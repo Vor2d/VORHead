@@ -1,0 +1,317 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.IO;
+using System;
+using UnityEngine.UI;
+using SFB;
+
+public class GameController_Setting : MonoBehaviour {
+
+    //private const int total_page = 3;
+    private List<string> camera_list_str = new List<string>() { "0", "1", "2", "3", "4" };
+
+    public GameObject Game_Controller;
+    public GameObject Page1;
+    public GameObject Page2;
+    public GameObject Page3;
+    public Text UIIndicatorText1;
+    //Page1;
+    [Header("Page1")]
+    public Toggle LoopTrialsToggle;
+    public Text ReadFileIndicator;
+    public InputField PTS_IF;   //Player to screen input field;
+    public InputField SW_IF;    //Screen width;
+    public Dropdown Camera1_DD; //Camera dropdown menu;
+    public Dropdown Camera2_DD;
+    public Camera camera1;
+    public Camera camera2;
+    public InputField LoopNumber_IF;
+    //Page2;
+    [Header("Page2")]
+    public Toggle HideFlagToggle;
+    public Toggle JumpFlagToggle;
+    public Toggle ShowTargetFlagToggle;
+    public Toggle HeadIndicatorChangeToggle;
+    public Toggle SkipCenterFlagToggle;
+    public Toggle HideHeadIndicatorToggle;
+    public InputField GazeTime_IF;
+    public InputField HideTime_IF;
+    public InputField ErrorTime_IF;
+    public InputField SpeedThreshold_IF;
+    public InputField StopWinodow_IF;
+    //public InputField HideTimeRandom_IF;
+    public InputField RandomGazeTime_IF;
+    public InputField Gain_IF;
+
+    private DataController DC_script;
+    private string path;
+    private List<float> turn_data;
+    private List<float> jump_data;
+    private List<GameObject> pages;
+    private int current_page;
+    private GameController GC_script;
+
+    // Use this for initialization
+    void Start () {
+        this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+        this.path = "";
+        this.turn_data = new List<float>();
+        this.jump_data = new List<float>();
+        this.pages = new List<GameObject>();
+        this.current_page = 0;
+        this.GC_script = Game_Controller.GetComponent<GameController>();
+        this.camera1.targetDisplay = Int32.Parse(DC_script.Camera1_display);
+        this.camera2.targetDisplay = Int32.Parse(DC_script.Camera2_display);
+
+        UIIndicatorText1.text = "";
+
+        init_dropdown(Camera1_DD, camera_list_str);
+        init_dropdown(Camera2_DD, camera_list_str);
+        pages.Add(Page1);
+        pages.Add(Page2);
+        pages.Add(Page3);
+        init_pages();
+
+        update_page1();
+    }
+
+    // Update is called once per frame
+    void Update () {
+        //Debug.Log("PST " + DC_script.player_screen_cm);
+        //Debug.Log("SW " + DC_script.screen_width_cm);
+	}
+
+    public void ToFinish()
+    {
+        UIIndicatorText1.text = "Finished!";
+    }
+
+    public void apply_change_page2()
+    {
+        try
+        {
+            apply_game_mode();
+            apply_variable_IF();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        //update_page2();
+        GC_script.update_data_restart();
+    }
+
+    public void apply_change_page1()
+    {
+        try
+        {
+            apply_screen_IF();
+            apply_camerachange();
+            DC_script.Loop_trial_flag = LoopTrialsToggle.isOn;
+            DC_script.Loop_number = Int32.Parse(LoopNumber_IF.text);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        //update_page1();
+        GC_script.update_data_restart();
+    }
+
+    public void next_page()
+    {
+        current_page++;
+        if(current_page >= pages.Count)
+        {
+            current_page = 0;
+        }
+        for (int i = 0; i < pages.Count; i++)
+        {
+            if (i == current_page)
+            {
+                pages[i].SetActive(true);
+            }
+            else
+            {
+                pages[i].SetActive(false);
+            }
+        }
+
+        Debug.Log("current page" + current_page);
+        switch(current_page)
+        {
+            case 0:
+                update_page1();
+                break;
+            case 1:
+                update_page2();
+                break;
+        }
+    }
+
+    public void load_turn_data()
+    {
+        path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false)[0];
+
+        load_turn_jump_data(path);
+    }
+
+    private void apply_game_mode()
+    {
+        DC_script.HideFlag = HideFlagToggle.isOn;
+        DC_script.JumpFlag = JumpFlagToggle.isOn;
+        DC_script.ShowTargetFlag = ShowTargetFlagToggle.isOn;
+        DC_script.HeadIndicatorChange = HeadIndicatorChangeToggle.isOn;
+        DC_script.SkipCenterFlag = SkipCenterFlagToggle.isOn;
+        DC_script.HideHeadIndicator = HideHeadIndicatorToggle.isOn;
+    }
+
+    private void apply_variable_IF()
+    {
+        try
+        {
+            DC_script.GazeTime = float.Parse(GazeTime_IF.text);
+            DC_script.HideTime = float.Parse(HideTime_IF.text);
+            DC_script.ErrorTime = float.Parse(ErrorTime_IF.text);
+            DC_script.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
+            DC_script.StopWinodow = float.Parse(StopWinodow_IF.text);
+            //DC_script.HideTimeRandom = float.Parse(HideTimeRandom_IF.text);
+            DC_script.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
+            DC_script.Gain = float.Parse(Gain_IF.text);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+    private void apply_camerachange()
+    {
+        string camera1_dis = Camera1_DD.captionText.text;
+        string camera2_dis = Camera2_DD.captionText.text;
+
+        camera1.targetDisplay = Int32.Parse(camera1_dis);
+        camera2.targetDisplay = Int32.Parse(camera2_dis);
+
+        DC_script.Camera1_display = camera1_dis;
+        DC_script.Camera2_display = camera2_dis;
+    }
+
+    private void apply_screen_IF()
+    {
+        try
+        {
+            DC_script.Player_screen_cm = float.Parse(PTS_IF.text);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+        try
+        {
+            DC_script.Screen_width_cm = float.Parse(SW_IF.text);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+
+    }
+
+    private void update_page1()
+    {
+        PTS_IF.text = DC_script.Player_screen_cm.ToString();
+        SW_IF.text = DC_script.Screen_width_cm.ToString();
+        try
+        {
+            Camera1_DD.value = Int32.Parse(DC_script.Camera1_display);
+            Camera2_DD.value = Int32.Parse(DC_script.Camera2_display);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+        LoopTrialsToggle.isOn = DC_script.Loop_trial_flag;
+        LoopNumber_IF.text = DC_script.Loop_number.ToString();
+    }
+
+    private void update_page2()
+    {
+        HideFlagToggle.isOn = DC_script.HideFlag;
+        JumpFlagToggle.isOn = DC_script.JumpFlag;
+        ShowTargetFlagToggle.isOn = DC_script.ShowTargetFlag;
+        HeadIndicatorChangeToggle.isOn = DC_script.HeadIndicatorChange;
+        SkipCenterFlagToggle.isOn = DC_script.SkipCenterFlag;
+        HideHeadIndicatorToggle.isOn = DC_script.HideHeadIndicator;
+        try
+        {
+            GazeTime_IF.text = DC_script.GazeTime.ToString("F2");
+            HideTime_IF.text = DC_script.HideTime.ToString("F2");
+            ErrorTime_IF.text = DC_script.ErrorTime.ToString("F2");
+            SpeedThreshold_IF.text = DC_script.SpeedThreshold.ToString("F2");
+            StopWinodow_IF.text = DC_script.StopWinodow.ToString("F2");
+            //HideTimeRandom_IF.text = DC_script.HideTimeRandom.ToString("F2");
+            RandomGazeTime_IF.text = DC_script.RandomGazeTime.ToString("F2");
+            Gain_IF.text = DC_script.Gain.ToString("F2");
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+        
+    }
+
+    private void init_pages()
+    {
+        for(int i = 0;i<pages.Count;i++)
+        {
+            if(i == 0)
+            {
+                pages[i].SetActive(true);
+            }
+            else
+            {
+                pages[i].SetActive(false);
+            }
+        }
+    }
+
+    private void load_turn_jump_data(string path)
+    {
+        try
+        {
+            GeneralMethods.load_turn_jump_data_general(path,out turn_data, out jump_data);
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Reading file error! " + e);
+            ReadFileIndicator.text = e.ToString();
+        }
+        Debug.Log("Loading complete! ");
+        ReadFileIndicator.text = "Loading complete!";
+
+        DC_script.turn_data = new List<float>(this.turn_data);
+        DC_script.jump_data = new List<float>(this.jump_data);
+    }
+
+    private void display_list(IEnumerable list)
+    {
+        int counter = 0;
+        foreach(var element in list)
+        {
+            Debug.Log(counter + " " + element.ToString());
+            counter++;
+        }
+    }
+
+    private void init_dropdown(Dropdown dropdown, List<string> content)
+    {
+        dropdown.ClearOptions();
+        dropdown.AddOptions(content);
+    }
+
+}
