@@ -32,7 +32,7 @@ public class DebugController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
+        //Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
 
         Headrr_Text.text = HT_init_text + HS_script.rrotate_degree.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;

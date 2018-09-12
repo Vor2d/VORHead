@@ -14,46 +14,31 @@ public class JumpLogSystem : MonoBehaviour
     const string first_line = "Line_#\tTime_Stamp\tSimulink_Sample\tTrail_#\tAction\t" +
                                 "Degree\tDirection";
 
-    //public GameObject Coil_Data;
-    //public float AfterJ_degreesR { get; set; }    //Real life degree;
-    //public float AfterJ_degreesV { get; set; }    //Virtual game degree;
-    //public bool Jump_captured { get; set; }
-    //public bool AJD_captured { get; set; }  //AfterJ Degrees captured;
-
     public bool log_state_flag { get; set; }
 
     private Thread JumpLog_Thread;
-    //private bool next_line;
     private StringBuilder JumpLog;
     private string file_name;
     private System.Diagnostics.Stopwatch stop_watch;
-    //private int last_time;
     private long time_stamp;
     private int line_counter;
-    //private bool stopwatch_get;
-    //private bool SS_get;   //Simulink Sample get;
     private CoilData CD_script;
     private uint simulink_sample;
     private DataController DC_script;
+    private AutoLogSystem ALS_script;
 
     // Use this for initialization
     void Start()
     {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
-        
+        this.ALS_script = GetComponent<AutoLogSystem>();
+
         this.JumpLog = new StringBuilder();
         this.log_state_flag = false;
         this.file_name = path + "JumpLog_" +
                             String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
         this.stop_watch = new System.Diagnostics.Stopwatch();
-        //this.last_time = 0;
-        //this.jump_time = 0;
-        //this.Jump_captured = false;
         this.line_counter = 0;
-        //this.next_line = false;
-        //this.stopwatch_get = false;
-        //this.SS_get = false;
-        //this.CD_script = Coil_Data.GetComponent<CoilData>();
         this.JumpLog_Thread = new Thread(write_file);
         this.time_stamp = 0;
 
@@ -73,54 +58,8 @@ public class JumpLogSystem : MonoBehaviour
 
     void Update()
     {
-        //if(log_state_flag && Jump_captured)
-        //{
-        //    if (!stopwatch_get)
-        //    {
-        //        Debug.Log("stopwatch_get");
-        //        jump_time = stop_watch.Elapsed.Milliseconds;
-        //        stopwatch_get = true;
-        //    }
-        //    if(!SS_get)
-        //    {
-        //        Debug.Log("SS_get");
-
-        //        simulink_sample = CD_script.simulinkSample;
-        //        SS_get = true;
-        //    }
-
-        //    if(stopwatch_get && SS_get && AJD_captured)
-        //    {
-        //        Debug.Log("AJD_captured");
-
-        //        next_line = true;
-        //        Jump_captured = false;
-        //    }
-
-        //}
-
-        //if(next_line && log_state_flag)
-        //{
-        //    next_line = false;
-        //    JumpLog.Append(line_counter.ToString());
-        //    JumpLog.Append("\t");
-        //    JumpLog.Append(jump_time.ToString());
-        //    JumpLog.Append("\t");
-        //    JumpLog.Append(simulink_sample);
-        //    JumpLog.Append("\t");
-        //    JumpLog.Append(AfterJ_degreesR.ToString("F2"));
-        //    JumpLog.Append("\t");
-        //    JumpLog.Append(AfterJ_degreesV.ToString("F2"));
-        //    JumpLog.Append("\t");
-        //    line_counter++;
-        //}
 
     }
-
-    //public void to_next_line()
-    //{
-    //    next_line = true;
-    //}
 
     public void toggle_Log()
     {
@@ -129,6 +68,7 @@ public class JumpLogSystem : MonoBehaviour
             stop_watch.Stop();
             stop_watch.Reset();
             log_state_flag = false;
+            JumpLog_Thread = new Thread(write_file);
             JumpLog_Thread.Start();
             Debug.Log("JumpLOG Stoped!!");
         }
@@ -143,12 +83,9 @@ public class JumpLogSystem : MonoBehaviour
     public void log_action(uint stimulink_sample, int trail_number, string action,float degree,
                                                                                 int direction)
     {
-        if(log_state_flag)
-        {
-            line_counter++;
-            JumpLog.Append(line_counter.ToString());
-            JumpLog.Append("\t");
-            time_stamp = stop_watch.ElapsedMilliseconds;
+        time_stamp = stop_watch.ElapsedMilliseconds;
+        if (log_state_flag)
+        {            
             JumpLog.Append(time_stamp.ToString());
             JumpLog.Append("\t");
             JumpLog.Append(stimulink_sample.ToString());
@@ -161,6 +98,29 @@ public class JumpLogSystem : MonoBehaviour
             JumpLog.Append("\t");
             JumpLog.Append(direction.ToString());
             JumpLog.AppendLine();
+        }
+        if(log_state_flag && ALS_script.JumpAutoLog_On)
+        {
+            try
+            {
+                ALS_script.JumpAutoLog_string.Append(time_stamp.ToString());
+                ALS_script.JumpAutoLog_string.Append("\t");
+                ALS_script.JumpAutoLog_string.Append(stimulink_sample.ToString());
+                ALS_script.JumpAutoLog_string.Append("\t");
+                ALS_script.JumpAutoLog_string.Append(trail_number.ToString());
+                ALS_script.JumpAutoLog_string.Append("\t");
+                ALS_script.JumpAutoLog_string.Append(action);
+                ALS_script.JumpAutoLog_string.Append("\t");
+                ALS_script.JumpAutoLog_string.Append(degree.ToString("F2"));
+                ALS_script.JumpAutoLog_string.Append("\t");
+                ALS_script.JumpAutoLog_string.Append(direction.ToString());
+                ALS_script.JumpAutoLog_string.AppendLine();
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e);
+            }
+
         }
     }
 

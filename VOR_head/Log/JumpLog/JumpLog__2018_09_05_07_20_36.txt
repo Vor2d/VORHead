@@ -1,4 +1,0 @@
-HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag False Loop_trial_flag True GazeTime 2 HideTime 0.1 HideTimeRandom 0 SpeedThreshold 10 StopWinodow 0.5 Player_screen_cm 50 Screen_width_cm 40 Camera1_display 1 Camera2_display 0 Loop_number -1 
-Line_#	Time_Stamp	Simulink_Sample	Trail_#	Action	Degree	Direction
-1	1617	0	0	MoveTarget	10.00	0
-

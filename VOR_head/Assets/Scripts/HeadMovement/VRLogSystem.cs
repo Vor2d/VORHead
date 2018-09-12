@@ -27,10 +27,12 @@ public class VRLogSystem : MonoBehaviour {
     //private Thread write_file_Thread;
     private string head_line;
     private DataController DC_script;
+    private AutoLogSystem ALS_script;
 
     // Use this for initialization
     void Start () {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+        this.ALS_script = GetComponent<AutoLogSystem>();
 
         this.VRLog = new StringBuilder();
         this.thread_state_flag = false;
