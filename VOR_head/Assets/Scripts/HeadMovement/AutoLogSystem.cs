@@ -15,6 +15,7 @@ public class AutoLogSystem : MonoBehaviour {
     public float JAL_time = 30.0f;
     public float JAL_changefile_time = 90.0f;
 
+    private string folder_path;
     //public bool VRthread_state_flag { get; set; }
     public bool Jumpthread_state_flag { get; set; }
     public StringBuilder VRAutoLog_string { get; set; }
@@ -33,24 +34,25 @@ public class AutoLogSystem : MonoBehaviour {
     void Start () {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
+        this.folder_path = path + String.Format("{0:_yyyy_MM_dd}", DateTime.Today) + "/";
         //this.VRthread_state_flag = false;
         this.Jumpthread_state_flag = false;
         this.VRAutoLog_string = new StringBuilder();
         this.JumpAutoLog_string = new StringBuilder();
         //this.VRWriteLock = false;
         //this.JumpWriteLock = false;
-        this.file_name = path + "JumpAutoLog_" +
+        this.file_name = folder_path + "JumpAutoLog_" +
                             String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
         this.jump_timer = JAL_time;
         this.jump_changefile_timer = JAL_changefile_time;
 
         this.JumpAutoLog_Thread = new Thread(write_jumpauto_file);
 
-        if (!Directory.Exists(path))
+        if (!Directory.Exists(folder_path))
         {
             try
             {
-                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(folder_path);
             }
             catch (Exception e)
             {
@@ -74,7 +76,7 @@ public class AutoLogSystem : MonoBehaviour {
 
         if(jump_changefile_timer <= 0.0f)
         {
-            file_name = path + "JumpAutoLog_" +
+            file_name = folder_path + "JumpAutoLog_" +
                     String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
             jump_changefile_timer = JAL_changefile_time;
         }

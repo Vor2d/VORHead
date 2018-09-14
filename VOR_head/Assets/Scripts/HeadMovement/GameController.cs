@@ -182,17 +182,17 @@ public class GameController : MonoBehaviour {
             JLS_script.toggle_Log();
         }
 
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            if(!collaberating_flag)
-            {
-                GCAnimator.SetTrigger("Collaborate");
-            }
-            else
-            {
-                restart_scene();
-            }
-        }
+        //if(Input.GetKeyDown(KeyCode.C))
+        //{
+        //    if(!collaberating_flag)
+        //    {
+        //        GCAnimator.SetTrigger("Collaborate");
+        //    }
+        //    else
+        //    {
+        //        restart_scene();
+        //    }
+        //}
 
         //TestText.text = (Screen.width).ToString();
         //TestText2.text = (Screen.dpi).ToString();
@@ -314,7 +314,7 @@ public class GameController : MonoBehaviour {
         //    HeadIndicator.GetComponent<Renderer>().enabled = true;
         //}
 
-        if (DC_script.HideFlag && !DC_script.ShowTargetFlag)
+        if ((DC_script.HideFlag && !DC_script.ShowTargetFlag) || DC_script.HideHeadIndicator)
         {
             Target_raycast_flag = false;
             Hide_raycast_flag = true;
@@ -327,7 +327,7 @@ public class GameController : MonoBehaviour {
 
     public void TargetToGaze()
     {
-        if (DC_script.HideFlag && !DC_script.ShowTargetFlag)
+        if ((DC_script.HideFlag && !DC_script.ShowTargetFlag) || DC_script.HideHeadIndicator)
         {
             Gaze(GazeTarget.HideDetector);
         }
@@ -679,6 +679,20 @@ public class GameController : MonoBehaviour {
     public void ToCollaborate()
     {
         collaberating_flag = true;
+        Target_raycast_flag = false;
+    }
+
+    public void Collaborating()
+    {
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    public void LeaveCollaborate()
+    {
+        Target_raycast_flag = true;
     }
 
     public void ToFinish()

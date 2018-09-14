@@ -48,7 +48,7 @@ public class CoilData : MonoBehaviour {
             // read quaternions
             while (!stopListening)
             {
-                Debug.Log("read_coil");
+                //Debug.Log("read_coil");
                 byte[] receiveBytes = udpClient.Receive(ref EP);
 
                 int offset = 0;
@@ -70,9 +70,9 @@ public class CoilData : MonoBehaviour {
                     simulinkSample = (UInt32)s;
                 }
 
-                Debug.Log("currentHeadOrientation1 " + currentHeadOrientation);
-                Debug.Log("currentHeadVelocity1 " + currentHeadVelocity);
-                Debug.Log("simulinkSample1 " + simulinkSample);
+                //Debug.Log("currentHeadOrientation1 " + currentHeadOrientation);
+                //Debug.Log("currentHeadVelocity1 " + currentHeadVelocity);
+                //Debug.Log("simulinkSample1 " + simulinkSample);
             }
         }
         catch (Exception e)

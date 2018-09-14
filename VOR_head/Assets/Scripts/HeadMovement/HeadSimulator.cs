@@ -28,7 +28,7 @@ public class HeadSimulator : MonoBehaviour {
 	void Update () {
         Quaternion coil_rotation = CD_script.currentHeadOrientation;
 
-        //coil_rotation = new Quaternion(0.0f, 0.0f, -0.1f, 1.0f);
+        //coil_rotation = new Quaternion(0.0f, 0.03f, -0.05f, 1.0f);
 
         current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
 

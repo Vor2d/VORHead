@@ -168,6 +168,11 @@ public class JumpLogSystem : MonoBehaviour
         quit_Thread();
     }
 
+    private void OnApplicationQuit()
+    {
+        quit_Thread();
+    }
+
     private void write_file()
     {
         StreamWriter file;

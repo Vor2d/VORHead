@@ -7,8 +7,8 @@ GazeTime	2
 RandomGazeTime	0
 HideTime	0.1
 ErrorTime	3
-SpeedThreshold	10
-StopWinodow	0.5
+SpeedThreshold	0
+StopWinodow	0.1
 HideFlag	False
 JumpFlag	False
 ShowTargetFlag	False
