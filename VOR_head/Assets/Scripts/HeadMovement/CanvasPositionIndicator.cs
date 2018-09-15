@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PositionIndicator : MonoBehaviour {
+public class CanvasPositionIndicator : MonoBehaviour {
 
     public Transform RelatedTransform;
     public Camera ShowingCamera;

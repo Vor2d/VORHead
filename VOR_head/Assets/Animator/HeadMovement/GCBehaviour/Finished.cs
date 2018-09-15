@@ -21,6 +21,7 @@ public class Finished : StateMachineBehaviour
         GC_script.Current_state = "Finished";
 
         GC_script.ToCollaborate();
+        GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "Finished",
                                 0.0f, 0);
 

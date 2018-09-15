@@ -18,6 +18,7 @@ public class ReturnPosition : StateMachineBehaviour {
         GC_script.ToReturnPosition();
         GC_script.Target_raycast_flag = true;
 
+        GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "ErrorReturn",
                                 GC_script.last_rot_ang_dir.x, (int)GC_script.last_rot_ang_dir.y);
     }

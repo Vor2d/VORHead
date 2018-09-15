@@ -18,6 +18,7 @@ public class ShowError : StateMachineBehaviour {
         GC_script.ToShowError();
         GC_script.Error_time_flag = true;
 
+        GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "ErrorOccurred",
                         GC_script.turn_degree, GC_script.turn_direct);
     }

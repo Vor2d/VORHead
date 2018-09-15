@@ -18,6 +18,8 @@ public class ShowTarget : StateMachineBehaviour {
         GC_script.Current_state = "ShowTarget";
 
         GC_script.ToShowTarget();
+
+        GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "ShowTarget",
                                         GC_script.turn_degree, GC_script.turn_direct);
 

@@ -34,7 +34,7 @@ public class DebugController : MonoBehaviour {
 	void Update () {
         //Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
 
-        Headrr_Text.text = HT_init_text + HS_script.rrotate_degree.ToString("F2");
+        Headrr_Text.text = HT_init_text + HS_script.TrueHeadRR.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
         JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;

@@ -6,7 +6,8 @@ using UnityEngine.XR;
 public class HeadSimulator : MonoBehaviour {
 
     //public Quaternion OriginalheadQ { get; set; }
-    public Vector3 rrotate_degree {get;set;}
+    public Vector3 RRotateDegree {get;set;}
+    public Vector3 TrueHeadRR { get; set; }
     public CoilData CD_script;
 
     private DataController DC_script;
@@ -21,7 +22,8 @@ public class HeadSimulator : MonoBehaviour {
         this.player_screen_cm = DC_script.Player_screen_cm;
         this.screen_width_cm = DC_script.Screen_width_cm;
         //this.OriginalheadQ = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
-        this.rrotate_degree = new Vector3();
+        this.RRotateDegree = new Vector3();
+        this.TrueHeadRR = new Vector3();
     }
 	
 	// Update is called once per frame
@@ -32,15 +34,15 @@ public class HeadSimulator : MonoBehaviour {
 
         current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
 
-        rrotate_degree = CRotaQuatToRRotaDegr(current_headQ);
+        TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
 
-        rrotate_degree = rrotate_degree * DC_script.Gain;
+        RRotateDegree = TrueHeadRR * DC_script.Gain;
 
         //Debug.Log("rrotate_degree " + rrotate_degree);
 
         transform.localEulerAngles =
             GeneralMethods.RealToVirtual(DC_script.Player_screen_cm, DC_script.Screen_width_cm,
-                                            rrotate_degree.x, rrotate_degree.y);
+                                            RRotateDegree.x, RRotateDegree.y);
     }
 
     public void reset_originQ()

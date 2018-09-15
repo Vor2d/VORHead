@@ -594,10 +594,10 @@ public class GameController : MonoBehaviour {
         {
             restar_script.turn_off_mesh();
         }
-        if(DC_script.HideFlag)
-        {
-            tar_script.turn_on_tobjmesh();
-        }
+        //if(DC_script.HideFlag)
+        //{
+        //    tar_script.turn_on_tobjmesh();
+        //}
         if (trial_iter < 0)
         {
             //Debug.Log("Trial2 " + trial_iter);
