@@ -61,7 +61,7 @@ public class GameController : MonoBehaviour {
     private Target tar_script;
     private ResultTarget restar_script;
     private CenterIndicator center_script;
-    private HeadStateController HSC_script;
+    //private HeadStateController HSC_script;
     private DataController DC_script;
     //private LastPosIndicator LPI_script;
     private HeadSimulator HS_script;
@@ -120,7 +120,7 @@ public class GameController : MonoBehaviour {
         this.turn_data = new List<float>(DC_script.turn_data);
         this.trial_iter = -1;
         this.jump_data = new List<float>(DC_script.jump_data);
-        this.HSC_script = GetComponent<HeadStateController>();
+        //this.HSC_script = GetComponent<HeadStateController>();
         //this.LPI_script = LastPosIndocator.GetComponent<LastPosIndicator>();
         this.stop_window_timer = DC_script.StopWinodow;
         this.Target_raycast_flag = true;
@@ -359,11 +359,22 @@ public class GameController : MonoBehaviour {
         turn_direct = turn_dir_temp;
 
         Debug.Log("turning " + turn_degree);
-        float virtual_degree = GeneralMethods.RealToVirtualy(DC_script.Player_screen_cm, 
-                                                    DC_script.Screen_width_cm, turn_degree);
+
+        if(DC_script.UsingCoilFlag)
+        {
+            float virtual_degree = GeneralMethods.RealToVirtualy(DC_script.Player_screen_cm,
+                                            DC_script.Screen_width_cm, turn_degree);
+            tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct, 0);
+            current_rot_ang_dir = new Vector2(virtual_degree, turn_direct);
+        }
+        if(DC_script.UsingVRFlag)
+        {
+            tar_CP_script.changePosition(turn_degree, 0.0f, turn_direct, 0);
+            current_rot_ang_dir = new Vector2(turn_degree, turn_direct);
+        }
+
         //Debug.Log("turning virtual " + virtual_degree);
-        tar_CP_script.changePosition(virtual_degree, 0.0f,turn_direct,0);
-        current_rot_ang_dir = new Vector2(virtual_degree, turn_direct);
+
         GCAnimator.SetTrigger("NextStep");
     }
 
@@ -417,7 +428,7 @@ public class GameController : MonoBehaviour {
         //    HeadIndicator.GetComponent<Renderer>().enabled = false;
         //}
 
-        HSC_script.reset_data();
+        //HSC_script.reset_data();
     }
 
     public void WaitForTurn()
@@ -457,7 +468,7 @@ public class GameController : MonoBehaviour {
         {
             head_speed_y = CD_script.currentHeadVelocity.z;
         }
-        else
+        if(DC_script.UsingVRFlag)
         {
             head_speed_y = GeneralMethods.getVRspeed().y;
         }
@@ -547,7 +558,7 @@ public class GameController : MonoBehaviour {
     {
         if(TurnSpeedWindow)
         {
-            IndiText1.GetComponent<TextMesh>().text = HSC_script.speedEvaluationMessage;
+            //IndiText1.GetComponent<TextMesh>().text = HSC_script.speedEvaluationMessage;
             IndiText1.GetComponent<Renderer>().enabled = true;
 
             if (DC_script.HideFlag)
@@ -656,7 +667,15 @@ public class GameController : MonoBehaviour {
         //HeadSParent.transform.rotation = 
         //                            Quaternion.Inverse(HeadSimulator.transform.localRotation);
 
-        HS_script.reset_originQ();
+        if(DC_script.UsingCoilFlag)
+        {
+            HS_script.reset_originQ();
+        }
+        if(DC_script.UsingVRFlag)
+        {
+            InputTracking.Recenter();
+        }
+        
     }
 
     public void load_setting_scene()

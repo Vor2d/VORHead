@@ -1,3 +1,0 @@
-HideFlag True JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True Loop_trial_flag True GazeTime 2 RandomGazeTime 0 HideTime 0.1 SpeedThreshold 0 StopWinodow 0.1 Player_screen_cm 50 Screen_width_cm 40 Camera1_display 1 Camera2_display 0 Loop_number -1 Gain 1 
-
-

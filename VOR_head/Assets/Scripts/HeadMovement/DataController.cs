@@ -35,6 +35,7 @@ public class DataController : MonoBehaviour {
     public int Loop_number { get; set; }
     //Other data;
     public bool UsingCoilFlag { get; set; }
+    public bool UsingVRFlag { get; set; }
     public Quaternion Head_origin { get; set; }
     public float Gain { get; set; }
 
@@ -106,7 +107,8 @@ public class DataController : MonoBehaviour {
             this.HideHeadIndicator = false;
         }
 
-        this.UsingCoilFlag = true;
+        this.UsingCoilFlag = false;
+        this.UsingVRFlag = true;
 
         List<float> turn_data_temp = new List<float>();
         List<float> jump_data_temp = new List<float>();

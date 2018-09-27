@@ -28,21 +28,29 @@ public class HeadSimulator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Quaternion coil_rotation = CD_script.currentHeadOrientation;
 
-        //coil_rotation = new Quaternion(0.0f, 0.03f, -0.05f, 1.0f);
+        if(DC_script.UsingCoilFlag)
+        {
+            Quaternion coil_rotation = CD_script.currentHeadOrientation;
 
-        current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
+            //coil_rotation = new Quaternion(0.0f, 0.03f, -0.05f, 1.0f);
 
-        TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
+            current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
 
-        RRotateDegree = TrueHeadRR * DC_script.Gain;
+            TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
 
-        //Debug.Log("rrotate_degree " + rrotate_degree);
+            RRotateDegree = TrueHeadRR * DC_script.Gain;
 
-        transform.localEulerAngles =
-            GeneralMethods.RealToVirtual(DC_script.Player_screen_cm, DC_script.Screen_width_cm,
-                                            RRotateDegree.x, RRotateDegree.y);
+            Debug.Log("RRotateDegree " + RRotateDegree);
+
+            transform.localEulerAngles =
+                GeneralMethods.RealToVirtual(DC_script.Player_screen_cm, DC_script.Screen_width_cm,
+                                                RRotateDegree.x, RRotateDegree.y);
+        }
+        if(DC_script.UsingVRFlag)
+        {
+            transform.rotation = GeneralMethods.getVRrotation();
+        }
     }
 
     public void reset_originQ()

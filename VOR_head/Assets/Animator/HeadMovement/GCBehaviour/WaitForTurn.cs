@@ -5,17 +5,17 @@ using UnityEngine;
 public class WaitForTurn : StateMachineBehaviour {
 
     private GameController GC_script;
-    private HeadStateController HSC_script;
+    //private HeadStateController HSC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
-        this.HSC_script = 
-                        GameObject.Find("GameController").GetComponent<HeadStateController>();
+        //this.HSC_script = 
+        //                GameObject.Find("GameController").GetComponent<HeadStateController>();
         GC_script.Current_state = "WaitForTurn";
 
-        HSC_script.Check_speed_flag = true;
+        //HSC_script.Check_speed_flag = true;
         GC_script.Check_speed_flag = true;
         GC_script.Target_raycast_flag = false;
 
@@ -32,7 +32,7 @@ public class WaitForTurn : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        HSC_script.Check_speed_flag = false;
+        //HSC_script.Check_speed_flag = false;
         GC_script.Check_speed_flag = false;
     }
 

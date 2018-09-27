@@ -41,8 +41,8 @@ public class ChangePosition : MonoBehaviour {
 
     public void changePosition(float ang_degX, float ang_degY, int direcX, int direcY)
     {
-        transform.position = 
-                        GeneralMethods.PositionCal(init_dist,ang_degX,ang_degY,direcX,direcY);
+            transform.position =
+                GeneralMethods.PositionCal(init_dist, ang_degX, ang_degY, direcX, direcY);
 
         transform.LookAt(Camera.main.transform);
     }

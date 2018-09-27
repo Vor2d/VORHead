@@ -140,7 +140,7 @@ public static class GeneralMethods {
         Debug.Log("Loading complete! ");
     }
 
-    //Change Position General Method;
+    //Monitor Change Position General Method;
     private static float DestinationCal(float init_dist,float ang_deg, int direc)
     {
         if((ang_deg+90)%180 == 0)
@@ -167,5 +167,6 @@ public static class GeneralMethods {
                             DestinationCal(init_dist,ang_degY,direcY),
                             init_dist);
     }
+
 
 }
