@@ -12,6 +12,7 @@ TagManager:
   - CenterTest
   - TurnBorder
   - HideDetector
+  - City
   layers:
   - Default
   - TransparentFX
