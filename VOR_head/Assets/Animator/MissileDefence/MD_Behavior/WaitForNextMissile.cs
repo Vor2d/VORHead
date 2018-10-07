@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InstantiatetMissile : StateMachineBehaviour {
+public class WaitForNextMissile : StateMachineBehaviour {
 
     private MD_GameController MD_GC_script;
 
@@ -12,18 +12,20 @@ public class InstantiatetMissile : StateMachineBehaviour {
         this.MD_GC_script =
                     GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
 
-        MD_GC_script.ToInstantiatetMissile();
+        MD_GC_script.ToWaitForNextMissile();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        MD_GC_script.WaitForNextMissile();
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        MD_GC_script.ExitWaitForNextMissile();
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {

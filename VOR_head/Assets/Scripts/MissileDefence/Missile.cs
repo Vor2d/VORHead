@@ -10,39 +10,35 @@ public class Missile : MonoBehaviour {
     public bool start_flag;
     private Vector3 Target_pos;
 
+    //Need to init objects here since it is a prefab;
+    private void Awake()
+    {
+        this.Target_pos = new Vector3();
+        this.start_flag = false;
+    }
 
     // Use this for initialization
     void Start () {
-        this.Target_pos = new Vector3();
-        this.start_flag = false;
+
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        Debug.Log("start_flag " + start_flag);
         if (start_flag)
         {
-            Debug.Log("Moving Target_pos "+ Target_pos);
             transform.Translate(Target_pos * Time.deltaTime * Speed, Space.World);
         }
     }
 
     public void set_target(Transform tar_transform)
     {
-        Debug.Log("tar_transform.position " + tar_transform.position);
-        Debug.Log("transform.position " + transform.position);
-
         Target_pos = tar_transform.position - transform.position;
-        Debug.Log("Target_pos " + Target_pos);
     }
 
     public void start_move()
     {
         face(Target_pos);
-        Debug.Log("Target_pos2 " + Target_pos);
         start_flag = true;
-        Debug.Log("start_flag2 " + start_flag);
-
     }
 
     public void face(Vector3 pos)
@@ -52,9 +48,10 @@ public class Missile : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("11111");
-        if(other.transform.gameObject.tag == "City")
+        GameObject other_GO = other.transform.gameObject;
+        if (other_GO.tag == "City")
         {
+            other_GO.GetComponent<City>().get_hit();
             Destroy(gameObject);
         }
     }
