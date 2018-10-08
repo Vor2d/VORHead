@@ -7,13 +7,13 @@ public class Missile : MonoBehaviour {
 
     public float Speed = 0.5f;
 
-    public bool start_flag;
-    private Vector3 Target_pos;
+    private bool start_flag;
+    private Vector3 target_pos;
 
     //Need to init objects here since it is a prefab;
     private void Awake()
     {
-        this.Target_pos = new Vector3();
+        this.target_pos = new Vector3();
         this.start_flag = false;
     }
 
@@ -26,18 +26,18 @@ public class Missile : MonoBehaviour {
 	void FixedUpdate () {
         if (start_flag)
         {
-            transform.Translate(Target_pos * Time.deltaTime * Speed, Space.World);
+            transform.Translate(target_pos * Time.deltaTime * Speed, Space.World);
         }
     }
 
     public void set_target(Transform tar_transform)
     {
-        Target_pos = tar_transform.position - transform.position;
+        target_pos = tar_transform.position - transform.position;
     }
 
     public void start_move()
     {
-        face(Target_pos);
+        face(target_pos);
         start_flag = true;
     }
 
@@ -52,6 +52,10 @@ public class Missile : MonoBehaviour {
         if (other_GO.tag == "City")
         {
             other_GO.GetComponent<City>().get_hit();
+            Destroy(gameObject);
+        }
+        else if(other_GO.tag == "Explode")
+        {
             Destroy(gameObject);
         }
     }

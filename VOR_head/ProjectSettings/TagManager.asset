@@ -13,6 +13,7 @@ TagManager:
   - TurnBorder
   - HideDetector
   - City
+  - Explode
   layers:
   - Default
   - TransparentFX
