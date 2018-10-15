@@ -7600,7 +7600,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1663751346
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10300,7 +10300,6 @@ MonoBehaviour:
   Page2: {fileID: 1738857265}
   Page3: {fileID: 1547072187}
   UIIndicatorText1: {fileID: 1979538679}
-  LoopTrialsToggle: {fileID: 1663751347}
   ReadFileIndicator: {fileID: 1121371675}
   PTS_IF: {fileID: 1582974697}
   SW_IF: {fileID: 827270873}

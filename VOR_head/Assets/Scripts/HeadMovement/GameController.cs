@@ -98,8 +98,8 @@ public class GameController : MonoBehaviour {
         //this.ray_cast_scrip = Camera.main.GetComponent<RayCast>();
         this.ray_cast_scrip = HeadSimulator.GetComponent<RayCast>();
         this.gaze_timer = DC_script.Current_GM.GazeTime;
-        this.gaze_timer_rand = DC_script.GazeTime;
-        this.hide_gaze_timer = DC_script.GazeTime;
+        this.gaze_timer_rand = DC_script.Current_GM.GazeTime;
+        this.hide_gaze_timer = DC_script.Current_GM.GazeTime;
         this.tar_script = Target.GetComponent<Target>();
         this.restar_script = ResultTarget.GetComponent<ResultTarget>();
         //this.SNJstatus = SNJSteps.ToReset;
@@ -109,20 +109,20 @@ public class GameController : MonoBehaviour {
         this.GCAnimator = GetComponent<Animator>();
         this.head_speed_flag = false;
         this.Check_speed_flag = false;
-        this.Hide_timer = DC_script.HideTime;
+        this.Hide_timer = DC_script.Current_GM.HideTime;
         this.Hide_time_flag = false;
         this.Check_stop_flag = false;
         this.stopped_flag = false;
         this.head_speed_y = 0.0f;
-        this.error_timer = DC_script.ErrorTime;
+        this.error_timer = DC_script.Current_GM.ErrorTime;
         //this.indi_text1 = GameObject.Find("IndicatorText1");
         //this.head_indicator = GameObject.Find("HeadIndicator");
-        this.turn_data = new List<float>(DC_script.turn_data);
+        this.turn_data = new List<float>(DC_script.Current_TI.Turn_data);
         this.trial_iter = -1;
-        this.jump_data = new List<float>(DC_script.jump_data);
+        this.jump_data = new List<float>(DC_script.Current_TI.Jump_data);
         //this.HSC_script = GetComponent<HeadStateController>();
         //this.LPI_script = LastPosIndocator.GetComponent<LastPosIndicator>();
-        this.stop_window_timer = DC_script.StopWinodow;
+        this.stop_window_timer = DC_script.Current_GM.StopWinodow;
         this.Target_raycast_flag = true;
         this.HS_script = HeadSimulator.GetComponent<HeadSimulator>();
         //this.HI_CP_script = HeadIndicator.GetComponent<ChangePosition>();
@@ -145,7 +145,7 @@ public class GameController : MonoBehaviour {
         if (Display.displays.Length > 1)
             Display.displays[1].Activate();
 
-        if(!DC_script.HideHeadIndicator)
+        if(!DC_script.Current_GM.HideHeadIndicator)
         {
             HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
         }
@@ -216,7 +216,7 @@ public class GameController : MonoBehaviour {
             }
             else
             {
-                stop_window_timer = DC_script.StopWinodow;
+                stop_window_timer = DC_script.Current_GM.StopWinodow;
             }
         }
 
@@ -298,8 +298,9 @@ public class GameController : MonoBehaviour {
 
     public void ToCenterGaze()
     {
-        gaze_timer_rand = DC_script.GazeTime +
-                UnityEngine.Random.Range(-DC_script.RandomGazeTime, DC_script.RandomGazeTime);
+        gaze_timer_rand = DC_script.Current_GM.GazeTime +
+                UnityEngine.Random.Range(-DC_script.Current_GM.RandomGazeTime,
+                                            DC_script.Current_GM.RandomGazeTime);
     }
 
     public void CenterGaze()
@@ -309,25 +310,23 @@ public class GameController : MonoBehaviour {
 
     public void ToTargetToGaze()
     {
-        //if (DC_script.HeadIndicatorChange)
-        //{
-        //    HeadIndicator.GetComponent<Renderer>().enabled = true;
-        //}
-
-        if ((DC_script.HideFlag && !DC_script.ShowTargetFlag) || DC_script.HideHeadIndicator)
+        if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag)
+                || DC_script.Current_GM.HideHeadIndicator)
         {
             Target_raycast_flag = false;
             Hide_raycast_flag = true;
         }
 
-        gaze_timer_rand = DC_script.GazeTime +
-                UnityEngine.Random.Range(-DC_script.RandomGazeTime, DC_script.RandomGazeTime);
+        gaze_timer_rand = DC_script.Current_GM.GazeTime +
+                UnityEngine.Random.Range(-DC_script.Current_GM.RandomGazeTime,
+                                            DC_script.Current_GM.RandomGazeTime);
 
     }
 
     public void TargetToGaze()
     {
-        if ((DC_script.HideFlag && !DC_script.ShowTargetFlag) || DC_script.HideHeadIndicator)
+        if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag) 
+                || DC_script.Current_GM.HideHeadIndicator)
         {
             Gaze(GazeTarget.HideDetector);
         }
@@ -362,8 +361,10 @@ public class GameController : MonoBehaviour {
 
         if(DC_script.UsingCoilFlag)
         {
-            float virtual_degree = GeneralMethods.RealToVirtualy(DC_script.Player_screen_cm,
-                                            DC_script.Screen_width_cm, turn_degree);
+            float virtual_degree = 
+                GeneralMethods.RealToVirtualy(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
+                                                turn_degree);
             tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct, 0);
             current_rot_ang_dir = new Vector2(virtual_degree, turn_direct);
         }
@@ -394,22 +395,24 @@ public class GameController : MonoBehaviour {
         turn_direct = turn_dir_temp;
 
         Debug.Log("jumping " + turn_degree);
-        float virtual_degree = GeneralMethods.RealToVirtualy(DC_script.Player_screen_cm, 
-                                                    DC_script.Screen_width_cm, turn_degree);
+        float virtual_degree = 
+            GeneralMethods.RealToVirtualy(DC_script.SystemSetting.Player_screen_cm, 
+                                          DC_script.SystemSetting.Screen_width_cm,
+                                          turn_degree);
         //Debug.Log("jumping virtual " + virtual_degree);
         tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct,0);
         //to_log_jumpdata();
         GCAnimator.SetTrigger("NextStep");
     }
 
-    public void SNJToGaze()
-    {
-        if (gaze_timer <= 0)
-        {
-            GCAnimator.SetTrigger("NextStep");
-            gaze_timer = DC_script.GazeTime;
-        }
-    }
+    //public void SNJToGaze()
+    //{
+    //    if (gaze_timer <= 0)
+    //    {
+    //        GCAnimator.SetTrigger("NextStep");
+    //        gaze_timer = DC_script.Current_GM.GazeTime;
+    //    }
+    //}
 
     public void Hide()
     {
@@ -417,7 +420,7 @@ public class GameController : MonoBehaviour {
         {
             tar_script.turn_off_all_tmesh();
             GCAnimator.SetTrigger("NextStep");
-            Hide_timer = DC_script.HideTime;
+            Hide_timer = DC_script.Current_GM.HideTime;
         }
     }
 
@@ -472,7 +475,7 @@ public class GameController : MonoBehaviour {
         {
             head_speed_y = GeneralMethods.getVRspeed().y;
         }
-        if (Mathf.Abs(head_speed_y) > DC_script.SpeedThreshold)
+        if (Mathf.Abs(head_speed_y) > DC_script.Current_GM.SpeedThreshold)
         {
             GCAnimator.SetTrigger("NextStep");
             return;
@@ -502,7 +505,7 @@ public class GameController : MonoBehaviour {
         {
             GCAnimator.SetTrigger("NextStep");
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
-            stop_window_timer = DC_script.StopWinodow;
+            stop_window_timer = DC_script.Current_GM.StopWinodow;
             //stopped_flag = false;
         }
     }
@@ -561,7 +564,7 @@ public class GameController : MonoBehaviour {
             //IndiText1.GetComponent<TextMesh>().text = HSC_script.speedEvaluationMessage;
             IndiText1.GetComponent<Renderer>().enabled = true;
 
-            if (DC_script.HideFlag)
+            if (DC_script.Current_GM.HideFlag)
             {
                 tar_script.turn_on_tobjmesh();
             }
@@ -570,7 +573,7 @@ public class GameController : MonoBehaviour {
         {
             IndiText1.GetComponent<TextMesh>().text = "Too Slow!";
             IndiText1.GetComponent<Renderer>().enabled = true;
-            if (DC_script.HideFlag)
+            if (DC_script.Current_GM.HideFlag)
             {
                 tar_script.turn_on_tobjmesh();
             }
@@ -585,7 +588,7 @@ public class GameController : MonoBehaviour {
         {
             GCAnimator.SetTrigger("NextStep");
             Error_time_flag = false;    //One more setp;
-            error_timer = DC_script.ErrorTime;
+            error_timer = DC_script.Current_GM.ErrorTime;
         }
     }
 
@@ -627,15 +630,17 @@ public class GameController : MonoBehaviour {
         if (trial_iter >= turn_data.Count)
         {
             loop_iter++;
-            if (DC_script.Loop_trial_flag &&
-                    (DC_script.Loop_number == -1 || loop_iter < DC_script.Loop_number))
+            if (DC_script.Current_TI.Loop_number == -1 
+                    || loop_iter < DC_script.Current_TI.Loop_number)
             {
                 trial_iter = 0;
             }
             else
             {
+                trial_iter = -1;
+                GCAnimator.SetTrigger("UpdateDC");
                 //SceneManager.LoadScene("HeadMFinish");
-                GCAnimator.SetTrigger("Finished");
+                //GCAnimator.SetTrigger("Finished");
             }
         }
         Debug.Log("Trial " + trial_iter);
@@ -644,20 +649,16 @@ public class GameController : MonoBehaviour {
 
     public void ToInit()
     {
-        GCAnimator.SetBool("HideFlag", DC_script.HideFlag);
-        GCAnimator.SetBool("JumpFlag", DC_script.JumpFlag);
-        GCAnimator.SetBool("ShowTargetFlag", DC_script.ShowTargetFlag);
-        //GCAnimator.SetBool("ShowResultFlag", DC_script.ShowResultFlag);
-        GCAnimator.SetBool("SkipCenter", DC_script.SkipCenterFlag);
+        GCAnimator.SetBool("HideFlag", DC_script.Current_GM.HideFlag);
+        GCAnimator.SetBool("JumpFlag", DC_script.Current_GM.JumpFlag);
+        GCAnimator.SetBool("ShowTargetFlag", DC_script.Current_GM.ShowTargetFlag);
+        GCAnimator.SetBool("SkipCenter", DC_script.Current_GM.SkipCenterFlag);
         trial_iter = -1;
         ToReset();
     }
 
     public void recenter_stage()
     {
-        //HeadSParent.transform.rotation = 
-        //                            Quaternion.Inverse(HeadSimulator.transform.localRotation);
-
         if(DC_script.UsingCoilFlag)
         {
             HS_script.reset_originQ();
@@ -711,59 +712,6 @@ public class GameController : MonoBehaviour {
         IndiText1.GetComponent<Renderer>().enabled = true;
     }
 
-    ////private functions;
-    //private Vector3 getVRspeed1() 
-    //{
-    //    Vector3 angularVelocityRead = 
-    //            (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
-    //            FromFlippedZVector3f()) * Mathf.Rad2Deg;
-
-    //    return angularVelocityRead;
-    //}
-
-    //private void load_turn_data()
-    //{
-    //    Debug.Log("Loading file " + file_path1);
-    //    StreamReader reader = new StreamReader(file_path1);
-    //    float degrees = 0;
-    //    while (!reader.EndOfStream)
-    //    {
-    //        try
-    //        {
-    //            degrees = float.Parse(reader.ReadLine());
-    //            turn_data.Add(degrees);
-    //        }
-    //        catch(Exception e)
-    //        {
-    //            Debug.Log("Reading file error! " + e);
-    //        }
-    //    }
-    //    reader.Close();
-    //    Debug.Log("Loading complete! ");
-    //}
-
-    //private void load_turn_jump_data()
-    //{
-    //    Debug.Log("Loading file " + file_path2);
-    //    StreamReader reader = new StreamReader(file_path2);
-    //    while (!reader.EndOfStream)
-    //    {
-    //        try
-    //        {
-    //            //Turn degrees '\t' jump degrees;
-    //            string[] splitstr = reader.ReadLine().Split(file_spliter);
-    //            turn_data.Add(float.Parse(splitstr[0]));
-    //            jump_data.Add(float.Parse(splitstr[1]));
-    //        }
-    //        catch (Exception e)
-    //        {
-    //            Debug.Log("Reading file error! " + e);
-    //        }
-    //    }
-    //    reader.Close();
-    //    Debug.Log("Loading complete! ");
-    //}
-
     private void get_degree_direct(List<float> list, int iter, 
                                     out float turn_deg, out int turn_dir)
     {
@@ -783,12 +731,5 @@ public class GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("HeadMovement");
     }
-
-    //private void to_log_jumpdata()
-    //{
-    //    JLS_script.AfterJ_degreesV = jump_data[trial_iter];
-    //    JLS_script.AfterJ_degreesR = turn_degree;
-    //    JLS_script.AJD_captured = true;
-    //}
 
 }

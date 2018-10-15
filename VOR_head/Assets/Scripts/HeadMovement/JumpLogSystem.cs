@@ -182,7 +182,7 @@ public class JumpLogSystem : MonoBehaviour
             if (!File.Exists(file_name))
             {
                 file = new StreamWriter(file_name);
-                file.WriteLine(DC_script.VarToString());
+                file.WriteLine(DC_script.SystemSetting.VarToString());
                 file.WriteLine(first_line);
             }
             else

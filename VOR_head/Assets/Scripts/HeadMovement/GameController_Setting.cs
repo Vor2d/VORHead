@@ -19,7 +19,7 @@ public class GameController_Setting : MonoBehaviour {
     public Text UIIndicatorText1;
     //Page1;
     [Header("Page1")]
-    public Toggle LoopTrialsToggle;
+    //public Toggle LoopTrialsToggle;
     public Text ReadFileIndicator;
     public InputField PTS_IF;   //Player to screen input field;
     public InputField SW_IF;    //Screen width;
@@ -41,10 +41,10 @@ public class GameController_Setting : MonoBehaviour {
     public InputField ErrorTime_IF;
     public InputField SpeedThreshold_IF;
     public InputField StopWinodow_IF;
-    //public InputField HideTimeRandom_IF;
     public InputField RandomGazeTime_IF;
     public InputField Gain_IF;
 
+    //Variables;
     private DataController DC_script;
     private string path;
     private List<float> turn_data;
@@ -62,8 +62,8 @@ public class GameController_Setting : MonoBehaviour {
         this.pages = new List<GameObject>();
         this.current_page = 0;
         this.GC_script = Game_Controller.GetComponent<GameController>();
-        this.camera1.targetDisplay = Int32.Parse(DC_script.Camera1_display);
-        this.camera2.targetDisplay = Int32.Parse(DC_script.Camera2_display);
+        this.camera1.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
+        this.camera2.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
 
         UIIndicatorText1.text = "";
 
@@ -79,8 +79,7 @@ public class GameController_Setting : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        //Debug.Log("PST " + DC_script.player_screen_cm);
-        //Debug.Log("SW " + DC_script.screen_width_cm);
+
 	}
 
     public void ToFinish()
@@ -110,8 +109,8 @@ public class GameController_Setting : MonoBehaviour {
         {
             apply_screen_IF();
             apply_camerachange();
-            DC_script.Loop_trial_flag = LoopTrialsToggle.isOn;
-            DC_script.Loop_number = Int32.Parse(LoopNumber_IF.text);
+            //DC_script.Loop_trial_flag = LoopTrialsToggle.isOn;
+            DC_script.Current_TI.Loop_number = Int32.Parse(LoopNumber_IF.text);
         }
         catch(Exception e)
         {
@@ -162,26 +161,25 @@ public class GameController_Setting : MonoBehaviour {
 
     private void apply_game_mode()
     {
-        DC_script.HideFlag = HideFlagToggle.isOn;
-        DC_script.JumpFlag = JumpFlagToggle.isOn;
-        DC_script.ShowTargetFlag = ShowTargetFlagToggle.isOn;
-        DC_script.HeadIndicatorChange = HeadIndicatorChangeToggle.isOn;
-        DC_script.SkipCenterFlag = SkipCenterFlagToggle.isOn;
-        DC_script.HideHeadIndicator = HideHeadIndicatorToggle.isOn;
+        DC_script.Current_GM.HideFlag = HideFlagToggle.isOn;
+        DC_script.Current_GM.JumpFlag = JumpFlagToggle.isOn;
+        DC_script.Current_GM.ShowTargetFlag = ShowTargetFlagToggle.isOn;
+        DC_script.Current_GM.HeadIndicatorChange = HeadIndicatorChangeToggle.isOn;
+        DC_script.Current_GM.SkipCenterFlag = SkipCenterFlagToggle.isOn;
+        DC_script.Current_GM.HideHeadIndicator = HideHeadIndicatorToggle.isOn;
     }
 
     private void apply_variable_IF()
     {
         try
         {
-            DC_script.GazeTime = float.Parse(GazeTime_IF.text);
-            DC_script.HideTime = float.Parse(HideTime_IF.text);
-            DC_script.ErrorTime = float.Parse(ErrorTime_IF.text);
-            DC_script.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
-            DC_script.StopWinodow = float.Parse(StopWinodow_IF.text);
-            //DC_script.HideTimeRandom = float.Parse(HideTimeRandom_IF.text);
-            DC_script.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
-            DC_script.Gain = float.Parse(Gain_IF.text);
+            DC_script.Current_GM.GazeTime = float.Parse(GazeTime_IF.text);
+            DC_script.Current_GM.HideTime = float.Parse(HideTime_IF.text);
+            DC_script.Current_GM.ErrorTime = float.Parse(ErrorTime_IF.text);
+            DC_script.Current_GM.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
+            DC_script.Current_GM.StopWinodow = float.Parse(StopWinodow_IF.text);
+            DC_script.Current_GM.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
+            DC_script.Current_GM.Gain = float.Parse(Gain_IF.text);
         }
         catch(Exception e)
         {
@@ -197,15 +195,15 @@ public class GameController_Setting : MonoBehaviour {
         camera1.targetDisplay = Int32.Parse(camera1_dis);
         camera2.targetDisplay = Int32.Parse(camera2_dis);
 
-        DC_script.Camera1_display = camera1_dis;
-        DC_script.Camera2_display = camera2_dis;
+        DC_script.SystemSetting.Camera1_display = camera1_dis;
+        DC_script.SystemSetting.Camera2_display = camera2_dis;
     }
 
     private void apply_screen_IF()
     {
         try
         {
-            DC_script.Player_screen_cm = float.Parse(PTS_IF.text);
+            DC_script.SystemSetting.Player_screen_cm = float.Parse(PTS_IF.text);
         }
         catch(Exception e)
         {
@@ -213,7 +211,7 @@ public class GameController_Setting : MonoBehaviour {
         }
         try
         {
-            DC_script.Screen_width_cm = float.Parse(SW_IF.text);
+            DC_script.SystemSetting.Screen_width_cm = float.Parse(SW_IF.text);
         }
         catch (Exception e)
         {
@@ -224,39 +222,38 @@ public class GameController_Setting : MonoBehaviour {
 
     private void update_page1()
     {
-        PTS_IF.text = DC_script.Player_screen_cm.ToString();
-        SW_IF.text = DC_script.Screen_width_cm.ToString();
+        PTS_IF.text = DC_script.SystemSetting.Player_screen_cm.ToString();
+        SW_IF.text = DC_script.SystemSetting.Screen_width_cm.ToString();
         try
         {
-            Camera1_DD.value = Int32.Parse(DC_script.Camera1_display);
-            Camera2_DD.value = Int32.Parse(DC_script.Camera2_display);
+            Camera1_DD.value = Int32.Parse(DC_script.SystemSetting.Camera1_display);
+            Camera2_DD.value = Int32.Parse(DC_script.SystemSetting.Camera2_display);
         }
         catch(Exception e)
         {
             Debug.Log(e);
         }
-        LoopTrialsToggle.isOn = DC_script.Loop_trial_flag;
-        LoopNumber_IF.text = DC_script.Loop_number.ToString();
+        //LoopTrialsToggle.isOn = DC_script.Loop_trial_flag;
+        LoopNumber_IF.text = DC_script.Current_TI.Loop_number.ToString();
     }
 
     private void update_page2()
     {
-        HideFlagToggle.isOn = DC_script.HideFlag;
-        JumpFlagToggle.isOn = DC_script.JumpFlag;
-        ShowTargetFlagToggle.isOn = DC_script.ShowTargetFlag;
-        HeadIndicatorChangeToggle.isOn = DC_script.HeadIndicatorChange;
-        SkipCenterFlagToggle.isOn = DC_script.SkipCenterFlag;
-        HideHeadIndicatorToggle.isOn = DC_script.HideHeadIndicator;
+        HideFlagToggle.isOn = DC_script.Current_GM.HideFlag;
+        JumpFlagToggle.isOn = DC_script.Current_GM.JumpFlag;
+        ShowTargetFlagToggle.isOn = DC_script.Current_GM.ShowTargetFlag;
+        HeadIndicatorChangeToggle.isOn = DC_script.Current_GM.HeadIndicatorChange;
+        SkipCenterFlagToggle.isOn = DC_script.Current_GM.SkipCenterFlag;
+        HideHeadIndicatorToggle.isOn = DC_script.Current_GM.HideHeadIndicator;
         try
         {
-            GazeTime_IF.text = DC_script.GazeTime.ToString("F2");
-            HideTime_IF.text = DC_script.HideTime.ToString("F2");
-            ErrorTime_IF.text = DC_script.ErrorTime.ToString("F2");
-            SpeedThreshold_IF.text = DC_script.SpeedThreshold.ToString("F2");
-            StopWinodow_IF.text = DC_script.StopWinodow.ToString("F2");
-            //HideTimeRandom_IF.text = DC_script.HideTimeRandom.ToString("F2");
-            RandomGazeTime_IF.text = DC_script.RandomGazeTime.ToString("F2");
-            Gain_IF.text = DC_script.Gain.ToString("F2");
+            GazeTime_IF.text = DC_script.Current_GM.GazeTime.ToString("F2");
+            HideTime_IF.text = DC_script.Current_GM.HideTime.ToString("F2");
+            ErrorTime_IF.text = DC_script.Current_GM.ErrorTime.ToString("F2");
+            SpeedThreshold_IF.text = DC_script.Current_GM.SpeedThreshold.ToString("F2");
+            StopWinodow_IF.text = DC_script.Current_GM.StopWinodow.ToString("F2");
+            RandomGazeTime_IF.text = DC_script.Current_GM.RandomGazeTime.ToString("F2");
+            Gain_IF.text = DC_script.Current_GM.Gain.ToString("F2");
         }
         catch (Exception e)
         {
@@ -284,7 +281,7 @@ public class GameController_Setting : MonoBehaviour {
     {
         try
         {
-            GeneralMethods.load_turn_jump_data_general(path,out turn_data, out jump_data);
+            //GeneralMethods.load_turn_jump_data_general(path,out turn_data, out jump_data);
         }
         catch (Exception e)
         {
@@ -294,8 +291,8 @@ public class GameController_Setting : MonoBehaviour {
         Debug.Log("Loading complete! ");
         ReadFileIndicator.text = "Loading complete!";
 
-        DC_script.turn_data = new List<float>(this.turn_data);
-        DC_script.jump_data = new List<float>(this.jump_data);
+        DC_script.Current_TI.Turn_data = new List<float>(this.turn_data);
+        DC_script.Current_TI.Jump_data = new List<float>(this.jump_data);
     }
 
     private void display_list(IEnumerable list)

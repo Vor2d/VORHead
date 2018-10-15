@@ -8,6 +8,7 @@ using System.IO;
 public static class GeneralMethods {
 
     private static char[] file_spliter = new char[] { ' ', '\t' };
+    private const char line_separator = '_';
     private enum Direction { left, right };
 
     //y is horizontal; x is vertical;
@@ -162,7 +163,7 @@ public static class GeneralMethods {
                 if (section_state_GM)
                 {
                     string[] splitstr = reader.ReadLine().Split(file_spliter);
-                    if(splitstr[0][0] == '-')
+                    if(splitstr[0][0] == line_separator)
                     {
                         section_state_GM = false;
                         in_line_counter = 0;
@@ -192,7 +193,7 @@ public static class GeneralMethods {
                 else
                 {
                     string[] splitstr = reader.ReadLine().Split(file_spliter);
-                    if(splitstr[0][0] == '-')
+                    if(splitstr[0][0] == line_separator)
                     {
                         Section temp_section = new Section(temp_gameMode,temp_trialInfo);
                         sections.Add(temp_section);
@@ -229,6 +230,31 @@ public static class GeneralMethods {
         Debug.Log("Loading game data complete! ");
 
         return sections;
+    }
+
+    public static GameSetting read_game_setting_general(string path)
+    {
+        Dictionary<string, string> setting_dict = new Dictionary<string, string>();
+        GameSetting system_setting = new GameSetting();
+
+        try
+        {
+            StreamReader reader = new StreamReader(path);
+            while (!reader.EndOfStream)
+            {
+                string[] splitstr = reader.ReadLine().Split(new char[] { ' ', '\t' });
+                setting_dict.Add(splitstr[0], splitstr[1]);
+            }
+            reader.Close();
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+
+        system_setting.set_preset_setting(setting_dict);
+
+        return system_setting;
     }
 
     //Monitor Change Position General Method;

@@ -92,7 +92,7 @@ public class AutoLogSystem : MonoBehaviour {
             if (!File.Exists(file_name))
             {
                 file = new StreamWriter(file_name);
-                file.WriteLine(DC_script.VarToString());
+                file.WriteLine("Settings: "+DC_script.SystemSetting.VarToString());
             }
             else
             {

@@ -19,8 +19,8 @@ public class HeadSimulator : MonoBehaviour {
     void Start () {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
-        this.player_screen_cm = DC_script.Player_screen_cm;
-        this.screen_width_cm = DC_script.Screen_width_cm;
+        this.player_screen_cm = DC_script.SystemSetting.Player_screen_cm;
+        this.screen_width_cm = DC_script.SystemSetting.Screen_width_cm;
         //this.OriginalheadQ = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
         this.RRotateDegree = new Vector3();
         this.TrueHeadRR = new Vector3();
@@ -39,12 +39,13 @@ public class HeadSimulator : MonoBehaviour {
 
             TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
 
-            RRotateDegree = TrueHeadRR * DC_script.Gain;
+            RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
             Debug.Log("RRotateDegree " + RRotateDegree);
 
             transform.localEulerAngles =
-                GeneralMethods.RealToVirtual(DC_script.Player_screen_cm, DC_script.Screen_width_cm,
+                GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
                                                 RRotateDegree.x, RRotateDegree.y);
         }
         if(DC_script.UsingVRFlag)
