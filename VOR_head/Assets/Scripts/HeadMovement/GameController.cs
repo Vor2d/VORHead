@@ -97,7 +97,7 @@ public class GameController : MonoBehaviour {
 
         //this.ray_cast_scrip = Camera.main.GetComponent<RayCast>();
         this.ray_cast_scrip = HeadSimulator.GetComponent<RayCast>();
-        this.gaze_timer = DC_script.GazeTime;
+        this.gaze_timer = DC_script.Current_GM.GazeTime;
         this.gaze_timer_rand = DC_script.GazeTime;
         this.hide_gaze_timer = DC_script.GazeTime;
         this.tar_script = Target.GetComponent<Target>();
@@ -621,16 +621,7 @@ public class GameController : MonoBehaviour {
             GCAnimator.SetTrigger("NextStep");
         }
 
-        //center_rotatey = turn_degree;
-
-
-
-        //Debug.Log("last_rot_ang_dir " + last_rot_ang_dir);
-        //Debug.Log("trial_iter " + trial_iter);
-        //Debug.Log("current_rot_ang_dir " + current_rot_ang_dir);
-
         LPI_CP_script.changePosition(last_rot_ang_dir.x,0.0f, (int)last_rot_ang_dir.y,0);
-        //LPI_script.changePosition(30.0f, 1);
 
         trial_iter++;
         if (trial_iter >= turn_data.Count)

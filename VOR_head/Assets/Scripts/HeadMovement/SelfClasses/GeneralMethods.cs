@@ -112,32 +112,123 @@ public static class GeneralMethods {
         return VRrotation;
     }
 
-    public static void load_turn_jump_data_general(string path, 
-                                        out List<float> turn_data, out List<float> jump_data)
+    ////Load trials data;
+    //public static void load_turn_jump_data_general(string path, 
+    //                                    out List<float> turn_data, out List<float> jump_data)
+    //{
+    //    turn_data = new List<float>();
+    //    jump_data = new List<float>();
+    //    Debug.Log("Loading file " + path);
+    //    try
+    //    {
+    //        StreamReader reader = new StreamReader(path);
+    //        while (!reader.EndOfStream)
+    //        {
+
+
+    //            //Turn degrees '\t' jump degrees;
+    //            string[] splitstr = reader.ReadLine().Split(file_spliter);
+    //            turn_data.Add(float.Parse(splitstr[0]));
+    //            jump_data.Add(float.Parse(splitstr[1]));
+    //        }
+    //        reader.Close();
+
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.Log("Reading file error! " + e);
+    //    }
+    //    Debug.Log("Loading complete! ");
+    //}
+
+    //Load trials data with TrialInfo class
+    public static List<Section> load_game_data_general(string path)
     {
-        turn_data = new List<float>();
-        jump_data = new List<float>();
-        Debug.Log("Loading file " + path);
+        List<Section> sections = new List<Section>();
+
+        bool section_state_GM = true;
+        int in_line_counter = 0;
+        Dictionary<string, string> temp_para_dict = new Dictionary<string, string>();
+        GameMode temp_gameMode = new GameMode();
+        TrialInfo temp_trialInfo = new TrialInfo();
+
+        Debug.Log("Loading game data file " + path);
         try
         {
             StreamReader reader = new StreamReader(path);
             while (!reader.EndOfStream)
             {
+                in_line_counter++;
+                if (section_state_GM)
+                {
+                    string[] splitstr = reader.ReadLine().Split(file_spliter);
+                    if(splitstr[0][0] == '-')
+                    {
+                        section_state_GM = false;
+                        in_line_counter = 0;
+                        temp_gameMode.set_preset_para(temp_para_dict);
+                        continue;
+                    }
+                    else
+                    {
+                        if(in_line_counter == 1)
+                        {
+                            switch(splitstr[1])
+                            {
+                                case "A1":
+                                    {
+                                        temp_gameMode.
+                                            set_preset_mode(GameMode.GameModeEnum.A1);
+                                        break;
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            temp_para_dict.Add(splitstr[0], splitstr[1]);
+                        }
+                    }
+                }
+                else
+                {
+                    string[] splitstr = reader.ReadLine().Split(file_spliter);
+                    if(splitstr[0][0] == '-')
+                    {
+                        Section temp_section = new Section(temp_gameMode,temp_trialInfo);
+                        sections.Add(temp_section);
 
-
-                //Turn degrees '\t' jump degrees;
-                string[] splitstr = reader.ReadLine().Split(file_spliter);
-                turn_data.Add(float.Parse(splitstr[0]));
-                jump_data.Add(float.Parse(splitstr[1]));
+                        section_state_GM = true;
+                        in_line_counter = 0;
+                        temp_gameMode = new GameMode();
+                        temp_para_dict = new Dictionary<string, string>();
+                        temp_section = new Section();
+                        temp_trialInfo = new TrialInfo();
+                        continue;
+                    }
+                    else
+                    {
+                        if(in_line_counter == 1)
+                        {
+                            try { temp_trialInfo.Loop_number = Int32.Parse(splitstr[0]); }
+                            catch(Exception e) { Debug.Log(e); }
+                        }
+                        else
+                        {
+                            temp_trialInfo.Turn_data.Add(float.Parse(splitstr[0]));
+                            temp_trialInfo.Jump_data.Add(float.Parse(splitstr[1]));
+                        }
+                    }
+                }
             }
             reader.Close();
-
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             Debug.Log("Reading file error! " + e);
         }
-        Debug.Log("Loading complete! ");
+        Debug.Log("Loading game data complete! ");
+
+        return sections;
     }
 
     //Monitor Change Position General Method;
