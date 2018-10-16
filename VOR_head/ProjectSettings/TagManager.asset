@@ -14,6 +14,8 @@ TagManager:
   - HideDetector
   - City
   - Explode
+  - FrontBorder
+  - TDMissile
   layers:
   - Default
   - TransparentFX
