@@ -62,6 +62,7 @@ public class GameMode
             case GameModeEnum.A1:
                 {
                     HideFlag = true;
+                    ShowTargetFlag = true;
                     break;
                 }
             case GameModeEnum.A2:
@@ -75,7 +76,7 @@ public class GameMode
     public void set_preset_para(Dictionary<string,string> para_dict)
     {
         try { GazeTime = float.Parse(para_dict["GazeTime"]); }
-        catch { GazeTime = 2.0f; }
+        catch { GazeTime = 3.0f; }
         try { HideTime = float.Parse(para_dict["HideTime"]); }
         catch { HideTime = 0.2f; }
         try { ErrorTime = float.Parse(para_dict["ErrorTime"]); }
@@ -86,8 +87,6 @@ public class GameMode
         catch { StopWinodow = 0.1f; }
         try { Gain = float.Parse(para_dict["Gain"]); }
         catch { Gain = 1.0f; }
-        try { GazeTime = float.Parse(para_dict["GazeTime"]); }
-        catch { GazeTime = 2.0f; }
     }
 
     public string VarToString()

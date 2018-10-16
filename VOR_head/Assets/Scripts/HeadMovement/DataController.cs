@@ -54,7 +54,12 @@ public class DataController : MonoBehaviour {
         //    Debug.Log("------------------------");
         //}
 
-        Debug.Log("SystemSetting "+ SystemSetting.VarToString());
+        //Debug.Log("SystemSetting "+ SystemSetting.VarToString());
+
+        foreach(Section section in Sections)
+        {
+            Debug.Log(section.SectionTrialInfo.VarToString());
+        }
     }
 
 

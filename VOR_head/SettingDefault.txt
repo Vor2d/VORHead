@@ -1,4 +1,4 @@
-PlayerScreenCM	50
-ScreenWidthCM	40
+PlayerScreenCM	100
+ScreenWidthCM	100
 Camera1Display	1
 Camera2Display	0

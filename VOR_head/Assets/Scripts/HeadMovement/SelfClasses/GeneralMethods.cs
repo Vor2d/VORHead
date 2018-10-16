@@ -182,6 +182,12 @@ public static class GeneralMethods {
                                             set_preset_mode(GameMode.GameModeEnum.A1);
                                         break;
                                     }
+                                case "A2":
+                                    {
+                                        temp_gameMode.
+                                            set_preset_mode(GameMode.GameModeEnum.A2);
+                                        break;
+                                    }
                             }
                         }
                         else
@@ -237,6 +243,7 @@ public static class GeneralMethods {
         Dictionary<string, string> setting_dict = new Dictionary<string, string>();
         GameSetting system_setting = new GameSetting();
 
+        Debug.Log("Loading game settings.");
         try
         {
             StreamReader reader = new StreamReader(path);
@@ -249,8 +256,10 @@ public static class GeneralMethods {
         }
         catch(Exception e)
         {
-            Debug.Log(e);
+            Debug.Log("Reading file error! "+e);
         }
+        Debug.Log("Loading game settings complete.");
+
 
         system_setting.set_preset_setting(setting_dict);
 

@@ -84,6 +84,7 @@ public class GameController : MonoBehaviour {
     private Vector2 current_rot_ang_dir;
     private float hide_gaze_timer;
     private float gaze_timer_rand;
+    private int section_number;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -138,6 +139,7 @@ public class GameController : MonoBehaviour {
         this.loop_iter = -1;
         this.Hide_raycast_flag = false;
         this.LPI_CP_script = LastPosIndocator.GetComponent<ChangePosition>();
+        this.section_number = 0;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -608,51 +610,71 @@ public class GameController : MonoBehaviour {
         {
             restar_script.turn_off_mesh();
         }
-        //if(DC_script.HideFlag)
-        //{
-        //    tar_script.turn_on_tobjmesh();
-        //}
+
         if (trial_iter < 0)
         {
-            //Debug.Log("Trial2 " + trial_iter);
             last_rot_ang_dir = new Vector2(0.0f, 0.0f);
+            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0);
+            trial_iter++;
             GCAnimator.SetTrigger("FirstLoopNext");
         }
         else
         {
             last_rot_ang_dir = current_rot_ang_dir;
-            GCAnimator.SetTrigger("NextStep");
-        }
-
-        LPI_CP_script.changePosition(last_rot_ang_dir.x,0.0f, (int)last_rot_ang_dir.y,0);
-
-        trial_iter++;
-        if (trial_iter >= turn_data.Count)
-        {
-            loop_iter++;
-            if (DC_script.Current_TI.Loop_number == -1 
-                    || loop_iter < DC_script.Current_TI.Loop_number)
+            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0);
+            trial_iter++;
+            if (trial_iter >= turn_data.Count)
             {
-                trial_iter = 0;
+                loop_iter++;
+                if (DC_script.Current_TI.Loop_number == -1
+                        || loop_iter < DC_script.Current_TI.Loop_number)
+                {
+                    trial_iter = 0;
+                    GCAnimator.SetTrigger("NextStep");
+                }
+                else 
+                {
+                    loop_iter = -1;
+                    trial_iter = -1;
+                    section_number++;
+                    if (section_number < DC_script.Sections.Count)
+                    {
+                        GCAnimator.SetTrigger("UpdateDC");
+                    }
+                    else
+                    {
+                        GCAnimator.SetTrigger("Finished");
+                    }
+                }
             }
             else
             {
-                trial_iter = -1;
-                GCAnimator.SetTrigger("UpdateDC");
-                //SceneManager.LoadScene("HeadMFinish");
-                //GCAnimator.SetTrigger("Finished");
+                GCAnimator.SetTrigger("NextStep");
             }
+            
         }
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
+        Debug.Log("Section " + section_number);
+        //Debug.Log("DC_script.Current_TI " + DC_script.Current_TI.Loop_number);
+    }
+
+    public void ToUpdateDC()
+    {
+        Debug.Log("ToUpdateDC");
+
+        DC_script.Current_GM = DC_script.Sections[section_number].SectionGameMode;
+        DC_script.Current_TI = DC_script.Sections[section_number].SectionTrialInfo;
+        turn_data = DC_script.Current_TI.Turn_data;
+        jump_data = DC_script.Current_TI.Jump_data;
+        update_Animator();
+
+        GCAnimator.SetTrigger("NextStep");
     }
 
     public void ToInit()
     {
-        GCAnimator.SetBool("HideFlag", DC_script.Current_GM.HideFlag);
-        GCAnimator.SetBool("JumpFlag", DC_script.Current_GM.JumpFlag);
-        GCAnimator.SetBool("ShowTargetFlag", DC_script.Current_GM.ShowTargetFlag);
-        GCAnimator.SetBool("SkipCenter", DC_script.Current_GM.SkipCenterFlag);
+        update_Animator();
         trial_iter = -1;
         ToReset();
     }
@@ -730,6 +752,14 @@ public class GameController : MonoBehaviour {
     private void restart_scene()
     {
         SceneManager.LoadScene("HeadMovement");
+    }
+
+    private void update_Animator()
+    {
+        GCAnimator.SetBool("HideFlag", DC_script.Current_GM.HideFlag);
+        GCAnimator.SetBool("JumpFlag", DC_script.Current_GM.JumpFlag);
+        GCAnimator.SetBool("ShowTargetFlag", DC_script.Current_GM.ShowTargetFlag);
+        GCAnimator.SetBool("SkipCenter", DC_script.Current_GM.SkipCenterFlag);
     }
 
 }
