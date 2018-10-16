@@ -661,7 +661,7 @@ public class GameController : MonoBehaviour {
 
     public void ToUpdateDC()
     {
-        Debug.Log("ToUpdateDC");
+        //Debug.Log("ToUpdateDC");
 
         DC_script.Current_GM = DC_script.Sections[section_number].SectionGameMode;
         DC_script.Current_TI = DC_script.Sections[section_number].SectionTrialInfo;

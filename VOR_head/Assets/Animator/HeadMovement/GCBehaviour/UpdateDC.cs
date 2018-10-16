@@ -4,14 +4,22 @@ using UnityEngine;
 
 public class UpdateDC : StateMachineBehaviour {
 
-    GameController GC_script;
+    private GameController GC_script;
+    private JumpLogSystem JLS_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
+        this.JLS_script = GameObject.Find("LogSystem").GetComponent<JumpLogSystem>();
+
+        GC_script.Current_state = "ToUpdateDC";
 
         GC_script.ToUpdateDC();
+
+        GC_script.update_SS();
+        JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter,
+                        "Update Game Mode", GC_script.turn_degree, GC_script.turn_direct);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

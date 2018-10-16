@@ -6,14 +6,14 @@ public class ToHide : StateMachineBehaviour {
 
     private GameController GC_script;
     private JumpLogSystem JLS_script;
-    private DataController DC_script;
+    //private DataController DC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
         this.JLS_script = GameObject.Find("LogSystem").GetComponent<JumpLogSystem>();
-        this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+        //this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
         GC_script.Current_state = "ToHide";
 
         //GC_script.Hide_timer = DC_script.HideTime +
