@@ -53,6 +53,7 @@ public class GameController : MonoBehaviour {
     public bool Target_raycast_flag { get; set; }
     public bool Hide_raycast_flag { get; set; }
     public float Hide_timer { get; set; }
+    public int section_number { get; set; }
     public int loop_iter { get; set; }
 
 
@@ -84,7 +85,6 @@ public class GameController : MonoBehaviour {
     private Vector2 current_rot_ang_dir;
     private float hide_gaze_timer;
     private float gaze_timer_rand;
-    private int section_number;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;

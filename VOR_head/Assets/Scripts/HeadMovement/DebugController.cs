@@ -9,7 +9,7 @@ public class DebugController : MonoBehaviour {
     const string ST_init_text = "Current State: ";
     const string VRLST_init_text = "VR Logging: ";    //VRLoggingState init text;
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
-    const string LTN_init_text = "Loop and Trial Iterator: ";
+    const string LTN_init_text = "Loop and Trial and Section Iterator: ";
 
     public GameController GC_script;
     //public GameController_Setting GC_S_script;
@@ -39,6 +39,7 @@ public class DebugController : MonoBehaviour {
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
         JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;
         LoopTrialNumber_Text.text = LTN_init_text + GC_script.loop_iter.ToString()
-                                            + "\t & \t" + GC_script.trial_iter.ToString();
+                                            + "\t & \t" + GC_script.trial_iter.ToString()
+                                            + "\t & \t" + GC_script.section_number;
     }
 }
