@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameMode
 {
-    public enum GameModeEnum { Default,A1,A2,B1}
+    public enum GameModeEnum { Default, Test, Feedback_Learning, Jump_Learning }
 
     //Game Flag
     public bool HideFlag { get; set; }
@@ -59,14 +59,20 @@ public class GameMode
                     HideHeadIndicator = false;
                     break;
                 }
-            case GameModeEnum.A1:
+            case GameModeEnum.Test:
+                {
+                    HideFlag = true;
+                    HideHeadIndicator = true;
+                    break;
+                }
+            case GameModeEnum.Feedback_Learning:
+                {
+                    break;
+                }
+            case GameModeEnum.Jump_Learning:
                 {
                     HideFlag = true;
                     ShowTargetFlag = true;
-                    break;
-                }
-            case GameModeEnum.A2:
-                {
                     JumpFlag = true;
                     break;
                 }

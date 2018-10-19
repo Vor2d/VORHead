@@ -176,16 +176,28 @@ public static class GeneralMethods {
                         {
                             switch(splitstr[1])
                             {
-                                case "A1":
+                                case "Test":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.A1);
+                                            set_preset_mode(GameMode.GameModeEnum.Test);
                                         break;
                                     }
-                                case "A2":
+                                case "Feedback_Learning":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.A2);
+                                            set_preset_mode(GameMode.GameModeEnum.Feedback_Learning);
+                                        break;
+                                    }
+                                case "Jump_Learning":
+                                    {
+                                        temp_gameMode.
+                                            set_preset_mode(GameMode.GameModeEnum.Jump_Learning);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        temp_gameMode.
+                                            set_preset_mode(GameMode.GameModeEnum.Default);
                                         break;
                                     }
                             }
