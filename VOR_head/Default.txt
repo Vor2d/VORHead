@@ -1,4 +1,4 @@
-GameMode	Jump_Learning
+GameMode	Test
 ________________________________
 0
 10	15

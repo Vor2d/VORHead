@@ -78,8 +78,8 @@ public class CoilData : MonoBehaviour {
         catch (Exception e)
         {
             Debug.Log(e);
-            Debug.Log("[polhemus] PlStream terminated in PlStream::read_liberty()");
-            Console.WriteLine("[polhemus] PlStream terminated in PlStream::read_liberty().");
+            Debug.Log("read coil terminated");
+            //Console.WriteLine("[polhemus] PlStream terminated in PlStream::read_liberty().");
         }
         finally
         {
@@ -110,7 +110,7 @@ public class CoilData : MonoBehaviour {
         catch (Exception e)
         {
             Debug.Log(e);
-            Debug.Log("[polhemus] PlStream was unable to close the connection thread upon application exit. This is not a critical exception.");
+            Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
         }
     }
 }

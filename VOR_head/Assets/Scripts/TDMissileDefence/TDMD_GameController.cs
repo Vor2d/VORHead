@@ -7,6 +7,8 @@ public class TDMD_GameController : MonoBehaviour {
     public GameObject MissilePrefab;
     public Transform PlayerTransform;
 
+    public bool Fire_flag { get; set; }
+
     public float MissileIntervalTime = 3.0f;
     public float MissileInitZ;
     public float InstRandomRangeX = 9.0f;
@@ -23,13 +25,22 @@ public class TDMD_GameController : MonoBehaviour {
         this.wait_missile_timer = false;
         this.miss_interval_timer = MissileIntervalTime;
         this.TDMD_GCAnimator = GetComponent<Animator>();
+        this.Fire_flag = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if(wait_missile_timer)
+        Fire_flag = false;
+
+
+        if (wait_missile_timer)
         {
             miss_interval_timer -= Time.deltaTime;
+        }
+
+        if(Input.GetKeyDown(KeyCode.JoystickButton0))
+        {
+            Fire_flag = true;
         }
 	}
 

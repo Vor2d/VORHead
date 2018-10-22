@@ -173,12 +173,13 @@ public class GameController_Setting : MonoBehaviour {
     {
         try
         {
-            DC_script.Current_GM.GazeTime = float.Parse(GazeTime_IF.text);
-            DC_script.Current_GM.HideTime = float.Parse(HideTime_IF.text);
-            DC_script.Current_GM.ErrorTime = float.Parse(ErrorTime_IF.text);
-            DC_script.Current_GM.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
-            DC_script.Current_GM.StopWinodow = float.Parse(StopWinodow_IF.text);
-            DC_script.Current_GM.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
+            DC_script.SystemSetting.GazeTime = float.Parse(GazeTime_IF.text);
+            DC_script.SystemSetting.HideTime = float.Parse(HideTime_IF.text);
+            DC_script.SystemSetting.ErrorTime = float.Parse(ErrorTime_IF.text);
+            DC_script.SystemSetting.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
+            DC_script.SystemSetting.StopWinodow = float.Parse(StopWinodow_IF.text);
+            DC_script.SystemSetting.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
+
             DC_script.Current_GM.Gain = float.Parse(Gain_IF.text);
         }
         catch(Exception e)
@@ -247,12 +248,12 @@ public class GameController_Setting : MonoBehaviour {
         HideHeadIndicatorToggle.isOn = DC_script.Current_GM.HideHeadIndicator;
         try
         {
-            GazeTime_IF.text = DC_script.Current_GM.GazeTime.ToString("F2");
-            HideTime_IF.text = DC_script.Current_GM.HideTime.ToString("F2");
-            ErrorTime_IF.text = DC_script.Current_GM.ErrorTime.ToString("F2");
-            SpeedThreshold_IF.text = DC_script.Current_GM.SpeedThreshold.ToString("F2");
-            StopWinodow_IF.text = DC_script.Current_GM.StopWinodow.ToString("F2");
-            RandomGazeTime_IF.text = DC_script.Current_GM.RandomGazeTime.ToString("F2");
+            GazeTime_IF.text = DC_script.SystemSetting.GazeTime.ToString("F2");
+            HideTime_IF.text = DC_script.SystemSetting.HideTime.ToString("F2");
+            ErrorTime_IF.text = DC_script.SystemSetting.ErrorTime.ToString("F2");
+            SpeedThreshold_IF.text = DC_script.SystemSetting.SpeedThreshold.ToString("F2");
+            StopWinodow_IF.text = DC_script.SystemSetting.StopWinodow.ToString("F2");
+            RandomGazeTime_IF.text = DC_script.SystemSetting.RandomGazeTime.ToString("F2");
             Gain_IF.text = DC_script.Current_GM.Gain.ToString("F2");
         }
         catch (Exception e)

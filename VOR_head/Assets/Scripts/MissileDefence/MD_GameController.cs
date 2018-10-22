@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class MD_GameController : MonoBehaviour {
 
+    public MD_TargetRayCast MDTRC_script;
+    public GameObject ExplodePrefab;
+
     public bool City_destroied { get; set; }
 
     public float InstRandomRange = 9.0f;
@@ -89,5 +92,17 @@ public class MD_GameController : MonoBehaviour {
         cities = GameObject.FindGameObjectsWithTag("City");
         city_number = cities.Length;
         Debug.Log("city_number " + city_number);
+    }
+
+    public void IE_with_raycast()
+    {
+        instantiate_explode(MDTRC_script.Hit_position);
+    }
+
+    private void instantiate_explode(Vector3 target_pos)
+    {
+        GameObject explode =
+                    Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
+        explode.GetComponent<Explode>().start_exp();
     }
 }

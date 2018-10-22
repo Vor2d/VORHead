@@ -14,13 +14,10 @@ public class GameMode
     public bool SkipCenterFlag { get; set; }
     public bool HideHeadIndicator { get; set; }
     //Variables;
-    public float GazeTime { get; set; }
-    public float RandomGazeTime { get; set; }
-    public float HideTime { get; set; }
-    public float ErrorTime { get; set; }
-    public float SpeedThreshold { get; set; }
-    public float StopWinodow { get; set; }
     public float Gain { get; set; }
+
+    public GameModeEnum game_mode { get; set; }
+    //public string game_mode_str{ get; set; }
 
     public GameMode()
     {
@@ -36,18 +33,16 @@ public class GameMode
         this.HeadIndicatorChange = other_GM.HeadIndicatorChange;
         this.SkipCenterFlag = other_GM.SkipCenterFlag;
         this.HideHeadIndicator = other_GM.HideHeadIndicator;
-        this.GazeTime = other_GM.GazeTime;
-        this.RandomGazeTime = other_GM.RandomGazeTime;
-        this.HideTime = other_GM.HideTime;
-        this.ErrorTime = other_GM.ErrorTime;
-        this.SpeedThreshold = other_GM.SpeedThreshold;
-        this.StopWinodow = other_GM.StopWinodow;
+
         this.Gain = other_GM.Gain;
+
+        this.game_mode = other_GM.game_mode;
     }
 
     public void set_preset_mode(GameModeEnum GM_preset)
     {
-        switch(GM_preset)
+        game_mode = GM_preset;
+        switch (GM_preset)
         {
             case GameModeEnum.Default:
                 {
@@ -63,14 +58,17 @@ public class GameMode
                 {
                     HideFlag = true;
                     HideHeadIndicator = true;
+                    SkipCenterFlag = true;
                     break;
                 }
             case GameModeEnum.Feedback_Learning:
                 {
+                    SkipCenterFlag = true;
                     break;
                 }
             case GameModeEnum.Jump_Learning:
                 {
+                    SkipCenterFlag = true;
                     HideFlag = true;
                     ShowTargetFlag = true;
                     JumpFlag = true;
@@ -81,34 +79,50 @@ public class GameMode
 
     public void set_preset_para(Dictionary<string,string> para_dict)
     {
-        try { GazeTime = float.Parse(para_dict["GazeTime"]); }
-        catch { GazeTime = 3.0f; }
-        try { HideTime = float.Parse(para_dict["HideTime"]); }
-        catch { HideTime = 0.2f; }
-        try { ErrorTime = float.Parse(para_dict["ErrorTime"]); }
-        catch { ErrorTime = 2.0f; }
-        try { SpeedThreshold = float.Parse(para_dict["SpeedThreshold"]); }
-        catch { SpeedThreshold = 10.0f; }
-        try { StopWinodow = float.Parse(para_dict["StopWinodow"]); }
-        catch { StopWinodow = 0.1f; }
         try { Gain = float.Parse(para_dict["Gain"]); }
         catch { Gain = 1.0f; }
     }
 
     public string VarToString()
     {
+        
+
         string result_str = "";
+
+        string game_mode_str = "";
+        switch (game_mode)
+        {
+            case GameModeEnum.Default:
+                {
+                    game_mode_str = "Default";
+                    break;
+                }
+            case GameModeEnum.Test:
+                {
+                    game_mode_str = "Test";
+                    break;
+                }
+            case GameModeEnum.Feedback_Learning:
+                {
+                    game_mode_str = "Feedback_Learning";
+                    break;
+                }
+            case GameModeEnum.Jump_Learning:
+                {
+                    game_mode_str = "Jump_Learning";
+                    break;
+                }
+        }
+
+        result_str += "GameMode" + " " + game_mode_str + " ";
 
         result_str += "HideFlag" + " " + HideFlag.ToString() + " ";
         result_str += "JumpFlag" + " " + JumpFlag.ToString() + " ";
         result_str += "ShowTargetFlag" + " " + ShowTargetFlag.ToString() + " ";
         result_str += "HeadIndicatorChange" + " " + HeadIndicatorChange.ToString() + " ";
         result_str += "SkipCenterFlag" + " " + SkipCenterFlag.ToString() + " ";
-        result_str += "GazeTime" + " " + GazeTime.ToString() + " ";
-        result_str += "RandomGazeTime" + " " + RandomGazeTime.ToString() + " ";
-        result_str += "HideTime" + " " + HideTime.ToString() + " ";
-        result_str += "SpeedThreshold" + " " + SpeedThreshold.ToString() + " ";
-        result_str += "StopWinodow" + " " + StopWinodow.ToString() + " ";
+        result_str += "HideHeadIndicator" + " " + HideHeadIndicator.ToString() + " ";
+
         result_str += "Gain" + " " + Gain.ToString() + " ";
 
         return result_str;

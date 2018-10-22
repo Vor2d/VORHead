@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Aim : MonoBehaviour {
 
-    public GameObject ExplodePrefab;
+    public MD_GameController MDGC_script;
 
 	// Use this for initialization
 	void Start () {
@@ -13,17 +13,17 @@ public class Aim : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0))
+
+        //if(OVRInput.Get(OVRInput.Button.One))
+        //{
+        //    Debug.Log("OVRInput.Get(OVRInput.Button.One)");
+        //    MDGC_script.IE_with_raycast();
+        //}
+
+        if(Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            Vector2 mouse_pos = Input.mousePosition;
-            Vector3 click_pos = new Vector3();
-            click_pos = Camera.main.ScreenToWorldPoint(
-                                new Vector3(mouse_pos.x, mouse_pos.y, 10.0f));
-
-            GameObject explode =
-                        Instantiate(ExplodePrefab, click_pos, Quaternion.identity);
-            explode.GetComponent<Explode>().start_exp();
-
+            //Debug.Log("Input.GetKeyDown(KeyCode.JoystickButton0)");
+            MDGC_script.IE_with_raycast();
         }
     }
 }

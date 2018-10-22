@@ -124,6 +124,35 @@ public class JumpLogSystem : MonoBehaviour
         }
     }
 
+    public void log_updateDC(uint stimulink_sample, int trail_number, string updateDC_log)
+    {
+        time_stamp = stop_watch.ElapsedMilliseconds;
+        if (log_state_flag)
+        {
+            JumpLog.Append(time_stamp.ToString());
+            JumpLog.Append("\t");
+            JumpLog.Append(stimulink_sample.ToString());
+            JumpLog.Append("\t");
+            JumpLog.Append(trail_number.ToString());
+            JumpLog.Append("\t");
+            JumpLog.Append(updateDC_log);
+            JumpLog.Append("\t");
+            JumpLog.AppendLine();
+        }
+        if (log_state_flag && ALS_script.JumpAutoLog_On)
+        {
+            ALS_script.JumpAutoLog_string.Append(time_stamp.ToString());
+            ALS_script.JumpAutoLog_string.Append("\t");
+            ALS_script.JumpAutoLog_string.Append(stimulink_sample.ToString());
+            ALS_script.JumpAutoLog_string.Append("\t");
+            ALS_script.JumpAutoLog_string.Append(trail_number.ToString());
+            ALS_script.JumpAutoLog_string.Append("\t");
+            ALS_script.JumpAutoLog_string.Append(updateDC_log);
+            ALS_script.JumpAutoLog_string.Append("\t");
+            ALS_script.JumpAutoLog_string.AppendLine();
+        }
+    }
+
     //private void turn_on_Log()
     //{
         
@@ -214,7 +243,7 @@ public class JumpLogSystem : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(e);
-            Debug.Log("[polhemus] PlStream was unable to close the connection thread upon application exit. This is not a critical exception.");
+            Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
         }
     }
 }

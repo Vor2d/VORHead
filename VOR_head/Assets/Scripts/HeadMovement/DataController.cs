@@ -43,22 +43,18 @@ public class DataController : MonoBehaviour {
 
     private void Start()
     {
-        //foreach (Section section in Sections)
-        //{
-        //    Debug.Log("GM "+section.SectionGameMode.VarToString());
-        //    foreach(float turn in section.SectionTrialInfo.Turn_data)
-        //    {
-        //        Debug.Log("TD size" + section.SectionTrialInfo.Turn_data.Count);
-        //        Debug.Log("TD" + turn);
-        //    }
-        //    Debug.Log("------------------------");
-        //}
+        Debug.Log("SystemSetting " + SystemSetting.VarToString());
 
-        //Debug.Log("SystemSetting "+ SystemSetting.VarToString());
+        foreach (Section section in Sections)
+        {
+            Debug.Log("GM " + section.SectionGameMode.VarToString());
+            Debug.Log("-------------------");
+        }
 
-        foreach(Section section in Sections)
+        foreach (Section section in Sections)
         {
             Debug.Log(section.SectionTrialInfo.VarToString());
+            Debug.Log("-------------------");
         }
     }
 

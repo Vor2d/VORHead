@@ -98,9 +98,9 @@ public class GameController : MonoBehaviour {
 
         //this.ray_cast_scrip = Camera.main.GetComponent<RayCast>();
         this.ray_cast_scrip = HeadSimulator.GetComponent<RayCast>();
-        this.gaze_timer = DC_script.Current_GM.GazeTime;
-        this.gaze_timer_rand = DC_script.Current_GM.GazeTime;
-        this.hide_gaze_timer = DC_script.Current_GM.GazeTime;
+        this.gaze_timer = DC_script.SystemSetting.GazeTime;
+        this.gaze_timer_rand = DC_script.SystemSetting.GazeTime;
+        this.hide_gaze_timer = DC_script.SystemSetting.GazeTime;
         this.tar_script = Target.GetComponent<Target>();
         this.restar_script = ResultTarget.GetComponent<ResultTarget>();
         //this.SNJstatus = SNJSteps.ToReset;
@@ -110,12 +110,12 @@ public class GameController : MonoBehaviour {
         this.GCAnimator = GetComponent<Animator>();
         this.head_speed_flag = false;
         this.Check_speed_flag = false;
-        this.Hide_timer = DC_script.Current_GM.HideTime;
+        this.Hide_timer = DC_script.SystemSetting.HideTime;
         this.Hide_time_flag = false;
         this.Check_stop_flag = false;
         this.stopped_flag = false;
         this.head_speed_y = 0.0f;
-        this.error_timer = DC_script.Current_GM.ErrorTime;
+        this.error_timer = DC_script.SystemSetting.ErrorTime;
         //this.indi_text1 = GameObject.Find("IndicatorText1");
         //this.head_indicator = GameObject.Find("HeadIndicator");
         this.turn_data = new List<float>(DC_script.Current_TI.Turn_data);
@@ -123,7 +123,7 @@ public class GameController : MonoBehaviour {
         this.jump_data = new List<float>(DC_script.Current_TI.Jump_data);
         //this.HSC_script = GetComponent<HeadStateController>();
         //this.LPI_script = LastPosIndocator.GetComponent<LastPosIndicator>();
-        this.stop_window_timer = DC_script.Current_GM.StopWinodow;
+        this.stop_window_timer = DC_script.SystemSetting.StopWinodow;
         this.Target_raycast_flag = true;
         this.HS_script = HeadSimulator.GetComponent<HeadSimulator>();
         //this.HI_CP_script = HeadIndicator.GetComponent<ChangePosition>();
@@ -147,14 +147,7 @@ public class GameController : MonoBehaviour {
         if (Display.displays.Length > 1)
             Display.displays[1].Activate();
 
-        if(!DC_script.Current_GM.HideHeadIndicator)
-        {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
-        }
-        else
-        {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
-        }
+
 
     }
 
@@ -218,7 +211,7 @@ public class GameController : MonoBehaviour {
             }
             else
             {
-                stop_window_timer = DC_script.Current_GM.StopWinodow;
+                stop_window_timer = DC_script.SystemSetting.StopWinodow;
             }
         }
 
@@ -300,9 +293,9 @@ public class GameController : MonoBehaviour {
 
     public void ToCenterGaze()
     {
-        gaze_timer_rand = DC_script.Current_GM.GazeTime +
-                UnityEngine.Random.Range(-DC_script.Current_GM.RandomGazeTime,
-                                            DC_script.Current_GM.RandomGazeTime);
+        gaze_timer_rand = DC_script.SystemSetting.GazeTime +
+                UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
+                                            DC_script.SystemSetting.RandomGazeTime);
     }
 
     public void CenterGaze()
@@ -319,9 +312,9 @@ public class GameController : MonoBehaviour {
             Hide_raycast_flag = true;
         }
 
-        gaze_timer_rand = DC_script.Current_GM.GazeTime +
-                UnityEngine.Random.Range(-DC_script.Current_GM.RandomGazeTime,
-                                            DC_script.Current_GM.RandomGazeTime);
+        gaze_timer_rand = DC_script.SystemSetting.GazeTime +
+                UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
+                                            DC_script.SystemSetting.RandomGazeTime);
 
     }
 
@@ -422,7 +415,7 @@ public class GameController : MonoBehaviour {
         {
             tar_script.turn_off_all_tmesh();
             GCAnimator.SetTrigger("NextStep");
-            Hide_timer = DC_script.Current_GM.HideTime;
+            Hide_timer = DC_script.SystemSetting.HideTime;
         }
     }
 
@@ -477,7 +470,7 @@ public class GameController : MonoBehaviour {
         {
             head_speed_y = GeneralMethods.getVRspeed().y;
         }
-        if (Mathf.Abs(head_speed_y) > DC_script.Current_GM.SpeedThreshold)
+        if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
         {
             GCAnimator.SetTrigger("NextStep");
             return;
@@ -507,7 +500,7 @@ public class GameController : MonoBehaviour {
         {
             GCAnimator.SetTrigger("NextStep");
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
-            stop_window_timer = DC_script.Current_GM.StopWinodow;
+            stop_window_timer = DC_script.SystemSetting.StopWinodow;
             //stopped_flag = false;
         }
     }
@@ -590,7 +583,7 @@ public class GameController : MonoBehaviour {
         {
             GCAnimator.SetTrigger("NextStep");
             Error_time_flag = false;    //One more setp;
-            error_timer = DC_script.Current_GM.ErrorTime;
+            error_timer = DC_script.SystemSetting.ErrorTime;
         }
     }
 
@@ -609,6 +602,14 @@ public class GameController : MonoBehaviour {
         if(ShowResultFlag)
         {
             restar_script.turn_off_mesh();
+        }
+        if (!DC_script.Current_GM.HideHeadIndicator)
+        {
+            HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+        }
+        else
+        {
+            HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
         }
 
         if (trial_iter < 0)
@@ -656,13 +657,10 @@ public class GameController : MonoBehaviour {
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
         Debug.Log("Section " + section_number);
-        //Debug.Log("DC_script.Current_TI " + DC_script.Current_TI.Loop_number);
     }
 
     public void ToUpdateDC()
     {
-        //Debug.Log("ToUpdateDC");
-
         DC_script.Current_GM = DC_script.Sections[section_number].SectionGameMode;
         DC_script.Current_TI = DC_script.Sections[section_number].SectionTrialInfo;
         turn_data = DC_script.Current_TI.Turn_data;

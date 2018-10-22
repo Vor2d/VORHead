@@ -2,27 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpdateDC : StateMachineBehaviour {
+public class StartJumpLog : StateMachineBehaviour {
 
-    private GameController GC_script;
     private JumpLogSystem JLS_script;
-    private DataController DC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
-        this.JLS_script = GameObject.Find("LogSystem").GetComponent<JumpLogSystem>();
-        this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+        if (JLS_script == null)
+        {
+            JLS_script = GameObject.Find("LogSystem").GetComponent<JumpLogSystem>();
+        }
+        
+        if(!JLS_script.log_state_flag)
+        {
+            JLS_script.toggle_Log();
+        }
 
-        GC_script.Current_state = "ToUpdateDC";
-
-        GC_script.ToUpdateDC();
-
-        GC_script.update_SS();
-        JLS_script.log_updateDC(GC_script.simulink_sample, GC_script.trial_iter,
-                                DC_script.Current_GM.VarToString());
-                        
+        animator.SetTrigger("NextStep");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

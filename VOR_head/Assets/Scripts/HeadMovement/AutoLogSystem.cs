@@ -132,7 +132,7 @@ public class AutoLogSystem : MonoBehaviour {
         catch (Exception e)
         {
             Debug.Log(e);
-            Debug.Log("[polhemus] PlStream was unable to close the connection thread upon application exit. This is not a critical exception.");
+            Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
         }
     }
 

@@ -16,6 +16,7 @@ TagManager:
   - Explode
   - FrontBorder
   - TDMissile
+  - MD_TargetBorder
   layers:
   - Default
   - TransparentFX

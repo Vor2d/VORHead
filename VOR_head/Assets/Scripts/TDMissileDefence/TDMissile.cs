@@ -5,13 +5,17 @@ using UnityEngine;
 public class TDMissile : MonoBehaviour
 {
     //public Transform PlayerTransform;
+    public Transform AimITransform;
 
     public float Speed = 0.5f;
+
     public bool Aimed_flag { get; set; }
 
     private bool start_flag;
     private Vector3 target_pos;
     private bool AimI_mesh_flag;
+
+    private TDMD_GameController TDMDGC_script;
 
     //Need to init objects here since it is a prefab;
     private void Awake()
@@ -19,6 +23,8 @@ public class TDMissile : MonoBehaviour
         this.target_pos = new Vector3();
         this.start_flag = false;
         this.AimI_mesh_flag = false;
+        this.TDMDGC_script = 
+            GameObject.Find("TDMD_GameController").GetComponent<TDMD_GameController>();
     }
 
     // Use this for initialization
@@ -36,9 +42,9 @@ public class TDMissile : MonoBehaviour
             turn_on_AimI();
             Aimed_flag = false;
 
-            if(Input.GetMouseButtonDown(0))
+            if(TDMDGC_script.Fire_flag)
             {
-                Destroy(gameObject);
+                being_fired();
             }
         }
     }
@@ -80,22 +86,27 @@ public class TDMissile : MonoBehaviour
 
     private void turn_on_AimI()
     {
-        Transform AimI_transform = transform.Find("AimIndicator");
-        if (!AimI_mesh_flag && AimI_transform != null)
+        //Transform AimI_transform = transform.Find("AimIndicator");
+        if (!AimI_mesh_flag && AimITransform != null)
         {
-            AimI_transform.gameObject.GetComponent<AimInticator>().turn_on_mesh();
+            AimITransform.gameObject.GetComponent<AimInticator>().turn_on_mesh();
             AimI_mesh_flag = true;
         }
     }
 
     private void turn_off_AimI()
     {
-        Transform AimI_transform = transform.Find("AimIndicator");
-        if (AimI_mesh_flag && AimI_transform != null)
+        //Transform AimI_transform = transform.Find("AimIndicator");
+        if (AimI_mesh_flag && AimITransform != null)
         {
-            AimI_transform.gameObject.GetComponent<AimInticator>().turn_off_mesh();
+            AimITransform.gameObject.GetComponent<AimInticator>().turn_off_mesh();
             AimI_mesh_flag = false;
         }
+    }
+
+    private void being_fired()
+    {
+        Destroy(gameObject);
     }
 
 }
