@@ -1,0 +1,2 @@
+Settings: Player_screen_cm 100 Screen_width_cm 100 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 
+

@@ -732,6 +732,26 @@ public class GameController : MonoBehaviour {
         IndiText1.GetComponent<Renderer>().enabled = true;
     }
 
+    public void ToHideHeadIndicator()
+    {
+        if(DC_script.Current_GM.HeadIndicatorChange)
+        {
+            HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+        }
+        
+        GCAnimator.SetTrigger("NextStep");
+    }
+
+    public void ToShowHeadIndicator()
+    {
+        if (DC_script.Current_GM.HeadIndicatorChange)
+        {
+            HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+        }
+
+        GCAnimator.SetTrigger("NextStep");
+    }
+
     private void get_degree_direct(List<float> list, int iter, 
                                     out float turn_deg, out int turn_dir)
     {

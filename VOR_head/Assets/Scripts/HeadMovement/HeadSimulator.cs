@@ -51,6 +51,10 @@ public class HeadSimulator : MonoBehaviour {
         if(DC_script.UsingVRFlag)
         {
             transform.rotation = GeneralMethods.getVRrotation();
+            Debug.Log("GeneralMethods.getVRrotation() "+ GeneralMethods.getVRrotation());
+            Debug.Log("GetNodePose " + OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
+                        ToOVRPose().orientation);
+
         }
     }
 

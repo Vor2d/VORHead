@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CanterGaze : StateMachineBehaviour {
+public class ShowHeadIn : StateMachineBehaviour {
 
     private GameController GC_script;
 
@@ -13,16 +13,15 @@ public class CanterGaze : StateMachineBehaviour {
         {
             this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
         }
-        GC_script.Current_state = "CenterGaze";
+        GC_script.Current_state = "ShowHeadIndicator";
 
-        GC_script.ToCenterGaze();
+        GC_script.ToShowHeadIndicator();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        GC_script.CenterGaze();
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
