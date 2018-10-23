@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class City : MonoBehaviour {
 
+    public TextMesh BIndicatorText;
+
     public int Health = 3;
 
     public MD_GameController MD_GC_Script;
@@ -15,7 +17,7 @@ public class City : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        BIndicatorText.text = Health.ToString();
 	}
 
     public void get_hit()

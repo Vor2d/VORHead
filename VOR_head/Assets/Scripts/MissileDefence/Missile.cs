@@ -58,5 +58,10 @@ public class Missile : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+        else if(other_GO.tag == "MD_GroundBorder")
+        {
+            Destroy(gameObject);
+        }
+
     }
 }
