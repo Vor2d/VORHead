@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TDMD_TargetRayCast : MonoBehaviour {
+public class BP_TargetRayCast : MonoBehaviour {
 
     public float RayCastDistance = 100.0f;
 
@@ -11,13 +11,15 @@ public class TDMD_TargetRayCast : MonoBehaviour {
     private RaycastHit[] hits;
 
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         //this.Hit_position = new Vector3();
 
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         multi_raycast_hit();
 
         check_multi_hits();
@@ -34,10 +36,10 @@ public class TDMD_TargetRayCast : MonoBehaviour {
     {
         foreach (RaycastHit hit in hits)
         {
-            GameObject hit_OBJ = hit.transform.gameObject;
-            if (hit_OBJ.tag == "TDMissile")
+            Transform hit_TRAS = hit.transform;
+            if (hit_TRAS.tag == "BP_BubbleAimI")
             {
-                hit_OBJ.GetComponent<TDMissile>().Aimed_flag = true;
+                hit_TRAS.parent.GetComponent<Bubble>().Is_aimed_flag = true;
             }
 
         }

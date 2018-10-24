@@ -18,6 +18,7 @@ TagManager:
   - TDMissile
   - MD_TargetBorder
   - MD_GroundBorder
+  - BP_BubbleAimI
   layers:
   - Default
   - TransparentFX
