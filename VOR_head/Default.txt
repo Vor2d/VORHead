@@ -1,4 +1,4 @@
-GameMode	Test
+GameMode	HC_FB_Learning
 ________________________________
 0
 10	15

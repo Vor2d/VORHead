@@ -194,6 +194,12 @@ public static class GeneralMethods {
                                             set_preset_mode(GameMode.GameModeEnum.Jump_Learning);
                                         break;
                                     }
+                                case "HC_FB_Learning":
+                                    {
+                                        temp_gameMode.
+                                            set_preset_mode(GameMode.GameModeEnum.HC_FB_Learning);
+                                        break;
+                                    }
                                 default:
                                     {
                                         temp_gameMode.

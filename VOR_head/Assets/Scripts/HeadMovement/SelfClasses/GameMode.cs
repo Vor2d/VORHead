@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameMode
 {
-    public enum GameModeEnum { Default, Test, Feedback_Learning, Jump_Learning }
+    public enum GameModeEnum { Default, Test, Feedback_Learning,HC_FB_Learning, Jump_Learning }
 
     //Game Flag
     public bool HideFlag { get; set; }
@@ -74,6 +74,12 @@ public class GameMode
                     JumpFlag = true;
                     break;
                 }
+            case GameModeEnum.HC_FB_Learning:
+                {
+                    SkipCenterFlag = true;
+                    HeadIndicatorChange = true;
+                    break;
+                }
         }
     }
 
@@ -110,6 +116,11 @@ public class GameMode
             case GameModeEnum.Jump_Learning:
                 {
                     game_mode_str = "Jump_Learning";
+                    break;
+                }
+            case GameModeEnum.HC_FB_Learning:
+                {
+                    game_mode_str = "HC_FB_Learning";
                     break;
                 }
         }
