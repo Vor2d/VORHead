@@ -106,6 +106,7 @@ public class TDMissile : MonoBehaviour
 
     private void being_fired()
     {
+        TDMDGC_script.missile_destroyed();
         Destroy(gameObject);
     }
 

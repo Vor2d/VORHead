@@ -4,18 +4,27 @@ using UnityEngine;
 
 public class TDMD_GameController : MonoBehaviour {
 
+    private const string score_init_str = "Score: ";
+    private const string life_init_str = "Life: ";
+
     public GameObject MissilePrefab;
     public Transform PlayerTransform;
+    public GameObject ScoreText_OBJ;
+    public GameObject LifeText_OBJ;
+    public TDMD_Player TDMDPlyaer_script;
 
+    public bool Text_changed_flag { get; set; }
     public bool Fire_flag { get; set; }
 
     public float MissileIntervalTime = 3.0f;
-    public float MissileInitZ;
+    public float MissileInitZ = 10.0f;
     public float InstRandomRangeX = 9.0f;
     public float InstRandomRangeY = 9.0f;
+    public int ScoreIncrease = 10;
 
     private bool wait_missile_timer;
     private float miss_interval_timer;
+    private int score;
 
     private Animator TDMD_GCAnimator;
 
@@ -26,6 +35,8 @@ public class TDMD_GameController : MonoBehaviour {
         this.miss_interval_timer = MissileIntervalTime;
         this.TDMD_GCAnimator = GetComponent<Animator>();
         this.Fire_flag = false;
+        this.score = 0;
+        this.Text_changed_flag = true;
 	}
 	
 	// Update is called once per frame
@@ -42,6 +53,8 @@ public class TDMD_GameController : MonoBehaviour {
         {
             Fire_flag = true;
         }
+
+        update_text();
 	}
 
     public void ToSpawnMissile()
@@ -73,6 +86,22 @@ public class TDMD_GameController : MonoBehaviour {
         {
             miss_interval_timer = MissileIntervalTime;
             TDMD_GCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    public void missile_destroyed()
+    {
+        score += ScoreIncrease;
+        Text_changed_flag = true;
+    }
+
+    private void update_text()
+    {
+        if(Text_changed_flag)
+        {
+            ScoreText_OBJ.GetComponent<TextMesh>().text = score_init_str + score.ToString();
+            LifeText_OBJ.GetComponent<TextMesh>().text = 
+                                        life_init_str + TDMDPlyaer_script.life.ToString();
         }
     }
 }

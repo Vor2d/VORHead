@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class MD_GameController : MonoBehaviour {
 
+    private const string score_init_str = "Score: ";
+
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
+    public GameObject MissilePrefab;
+    public GameObject ScoreText_OBJ;
 
     public bool City_destroied { get; set; }
 
@@ -13,14 +17,15 @@ public class MD_GameController : MonoBehaviour {
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
     public float MissileInterTime = 3.0f;
-
-    public GameObject MissilePrefab;
+    public int ScoreIncerase = 10;
 
     private GameObject[] cities;
     private float missile_timer;
     private bool missile_timer_flag;
     private Animator MD_GC_Animator;
     private int city_number;
+    private int score;
+    private bool score_changed_flag;
 
     // Use this for initialization
     void Start () {
@@ -29,6 +34,8 @@ public class MD_GameController : MonoBehaviour {
         this.MD_GC_Animator = GetComponent<Animator>();
         this.missile_timer_flag = false;
         this.missile_timer = MissileInterTime;
+        this.score = 0;
+        this.score_changed_flag = true;
 
         update_cities();
     }
@@ -39,6 +46,8 @@ public class MD_GameController : MonoBehaviour {
         {
             missile_timer -= Time.deltaTime;
         }
+
+        update_score();
     }
 
     private void LateUpdate()
@@ -104,5 +113,21 @@ public class MD_GameController : MonoBehaviour {
         GameObject explode =
                     Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
         explode.GetComponent<Explode>().start_exp();
+    }
+
+    public void missile_destroyed()
+    {
+        score += ScoreIncerase;
+        score_changed_flag = true;
+    }
+
+    private void update_score()
+    {
+        if(score_changed_flag)
+        {
+            ScoreText_OBJ.GetComponent<TextMesh>().text = score_init_str + score.ToString();
+            score_changed_flag = false;
+        }
+        
     }
 }

@@ -10,11 +10,14 @@ public class Missile : MonoBehaviour {
     private bool start_flag;
     private Vector3 target_pos;
 
+    private MD_GameController MDGC_script;
+
     //Need to init objects here since it is a prefab;
     private void Awake()
     {
         this.target_pos = new Vector3();
         this.start_flag = false;
+        this.MDGC_script = GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
     }
 
     // Use this for initialization
@@ -56,6 +59,7 @@ public class Missile : MonoBehaviour {
         }
         else if(other_GO.tag == "Explode")
         {
+            MDGC_script.missile_destroyed();
             Destroy(gameObject);
         }
         else if(other_GO.tag == "MD_GroundBorder")
