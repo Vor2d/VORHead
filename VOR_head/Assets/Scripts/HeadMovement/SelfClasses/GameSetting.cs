@@ -16,6 +16,7 @@ public class GameSetting
     public float ErrorTime { get; set; }
     public float SpeedThreshold { get; set; }
     public float StopWinodow { get; set; }
+    public float TargetChangeTime { get; set; }
 
     public GameSetting()
     {
@@ -50,6 +51,8 @@ public class GameSetting
         catch { SpeedThreshold = 10.0f; }
         try { StopWinodow = float.Parse(setting_dict["StopWinodow"]); }
         catch { StopWinodow = 0.1f; }
+        try { TargetChangeTime = float.Parse(setting_dict["TargetChangeTime"]); }
+        catch { TargetChangeTime = 2.0f; }
     }
 
     public string VarToString()
@@ -66,6 +69,8 @@ public class GameSetting
         result_str += "HideTime" + " " + HideTime.ToString() + " ";
         result_str += "SpeedThreshold" + " " + SpeedThreshold.ToString() + " ";
         result_str += "StopWinodow" + " " + StopWinodow.ToString() + " ";
+        result_str += "TargetChangeTime" + " " + TargetChangeTime.ToString() + " ";
+
 
         return result_str;
     }

@@ -176,34 +176,46 @@ public static class GeneralMethods {
                         {
                             switch(splitstr[1])
                             {
-                                case "Test":
+                                case "GazeTest":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.Test);
+                                    set_preset_mode(GameMode.GameModeEnum.GazeTest);
+                                        break;
+                                    }
+                                case "EyeTest":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameMode.GameModeEnum.EyeTest);
                                         break;
                                     }
                                 case "Feedback_Learning":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.Feedback_Learning);
+                                    set_preset_mode(GameMode.GameModeEnum.Feedback_Learning);
                                         break;
                                     }
                                 case "Jump_Learning":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.Jump_Learning);
+                                    set_preset_mode(GameMode.GameModeEnum.Jump_Learning);
                                         break;
                                     }
                                 case "HC_FB_Learning":
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.HC_FB_Learning);
+                                    set_preset_mode(GameMode.GameModeEnum.HC_FB_Learning);
+                                        break;
+                                    }
+                                case "Training":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameMode.GameModeEnum.Training);
                                         break;
                                     }
                                 default:
                                     {
                                         temp_gameMode.
-                                            set_preset_mode(GameMode.GameModeEnum.Default);
+                                    set_preset_mode(GameMode.GameModeEnum.Default);
                                         break;
                                     }
                             }

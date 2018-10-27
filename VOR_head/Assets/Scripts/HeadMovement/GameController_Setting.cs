@@ -36,6 +36,7 @@ public class GameController_Setting : MonoBehaviour {
     public Toggle HeadIndicatorChangeToggle;
     public Toggle SkipCenterFlagToggle;
     public Toggle HideHeadIndicatorToggle;
+    public Toggle ChangeTargetByTimeToggle;
     public InputField GazeTime_IF;
     public InputField HideTime_IF;
     public InputField ErrorTime_IF;
@@ -43,6 +44,7 @@ public class GameController_Setting : MonoBehaviour {
     public InputField StopWinodow_IF;
     public InputField RandomGazeTime_IF;
     public InputField Gain_IF;
+    public InputField TargetChangeTime_IF;
 
     //Variables;
     private DataController DC_script;
@@ -167,6 +169,7 @@ public class GameController_Setting : MonoBehaviour {
         DC_script.Current_GM.HeadIndicatorChange = HeadIndicatorChangeToggle.isOn;
         DC_script.Current_GM.SkipCenterFlag = SkipCenterFlagToggle.isOn;
         DC_script.Current_GM.HideHeadIndicator = HideHeadIndicatorToggle.isOn;
+        DC_script.Current_GM.ChangeTargetByTime = ChangeTargetByTimeToggle.isOn;
     }
 
     private void apply_variable_IF()
@@ -179,6 +182,7 @@ public class GameController_Setting : MonoBehaviour {
             DC_script.SystemSetting.SpeedThreshold = float.Parse(SpeedThreshold_IF.text);
             DC_script.SystemSetting.StopWinodow = float.Parse(StopWinodow_IF.text);
             DC_script.SystemSetting.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
+            DC_script.SystemSetting.TargetChangeTime = float.Parse(TargetChangeTime_IF.text);
 
             DC_script.Current_GM.Gain = float.Parse(Gain_IF.text);
         }
@@ -246,6 +250,7 @@ public class GameController_Setting : MonoBehaviour {
         HeadIndicatorChangeToggle.isOn = DC_script.Current_GM.HeadIndicatorChange;
         SkipCenterFlagToggle.isOn = DC_script.Current_GM.SkipCenterFlag;
         HideHeadIndicatorToggle.isOn = DC_script.Current_GM.HideHeadIndicator;
+        ChangeTargetByTimeToggle.isOn = DC_script.Current_GM.ChangeTargetByTime;
         try
         {
             GazeTime_IF.text = DC_script.SystemSetting.GazeTime.ToString("F2");
@@ -255,6 +260,7 @@ public class GameController_Setting : MonoBehaviour {
             StopWinodow_IF.text = DC_script.SystemSetting.StopWinodow.ToString("F2");
             RandomGazeTime_IF.text = DC_script.SystemSetting.RandomGazeTime.ToString("F2");
             Gain_IF.text = DC_script.Current_GM.Gain.ToString("F2");
+            TargetChangeTime_IF.text = DC_script.SystemSetting.TargetChangeTime.ToString("F2");
         }
         catch (Exception e)
         {

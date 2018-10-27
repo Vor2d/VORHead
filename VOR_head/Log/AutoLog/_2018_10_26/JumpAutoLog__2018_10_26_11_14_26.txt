@@ -1,0 +1,17 @@
+Settings: Player_screen_cm 100 Screen_width_cm 100 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 
+6	0	-1	GameMode Training HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator False Gain 1 	
+25	0	0	ReSet	0.00	0
+33	0	0	ShowTarget	0.00	0
+5776	0	0	MoveTarget	10.00	1
+5791	0	0	ShowTarget	10.00	1
+9230	0	1	MoveTarget	10.00	0
+9244	0	1	ShowTarget	10.00	0
+12082	0	0	MoveTarget	10.00	1
+12096	0	0	ShowTarget	10.00	1
+14751	0	1	MoveTarget	10.00	0
+14766	0	1	ShowTarget	10.00	0
+17234	0	0	MoveTarget	10.00	1
+17247	0	0	ShowTarget	10.00	1
+19487	0	1	MoveTarget	10.00	0
+19503	0	1	ShowTarget	10.00	0
+

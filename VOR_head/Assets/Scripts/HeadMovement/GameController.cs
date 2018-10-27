@@ -10,8 +10,6 @@ public class GameController : MonoBehaviour {
 
     //Direction: 0 is left, 1 is right;
 
-    //const string default_file = "Default.txt";
-
     public enum GazeTarget { DefaultTarget, HideDetector}
 
     //Obsoleted;
@@ -21,9 +19,6 @@ public class GameController : MonoBehaviour {
     public bool TurnSpeedWindow = false;
     [HideInInspector]
     public GameObject ResultTarget = null;
-
-    ////Enum Object;
-    //public enum GameMode { ShowNStay, ShowNJump, Custom };
 
     [Header("Game Object")]
     //Game Object;
@@ -55,6 +50,7 @@ public class GameController : MonoBehaviour {
     public float Hide_timer { get; set; }
     public int section_number { get; set; }
     public int loop_iter { get; set; }
+    public bool TargetTimerFlag { get; set; }
 
 
     //Scripts;
@@ -62,12 +58,9 @@ public class GameController : MonoBehaviour {
     private Target tar_script;
     private ResultTarget restar_script;
     private CenterIndicator center_script;
-    //private HeadStateController HSC_script;
     private DataController DC_script;
-    //private LastPosIndicator LPI_script;
     private HeadSimulator HS_script;
     private ChangePosition tar_CP_script;
-    //private ChangePosition HI_CP_script;
     private ChangePosition LPI_CP_script;
     private CoilData CD_script;
     private VRLogSystem VRLS_script;
@@ -85,6 +78,7 @@ public class GameController : MonoBehaviour {
     private Vector2 current_rot_ang_dir;
     private float hide_gaze_timer;
     private float gaze_timer_rand;
+    private float target_change_timer;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -140,6 +134,8 @@ public class GameController : MonoBehaviour {
         this.Hide_raycast_flag = false;
         this.LPI_CP_script = LastPosIndocator.GetComponent<ChangePosition>();
         this.section_number = 0;
+        this.TargetTimerFlag = false;
+        this.target_change_timer = DC_script.SystemSetting.TargetChangeTime;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -245,6 +241,11 @@ public class GameController : MonoBehaviour {
         if (Hide_time_flag)
         {
             Hide_timer -= Time.deltaTime;
+        }
+
+        if(TargetTimerFlag)
+        {
+            target_change_timer -= Time.deltaTime;
         }
     }
 
@@ -778,6 +779,23 @@ public class GameController : MonoBehaviour {
         GCAnimator.SetBool("JumpFlag", DC_script.Current_GM.JumpFlag);
         GCAnimator.SetBool("ShowTargetFlag", DC_script.Current_GM.ShowTargetFlag);
         GCAnimator.SetBool("SkipCenter", DC_script.Current_GM.SkipCenterFlag);
+        GCAnimator.SetBool("ChangeTargetByTimeFlag", DC_script.Current_GM.ChangeTargetByTime);
+    }
+
+    public void ToChangeTargetWaitTime()
+    {
+        TargetTimerFlag = true;
+    }
+
+    public void ChangeTargetWaitTime()
+    {
+        if(target_change_timer < 0.0f)
+        {
+            target_change_timer = DC_script.SystemSetting.TargetChangeTime;
+            TargetTimerFlag = false;
+
+            GCAnimator.SetTrigger("NextStep");
+        }
     }
 
 }

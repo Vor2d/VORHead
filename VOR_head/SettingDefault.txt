@@ -2,3 +2,10 @@ PlayerScreenCM	100
 ScreenWidthCM	100
 Camera1Display	1
 Camera2Display	0
+GazeTime	1.5
+RandomGazeTime	0.5
+HideTime	0.1
+ErrorTime	2.0
+SpeedThreshold	10
+StopWindow	0.1
+TargetChangeTime	2.0

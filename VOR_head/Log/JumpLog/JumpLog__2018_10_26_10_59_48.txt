@@ -1,0 +1,14 @@
+Player_screen_cm 100 Screen_width_cm 100 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 
+Line_#	Time_Stamp	Simulink_Sample	Trail_#	Action	Degree	Direction
+7	0	-1	GameMode EyeTest HideFlag True JumpFlag False ShowTargetFlag True HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 	
+24	0	0	ReSet	0.00	0
+31	0	0	ShowTarget	0.00	0
+19202	0	0	MoveTarget	10.00	1
+19224	0	0	ShowTarget	10.00	1
+19368	0	0	TargetHided	10.00	1
+19368	0	0	ChangeTargetWaitTime	10.00	1
+21658	0	1	MoveTarget	10.00	0
+21679	0	1	ShowTarget	10.00	0
+21812	0	1	TargetHided	10.00	0
+21812	0	1	ChangeTargetWaitTime	10.00	0
+

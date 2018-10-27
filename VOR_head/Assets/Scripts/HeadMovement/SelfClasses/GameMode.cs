@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class GameMode
 {
-    public enum GameModeEnum { Default, Test, Feedback_Learning,HC_FB_Learning, Jump_Learning }
+    public enum GameModeEnum { Default, GazeTest, EyeTest, Feedback_Learning,HC_FB_Learning,
+                                Jump_Learning,Training}
 
     //Game Flag
     public bool HideFlag { get; set; }
@@ -13,10 +14,11 @@ public class GameMode
     public bool HeadIndicatorChange { get; set; }
     public bool SkipCenterFlag { get; set; }
     public bool HideHeadIndicator { get; set; }
+    public bool ChangeTargetByTime { get; set; }
     //Variables;
     public float Gain { get; set; }
 
-    public GameModeEnum game_mode { get; set; }
+    public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
 
     public GameMode()
@@ -33,15 +35,16 @@ public class GameMode
         this.HeadIndicatorChange = other_GM.HeadIndicatorChange;
         this.SkipCenterFlag = other_GM.SkipCenterFlag;
         this.HideHeadIndicator = other_GM.HideHeadIndicator;
+        this.ChangeTargetByTime = other_GM.ChangeTargetByTime;
 
         this.Gain = other_GM.Gain;
 
-        this.game_mode = other_GM.game_mode;
+        this.GameModeName = other_GM.GameModeName;
     }
 
     public void set_preset_mode(GameModeEnum GM_preset)
     {
-        game_mode = GM_preset;
+        GameModeName = GM_preset;
         switch (GM_preset)
         {
             case GameModeEnum.Default:
@@ -52,13 +55,23 @@ public class GameMode
                     HeadIndicatorChange = false;
                     SkipCenterFlag = false;
                     HideHeadIndicator = false;
+                    ChangeTargetByTime = false;
                     break;
                 }
-            case GameModeEnum.Test:
+            case GameModeEnum.GazeTest:
                 {
                     HideFlag = true;
                     HideHeadIndicator = true;
                     SkipCenterFlag = true;
+                    break;
+                }
+            case GameModeEnum.EyeTest:
+                {
+                    ChangeTargetByTime = true;
+                    HideHeadIndicator = true;
+                    SkipCenterFlag = true;
+                    HideFlag = true;
+                    ShowTargetFlag = true;
                     break;
                 }
             case GameModeEnum.Feedback_Learning:
@@ -80,6 +93,11 @@ public class GameMode
                     HeadIndicatorChange = true;
                     break;
                 }
+            case GameModeEnum.Training:
+                {
+                    SkipCenterFlag = true;
+                    break;
+                }
         }
     }
 
@@ -95,37 +113,37 @@ public class GameMode
 
         string result_str = "";
 
-        string game_mode_str = "";
-        switch (game_mode)
-        {
-            case GameModeEnum.Default:
-                {
-                    game_mode_str = "Default";
-                    break;
-                }
-            case GameModeEnum.Test:
-                {
-                    game_mode_str = "Test";
-                    break;
-                }
-            case GameModeEnum.Feedback_Learning:
-                {
-                    game_mode_str = "Feedback_Learning";
-                    break;
-                }
-            case GameModeEnum.Jump_Learning:
-                {
-                    game_mode_str = "Jump_Learning";
-                    break;
-                }
-            case GameModeEnum.HC_FB_Learning:
-                {
-                    game_mode_str = "HC_FB_Learning";
-                    break;
-                }
-        }
+        //string game_mode_str = "";
+        //switch (game_mode)
+        //{
+        //    case GameModeEnum.Default:
+        //        {
+        //            game_mode_str = "Default";
+        //            break;
+        //        }
+        //    case GameModeEnum.GazeTest:
+        //        {
+        //            game_mode_str = "GazeTest";
+        //            break;
+        //        }
+        //    case GameModeEnum.Feedback_Learning:
+        //        {
+        //            game_mode_str = "Feedback_Learning";
+        //            break;
+        //        }
+        //    case GameModeEnum.Jump_Learning:
+        //        {
+        //            game_mode_str = "Jump_Learning";
+        //            break;
+        //        }
+        //    case GameModeEnum.HC_FB_Learning:
+        //        {
+        //            game_mode_str = "HC_FB_Learning";
+        //            break;
+        //        }
+        //}
 
-        result_str += "GameMode" + " " + game_mode_str + " ";
+        result_str += "GameMode" + " " + GameModeName.ToString() + " ";
 
         result_str += "HideFlag" + " " + HideFlag.ToString() + " ";
         result_str += "JumpFlag" + " " + JumpFlag.ToString() + " ";
