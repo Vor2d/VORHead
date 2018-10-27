@@ -54,7 +54,7 @@ public class HeadSimulator : MonoBehaviour {
             //Debug.Log("GeneralMethods.getVRrotation() "+ GeneralMethods.getVRrotation());
             //Debug.Log("GetNodePose " + OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
             //            ToOVRPose().orientation);
-
+            TrueHeadRR = GeneralMethods.normalize_degree(transform.rotation.eulerAngles);
         }
     }
 

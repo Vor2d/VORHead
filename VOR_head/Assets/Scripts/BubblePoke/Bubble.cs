@@ -11,7 +11,6 @@ public class Bubble : MonoBehaviour {
 
     public float IncreaseSpeed = 1.0f;
     public float LastTime = 3.0f;
-    //public float CriticalPercent = 0.8f;
     public float LastTransparent = 0.3f;
     public float InitTransparent = 0.6f;
     
@@ -20,8 +19,8 @@ public class Bubble : MonoBehaviour {
     private float BR_init_scale;
     private Color init_aimIn_color;
     private bool last_aimed_flag;
-    //private bool critial_changed;
 
+    private BP_GameController BPGC_script;
     private BP_InputManager BPIM_script;
 
     // Use this for initialization
@@ -29,6 +28,8 @@ public class Bubble : MonoBehaviour {
         this.start_flag = false;
         this.BPIM_script = 
                     GameObject.Find("BP_InputManager").GetComponent<BP_InputManager>();
+        this.BPGC_script =
+                    GameObject.Find("BP_GameController").GetComponent<BP_GameController>();
         this.last_aimed_flag = false;
         //this.critial_changed = false;
 	}
@@ -90,6 +91,7 @@ public class Bubble : MonoBehaviour {
 
             if(BPIM_script.Key_pressed)
             {
+                BPGC_script.bubble_destroyed();
                 Destroy(gameObject);
             }
         }

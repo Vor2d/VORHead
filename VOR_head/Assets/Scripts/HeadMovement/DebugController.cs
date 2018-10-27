@@ -23,23 +23,25 @@ public class DebugController : MonoBehaviour {
     public Text JumpLoggingState_Text;
     public Text LoopTrialNumber_Text;
 
-
+    private DataController DC_script;
 
 	// Use this for initialization
 	void Start () {
-
+        DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
         //Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
 
-        Headrr_Text.text = HT_init_text + HS_script.TrueHeadRR.ToString("F2");
+        Headrr_Text.text = HT_init_text + HS_script.TrueHeadRR.ToString("F2")
+                            + "\t" + GC_script.turn_degree.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
         JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;
         LoopTrialNumber_Text.text = LTN_init_text + GC_script.loop_iter.ToString()
                                             + "\t & \t" + GC_script.trial_iter.ToString()
-                                            + "\t & \t" + GC_script.section_number;
+                                            + "\t & \t" + GC_script.section_number
+                                            + "\t" + DC_script.Current_GM.GameModeName;
     }
 }

@@ -1,4 +1,4 @@
-GameMode	Training
+GameMode	Jump_Learning
 ________________________________
 -1
 10	15

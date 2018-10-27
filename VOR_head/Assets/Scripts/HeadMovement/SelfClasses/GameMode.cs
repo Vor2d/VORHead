@@ -85,6 +85,7 @@ public class GameMode
                     HideFlag = true;
                     ShowTargetFlag = true;
                     JumpFlag = true;
+                    HeadIndicatorChange = true;
                     break;
                 }
             case GameModeEnum.HC_FB_Learning:

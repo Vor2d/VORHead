@@ -1,26 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BP_GameController : MonoBehaviour {
 
+    private const string score_init_str = "Score: ";
+
     public GameObject BubblePrefab;
+    public Text ScoreText;
 
     public float BubbleIntervalTime = 3.0f;
     public float RandRangeX = 15.0f;
     public float RandRangeY = 15.0f;
     public float RandRangeZ1 = 5.0f;
     public float RandRangeZ2 = 15.0f;
+    public int ScoreIncrease = 10;
 
     private float bubble_inte_timer;
     private bool bubble_Itimer_flag;
     private Animator BPGCAnimator;
+    private int score;
+    private bool score_changed;
 
 	// Use this for initialization
 	void Start () {
         this.bubble_inte_timer = BubbleIntervalTime;
         this.bubble_Itimer_flag = false;
         this.BPGCAnimator = GetComponent<Animator>();
+        this.score = 0;
+        this.score_changed = true;
 	}
 	
 	// Update is called once per frame
@@ -29,6 +38,8 @@ public class BP_GameController : MonoBehaviour {
         {
             bubble_inte_timer -= Time.deltaTime;
         }
+
+        update_score();
 	}
 
     public void ToInstantiateBubble()
@@ -64,6 +75,21 @@ public class BP_GameController : MonoBehaviour {
             bubble_inte_timer = BubbleIntervalTime;
 
             BPGCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    public void bubble_destroyed()
+    {
+        score += ScoreIncrease;
+        score_changed = true;
+    }
+
+    private void update_score()
+    {
+        if(score_changed)
+        {
+            ScoreText.text = score_init_str + score.ToString();
+            score_changed = false;
         }
     }
 }
