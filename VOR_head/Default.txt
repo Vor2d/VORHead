@@ -1,4 +1,4 @@
-GameMode	Jump_Learning
+GameMode	GazeTest
 ________________________________
 -1
 10	15

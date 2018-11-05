@@ -12,6 +12,15 @@ public class GameController : MonoBehaviour {
 
     public enum GazeTarget { DefaultTarget, HideDetector}
 
+    public Dictionary<string, string> GameModeToIndiText = new Dictionary<string, string>()
+    {
+        { "Training", "Back Training" },
+        { "EyeTest","Test 1"},
+        { "GazeTest","Test 2"},
+        { "HC_FB_Learning","Learning 1"},
+        { "Jump_Learning","Learning 2"},
+    };
+
     //Obsoleted;
     [HideInInspector]
     public bool ShowResultFlag = false;
@@ -798,4 +807,24 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    public void ToSectionPause()
+    {
+        string showing_message =
+                    GameModeToIndiText[DC_script.Current_GM.GameModeName.ToString()];
+        IndiText1.GetComponent<TextMesh>().text = showing_message;
+        IndiText1.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public void SectionPause ()
+    {
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    public void LeaveSectionPause()
+    {
+        IndiText1.GetComponent<MeshRenderer>().enabled = false;
+    }
 }
