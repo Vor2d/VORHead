@@ -42,6 +42,7 @@ public class GameController : MonoBehaviour {
     public GameObject CoilData;
     public GameObject HeadSParent;
     public GameObject LogSystem;
+    public GameController_Setting GCS_script;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -809,10 +810,12 @@ public class GameController : MonoBehaviour {
 
     public void ToSectionPause()
     {
-        string showing_message =
-                    GameModeToIndiText[DC_script.Current_GM.GameModeName.ToString()];
-        IndiText1.GetComponent<TextMesh>().text = showing_message;
-        IndiText1.GetComponent<MeshRenderer>().enabled = true;
+        //string showing_message =
+        //            GameModeToIndiText[DC_script.Current_GM.GameModeName.ToString()];
+        //IndiText1.GetComponent<TextMesh>().text = showing_message;
+        //IndiText1.GetComponent<MeshRenderer>().enabled = true;
+
+        GCS_script.change_indicate_text(DC_script.Current_GM.GameModeName.ToString());
     }
 
     public void SectionPause ()
@@ -825,6 +828,8 @@ public class GameController : MonoBehaviour {
 
     public void LeaveSectionPause()
     {
-        IndiText1.GetComponent<MeshRenderer>().enabled = false;
+        //IndiText1.GetComponent<MeshRenderer>().enabled = false;
+
+        GCS_script.turn_off_text();
     }
 }

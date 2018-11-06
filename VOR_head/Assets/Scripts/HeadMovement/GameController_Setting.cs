@@ -16,7 +16,7 @@ public class GameController_Setting : MonoBehaviour {
     public GameObject Page1;
     public GameObject Page2;
     public GameObject Page3;
-    public Text UIIndicatorText1;
+    public GameObject UIIndicatorText1_OBJ;
     //Page1;
     [Header("Page1")]
     //public Toggle LoopTrialsToggle;
@@ -67,7 +67,7 @@ public class GameController_Setting : MonoBehaviour {
         this.camera1.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.camera2.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
 
-        UIIndicatorText1.text = "";
+        UIIndicatorText1_OBJ.GetComponent<Text>().text = "";
 
         init_dropdown(Camera1_DD, camera_list_str);
         init_dropdown(Camera2_DD, camera_list_str);
@@ -86,7 +86,8 @@ public class GameController_Setting : MonoBehaviour {
 
     public void ToFinish()
     {
-        UIIndicatorText1.text = "Finished!";
+        UIIndicatorText1_OBJ.SetActive(true);
+        UIIndicatorText1_OBJ.GetComponent<Text>().text = "Finished!";
     }
 
     public void apply_change_page2()
@@ -316,6 +317,17 @@ public class GameController_Setting : MonoBehaviour {
     {
         dropdown.ClearOptions();
         dropdown.AddOptions(content);
+    }
+
+    public void change_indicate_text(string text)
+    {
+        UIIndicatorText1_OBJ.SetActive(true);
+        UIIndicatorText1_OBJ.GetComponent<Text>().text = "Pause for: " + text;
+    }
+
+    public void turn_off_text()
+    {
+        UIIndicatorText1_OBJ.SetActive(false);
     }
 
 }

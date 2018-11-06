@@ -5242,6 +5242,7 @@ MonoBehaviour:
   CoilData: {fileID: 499942471}
   HeadSParent: {fileID: 1734048028}
   LogSystem: {fileID: 370484274}
+  GCS_script: {fileID: 2139837189}
 --- !u!4 &913016691
 Transform:
   m_ObjectHideFlags: 0
@@ -5284,18 +5285,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 485bcf537aaa4e642a5faaa123408651, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookbackWindow: 4
-  speedThreshold: 100
-  speedDifferenceMax: 60
-  speedDifferenceMin: 40
-  TurnBorderDegree: 20
-  <speedEvaluationRecord>k__BackingField: 0
-  <Check_speed_flag>k__BackingField: 0
-  <speedEvaluationMessage>k__BackingField: 
-  head_rotation: {x: 0, y: 0, z: 0, w: 0}
-  head_velocity: {x: 0, y: 0, z: 0}
-  headSpeedy: 0
-  lookbackSpeedy: 0
 --- !u!1 &979479868
 GameObject:
   m_ObjectHideFlags: 0
@@ -10240,7 +10229,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1979538678
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10721,7 +10710,7 @@ MonoBehaviour:
   Page1: {fileID: 2033743383}
   Page2: {fileID: 1738857265}
   Page3: {fileID: 1547072187}
-  UIIndicatorText1: {fileID: 1979538679}
+  UIIndicatorText1_OBJ: {fileID: 1979538677}
   ReadFileIndicator: {fileID: 1121371675}
   PTS_IF: {fileID: 1582974697}
   SW_IF: {fileID: 827270873}
