@@ -28,7 +28,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1491483959902142
 GameObject:
   m_ObjectHideFlags: 0
@@ -198,7 +198,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AimITransform: {fileID: 4267750450199576}
-  Speed: 0.2
+  Speed: 0.1
+  ExplodeTime: 1
+  change_color_to: {r: 1, g: 0, b: 0, a: 0}
 --- !u!136 &136931152364616912
 CapsuleCollider:
   m_ObjectHideFlags: 1

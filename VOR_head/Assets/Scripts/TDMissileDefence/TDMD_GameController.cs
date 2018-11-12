@@ -7,6 +7,7 @@ public class TDMD_GameController : MonoBehaviour {
     private const string score_init_str = "Score: ";
     private const string life_init_str = "Life: ";
 
+    public GameObject[] Cities;
     public GameObject MissilePrefab;
     public Transform PlayerTransform;
     public GameObject ScoreText_OBJ;
@@ -62,7 +63,8 @@ public class TDMD_GameController : MonoBehaviour {
         GameObject missile =
             Instantiate(MissilePrefab, RandomPosGenerate(), Quaternion.identity);
         TDMissile missile_script = missile.GetComponent<TDMissile>();
-        missile_script.set_target(PlayerTransform);
+        int randomindex = Random.Range(0, 5);
+        missile_script.set_target(Cities[randomindex].transform);
         missile_script.start_move();
 
         TDMD_GCAnimator.SetTrigger("NextStep");
