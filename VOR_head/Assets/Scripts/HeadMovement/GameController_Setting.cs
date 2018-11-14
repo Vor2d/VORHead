@@ -330,4 +330,9 @@ public class GameController_Setting : MonoBehaviour {
         UIIndicatorText1_OBJ.SetActive(false);
     }
 
+    public void ToECSceneButton()
+    {
+        SceneManager.LoadScene("EyeCalibration");
+    }
+
 }

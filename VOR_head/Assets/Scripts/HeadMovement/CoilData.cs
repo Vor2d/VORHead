@@ -113,4 +113,30 @@ public class CoilData : MonoBehaviour {
             Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
         }
     }
+
+    private void OnDestroy()
+    {
+        try
+        {
+            // signal shutdown
+            stopListening = true;
+
+            // attempt to join for 500ms
+            if (!RCThread.Join(500))
+            {
+                // force shutdown
+                RCThread.Abort();
+                if (udpClient != null)
+                {
+                    udpClient.Close();
+                    udpClient = null;
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
+        }
+    }
 }

@@ -7,7 +7,7 @@ public enum EyeIndex { left,right}
 
 public class EyeInfo
 {
-    public EyeFunction eye_function { get; set; }
+    public EyeFunction Eye_function { get; set; }
 
     private float linear_leftk;
     private float linear_leftb;
@@ -16,7 +16,7 @@ public class EyeInfo
 
     public EyeInfo()
     {
-        this.eye_function = EyeFunction.linear;
+        this.Eye_function = EyeFunction.linear;
         this.linear_leftk = 0;
         this.linear_leftb = 0;
         this.linear_rightk = 0;
@@ -25,7 +25,7 @@ public class EyeInfo
 
     public EyeInfo(EyeInfo otherEI)
     {
-        this.eye_function = otherEI.eye_function;
+        this.Eye_function = otherEI.Eye_function;
         this.linear_leftk = otherEI.linear_leftk;
         this.linear_leftb = otherEI.linear_leftb;
         this.linear_rightk = otherEI.linear_rightk;
@@ -41,6 +41,7 @@ public class EyeInfo
                 {
                     if (x_list.Count < 2 || y_list.Count < 2)
                     {
+                        Debug.Log("Fit function error!");
                         return;
                     }
                     fit_linear(target_EI,x_list,y_list);

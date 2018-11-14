@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class EC_GameController : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class EC_GameController : MonoBehaviour {
 
     public GameObject TargetOBJ;
     public GameObject IndicatorText1;
+    public Camera GameCamera;
+    public Camera UICamera;
 
     public float StairingTime = 5.0f;
     public bool EnableAnim = true;
@@ -30,6 +33,12 @@ public class EC_GameController : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+
+        if(DC_script == null)
+        {
+            this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+        }
+
         this.stair_timer = StairingTime;
         this.Stairing_flag = false;
         this.EC_trials = new List<float>();
@@ -39,6 +48,8 @@ public class EC_GameController : MonoBehaviour {
         this.target_crossTrans = TargetOBJ.transform.Find("TCrossBar");
         this.original_scale = target_crossTrans.localScale;
         this.start_flag = false;
+        this.GameCamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
+        this.UICamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
     }
 
     // Update is called once per frame
@@ -126,5 +137,10 @@ public class EC_GameController : MonoBehaviour {
     private float scale_cal()
     {
         return (stair_timer / StairingTime * (1 - LowerBound)) + LowerBound;
+    }
+
+    public void ToMainSceneButton()
+    {
+        SceneManager.LoadScene("HeadMovement");
     }
 }
