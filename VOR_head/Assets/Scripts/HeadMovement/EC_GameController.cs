@@ -26,6 +26,7 @@ public class EC_GameController : MonoBehaviour {
     private Vector3 original_scale;
     private Transform target_crossTrans;
     private bool start_flag;
+    private DataController DC_script;
 
     // Use this for initialization
     void Start() {

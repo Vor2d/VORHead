@@ -324,5 +324,31 @@ public static class GeneralMethods {
                             init_dist);
     }
 
+    public static float get_median(List<float> data_list)
+    {
+        data_list.Sort();
+
+        if (data_list.Count % 2 != 0)
+        {
+            return data_list[data_list.Count / 2];
+        }
+        else
+        {
+            return (data_list[data_list.Count / 2] + data_list[data_list.Count / 2 - 1])
+                            / 2.0f;
+        }
+    }
+
+    public static void fit_linear(float x1, float x2, float y1, float y2, 
+                                    out float k, out float b)
+    {
+        k = 0;
+        b = 0;
+        float delta_y = y1 - y2;
+        float delta_x = x1 - x2;
+        k = delta_y / delta_x;
+        b = y1 - (k * x1);
+    }
+
 
 }
