@@ -8,7 +8,7 @@ public class MD_GameController : MonoBehaviour {
 
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
-    public GameObject MissilePrefab;
+    public GameObject[] MissilePrefabs;
     public GameObject ScoreText_OBJ;
 
     public bool City_destroied { get; set; }
@@ -62,7 +62,8 @@ public class MD_GameController : MonoBehaviour {
     public void ToInstantiatetMissile()
     {
         GameObject Missile =
-                    Instantiate(MissilePrefab, RandomPosGenerate(), Quaternion.identity);
+                    Instantiate(MissilePrefabs[Random.Range(0,MissilePrefabs.Length)],
+                                RandomPosGenerate(), Quaternion.identity);
         Missile Missile_Script = Missile.GetComponent<Missile>();
         int city_index = Random.Range(0, city_number);
         Missile_Script.set_target(cities[city_index].transform);

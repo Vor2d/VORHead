@@ -696,8 +696,9 @@ MonoBehaviour:
   MDTRC_script: {fileID: 970206100}
   ExplodePrefab: {fileID: 1045546833510976, guid: b286d710dbb59a34996cd333d5a7311d,
     type: 2}
-  MissilePrefab: {fileID: 1728829205962738, guid: a01b44faf18427d4f9d09cb2185034e3,
-    type: 2}
+  MissilePrefabs:
+  - {fileID: 1068955111381796, guid: fcfb223d29f00fc47b9bf367dbf258bf, type: 2}
+  - {fileID: 1330579366159162, guid: 10e0cfaff92865646a4e1408cd55a5f8, type: 2}
   ScoreText_OBJ: {fileID: 411367424}
   InstRandomRange: 9
   InstY: 6

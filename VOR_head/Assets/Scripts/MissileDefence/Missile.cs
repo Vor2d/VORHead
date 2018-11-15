@@ -46,7 +46,7 @@ public class Missile : MonoBehaviour {
 
     public void face(Vector3 pos)
     {
-        transform.up = -pos;
+        transform.forward = pos;
     }
 
     private void OnTriggerEnter(Collider other)
