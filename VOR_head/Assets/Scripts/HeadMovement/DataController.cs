@@ -26,8 +26,8 @@ public class DataController : MonoBehaviour {
     {
         DontDestroyOnLoad(this);
 
-        this.UsingCoilFlag = false;
-        this.UsingVRFlag = true;
+        this.UsingCoilFlag = true;
+        this.UsingVRFlag = false;
 
         this.init_data = new Dictionary<string, string>();
         this.Head_origin = new Quaternion(0.0f,0.0f,0.0f,1.0f);

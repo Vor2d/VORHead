@@ -1,4 +1,4 @@
-GameMode	GazeTest
+GameMode	NoReddot
 ________________________________
 -1
 10	15

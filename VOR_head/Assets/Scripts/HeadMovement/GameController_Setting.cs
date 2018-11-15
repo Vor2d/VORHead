@@ -335,4 +335,16 @@ public class GameController_Setting : MonoBehaviour {
         SceneManager.LoadScene("EyeCalibration");
     }
 
+    public void ToggleReddotButton()
+    {
+        if(GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled)
+        {
+            GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+        }
+        else
+        {
+            GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+        }
+    }
+
 }

@@ -12,6 +12,7 @@ public class GameController : MonoBehaviour {
 
     public enum GazeTarget { DefaultTarget, HideDetector}
 
+    //Obsolete;
     public Dictionary<string, string> GameModeToIndiText = new Dictionary<string, string>()
     {
         { "Training", "Back Training" },

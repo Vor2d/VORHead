@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameMode
 {
     public enum GameModeEnum { Default, GazeTest, EyeTest, Feedback_Learning,HC_FB_Learning,
-                                Jump_Learning,Training}
+                                Jump_Learning,Training,NoReddot}
 
     //Game Flag
     public bool HideFlag { get; set; }
@@ -97,6 +97,12 @@ public class GameMode
             case GameModeEnum.Training:
                 {
                     SkipCenterFlag = true;
+                    break;
+                }
+            case GameModeEnum.NoReddot:
+                {
+                    SkipCenterFlag = true;
+                    HideHeadIndicator = true;
                     break;
                 }
         }

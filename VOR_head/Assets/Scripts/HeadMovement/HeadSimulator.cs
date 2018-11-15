@@ -41,7 +41,7 @@ public class HeadSimulator : MonoBehaviour {
 
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
-            Debug.Log("RRotateDegree " + RRotateDegree);
+            //Debug.Log("RRotateDegree " + RRotateDegree);
 
             transform.localEulerAngles =
                 GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,

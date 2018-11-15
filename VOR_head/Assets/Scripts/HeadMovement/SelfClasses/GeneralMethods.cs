@@ -212,6 +212,12 @@ public static class GeneralMethods {
                                     set_preset_mode(GameMode.GameModeEnum.Training);
                                         break;
                                     }
+                                case "NoReddot":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameMode.GameModeEnum.NoReddot);
+                                        break;
+                                    }
                                 default:
                                     {
                                         temp_gameMode.

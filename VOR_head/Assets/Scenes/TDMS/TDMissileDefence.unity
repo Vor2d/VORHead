@@ -657,7 +657,7 @@ GameObject:
   - component: {fileID: 1306994843}
   - component: {fileID: 1306994842}
   m_Layer: 0
-  m_Name: Sphere
+  m_Name: AimIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
