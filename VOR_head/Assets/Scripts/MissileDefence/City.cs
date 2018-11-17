@@ -24,6 +24,8 @@ public class City : MonoBehaviour {
     {
         Health--;
         check_health();
+
+        GetComponent<AudioSource>().Play();
     }
 
     private void check_health()
@@ -31,7 +33,7 @@ public class City : MonoBehaviour {
         if(Health <= 0)
         {
             MD_GC_Script.City_destroied = true;
-            Destroy(gameObject);
+            Destroy(gameObject,1.0f);
         }
     }
 }

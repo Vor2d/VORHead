@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour {
 
+    [SerializeField] private GameObject explosion_OBJ;
 
     public float Speed = 0.5f;
 
@@ -55,15 +56,18 @@ public class Missile : MonoBehaviour {
         if (other_GO.tag == "City")
         {
             other_GO.GetComponent<City>().get_hit();
+            Instantiate(explosion_OBJ, transform.position,new Quaternion());
             Destroy(gameObject);
         }
         else if(other_GO.tag == "Explode")
         {
             MDGC_script.missile_destroyed();
+            Instantiate(explosion_OBJ, transform.position, new Quaternion());
             Destroy(gameObject);
         }
         else if(other_GO.tag == "MD_GroundBorder")
         {
+            Instantiate(explosion_OBJ, transform.position, new Quaternion());
             Destroy(gameObject);
         }
 

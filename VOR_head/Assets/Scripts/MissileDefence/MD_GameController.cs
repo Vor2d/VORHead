@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SpatialTracking;
 
 public class MD_GameController : MonoBehaviour {
 
     private const string score_init_str = "Score: ";
+
+    [SerializeField] private Transform Camera1I_TRANS;
+    [SerializeField] private Transform Camera2I_TRANS;
 
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
@@ -26,6 +30,7 @@ public class MD_GameController : MonoBehaviour {
     private int city_number;
     private int score;
     private bool score_changed_flag;
+    private bool first_camera_on;
 
     // Use this for initialization
     void Start () {
@@ -36,6 +41,9 @@ public class MD_GameController : MonoBehaviour {
         this.missile_timer = MissileInterTime;
         this.score = 0;
         this.score_changed_flag = true;
+        this.first_camera_on = false;
+
+        toggle_camera();
 
         update_cities();
     }
@@ -45,6 +53,11 @@ public class MD_GameController : MonoBehaviour {
         if (missile_timer_flag)
         {
             missile_timer -= Time.deltaTime;
+        }
+
+        if(Input.GetKeyDown(KeyCode.JoystickButton1))
+        {
+            toggle_camera();
         }
 
         update_score();
@@ -131,4 +144,24 @@ public class MD_GameController : MonoBehaviour {
         }
         
     }
+
+    private void toggle_camera()
+    {
+        if(first_camera_on)
+        {
+            Camera.main.transform.position = Camera2I_TRANS.position;
+            first_camera_on = false;
+            //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
+            //                    TrackedPoseDriver.TrackingType.RotationOnly;
+        }
+        else
+        {
+            Camera.main.transform.position = Camera1I_TRANS.position;
+            first_camera_on = true;
+            //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
+            //                TrackedPoseDriver.TrackingType.RotationAndPosition;
+        }
+    }
+
+
 }
