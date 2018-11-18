@@ -112,7 +112,16 @@ public class MD_GameController : MonoBehaviour {
 
     public void update_cities()
     {
-        cities = GameObject.FindGameObjectsWithTag("City");
+        List<GameObject> temp_cities = new List<GameObject>();
+        foreach(GameObject city in GameObject.FindGameObjectsWithTag("City"))
+        {
+            if(city.GetComponent<City>().Health > 0)
+            {
+                temp_cities.Add(city);
+            }
+        }
+
+        cities = temp_cities.ToArray();
         city_number = cities.Length;
         Debug.Log("city_number " + city_number);
     }
