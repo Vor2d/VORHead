@@ -18,7 +18,7 @@ public class StartScene {
         //EditorApplication.SaveCurrentSceneIfUserWantsTo();
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         //EditorApplication.OpenScene("Assets/whatever/YourPrepScene.unity");
-        EditorSceneManager.OpenScene("Assets/Scenes/HMTS/HeadMInit.unity");
+        EditorSceneManager.OpenScene("Assets/Scenes/StartScene/StartScene.unity");
         EditorApplication.isPlaying = true;
     }
 }
