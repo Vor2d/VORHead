@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BP_DataController : MonoBehaviour {
-
-    public bool Using_VR_flag { get; set; }
+public class BP_DataController : ParentDataController {
 
     private void Awake()
     {
@@ -13,7 +11,7 @@ public class BP_DataController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        this.Using_VR_flag = true;
+        init_DC();
 	}
 	
 	// Update is called once per frame

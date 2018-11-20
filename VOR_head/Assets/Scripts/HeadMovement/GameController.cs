@@ -201,7 +201,7 @@ public class GameController : MonoBehaviour {
 
         if (Check_stop_flag)
         {
-            if(DC_script.UsingCoilFlag)
+            if(DC_script.using_coil)
             {
                 head_speed_y = CD_script.currentHeadVelocity.z;
             }
@@ -366,7 +366,7 @@ public class GameController : MonoBehaviour {
 
         Debug.Log("turning " + turn_degree);
 
-        if(DC_script.UsingCoilFlag)
+        if(DC_script.using_coil)
         {
             float virtual_degree = 
                 GeneralMethods.RealToVirtualy(DC_script.SystemSetting.Player_screen_cm,
@@ -375,7 +375,7 @@ public class GameController : MonoBehaviour {
             tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct, 0);
             current_rot_ang_dir = new Vector2(virtual_degree, turn_direct);
         }
-        if(DC_script.UsingVRFlag)
+        if(DC_script.using_VR)
         {
             tar_CP_script.changePosition(turn_degree, 0.0f, turn_direct, 0);
             current_rot_ang_dir = new Vector2(turn_degree, turn_direct);
@@ -474,11 +474,11 @@ public class GameController : MonoBehaviour {
 
     private void check_speed_no_window()
     {
-        if(DC_script.UsingCoilFlag)
+        if(DC_script.using_coil)
         {
             head_speed_y = CD_script.currentHeadVelocity.z;
         }
-        if(DC_script.UsingVRFlag)
+        if(DC_script.using_VR)
         {
             head_speed_y = GeneralMethods.getVRspeed().y;
         }
@@ -691,11 +691,11 @@ public class GameController : MonoBehaviour {
 
     public void recenter_stage()
     {
-        if(DC_script.UsingCoilFlag)
+        if(DC_script.using_coil)
         {
             HS_script.reset_originQ();
         }
-        if(DC_script.UsingVRFlag)
+        if(DC_script.using_VR)
         {
             InputTracking.Recenter();
         }

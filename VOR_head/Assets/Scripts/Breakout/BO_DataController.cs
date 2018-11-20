@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BO_DataController : MonoBehaviour {
+public class BO_DataController : ParentDataController {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
+    // Use this for initialization
+    void Start()
+    {
+        init_DC();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+
 }

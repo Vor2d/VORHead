@@ -40,4 +40,9 @@ public class SC_GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("LoadTDMissileDefence");
     }
+
+    public void to_BO_scene()
+    {
+        SceneManager.LoadScene("LoadBreakout");
+    }
 }

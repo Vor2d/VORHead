@@ -16,7 +16,7 @@ public class MD_HeadSimulator : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
-        if (MDDC_script.Using_VR_flag)
+        if (MDDC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 
-public class DataController : MonoBehaviour {
+public class DataController : ParentDataController {
 
     private const string trial_path = "Default.txt";
     private const string setting_path = "SettingDefault.txt";
@@ -16,8 +16,6 @@ public class DataController : MonoBehaviour {
 
     //System data;
 
-    public bool UsingCoilFlag { get; set; }
-    public bool UsingVRFlag { get; set; }
     public Quaternion Head_origin { get; set; }
 
     private Dictionary<string, string> init_data;
@@ -26,8 +24,7 @@ public class DataController : MonoBehaviour {
     {
         DontDestroyOnLoad(this);
 
-        this.UsingCoilFlag = true;
-        this.UsingVRFlag = false;
+        init_DC();
 
         this.init_data = new Dictionary<string, string>();
         this.Head_origin = new Quaternion(0.0f,0.0f,0.0f,1.0f);

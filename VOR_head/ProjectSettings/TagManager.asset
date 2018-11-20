@@ -20,6 +20,7 @@ TagManager:
   - MD_GroundBorder
   - BP_BubbleAimI
   - TDMD_GroundWall
+  - BO_PadLayer
   layers:
   - Default
   - TransparentFX

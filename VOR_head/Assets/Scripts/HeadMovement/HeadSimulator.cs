@@ -29,7 +29,7 @@ public class HeadSimulator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if(DC_script.UsingCoilFlag)
+        if(DC_script.using_coil)
         {
             Quaternion coil_rotation = CD_script.currentHeadOrientation;
 
@@ -48,7 +48,7 @@ public class HeadSimulator : MonoBehaviour {
                                                 DC_script.SystemSetting.Screen_width_cm,
                                                 RRotateDegree.x, RRotateDegree.y);
         }
-        if(DC_script.UsingVRFlag)
+        if(DC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
             //Debug.Log("GeneralMethods.getVRrotation() "+ GeneralMethods.getVRrotation());

@@ -14,7 +14,7 @@ public class TDMD_HeadSimulator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (TDMDDC_script.Using_VR_flag)
+        if (TDMDDC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
         }
