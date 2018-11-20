@@ -21,6 +21,7 @@ TagManager:
   - BP_BubbleAimI
   - TDMD_GroundWall
   - BO_PadLayer
+  - BO_DeSpawnWall
   layers:
   - Default
   - TransparentFX
@@ -32,8 +33,8 @@ TagManager:
   - 
   - BackGround
   - GameObject
-  - 
-  - 
+  - BO_Pad
+  - BO_Wall
   - 
   - 
   - 

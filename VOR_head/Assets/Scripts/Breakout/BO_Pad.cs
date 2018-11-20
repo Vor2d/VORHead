@@ -13,6 +13,9 @@ public class BO_Pad : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position = BOCRH_script.Hit_position;
+        if(BOCRH_script.Hit_position.z != 0.0f)
+        {
+            transform.position = BOCRH_script.Hit_position;
+        }
 	}
 }

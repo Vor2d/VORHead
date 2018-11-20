@@ -16,7 +16,7 @@ public class BO_CheckRayHit : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 
         check_hits();
 
@@ -24,16 +24,19 @@ public class BO_CheckRayHit : MonoBehaviour {
 
     private void check_hits()
     {
-        for (int i = 0; i < GRC_script.Hits.Length; i++)
+        if(GRC_script.Hits != null)
         {
-            RaycastHit hit = GRC_script.Hits[i];
-            Transform objectHit = hit.transform;
+            for (int i = 0; i < GRC_script.Hits.Length; i++)
             {
-                if (objectHit != null)
+                RaycastHit hit = GRC_script.Hits[i];
+                Transform objectHit = hit.transform;
                 {
-                    if (objectHit.tag == HitTag)
+                    if (objectHit != null)
                     {
-                        Hit_position = hit.point;
+                        if (objectHit.tag == HitTag)
+                        {
+                            Hit_position = hit.point;
+                        }
                     }
                 }
             }
