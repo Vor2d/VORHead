@@ -10,10 +10,16 @@ public class BO_Ball : MonoBehaviour {
     [SerializeField] private float MinDepthSpeed = 10.0f;
     [SerializeField] private float AdjustForce = 10.0f;
     [SerializeField] private float StartForce = 1000.0f;
+    [SerializeField] private float HorizontalBoundary = 9.0f;
+    [SerializeField] private float VerticalBoundary = 4.0f;
+    [SerializeField] private float BoundaryPercentage = 0.1f;
+    [SerializeField] private float BoundaryTime = 1.0f;
 
     private BO_GameController BOGC_script;
     private Rigidbody ball_RB;
     private bool start_flag;
+    public float boundary_timer;
+    private bool boundary_timer_falg; 
 
     // Use this for initialization
     void Start () {
@@ -21,11 +27,25 @@ public class BO_Ball : MonoBehaviour {
         this.BOGC_script = 
                 GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
         this.start_flag = false;
-
+        this.boundary_timer = BoundaryTime;
+        this.boundary_timer_falg = false;
 	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+
+    private void Update()
+    {
+        check_boundary();
+        if (boundary_timer_falg)
+        {
+            boundary_timer -= Time.deltaTime;
+        }
+        else
+        {
+            boundary_timer = BoundaryTime;
+        }
+    }
+
+    // Update is called once per frame
+    void FixedUpdate () {
 
         if(start_flag)
         {
@@ -77,6 +97,24 @@ public class BO_Ball : MonoBehaviour {
                 ball_RB.AddForce(new Vector3(0.0f, force, 0.0f));
             }
         }
+
+        if(boundary_timer < 0.0f)
+        {
+            if(HorizontalBoundary - Mathf.Abs(transform.position.x)
+                    < HorizontalBoundary * BoundaryPercentage)
+            {
+                float force = transform.position.x < 0 ? AdjustForce : -AdjustForce;
+                ball_RB.AddForce(new Vector3(force, 0.0f, 0.0f));
+            }
+            else if(VerticalBoundary - Mathf.Abs(transform.position.y)
+                    < VerticalBoundary * BoundaryPercentage)
+            {
+                float force = transform.position.y < 0 ? AdjustForce : -AdjustForce;
+                ball_RB.AddForce(new Vector3(0.0f, force, 0.0f));
+            }
+
+        }
+        
     }
 
     public void start_ball()
@@ -91,6 +129,30 @@ public class BO_Ball : MonoBehaviour {
         {
             BOGC_script.restart_game();
             Destroy(gameObject);
+        }
+    }
+
+    private void check_boundary()
+    {
+        if(HorizontalBoundary - Mathf.Abs(transform.position.x)
+                    > HorizontalBoundary * BoundaryPercentage &&
+           VerticalBoundary - Mathf.Abs(transform.position.y)
+                    > VerticalBoundary * BoundaryPercentage)
+        {
+            boundary_timer_falg = false;
+        }
+        else
+        {
+            boundary_timer_falg = true;
+        }
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.transform.CompareTag("BO_Brick"))
+        {
+            collision.transform.GetComponent<BO_Brick>().hited();
         }
     }
 }

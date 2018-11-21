@@ -8,6 +8,7 @@ public class BO_GameController : MonoBehaviour {
     [SerializeField] private GameObject TextIndicator2;
     [SerializeField] private Transform BOPad_TRANS;
     [SerializeField] private GameObject BOBall_Prefab;
+    [SerializeField] private GameObject DebugText1;
 
     [SerializeField] private float StartCountTime = 3.0f;
     [SerializeField] private float BallOffset = 1.0f;
@@ -42,6 +43,12 @@ public class BO_GameController : MonoBehaviour {
         {
             TextIndicator1.GetComponent<TextMesh>().text =
                             BOBall_TRANS.position.ToString();
+        }
+        catch { }
+        try
+        {
+            DebugText1.GetComponent<TextMesh>().text =
+                        BOBall_TRANS.GetComponent<BO_Ball>().boundary_timer.ToString("F2");
         }
         catch { }
 
