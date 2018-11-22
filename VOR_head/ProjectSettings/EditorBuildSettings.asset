@@ -38,4 +38,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Breakout/Breakout.unity
     guid: 032ff75e1ad278248be1aadcbfbb12d1
+  - enabled: 1
+    path: Assets/Scenes/FruitSlice/LoadFruitSlice.unity
+    guid: b3fdeff0dd1c78c4bb2c9892e4cce25d
+  - enabled: 1
+    path: Assets/Scenes/FruitSlice/FriutSlice.unity
+    guid: 5a2550da8e7f7ec4e8d20f4faf2bb696
   m_configObjects: {}

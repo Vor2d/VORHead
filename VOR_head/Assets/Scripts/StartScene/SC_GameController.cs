@@ -45,4 +45,9 @@ public class SC_GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("LoadBreakout");
     }
+
+    public void to_FS_scene()
+    {
+        SceneManager.LoadScene("LoadFruitSlice");
+    }
 }

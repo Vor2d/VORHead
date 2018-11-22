@@ -31,7 +31,6 @@ public class Bubble : MonoBehaviour {
         this.BPGC_script =
                     GameObject.Find("BP_GameController").GetComponent<BP_GameController>();
         this.last_aimed_flag = false;
-        //this.critial_changed = false;
 	}
 
     private void Start()
@@ -57,17 +56,10 @@ public class Bubble : MonoBehaviour {
             float time_scale = last_timer / LastTime;
 
             BubbleRender.GetComponent<MeshRenderer>().material.color =
-                                                    new Color(1.0f * time_scale, 
+                                                    new Color(1.0f * time_scale,
                                                                 1.0f * time_scale,
-                                                                0.0f, 
+                                                                0.0f,
                         (InitTransparent - LastTransparent) * time_scale + LastTransparent);
-
-            //if(last_timer < LastTime * (1 - CriticalPercent) && !critial_changed)
-            //{
-            //    BubbleRender.GetComponent<MeshRenderer>().material.color = 
-            //                                            new Color(1.0f,1.0f,0.0f,0.3f);
-            //    critial_changed = true;
-            //}
 
             if (last_timer < 0.0f)
             {
