@@ -9,6 +9,7 @@ public class MD_GameController : MonoBehaviour {
 
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
+    [SerializeField] private Transform CameraParent_TRANS;
 
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
@@ -158,14 +159,22 @@ public class MD_GameController : MonoBehaviour {
     {
         if(first_camera_on)
         {
-            Camera.main.transform.position = Camera2I_TRANS.position;
+            //Camera.main.transform.position = Camera2I_TRANS.position;
+            //Camera.main.transform.rotation = Camera2I_TRANS.rotation;
+            CameraParent_TRANS.position = Camera2I_TRANS.position;
+            CameraParent_TRANS.rotation = Camera2I_TRANS.rotation;
+            CameraParent_TRANS.localScale = Camera2I_TRANS.localScale;
             first_camera_on = false;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
             //                    TrackedPoseDriver.TrackingType.RotationOnly;
         }
         else
         {
-            Camera.main.transform.position = Camera1I_TRANS.position;
+            //Camera.main.transform.position = Camera1I_TRANS.position;
+            //Camera.main.transform.rotation = Camera1I_TRANS.rotation;
+            CameraParent_TRANS.position = Camera1I_TRANS.position;
+            CameraParent_TRANS.rotation = Camera1I_TRANS.rotation;
+            CameraParent_TRANS.localScale = Camera1I_TRANS.localScale;
             first_camera_on = true;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
             //                TrackedPoseDriver.TrackingType.RotationAndPosition;

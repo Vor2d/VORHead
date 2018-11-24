@@ -8,12 +8,17 @@ public class City : MonoBehaviour {
 
     public int Health = 3;
 
-    public MD_GameController MD_GC_Script;
+    private MD_GameController MD_GC_Script;
 
 	// Use this for initialization
 	void Start () {
-		
-	}
+        if(MD_GC_Script == null)
+        {
+            MD_GC_Script = 
+                GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
+        }
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
