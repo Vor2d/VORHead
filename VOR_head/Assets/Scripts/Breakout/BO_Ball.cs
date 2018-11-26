@@ -18,8 +18,11 @@ public class BO_Ball : MonoBehaviour {
     private BO_GameController BOGC_script;
     private Rigidbody ball_RB;
     private bool start_flag;
-    public float boundary_timer;
-    private bool boundary_timer_falg; 
+    private float boundary_timer;
+    private bool boundary_timer_falg;
+
+    //Debug
+    //public Vector3 collision_pos;
 
     // Use this for initialization
     void Start () {
@@ -153,6 +156,15 @@ public class BO_Ball : MonoBehaviour {
         if(collision.transform.CompareTag("BO_Brick"))
         {
             collision.transform.GetComponent<BO_Brick>().hited();
+        }
+
+        Debug.Log("collision.contacts " + collision.contacts.Length);
+
+        foreach (ContactPoint contact in collision.contacts)
+        {
+            
+            // Visualize the contact point
+            Debug.DrawRay(contact.point, contact.normal, Color.white);
         }
     }
 }

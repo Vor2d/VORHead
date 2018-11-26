@@ -24,6 +24,7 @@ TagManager:
   - BO_DeSpawnWall
   - BO_Brick
   - FS_FruitAimI
+  - BO_Wall
   layers:
   - Default
   - TransparentFX

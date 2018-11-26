@@ -47,8 +47,8 @@ public class BO_GameController : MonoBehaviour {
         catch { }
         try
         {
-            DebugText1.GetComponent<TextMesh>().text =
-                        BOBall_TRANS.GetComponent<BO_Ball>().boundary_timer.ToString("F2");
+            //DebugText1.GetComponent<TextMesh>().text =
+            //            BOBall_TRANS.GetComponent<BO_Ball>().boundary_timer.ToString("F2");
         }
         catch { }
 
@@ -76,6 +76,7 @@ public class BO_GameController : MonoBehaviour {
         BOBall_TRANS = Instantiate(BOBall_Prefab, 
                                 BOPad_TRANS.position + new Vector3(0.0f,0.0f,BallOffset),
                                 new Quaternion()).transform;
+        BOBall_TRANS.name = "BO_Ball";
         trial_iter++;
         if(trial_iter > 0)
         {

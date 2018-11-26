@@ -195,7 +195,6 @@ MonoBehaviour:
   VerticalBoundary: 4
   BoundaryPercentage: 0.1
   BoundaryTime: 1
-  boundary_timer: 0
 --- !u!135 &135740915326561836
 SphereCollider:
   m_ObjectHideFlags: 1
