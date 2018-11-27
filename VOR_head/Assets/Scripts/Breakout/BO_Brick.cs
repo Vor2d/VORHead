@@ -6,11 +6,16 @@ public class BO_Brick : MonoBehaviour {
 
     private float alpha;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
         this.alpha = GetComponent<Renderer>().material.color.a;
 
         random_color();
+    }
+
+    // Use this for initialization
+    void Start () {
+
 	}
 	
 	// Update is called once per frame
@@ -30,6 +35,22 @@ public class BO_Brick : MonoBehaviour {
 
     public void hited()
     {
+        GetComponent<Collider>().enabled = false;
         Destroy(gameObject);
+    }
+
+    public void update_shadow()
+    {
+        foreach(Transform child in transform)
+        {
+            if(child.CompareTag("BO_BrickRayCasts"))
+            {
+                foreach(Transform cchild in child)
+                {
+                    cchild.GetComponent<BO_BrickRayCast>().update_shadow();
+                    Debug.Log("1 Called!");
+                }
+            }
+        }
     }
 }

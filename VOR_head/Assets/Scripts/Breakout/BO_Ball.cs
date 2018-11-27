@@ -14,12 +14,27 @@ public class BO_Ball : MonoBehaviour {
     [SerializeField] private float VerticalBoundary = 4.0f;
     [SerializeField] private float BoundaryPercentage = 0.1f;
     [SerializeField] private float BoundaryTime = 1.0f;
+    [SerializeField] private float BallDiameter = 1.0f;
+
+    [SerializeField] ParticleSystem Left_PS;
+    [SerializeField] ParticleSystem Right_PS;
+    [SerializeField] ParticleSystem Up_PS;
+    [SerializeField] ParticleSystem Down_PS;
 
     private BO_GameController BOGC_script;
     private Rigidbody ball_RB;
     private bool start_flag;
     private float boundary_timer;
-    private bool boundary_timer_falg;
+    private bool boundary_timer_flag;
+
+    private bool last_left_boundary_flag;
+    private bool left_boundary_flag;
+    private bool last_right_boundary_flag;
+    private bool right_boundary_flag;
+    private bool last_up_boundary_flag;
+    private bool up_boundary_flag;
+    private bool last_down_boundary_flag;
+    private bool down_boundary_flag;
 
     //Debug
     //public Vector3 collision_pos;
@@ -31,13 +46,21 @@ public class BO_Ball : MonoBehaviour {
                 GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
         this.start_flag = false;
         this.boundary_timer = BoundaryTime;
-        this.boundary_timer_falg = false;
-	}
+        this.boundary_timer_flag = false;
+        this.last_left_boundary_flag = false;
+        this.left_boundary_flag = false;
+        this.last_right_boundary_flag = false;
+        this.right_boundary_flag = false;
+        this.last_up_boundary_flag = false;
+        this.up_boundary_flag = false;
+        this.last_down_boundary_flag = false;
+        this.down_boundary_flag = false;
+    }
 
     private void Update()
     {
         check_boundary();
-        if (boundary_timer_falg)
+        if (boundary_timer_flag)
         {
             boundary_timer -= Time.deltaTime;
         }
@@ -45,6 +68,50 @@ public class BO_Ball : MonoBehaviour {
         {
             boundary_timer = BoundaryTime;
         }
+
+        if(!last_left_boundary_flag && left_boundary_flag)  //left
+        {
+            turn_on_left_PS();
+            //BOGC_script.DebugText1.GetComponent<TextMesh>().text = "left";
+        }
+        else if(last_left_boundary_flag && !left_boundary_flag)
+        {
+            turn_off_left_PS();
+        }
+        if (!last_right_boundary_flag && right_boundary_flag) //right
+        {
+            turn_on_right_PS();
+            //BOGC_script.DebugText1.GetComponent<TextMesh>().text = "right";
+
+        }
+        else if (last_right_boundary_flag && !right_boundary_flag)
+        {
+            turn_off_right_PS();
+        }
+        if (!last_up_boundary_flag && up_boundary_flag) //up
+        {
+            turn_on_up_PS();
+            //BOGC_script.DebugText1.GetComponent<TextMesh>().text = "up";
+
+        }
+        else if (last_up_boundary_flag && !up_boundary_flag)
+        {
+            turn_off_up_PS();
+        }
+        if (!last_down_boundary_flag && down_boundary_flag) //down
+        {
+            turn_on_down_PS();
+            //BOGC_script.DebugText1.GetComponent<TextMesh>().text = "down";
+
+        }
+        else if (last_down_boundary_flag && !down_boundary_flag)
+        {
+            turn_off_down_PS();
+        }
+        last_left_boundary_flag = left_boundary_flag;
+        last_right_boundary_flag = right_boundary_flag;
+        last_up_boundary_flag = up_boundary_flag;
+        last_down_boundary_flag = down_boundary_flag;
     }
 
     // Update is called once per frame
@@ -53,7 +120,10 @@ public class BO_Ball : MonoBehaviour {
         if(start_flag)
         {
             check_velocity();
+            adjust_boundary();
         }
+
+
 
     }
 
@@ -100,23 +170,6 @@ public class BO_Ball : MonoBehaviour {
                 ball_RB.AddForce(new Vector3(0.0f, force, 0.0f));
             }
         }
-
-        if(boundary_timer < 0.0f)
-        {
-            if(HorizontalBoundary - Mathf.Abs(transform.position.x)
-                    < HorizontalBoundary * BoundaryPercentage)
-            {
-                float force = transform.position.x < 0 ? AdjustForce : -AdjustForce;
-                ball_RB.AddForce(new Vector3(force, 0.0f, 0.0f));
-            }
-            else if(VerticalBoundary - Mathf.Abs(transform.position.y)
-                    < VerticalBoundary * BoundaryPercentage)
-            {
-                float force = transform.position.y < 0 ? AdjustForce : -AdjustForce;
-                ball_RB.AddForce(new Vector3(0.0f, force, 0.0f));
-            }
-
-        }
         
     }
 
@@ -139,16 +192,117 @@ public class BO_Ball : MonoBehaviour {
     {
         if(HorizontalBoundary - Mathf.Abs(transform.position.x)
                     > HorizontalBoundary * BoundaryPercentage &&
-           VerticalBoundary - Mathf.Abs(transform.position.y)
+            VerticalBoundary - Mathf.Abs(transform.position.y)
                     > VerticalBoundary * BoundaryPercentage)
         {
-            boundary_timer_falg = false;
+            boundary_timer_flag = false;
+            left_boundary_flag = false;
+            right_boundary_flag = false;
+            up_boundary_flag = false;
+            down_boundary_flag = false;
         }
         else
         {
-            boundary_timer_falg = true;
+            if (HorizontalBoundary - Mathf.Abs(transform.position.x)
+                    < HorizontalBoundary * BoundaryPercentage)
+            {
+                if (transform.position.x < 0.0f)
+                {
+                    left_boundary_flag = true;
+                }
+                else
+                {
+                    right_boundary_flag = true;
+                }
+                boundary_timer_flag = true;
+            }
+            else
+            {
+                left_boundary_flag = false;
+                right_boundary_flag = false;
+            }
+            if (VerticalBoundary - Mathf.Abs(transform.position.y)
+                        < VerticalBoundary * BoundaryPercentage)
+            {
+                if (transform.position.y > 0.0f)
+                {
+                    up_boundary_flag = true;
+                }
+                else
+                {
+                    down_boundary_flag = true;
+                }
+                boundary_timer_flag = true;
+            }
+            else
+            {
+                up_boundary_flag = false;
+                down_boundary_flag = false;
+            }
+
         }
 
+    }
+
+    public void adjust_boundary()
+    {
+        if (boundary_timer < 0.0f)
+        {
+            //
+            if (HorizontalBoundary - Mathf.Abs(transform.position.x)
+                    < HorizontalBoundary * BoundaryPercentage)
+            {
+                float force = transform.position.x < 0 ? AdjustForce : -AdjustForce;
+                ball_RB.AddForce(new Vector3(force, 0.0f, 0.0f));
+            }
+            else if (VerticalBoundary - Mathf.Abs(transform.position.y)
+                    < VerticalBoundary * BoundaryPercentage)
+            {
+                float force = transform.position.y < 0 ? AdjustForce : -AdjustForce;
+                ball_RB.AddForce(new Vector3(0.0f, force, 0.0f));
+            }
+
+        }
+    }
+
+    private void turn_on_left_PS()
+    {
+        Left_PS.Play();
+    }
+
+    private void turn_off_left_PS()
+    {
+        Left_PS.Stop();
+    }
+
+    private void turn_on_right_PS()
+    {
+        Right_PS.Play();
+    }
+
+    private void turn_off_right_PS()
+    {
+        Right_PS.Stop();
+    }
+
+    private void turn_on_up_PS()
+    {
+        Up_PS.Play();
+    }
+
+    private void turn_off_up_PS()
+    {
+        Up_PS.Stop();
+    }
+
+    private void turn_on_down_PS()
+    {
+        Down_PS.Play();
+    }
+
+    private void turn_off_down_PS()
+    {
+        Down_PS.Stop();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -156,15 +310,16 @@ public class BO_Ball : MonoBehaviour {
         if(collision.transform.CompareTag("BO_Brick"))
         {
             collision.transform.GetComponent<BO_Brick>().hited();
+            BOGC_script.brick_destroied();
         }
 
-        Debug.Log("collision.contacts " + collision.contacts.Length);
+        //Debug.Log("collision.contacts " + collision.contacts.Length);
 
-        foreach (ContactPoint contact in collision.contacts)
-        {
+        //foreach (ContactPoint contact in collision.contacts)
+        //{
             
-            // Visualize the contact point
-            Debug.DrawRay(contact.point, contact.normal, Color.white);
-        }
+        //    // Visualize the contact point
+        //    Debug.DrawRay(contact.point, contact.normal, Color.white);
+        //}
     }
 }

@@ -8,7 +8,7 @@ public class BO_GameController : MonoBehaviour {
     [SerializeField] private GameObject TextIndicator2;
     [SerializeField] private Transform BOPad_TRANS;
     [SerializeField] private GameObject BOBall_Prefab;
-    [SerializeField] private GameObject DebugText1;
+    [SerializeField] public GameObject DebugText1;
 
     [SerializeField] private float StartCountTime = 3.0f;
     [SerializeField] private float BallOffset = 1.0f;
@@ -21,6 +21,7 @@ public class BO_GameController : MonoBehaviour {
     private float lost_wait_timer;
     private bool lost_wait_flag;
     private int trial_iter;
+    private bool brick_updated;
 
     // Use this for initialization
     void Start () {
@@ -30,6 +31,7 @@ public class BO_GameController : MonoBehaviour {
         this.lost_wait_timer = LostWaitTime;
         this.lost_wait_flag = false;
         this.trial_iter = -1;
+        this.brick_updated = true;
 
         TextIndicator2.SetActive(false);
 	}
@@ -126,8 +128,18 @@ public class BO_GameController : MonoBehaviour {
         BOGCAnimator.SetTrigger("ReStart");
     }
 
-    public void LeaveGameProcess()
+    public void brick_destroied()
     {
-
+        update_brick();
     }
+
+    public void update_brick()
+    {
+        foreach (GameObject brick_OBJ in GameObject.FindGameObjectsWithTag("BO_Brick"))
+        {
+            brick_OBJ.GetComponent<BO_Brick>().update_shadow();
+        }
+    }
+
+
 }

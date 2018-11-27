@@ -37,7 +37,7 @@ GameObject:
   - component: {fileID: 4504966077467210}
   m_Layer: 0
   m_Name: RayCasts
-  m_TagString: Untagged
+  m_TagString: BO_BrickRayCasts
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 23883001191707752}
   - component: {fileID: 65966287538577520}
   - component: {fileID: 114656093741234052}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Brick
   m_TagString: BO_Brick
   m_Icon: {fileID: 0}
@@ -261,6 +261,10 @@ MonoBehaviour:
     type: 2}
   Parent_Trans: {fileID: 4396438390734340}
   MaxDistance: 10
+  InitAlpha: 50
+  RayMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &114400175416097308
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -276,6 +280,10 @@ MonoBehaviour:
     type: 2}
   Parent_Trans: {fileID: 4396438390734340}
   MaxDistance: 10
+  InitAlpha: 50
+  RayMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &114580005558854544
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -291,6 +299,10 @@ MonoBehaviour:
     type: 2}
   Parent_Trans: {fileID: 4396438390734340}
   MaxDistance: 10
+  InitAlpha: 50
+  RayMask:
+    serializedVersion: 2
+    m_Bits: 2048
 --- !u!114 &114656093741234052
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -317,3 +329,7 @@ MonoBehaviour:
     type: 2}
   Parent_Trans: {fileID: 4396438390734340}
   MaxDistance: 10
+  InitAlpha: 50
+  RayMask:
+    serializedVersion: 2
+    m_Bits: 2048

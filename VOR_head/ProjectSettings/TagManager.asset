@@ -25,6 +25,7 @@ TagManager:
   - BO_Brick
   - FS_FruitAimI
   - BO_Wall
+  - BO_BrickRayCasts
   layers:
   - Default
   - TransparentFX
@@ -37,7 +38,7 @@ TagManager:
   - BackGround
   - GameObject
   - BO_Pad
-  - BO_Wall
+  - BO_BrickRayLayer
   - RayCastOnly
   - 
   - 
