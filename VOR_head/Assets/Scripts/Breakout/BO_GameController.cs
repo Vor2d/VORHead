@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BO_GameController : MonoBehaviour {
 
@@ -9,6 +10,10 @@ public class BO_GameController : MonoBehaviour {
     [SerializeField] private Transform BOPad_TRANS;
     [SerializeField] private GameObject BOBall_Prefab;
     [SerializeField] public GameObject DebugText1;
+    [SerializeField] private Transform PosManuIndicator;
+    [SerializeField] private Transform PosPlayIndicator;
+    [SerializeField] private Transform CameraParent_TRANS;
+    [SerializeField] private Transform Body_TRANS;
 
     [SerializeField] private float StartCountTime = 3.0f;
     [SerializeField] private float BallOffset = 1.0f;
@@ -22,6 +27,7 @@ public class BO_GameController : MonoBehaviour {
     private bool lost_wait_flag;
     private int trial_iter;
     private bool brick_updated;
+    private bool check_start;
 
     // Use this for initialization
     void Start () {
@@ -32,6 +38,7 @@ public class BO_GameController : MonoBehaviour {
         this.lost_wait_flag = false;
         this.trial_iter = -1;
         this.brick_updated = true;
+        this.check_start = false;
 
         TextIndicator2.SetActive(false);
 	}
@@ -40,6 +47,10 @@ public class BO_GameController : MonoBehaviour {
 	void Update () {
 
         //Debug.Log("pad position " + BOPad_TRANS.position);
+        if(Input.GetKeyDown(KeyCode.JoystickButton1))
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
 
         try
         {
@@ -67,9 +78,11 @@ public class BO_GameController : MonoBehaviour {
 
 	}
 
-    public void BO_Init()
+    public void BO_ToInit()
     {
-        BOGCAnimator.SetTrigger("NextStep");
+        //BOGCAnimator.SetTrigger("NextStep");
+        check_start = true;
+        init_var();
     }
 
     public void ToBO_Start()
@@ -140,6 +153,40 @@ public class BO_GameController : MonoBehaviour {
             brick_OBJ.GetComponent<BO_Brick>().update_shadow();
         }
     }
+
+    private void init_var()
+    {
+        CameraParent_TRANS.transform.position = PosManuIndicator.position;
+        Body_TRANS.position = PosManuIndicator.position;
+        Body_TRANS.Find("RightControllerGroup").Find("RightController").
+                        GetComponent<RightController>().turn_on_controller();
+        Debug.Log("init_var");
+    }
+
+    public void start_button()
+    {
+        if (check_start)
+        {
+            to_game();
+            BOGCAnimator.SetTrigger("Start");
+        }
+    }
+
+    public void back_button()
+    {
+        Debug.Log("back_button");
+        GameObject.Find("SceneManager").GetComponent<MySceneManager>().to_start_scene();
+    }
+
+    private void to_game()
+    {
+        CameraParent_TRANS.transform.position = PosPlayIndicator.position;
+        Body_TRANS.position = PosPlayIndicator.position;
+        Body_TRANS.Find("RightControllerGroup").Find("RightController").
+                        GetComponent<RightController>().turn_off_controller();
+        Debug.Log("to_game");
+    }
+
 
 
 }

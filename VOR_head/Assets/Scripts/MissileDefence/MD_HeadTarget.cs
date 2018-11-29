@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MD_HeadTarget : MonoBehaviour {
 
-    
+    [SerializeField] private Transform HS_TRANS;
 
 	// Use this for initialization
 	void Start () {
@@ -13,7 +13,8 @@ public class MD_HeadTarget : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.LookAt(Camera.main.transform);
+        transform.LookAt(HS_TRANS.position);
+        //transform.Rotate(new Vector3(180.0f, 0.0f, 0.0f));
         //transform.forward = Vector3.down;
         //transform.up = -transform.position;
     }

@@ -15,7 +15,7 @@ public class BO_Init : StateMachineBehaviour {
                 GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
         }
 
-        BOGC_script.BO_Init();
+        BOGC_script.BO_ToInit();
 
     }
 

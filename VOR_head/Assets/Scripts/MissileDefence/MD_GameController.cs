@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
+using UnityEngine.SceneManagement;
 
 public class MD_GameController : MonoBehaviour {
 
@@ -10,6 +11,7 @@ public class MD_GameController : MonoBehaviour {
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
     [SerializeField] private Transform CameraParent_TRANS;
+    [SerializeField] private Transform Body_TRANS;
 
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
@@ -32,6 +34,7 @@ public class MD_GameController : MonoBehaviour {
     private int score;
     private bool score_changed_flag;
     private bool first_camera_on;
+    private bool start_flag;
 
     // Use this for initialization
     void Start () {
@@ -43,8 +46,9 @@ public class MD_GameController : MonoBehaviour {
         this.score = 0;
         this.score_changed_flag = true;
         this.first_camera_on = false;
+        this.start_flag = false;
 
-        toggle_camera();
+        
 
         update_cities();
     }
@@ -58,7 +62,7 @@ public class MD_GameController : MonoBehaviour {
 
         if(Input.GetKeyDown(KeyCode.JoystickButton1))
         {
-            toggle_camera();
+            restart();
         }
 
         update_score();
@@ -164,6 +168,13 @@ public class MD_GameController : MonoBehaviour {
             CameraParent_TRANS.position = Camera2I_TRANS.position;
             CameraParent_TRANS.rotation = Camera2I_TRANS.rotation;
             CameraParent_TRANS.localScale = Camera2I_TRANS.localScale;
+
+            Body_TRANS.position = Camera2I_TRANS.position;
+            Body_TRANS.rotation = Camera2I_TRANS.rotation;
+            Body_TRANS.localScale = Camera2I_TRANS.localScale;
+            Body_TRANS.Find("RightControllerGroup").Find("RightController").
+                            GetComponent<RightController>().turn_off_controller();
+
             first_camera_on = false;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
             //                    TrackedPoseDriver.TrackingType.RotationOnly;
@@ -175,10 +186,43 @@ public class MD_GameController : MonoBehaviour {
             CameraParent_TRANS.position = Camera1I_TRANS.position;
             CameraParent_TRANS.rotation = Camera1I_TRANS.rotation;
             CameraParent_TRANS.localScale = Camera1I_TRANS.localScale;
+
+            Body_TRANS.position = Camera1I_TRANS.position;
+            Body_TRANS.rotation = Camera1I_TRANS.rotation;
+            Body_TRANS.localScale = Camera1I_TRANS.localScale;
+            Body_TRANS.Find("RightControllerGroup").Find("RightController").
+                        GetComponent<RightController>().turn_on_controller();
+
             first_camera_on = true;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
             //                TrackedPoseDriver.TrackingType.RotationAndPosition;
         }
+    }
+
+    public void back_button()
+    {
+        GameObject.Find("SceneManager").GetComponent<MySceneManager>().to_start_scene();
+    }
+
+    public void start_button()
+    {
+        if(start_flag)
+        {
+            toggle_camera();
+            MD_GC_Animator.SetTrigger("Start");
+        }
+        
+    }
+
+    public void ToInit()
+    {
+        toggle_camera();
+        start_flag = true;
+    }
+
+    private void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 

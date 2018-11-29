@@ -28,11 +28,16 @@ public class MySceneManager : MonoBehaviour {
 		
         if(Input.GetKeyDown(KeyCode.Escape))
         {
-            back_to_start_scene();
-            SceneManager.LoadScene("StartScene");
+            to_start_scene();
         }
 
 	}
+
+    public void to_start_scene()
+    {
+        back_to_start_scene();
+        SceneManager.LoadScene("StartScene");
+    }
 
     private void back_to_start_scene()
     {
@@ -46,4 +51,6 @@ public class MySceneManager : MonoBehaviour {
             
         }
     }
+
+
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MD_HeadSimulator : MonoBehaviour {
 
+    [SerializeField] Transform Camera_TRANS;
+
     MD_DataController MDDC_script;
 
 	// Use this for initialization
@@ -16,6 +18,7 @@ public class MD_HeadSimulator : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        transform.position = Camera_TRANS.position;
         if (MDDC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();

@@ -34,9 +34,8 @@ public class WorldCanvasController : MonoBehaviour {
         point_data.position = hit_to_screen;
 
         //Debug.Log("hit_to_screen" + hit_to_screen);
-
-        Vector3[] positions = { transform.position, RC_script.hit_point };
-        GetComponent<LineRenderer>().SetPositions(positions);
+        //Vector3[] positions = { transform.position, RC_script.hit_point };
+        //GetComponent<LineRenderer>().SetPositions(positions);
 
         right_controller();
     }
