@@ -6,12 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class MD_GameController : MonoBehaviour {
 
-    private const string score_init_str = "Score: ";
+    public const string score_init_str = "Score: ";
+    public const string nextS_trigger_str = "NextStep";
+    public const string start_trigger_str = "Start";
+    //public const string rightCG_Oname_str = "RightControllerGroup";  //Right controller Group object name;
+    //public const string rightC_Oname_str = "RightController";    //Right controller object name;
+    public const string city_tag = "City";
+    public const string sceneM_Oname_str = "SceneManager";  //SceneManager object name;
 
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
     [SerializeField] private Transform CameraParent_TRANS;
     [SerializeField] private Transform Body_TRANS;
+    [SerializeField] private Aim Aim_script;
+    [SerializeField] private RightController RC_script;
+    [SerializeField] private Transform AimT_TRANS;
+
 
     public MD_TargetRayCast MDTRC_script;
     public GameObject ExplodePrefab;
@@ -20,6 +30,7 @@ public class MD_GameController : MonoBehaviour {
 
     public bool City_destroied { get; set; }
 
+    [SerializeField] private float SmallExplodeScale = 0.1f;
     public float InstRandomRange = 9.0f;
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
@@ -86,7 +97,7 @@ public class MD_GameController : MonoBehaviour {
         int city_index = Random.Range(0, city_number);
         Missile_Script.set_target(cities[city_index].transform);
         Missile_Script.start_move();
-        MD_GC_Animator.SetTrigger("NextStep");
+        MD_GC_Animator.SetTrigger(nextS_trigger_str);
     }
 
     private Vector3 RandomPosGenerate()
@@ -106,7 +117,7 @@ public class MD_GameController : MonoBehaviour {
         {
             missile_timer_flag = false;
             missile_timer = MissileInterTime;
-            MD_GC_Animator.SetTrigger("NextStep");
+            MD_GC_Animator.SetTrigger(nextS_trigger_str);
         }
     }
 
@@ -118,7 +129,7 @@ public class MD_GameController : MonoBehaviour {
     public void update_cities()
     {
         List<GameObject> temp_cities = new List<GameObject>();
-        foreach(GameObject city in GameObject.FindGameObjectsWithTag("City"))
+        foreach(GameObject city in GameObject.FindGameObjectsWithTag(city_tag))
         {
             if(city.GetComponent<City>().Health > 0)
             {
@@ -143,6 +154,14 @@ public class MD_GameController : MonoBehaviour {
         explode.GetComponent<Explode>().start_exp();
     }
 
+    private void instantiate_explode(Vector3 target_pos,float scale)
+    {
+        GameObject explode =
+                    Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
+        explode.GetComponent<Explode>().set_radius_scale(scale);
+        explode.GetComponent<Explode>().start_exp();
+    }
+
     public void missile_destroyed()
     {
         score += ScoreIncerase;
@@ -163,17 +182,10 @@ public class MD_GameController : MonoBehaviour {
     {
         if(first_camera_on)
         {
-            //Camera.main.transform.position = Camera2I_TRANS.position;
-            //Camera.main.transform.rotation = Camera2I_TRANS.rotation;
-            CameraParent_TRANS.position = Camera2I_TRANS.position;
-            CameraParent_TRANS.rotation = Camera2I_TRANS.rotation;
-            CameraParent_TRANS.localScale = Camera2I_TRANS.localScale;
-
             Body_TRANS.position = Camera2I_TRANS.position;
             Body_TRANS.rotation = Camera2I_TRANS.rotation;
             Body_TRANS.localScale = Camera2I_TRANS.localScale;
-            Body_TRANS.Find("RightControllerGroup").Find("RightController").
-                            GetComponent<RightController>().turn_off_controller();
+            RC_script.turn_off_controller();
 
             first_camera_on = false;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
@@ -181,17 +193,10 @@ public class MD_GameController : MonoBehaviour {
         }
         else
         {
-            //Camera.main.transform.position = Camera1I_TRANS.position;
-            //Camera.main.transform.rotation = Camera1I_TRANS.rotation;
-            CameraParent_TRANS.position = Camera1I_TRANS.position;
-            CameraParent_TRANS.rotation = Camera1I_TRANS.rotation;
-            CameraParent_TRANS.localScale = Camera1I_TRANS.localScale;
-
             Body_TRANS.position = Camera1I_TRANS.position;
             Body_TRANS.rotation = Camera1I_TRANS.rotation;
             Body_TRANS.localScale = Camera1I_TRANS.localScale;
-            Body_TRANS.Find("RightControllerGroup").Find("RightController").
-                        GetComponent<RightController>().turn_on_controller();
+            RC_script.turn_on_controller();
 
             first_camera_on = true;
             //Camera.main.GetComponent<TrackedPoseDriver>().trackingType =
@@ -201,7 +206,7 @@ public class MD_GameController : MonoBehaviour {
 
     public void back_button()
     {
-        GameObject.Find("SceneManager").GetComponent<MySceneManager>().to_start_scene();
+        GameObject.Find(sceneM_Oname_str).GetComponent<MySceneManager>().to_start_scene();
     }
 
     public void start_button()
@@ -209,7 +214,8 @@ public class MD_GameController : MonoBehaviour {
         if(start_flag)
         {
             toggle_camera();
-            MD_GC_Animator.SetTrigger("Start");
+            MD_GC_Animator.SetTrigger(start_trigger_str);
+            Aim_script.state_one_flag = false;
         }
         
     }
@@ -218,11 +224,17 @@ public class MD_GameController : MonoBehaviour {
     {
         toggle_camera();
         start_flag = true;
+        Aim_script.state_one_flag = true;
     }
 
     private void restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void state_one_Iexplosion()
+    {
+        instantiate_explode(AimT_TRANS.position,SmallExplodeScale);
     }
 
 

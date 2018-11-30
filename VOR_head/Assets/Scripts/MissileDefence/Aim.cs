@@ -6,9 +6,11 @@ public class Aim : MonoBehaviour {
 
     public MD_GameController MDGC_script;
 
+    public bool state_one_flag { get; set; }
+
 	// Use this for initialization
 	void Start () {
-		
+        this.state_one_flag = true;
 	}
 	
 	// Update is called once per frame
@@ -22,8 +24,14 @@ public class Aim : MonoBehaviour {
 
         if(Input.GetKeyDown(KeyCode.JoystickButton0))
         {
-            //Debug.Log("Input.GetKeyDown(KeyCode.JoystickButton0)");
-            MDGC_script.IE_with_raycast();
+            if(state_one_flag)
+            {
+                MDGC_script.state_one_Iexplosion();
+            }
+            else
+            {
+                MDGC_script.IE_with_raycast();
+            }
         }
     }
 }

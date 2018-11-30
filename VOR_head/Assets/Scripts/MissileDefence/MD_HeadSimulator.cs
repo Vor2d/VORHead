@@ -21,7 +21,7 @@ public class MD_HeadSimulator : MonoBehaviour {
         transform.position = Camera_TRANS.position;
         if (MDDC_script.using_VR)
         {
-            transform.rotation = GeneralMethods.getVRrotation();
+            transform.localRotation = GeneralMethods.getVRrotation();
         }
     }
 }

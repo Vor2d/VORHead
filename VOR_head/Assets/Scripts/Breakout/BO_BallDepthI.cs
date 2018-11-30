@@ -24,7 +24,7 @@ public class BO_BallDepthI : MonoBehaviour {
             {
                 Ball_TRANS = GameObject.Find("BO_Ball").transform;
             }
-            catch { Debug.Log("faild"); }
+            catch {  }
         }
         else
         {

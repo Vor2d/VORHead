@@ -45,11 +45,11 @@ public class WorldCanvasController : MonoBehaviour {
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(point_data, results);
 
-        Debug.Log("result " + results.Count);
-        foreach(RaycastResult rcr in results)
-        {
-            Debug.Log("result object " + rcr.gameObject.name);
-        }
+        //Debug.Log("result " + results.Count);
+        //foreach(RaycastResult rcr in results)
+        //{
+        //    Debug.Log("result object " + rcr.gameObject.name);
+        //}
 
         if (results.Count > 0)
         {
