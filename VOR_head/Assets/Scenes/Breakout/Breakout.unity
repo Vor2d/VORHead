@@ -1046,7 +1046,7 @@ GameObject:
   - component: {fileID: 564903916}
   - component: {fileID: 564903915}
   m_Layer: 10
-  m_Name: Colliders
+  m_Name: PadColliders
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
