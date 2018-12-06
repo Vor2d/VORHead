@@ -114,6 +114,48 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &227264861
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4895813184888646, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d87bc7e0925fe84469fb2b48328e1fad, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &323992699
 GameObject:
   m_ObjectHideFlags: 0
@@ -567,7 +609,6 @@ MonoBehaviour:
     type: 2}
   ScoreText: {fileID: 570143975}
   DebugText1: {fileID: 2122146843}
-  Debug_OBJ1: {fileID: 0}
   SliceSpeed: 50
   FruitIntervalTime: 3
   RandRangeX: 10
