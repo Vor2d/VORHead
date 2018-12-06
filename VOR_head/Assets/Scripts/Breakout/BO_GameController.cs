@@ -23,7 +23,9 @@ public class BO_GameController : MonoBehaviour {
     [SerializeField] private Transform CameraParent_TRANS;
     [SerializeField] private Transform Body_TRANS;
     [SerializeField] private RightController RC_script;
-    [SerializeField] private Transform FakePad;
+    //[SerializeField] private Transform FakePad;
+    [SerializeField] private GameObject[] Stated1_OBJs;
+    [SerializeField] private GameObject[] Stated2_OBJs;
 
     [SerializeField] private float StartCountTime = 3.0f;
     [SerializeField] private float BallOffset = 1.0f;
@@ -170,8 +172,10 @@ public class BO_GameController : MonoBehaviour {
         Body_TRANS.position = PosManuIndicator.position;
         RC_script.turn_on_controller();
         //BOPad_TRANS.GetComponent<BO_Pad>().move_with_raycast = false;
-        BOPad_TRANS.gameObject.SetActive(false);
-        FakePad.gameObject.SetActive(true);
+        //BOPad_TRANS.gameObject.SetActive(false);
+        //FakePad.gameObject.SetActive(true);
+        enable_stated1_objs();
+        disable_stated2_objs();
         Debug.Log("init_var");
     }
 
@@ -196,9 +200,48 @@ public class BO_GameController : MonoBehaviour {
         Body_TRANS.position = PosPlayIndicator.position;
         RC_script.turn_off_controller();
         //BOPad_TRANS.GetComponent<BO_Pad>().move_with_raycast = true;
-        BOPad_TRANS.gameObject.SetActive(true);
-        FakePad.gameObject.SetActive(false);
+        //BOPad_TRANS.gameObject.SetActive(true);
+        //FakePad.gameObject.SetActive(false);
+        enable_stated2_objs();
+        disable_stated1_objs();
         Debug.Log("to_game");
+    }
+
+    private void disable_stated1_objs()
+    {
+        foreach(GameObject go in Stated1_OBJs)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    private void enable_stated1_objs()
+    {
+        foreach (GameObject go in Stated1_OBJs)
+        {
+            go.SetActive(true);
+        }
+    }
+
+    private void disable_stated2_objs()
+    {
+        foreach (GameObject go in Stated2_OBJs)
+        {
+            go.SetActive(false);
+        }
+    }
+
+    private void enable_stated2_objs()
+    {
+        foreach (GameObject go in Stated2_OBJs)
+        {
+            go.SetActive(true);
+        }
+    }
+
+    public void recenter_button()
+    {
+        UnityEngine.XR.InputTracking.Recenter();
     }
 
 

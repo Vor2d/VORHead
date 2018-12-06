@@ -78,7 +78,7 @@ public class BO_BrickRayCast : MonoBehaviour {
     public void update_shadow()
     {
         raycast_hit();
-        Debug.Log("hit flag " + hited_flag);
+        //Debug.Log("hit flag " + hited_flag);
         if(hited_flag)
         {
             shadow_TRANS.position = hit_position;

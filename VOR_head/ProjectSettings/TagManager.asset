@@ -26,6 +26,7 @@ TagManager:
   - FS_FruitAimI
   - BO_Wall
   - BO_BrickRayCasts
+  - BO_Ball
   layers:
   - Default
   - TransparentFX

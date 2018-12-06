@@ -20,4 +20,5 @@ public class BO_Pad : MonoBehaviour {
             transform.position = BOCRH_script.Hit_position;
         }
 	}
+
 }

@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 65966287538577520}
   - component: {fileID: 114656093741234052}
   m_Layer: 11
-  m_Name: Brick
+  m_Name: BO_Brick
   m_TagString: BO_Brick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -314,6 +314,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f66566a8cac32d4aa2867af8f77c1db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BrickParticle_Prefab: {fileID: 1701683123276176, guid: 9056452c7e991e74f89ec9d6e52f333f,
+    type: 2}
 --- !u!114 &114658323525272384
 MonoBehaviour:
   m_ObjectHideFlags: 1

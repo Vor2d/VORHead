@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BO_Brick : MonoBehaviour {
 
+    [SerializeField] private GameObject BrickParticle_Prefab;
+
     private float alpha;
 
     private void Awake()
@@ -36,6 +38,7 @@ public class BO_Brick : MonoBehaviour {
     public void hited()
     {
         GetComponent<Collider>().enabled = false;
+        Instantiate(BrickParticle_Prefab, transform.position,new Quaternion());
         Destroy(gameObject);
     }
 
@@ -48,7 +51,7 @@ public class BO_Brick : MonoBehaviour {
                 foreach(Transform cchild in child)
                 {
                     cchild.GetComponent<BO_BrickRayCast>().update_shadow();
-                    Debug.Log("1 Called!");
+                    //Debug.Log("1 Called!");
                 }
             }
         }
