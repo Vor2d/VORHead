@@ -23,10 +23,11 @@ TagManager:
   - BO_PadLayer
   - BO_DeSpawnWall
   - BO_Brick
-  - FS_FruitAimI
   - BO_Wall
   - BO_BrickRayCasts
   - BO_Ball
+  - FS_FruitStartI
+  - FS_FruitPlane
   layers:
   - Default
   - TransparentFX

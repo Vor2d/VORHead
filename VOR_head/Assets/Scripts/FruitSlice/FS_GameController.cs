@@ -11,6 +11,7 @@ public class FS_GameController : MonoBehaviour {
     [SerializeField] private GameObject ScoreText;
     [SerializeField] private GameObject DebugText1;
     //[SerializeField] private GameObject Debug_OBJ1;
+    [SerializeField] private RightController RC_script;
 
     public bool is_slicing { get; set; }
 
@@ -57,6 +58,12 @@ public class FS_GameController : MonoBehaviour {
 
     }
 
+    public void FS_Init()
+    {
+        RC_script.turn_off_controller();
+        FSGCAnimator.SetTrigger("NextStep");
+    }
+
     public void ToInstantiateFruit()
     {
         instantiate_fruit();
@@ -66,9 +73,9 @@ public class FS_GameController : MonoBehaviour {
 
     private void instantiate_fruit()
     {
-        GameObject fruit_obj = 
+        GameObject fruit_obj =
                     Instantiate(FruitPrefab, rand_pos_generator(), new Quaternion());
-        fruit_obj.GetComponent<FS_Fruit>().start_bubble();
+        fruit_obj.GetComponent<FS_Fruit>().start_fruit();
     }
 
     private Vector3 rand_pos_generator()

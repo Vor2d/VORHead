@@ -6,43 +6,44 @@ public class FS_CheckRayHit : MonoBehaviour {
 
     [SerializeField] private GeneralRayCast GRC_script;
 
-    private RaycastHit[] raycastHits;
+    //private RaycastHit[] raycastHits;
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start () {		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (raycastHits != null)
-        {
-            foreach (RaycastHit raycastHit in raycastHits)
-            {
-                if (raycastHit.transform.CompareTag("FS_FruitAimI"))
-                {
-                    raycastHit.transform.GetComponentInParent<FS_Fruit>().
-                                                                Is_aimed_flag = false;
-                }
-            }
-        }
-
-        raycastHits = GRC_script.Hits;
-
-        if (raycastHits != null)
-        {
-            foreach (RaycastHit raycastHit in raycastHits)
-            {
-                
-                if (raycastHit.transform.CompareTag("FS_FruitAimI"))
-                {
-                    raycastHit.transform.GetComponentInParent<FS_Fruit>().
-                                                                Is_aimed_flag = true;
-                }
-            }
-        }
-
-
 	}
+
+    public bool check_ray_to_start()
+    {
+        if (GRC_script.Hits != null)
+        {
+            foreach (RaycastHit raycastHit in GRC_script.Hits)
+            {
+                Debug.Log("raycastHit " + raycastHit.transform.name);
+                if (raycastHit.transform.CompareTag(FS_VariableManager.FruitStartI_Tag))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Vector3 check_ray_to_plane()
+    {
+        if(GRC_script.Hits != null)
+        {
+            foreach (RaycastHit raycastHit in GRC_script.Hits)
+            {
+                if (raycastHit.transform.CompareTag(FS_VariableManager.FruitPlane_Tag))
+                {
+                    return raycastHit.point;
+                }
+            }
+        }
+        return Vector3.zero;
+    }
 }

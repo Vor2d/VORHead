@@ -60,30 +60,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90f565129ea90a945ad65ae884ee470e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1101 &1101424729867460892
-AnimatorStateTransition:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: NextStep
-    m_EventTreshold: 0
-  m_DstStateMachine: {fileID: 0}
-  m_DstState: {fileID: 1102553530312180438}
-  m_Solo: 0
-  m_Mute: 0
-  m_IsExit: 0
-  serializedVersion: 3
-  m_TransitionDuration: 0
-  m_TransitionOffset: 0
-  m_ExitTime: 0.75
-  m_HasExitTime: 0
-  m_HasFixedDuration: 1
-  m_InterruptionSource: 0
-  m_OrderedInterruption: 1
-  m_CanTransitionToSelf: 1
 --- !u!1101 &1101562470024947812
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -195,8 +171,7 @@ AnimatorState:
   m_Name: FS_Init
   m_Speed: 1
   m_CycleOffset: 0
-  m_Transitions:
-  - {fileID: 1101424729867460892}
+  m_Transitions: []
   m_StateMachineBehaviours:
   - {fileID: 114968407525314068}
   m_Position: {x: 50, y: 50, z: 0}

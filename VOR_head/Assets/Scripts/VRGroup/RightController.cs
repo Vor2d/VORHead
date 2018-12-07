@@ -25,7 +25,7 @@ public class RightController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        update_hand();
+        //update_hand();
         if(using_controller)
         {
             update_indicator();

@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class FS_Fruit : MonoBehaviour {
 
+    public bool Sliced_flag { get; set; }
+    public bool Start_flag { get; set; }
+    public bool Last_is_aimed_flag { get; set; }
     public bool Is_aimed_flag { get; set; }
-    public bool sliced_flag { get; set; }
-    public bool start_flag { get; set; }
-    public bool last_is_aimed_flag { get; set; }
+    public bool Aim_changed { get; set; }
 
+    [SerializeField] private FS_CheckRayHit FSCRH_script;
+    [SerializeField] private GameObject StopIndicator_Prefab;
     public FS_GameController FSGC_script;
+    public Controller_Input CI_script;
 
-    
     public bool speed_cal;
 
     // Use this for initialization
     void Awake () {
-        this.start_flag = false;
+        this.Start_flag = false;
         this.FSGC_script =
                     GameObject.Find("FS_GameController").GetComponent<FS_GameController>();
 	}
@@ -24,33 +27,46 @@ public class FS_Fruit : MonoBehaviour {
     private void Start()
     {
         this.Is_aimed_flag = false;
-        this.last_is_aimed_flag = false;
+        this.Last_is_aimed_flag = false;
         this.speed_cal = false;
-        this.sliced_flag = false;
+        this.Sliced_flag = false;
 
-        start_bubble();
+        start_fruit();
     }
 
     // Update is called once per frame
     void Update () {
 		
-        if(start_flag)
+        if(Start_flag)
         {
             //check_speed1();
-
-            last_is_aimed_flag = Is_aimed_flag;
+            check_start_aim();
         }
 
 	}
 
-    public void start_bubble()
+    private void check_start_aim()
     {
-        start_flag = true;
+        Last_is_aimed_flag = Is_aimed_flag;
+        Is_aimed_flag = FSCRH_script.check_ray_to_start();
+        if (Is_aimed_flag != Last_is_aimed_flag)
+        {
+            Aim_changed = true;
+        }
+        else
+        {
+            Aim_changed = false;
+        }
+    }
+
+    public void start_fruit()
+    {
+        Start_flag = true;
     }
 
     private void fruit_sliced()
     {
-        sliced_flag = true;
+        Sliced_flag = true;
         FSGC_script.fruit_destroyed();
         Destroy(gameObject);
     }
@@ -60,18 +76,18 @@ public class FS_Fruit : MonoBehaviour {
     {
         if (FSGC_script.is_slicing)
         {
-            if (!last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
+            if (!Last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
             {
                 speed_cal = true;
             }
-            else if (last_is_aimed_flag && Is_aimed_flag)    //In trigger;
+            else if (Last_is_aimed_flag && Is_aimed_flag)    //In trigger;
             {
                 if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSGC_script.SliceSpeed)
                 {
                     speed_cal = false;
                 }
             }
-            else if (last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
+            else if (Last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
             {
                 if (speed_cal)
                 {
@@ -85,4 +101,14 @@ public class FS_Fruit : MonoBehaviour {
         }
     }
 
+    public void fruit_cutted()
+    {
+        Vector3 hit_point = FSCRH_script.check_ray_to_plane();
+        if(hit_point != Vector3.zero)
+        {
+            //Debug.Log("hit_point " + hit_point);
+            Instantiate(StopIndicator_Prefab, hit_point, new Quaternion());
+            Sliced_flag = true;
+        }
+    }
 }
