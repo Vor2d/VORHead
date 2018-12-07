@@ -8,12 +8,19 @@ public class Controller_Input : MonoBehaviour {
     public const string LeftIndexTrigger_str = "Oculus_CrossPlatform_PrimaryIndexTrigger";
     public const string RightIndexTrigger_str = "Oculus_CrossPlatform_SecondaryIndexTrigger";
 
+    
     public OVRInput.Controller Controller_type;
 
     public bool Forward_flag { get; set; }
     public bool Index_trigger { get; set; }
     public bool Left_flag { get; set; }
     public bool Right_flag { get; set; }
+    public System.Action Button_B { get; set; }
+
+    private void Awake()
+    {
+        this.Button_B = null;
+    }
 
     // Use this for initialization
     void Start () {
@@ -73,6 +80,7 @@ public class Controller_Input : MonoBehaviour {
                 }
             case OVRInput.Controller.RTouch:
                 {
+                    //R vertical thumb stick;
                     if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical")
                                                                                     > 0.5f)
                     {
@@ -82,7 +90,7 @@ public class Controller_Input : MonoBehaviour {
                     {
                         Forward_flag = false;
                     }
-
+                    //R index trigger;
                     if (Input.GetAxis(RightIndexTrigger_str) > 0.5f)
                     {
                         Index_trigger = true;
@@ -91,6 +99,12 @@ public class Controller_Input : MonoBehaviour {
                     {
                         Index_trigger = false;
                     }
+                    //R B button;
+                    if(Input.GetKeyDown(KeyCode.JoystickButton1))
+                    {
+                        Button_B();
+                    }
+
 
                     break;
                 }

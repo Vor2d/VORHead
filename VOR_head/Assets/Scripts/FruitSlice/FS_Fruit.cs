@@ -10,18 +10,19 @@ public class FS_Fruit : MonoBehaviour {
     public bool Is_aimed_flag { get; set; }
     public bool Aim_changed { get; set; }
 
-    [SerializeField] private FS_CheckRayHit FSCRH_script;
-    [SerializeField] private GameObject StopIndicator_Prefab;
+    public FS_CheckRayHit FSCRH_script;
     public FS_GameController FSGC_script;
     public Controller_Input CI_script;
 
     public bool speed_cal;
 
+    private bool inner_sliced_flag;
+
     // Use this for initialization
     void Awake () {
         this.Start_flag = false;
         this.FSGC_script =
-                    GameObject.Find("FS_GameController").GetComponent<FS_GameController>();
+                GameObject.Find(FS_VariableManager.FS_GC_str).GetComponent<FS_GameController>();
 	}
 
     private void Start()
@@ -30,6 +31,7 @@ public class FS_Fruit : MonoBehaviour {
         this.Last_is_aimed_flag = false;
         this.speed_cal = false;
         this.Sliced_flag = false;
+        this.inner_sliced_flag = false;
 
         start_fruit();
     }
@@ -41,6 +43,16 @@ public class FS_Fruit : MonoBehaviour {
         {
             //check_speed1();
             check_start_aim();
+
+            if (inner_sliced_flag)
+            {
+                Sliced_flag = true;
+                inner_sliced_flag = false;
+            }
+            else
+            {
+                Sliced_flag = false;
+            }
         }
 
 	}
@@ -103,12 +115,7 @@ public class FS_Fruit : MonoBehaviour {
 
     public void fruit_cutted()
     {
-        Vector3 hit_point = FSCRH_script.check_ray_to_plane();
-        if(hit_point != Vector3.zero)
-        {
-            //Debug.Log("hit_point " + hit_point);
-            Instantiate(StopIndicator_Prefab, hit_point, new Quaternion());
-            Sliced_flag = true;
-        }
+        inner_sliced_flag = true;
     }
+
 }

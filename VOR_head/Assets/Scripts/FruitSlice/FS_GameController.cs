@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FS_GameController : MonoBehaviour {
 
@@ -12,6 +13,7 @@ public class FS_GameController : MonoBehaviour {
     [SerializeField] private GameObject DebugText1;
     //[SerializeField] private GameObject Debug_OBJ1;
     [SerializeField] private RightController RC_script;
+    [SerializeField] private Controller_Input RightCI_script;
 
     public bool is_slicing { get; set; }
 
@@ -38,7 +40,10 @@ public class FS_GameController : MonoBehaviour {
         this.score = 0;
         this.score_changed = true;
         this.is_slicing = false;
-	}
+
+        RightCI_script.Button_B += restart;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -126,5 +131,10 @@ public class FS_GameController : MonoBehaviour {
         {
             is_slicing = false;
         }
+    }
+
+    private void restart()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

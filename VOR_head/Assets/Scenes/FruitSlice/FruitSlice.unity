@@ -1028,9 +1028,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FSF_script: {fileID: 1828043354}
+  FruitLineR_TRANS: {fileID: 2108645848}
   StartI_TRANS: {fileID: 55040564}
   EndI_TRANS: {fileID: 2056938999}
-  FruitLineR_TRANS: {fileID: 2108645848}
 --- !u!114 &1828043354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,8 +1044,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FSCRH_script: {fileID: 372634433}
-  StopIndicator_Prefab: {fileID: 1958577988463012, guid: 7cefd11f2da38d1479ca5c83d2947808,
-    type: 2}
   FSGC_script: {fileID: 1897828990}
   CI_script: {fileID: 230187261}
   speed_cal: 0
@@ -1153,6 +1151,7 @@ MonoBehaviour:
   ScoreText: {fileID: 570143975}
   DebugText1: {fileID: 2122146843}
   RC_script: {fileID: 230187262}
+  RightCI_script: {fileID: 0}
   SliceSpeed: 50
   FruitIntervalTime: 3
   RandRangeX: 10

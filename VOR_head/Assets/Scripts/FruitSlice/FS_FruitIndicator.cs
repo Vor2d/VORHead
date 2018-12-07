@@ -5,9 +5,11 @@ using UnityEngine;
 public class FS_FruitIndicator : MonoBehaviour {
 
     [SerializeField] private FS_Fruit FSF_script;
-    [SerializeField] private Transform StartI_TRANS;
-    [SerializeField] private Transform EndI_TRANS;
     [SerializeField] private Transform FruitLineR_TRANS;
+
+    public Transform StartI_TRANS;
+    public Transform EndI_TRANS;
+
 
     private bool start_color_triggerred;
     private Color start_color;
