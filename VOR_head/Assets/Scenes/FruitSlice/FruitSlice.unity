@@ -1009,6 +1009,7 @@ GameObject:
   - component: {fileID: 1828043354}
   - component: {fileID: 1828043353}
   - component: {fileID: 1828043357}
+  - component: {fileID: 1828043358}
   m_Layer: 0
   m_Name: FS_Fruit
   m_TagString: Untagged
@@ -1087,6 +1088,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FSF_script: {fileID: 1828043354}
+--- !u!114 &1828043358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1828043352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa83053d0c7c2a40ad5eacb386247cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  FSF_script: {fileID: 1828043354}
+  StopIndicator_Prefab: {fileID: 1958577988463012, guid: 7cefd11f2da38d1479ca5c83d2947808,
+    type: 2}
+  FSFI_script: {fileID: 1828043353}
 --- !u!1 &1897828987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1151,8 +1167,8 @@ MonoBehaviour:
   ScoreText: {fileID: 570143975}
   DebugText1: {fileID: 2122146843}
   RC_script: {fileID: 230187262}
-  RightCI_script: {fileID: 0}
-  SliceSpeed: 50
+  RightCI_script: {fileID: 230187261}
+  SliceSpeed: 30
   FruitIntervalTime: 3
   RandRangeX: 10
   RandRangeY: 0

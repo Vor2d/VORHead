@@ -22,6 +22,7 @@ public class FS_FruitRenderer : MonoBehaviour {
 	void Update () {
 		if(FSF_script.Sliced_flag && !cut_triggered)
         {
+            cut_triggered = true;
             cut();
         }
 	}
@@ -37,9 +38,10 @@ public class FS_FruitRenderer : MonoBehaviour {
         {
             Stimer -= Time.deltaTime;
             FirstHalf_TRANS.Translate(Vector3.down*Time.deltaTime);
-  ;
             SecondHalf_TRANS.Translate(Vector3.up*Time.deltaTime);
             yield return null;
         }
+        cut_triggered = false;
+        Stimer = STime;
     }
 }
