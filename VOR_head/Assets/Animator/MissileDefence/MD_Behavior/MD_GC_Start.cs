@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class MD_GC_Start : StateMachineBehaviour {
 
+    private MD_GameController MD_GC_script;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetTrigger("NextStep");
+        if(MD_GC_script == null)
+        {
+            this.MD_GC_script =
+                GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
+        }
+        MD_GC_script.ToStart();
+
+        //animator.SetTrigger("NextStep");
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

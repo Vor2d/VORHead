@@ -10,7 +10,7 @@ public static class StartScene
 
     //private static Scene current_scene;
 
-    [MenuItem("Edit/Play-Stop, But From Prelaunch Scene %0")]
+    [MenuItem("Edit/Play-Stop, But From Prelaunch Scene #0")]
     public static void PlayFromPrelaunchScene()
     {
         

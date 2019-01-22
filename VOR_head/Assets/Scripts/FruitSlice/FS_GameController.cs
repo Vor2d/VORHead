@@ -32,17 +32,19 @@ public class FS_GameController : MonoBehaviour {
     private int score;
     private bool score_changed;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        RightCI_script.Button_B += restart;
+    }
+
+    // Use this for initialization
+    void Start () {
         this.fruit_inte_timer = FruitIntervalTime;
         this.fruit_Itimer_flag = false;
         this.FSGCAnimator = GetComponent<Animator>();
         this.score = 0;
         this.score_changed = true;
         this.is_slicing = false;
-
-        RightCI_script.Button_B += restart;
-
     }
 	
 	// Update is called once per frame

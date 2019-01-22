@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SpatialTracking;
 using UnityEngine.SceneManagement;
+using TMPro;
 
+[RequireComponent(typeof(AmmoSystem))]
 public class MD_GameController : MonoBehaviour {
-
-    public const string score_init_str = "Score: ";
-    public const string nextS_trigger_str = "NextStep";
-    public const string start_trigger_str = "Start";
-    //public const string rightCG_Oname_str = "RightControllerGroup";  //Right controller Group object name;
-    //public const string rightC_Oname_str = "RightController";    //Right controller object name;
-    public const string city_tag = "City";
-    public const string sceneM_Oname_str = "SceneManager";  //SceneManager object name;
 
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
@@ -21,21 +15,36 @@ public class MD_GameController : MonoBehaviour {
     [SerializeField] private Aim Aim_script;
     [SerializeField] private RightController RC_script;
     [SerializeField] private Transform AimT_TRANS;
+    [SerializeField] private GameObject WorldCanvas_GO;
+    [SerializeField] private Transform ScoreText_TRANS;
+    [SerializeField] private Transform WaveText_TRANS;
+    [SerializeField] private AmmoSystem AS_script;
+    [SerializeField] private Transform AmmoText_TRANS;
+    [SerializeField] private Transform OOAText_TRANS;
+    [SerializeField] private MD_TargetRayCast MDTRC_script;
+    [SerializeField] private GameObject ExplodePrefab;
+    [SerializeField] private GameObject[] MissilePrefabs;
 
-
-    public MD_TargetRayCast MDTRC_script;
-    public GameObject ExplodePrefab;
-    public GameObject[] MissilePrefabs;
-    public GameObject ScoreText_OBJ;
-
-    public bool City_destroied { get; set; }
-
-    [SerializeField] private float SmallExplodeScale = 0.1f;
     public float InstRandomRange = 9.0f;
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
     public float MissileInterTime = 3.0f;
     public int ScoreIncerase = 10;
+    [Header("BonusSystem")]
+    public bool UsingBonusSystem = false;
+    public int[] BonusScores;
+    [Header("PunishSystem")]
+    public bool UsingPunishSystem = false;
+    public int GetHitPunish = 0;
+    public int GetDestroyPunish = 0;
+
+    [Header("")]
+    [SerializeField] private float SmallExplodeScale = 0.1f;
+    [SerializeField] private float WaveInterTime = 1.0f;
+    [SerializeField] private int AmmoOffSet = 0;
+    [SerializeField] private bool ScoreNotNegative = true;
+
+    public bool City_destroied { get; set; }
 
     private GameObject[] cities;
     private float missile_timer;
@@ -46,6 +55,13 @@ public class MD_GameController : MonoBehaviour {
     private bool score_changed_flag;
     private bool first_camera_on;
     private bool start_flag;
+    private int wave_number;
+    private MD_WaveInfo wave_info;
+    private int current_MTI_number; //missile to instantiate;
+    private float wave_inter_timer;
+    private bool wave_inter_flag;
+    private int current_missile_number;
+    private bool ammo_changed_flag;
 
     // Use this for initialization
     void Start () {
@@ -58,17 +74,27 @@ public class MD_GameController : MonoBehaviour {
         this.score_changed_flag = true;
         this.first_camera_on = false;
         this.start_flag = false;
+        this.wave_number = -1;
+        this.wave_info = new MD_WaveInfo();
+        this.current_MTI_number = -1;
+        this.wave_inter_timer = WaveInterTime;
+        this.wave_inter_flag = false;
+        this.current_missile_number = -1;
+        this.ammo_changed_flag = true;
 
-        
-
+        wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         update_cities();
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (missile_timer_flag)
+        if(missile_timer_flag)
         {
             missile_timer -= Time.deltaTime;
+        }
+        if(wave_inter_flag)
+        {
+            wave_inter_timer -= Time.deltaTime;
         }
 
         if(Input.GetKeyDown(KeyCode.JoystickButton1))
@@ -76,13 +102,15 @@ public class MD_GameController : MonoBehaviour {
             restart();
         }
 
-        update_score();
+        update_score_text();
+        update_ammo_text();
     }
 
     private void LateUpdate()
     {
         if(City_destroied)
         {
+            city_destroied();
             update_cities();
             City_destroied = false;
         }
@@ -90,6 +118,12 @@ public class MD_GameController : MonoBehaviour {
 
     public void ToInstantiatetMissile()
     {
+        current_MTI_number--;
+        if(current_MTI_number < 0)
+        {
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorStartWaveTrigger_str);
+            return;
+        }
         GameObject Missile =
                     Instantiate(MissilePrefabs[Random.Range(0,MissilePrefabs.Length)],
                                 RandomPosGenerate(), Quaternion.identity);
@@ -97,7 +131,7 @@ public class MD_GameController : MonoBehaviour {
         int city_index = Random.Range(0, city_number);
         Missile_Script.set_target(cities[city_index].transform);
         Missile_Script.start_move();
-        MD_GC_Animator.SetTrigger(nextS_trigger_str);
+        MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
     }
 
     private Vector3 RandomPosGenerate()
@@ -117,7 +151,7 @@ public class MD_GameController : MonoBehaviour {
         {
             missile_timer_flag = false;
             missile_timer = MissileInterTime;
-            MD_GC_Animator.SetTrigger(nextS_trigger_str);
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
         }
     }
 
@@ -126,10 +160,19 @@ public class MD_GameController : MonoBehaviour {
         missile_timer_flag = false;
     }
 
+    private void city_destroied()
+    {
+        if(UsingPunishSystem)
+        {
+            score -= GetDestroyPunish;
+            score_changed_flag = true;
+        }
+    }
+
     public void update_cities()
     {
         List<GameObject> temp_cities = new List<GameObject>();
-        foreach(GameObject city in GameObject.FindGameObjectsWithTag(city_tag))
+        foreach(GameObject city in GameObject.FindGameObjectsWithTag(MD_StrDefiner.City_tag))
         {
             if(city.GetComponent<City>().Health > 0)
             {
@@ -166,13 +209,19 @@ public class MD_GameController : MonoBehaviour {
     {
         score += ScoreIncerase;
         score_changed_flag = true;
+        //StartCoroutine(check_missile_number());
     }
 
-    private void update_score()
+    private void update_score_text()
     {
         if(score_changed_flag)
         {
-            ScoreText_OBJ.GetComponent<TextMesh>().text = score_init_str + score.ToString();
+            if(score < 0)
+            {
+                score = 0;
+            }
+            ScoreText_TRANS.GetComponent<TextMesh>().text = 
+                        MD_StrDefiner.ScoreTextPreStr + score.ToString();
             score_changed_flag = false;
         }
         
@@ -206,7 +255,8 @@ public class MD_GameController : MonoBehaviour {
 
     public void back_button()
     {
-        GameObject.Find(sceneM_Oname_str).GetComponent<MySceneManager>().to_start_scene();
+        GameObject.Find(MD_StrDefiner.SceneManagerGO_name).
+                        GetComponent<MySceneManager>().to_start_scene();
     }
 
     public void start_button()
@@ -214,7 +264,7 @@ public class MD_GameController : MonoBehaviour {
         if(start_flag)
         {
             toggle_camera();
-            MD_GC_Animator.SetTrigger(start_trigger_str);
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorStartTrigger_str);
             Aim_script.state_one_flag = false;
         }
         
@@ -222,9 +272,11 @@ public class MD_GameController : MonoBehaviour {
 
     public void ToInit()
     {
+        WorldCanvas_GO.SetActive(true);
         toggle_camera();
         start_flag = true;
         Aim_script.state_one_flag = true;
+        WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
     private void restart()
@@ -237,5 +289,106 @@ public class MD_GameController : MonoBehaviour {
         instantiate_explode(AimT_TRANS.position,SmallExplodeScale);
     }
 
+    public void ToStart()
+    {
+        WorldCanvas_GO.SetActive(false);
+        MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+    }
 
+    public void ToStartWave()
+    {
+        wave_number++;
+        if(wave_number < wave_info.WaveNumber)
+        {
+            current_MTI_number = wave_info.WaveInfoList[wave_number];
+            //MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+            WaveText_TRANS.GetComponent<TextMesh>().text =
+                    MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
+            WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+            wave_inter_flag = true;
+            AS_script.set_ammo(current_MTI_number + AmmoOffSet);
+            ammo_changed_flag = true;
+        }
+        else
+        {
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorFinishTrigger_str);
+        }
+
+    }
+
+    public void StartWave()
+    {
+        if(wave_inter_timer < 0.0f)
+        {
+            wave_inter_timer = WaveInterTime;
+            wave_inter_flag = false;
+            WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+        }
+    }
+
+    public IEnumerator check_missile_number()
+    {
+        yield return new WaitForSeconds(0.1f);
+        current_missile_number =
+                GameObject.FindGameObjectsWithTag(MD_StrDefiner.Missile_tag).Length;
+    }
+
+    public void WaitMissileClear()
+    {
+        if (current_missile_number == 0)
+        {
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+        }
+    }
+
+    public void City_hitted()
+    {
+        //StartCoroutine(check_missile_number());
+        if(UsingPunishSystem)
+        {
+            score -= GetHitPunish;
+            score_changed_flag = true;
+        }
+    }
+
+    private void update_ammo_text()
+    {
+        if(ammo_changed_flag)
+        {
+            ammo_changed_flag = false;
+            AmmoText_TRANS.GetComponent<TextMeshPro>().text =
+                        MD_StrDefiner.AmmoTextPreStr + AS_script.Current_ammo;
+        }
+    }
+
+    public bool ammo_spend()
+    {
+        if(AS_script.ammo_spend())
+        {
+            ammo_changed_flag = true;
+            return true;
+        }
+        else
+        {
+            if (!OOAText_TRANS.GetComponent<MeshRenderer>().enabled)
+            {
+                StartCoroutine(outofammo_warning());
+            }
+            return false;
+        }
+    }
+
+    private IEnumerator outofammo_warning()
+    {
+        OOAText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        yield return new WaitForSeconds(1.0f);
+        OOAText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    public void add_bonus_score(int bonus_score)
+    {
+        score += bonus_score;
+        score_changed_flag = true;
+    }
 }

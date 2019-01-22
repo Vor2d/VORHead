@@ -15,10 +15,12 @@ public class Controller_Input : MonoBehaviour {
     public bool Index_trigger { get; set; }
     public bool Left_flag { get; set; }
     public bool Right_flag { get; set; }
+    public System.Action Button_A { get; set; }
     public System.Action Button_B { get; set; }
 
     private void Awake()
     {
+        this.Button_A = null;
         this.Button_B = null;
     }
 
@@ -100,9 +102,13 @@ public class Controller_Input : MonoBehaviour {
                         Index_trigger = false;
                     }
                     //R B button;
-                    if(Input.GetKeyDown(KeyCode.JoystickButton1))
+                    if(Input.GetKeyDown(KeyCode.JoystickButton1) && Button_B != null)
                     {
                         Button_B();
+                    }
+                    if (Input.GetKeyDown(KeyCode.JoystickButton0) && Button_A != null)
+                    {
+                        Button_A();
                     }
 
 

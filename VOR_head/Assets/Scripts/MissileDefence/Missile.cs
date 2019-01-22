@@ -57,11 +57,13 @@ public class Missile : MonoBehaviour {
         {
             other_GO.GetComponent<City>().get_hit();
             Instantiate(explosion_OBJ, transform.position,new Quaternion());
+            //MDGC_script.City_hitted();
             Destroy(gameObject);
         }
         else if(other_GO.tag == "Explode")
         {
             MDGC_script.missile_destroyed();
+            other_GO.GetComponent<Explode>().missile_hitted();
             Instantiate(explosion_OBJ, transform.position, new Quaternion());
             Destroy(gameObject);
         }
@@ -70,6 +72,7 @@ public class Missile : MonoBehaviour {
             Instantiate(explosion_OBJ, transform.position, new Quaternion());
             Destroy(gameObject);
         }
+        StartCoroutine(MDGC_script.check_missile_number());
 
     }
 }

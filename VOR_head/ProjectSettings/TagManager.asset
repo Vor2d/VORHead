@@ -28,6 +28,7 @@ TagManager:
   - BO_Ball
   - FS_FruitStartI
   - FS_FruitPlane
+  - MD_Missile
   layers:
   - Default
   - TransparentFX

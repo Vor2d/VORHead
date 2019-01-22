@@ -1,14 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class City : MonoBehaviour {
 
+    [SerializeField] private GameObject HittedText_Prefab;
+    [SerializeField] private GameObject DestroiedText_Prefab;
+
     public TextMesh BIndicatorText;
+
+    [SerializeField] private Vector3 TextOffSet = Vector3.zero;
 
     public int Health = 3;
 
     private MD_GameController MD_GC_Script;
+    private bool already_destroied;
 
 	// Use this for initialization
 	void Start () {
@@ -17,6 +24,8 @@ public class City : MonoBehaviour {
             MD_GC_Script = 
                 GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
         }
+
+        this.already_destroied = false;
 
     }
 	
@@ -28,17 +37,54 @@ public class City : MonoBehaviour {
     public void get_hit()
     {
         Health--;
-        check_health();
+        if(check_destroied())
+        {
+            if(!already_destroied)
+            {
+                already_destroied = true;
+                MD_GC_Script.City_destroied = true;
+                if (MD_GC_Script.UsingPunishSystem)
+                {
+                    instantiate_punish_text(true);
+                }
+                Destroy(gameObject, 1.0f);
+            }
+        }
+        else
+        {
+            MD_GC_Script.City_hitted();
+            if (MD_GC_Script.UsingPunishSystem)
+            {
+                instantiate_punish_text(false);
+            }
+        }
 
         GetComponent<AudioSource>().Play();
+
     }
 
-    private void check_health()
+    private bool check_destroied()
     {
-        if(Health <= 0)
+        return Health <= 0;
+    }
+
+    private void instantiate_punish_text(bool destroied)
+    {
+        GameObject punish_text;
+        if (!destroied)
         {
-            MD_GC_Script.City_destroied = true;
-            Destroy(gameObject,1.0f);
+            punish_text = Instantiate(HittedText_Prefab,
+                                        transform.position + TextOffSet, Quaternion.identity);
+            punish_text.GetComponent<TextMeshPro>().text +=
+                                    "\n- " + MD_GC_Script.GetHitPunish;
         }
+        else
+        {
+            punish_text = Instantiate(DestroiedText_Prefab,
+                            transform.position + TextOffSet, Quaternion.identity);
+            punish_text.GetComponent<TextMeshPro>().text +=
+                                    "\n- " + MD_GC_Script.GetDestroyPunish;
+        }
+        punish_text.GetComponent<PunishText>().start_move();
     }
 }
