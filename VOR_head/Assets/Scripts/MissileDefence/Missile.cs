@@ -6,7 +6,8 @@ public class Missile : MonoBehaviour {
 
     [SerializeField] private GameObject explosion_OBJ;
 
-    public float Speed = 0.5f;
+    public float InitSpeed = 0.5f;
+    [SerializeField] private float SpeedRandomRange = 0.0f;
 
     private bool start_flag;
     private Vector3 target_pos;
@@ -23,14 +24,15 @@ public class Missile : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+        InitSpeed += Random.Range(-SpeedRandomRange,SpeedRandomRange);
 
-	}
+    }
 	
 	// Update is called once per frame
 	void FixedUpdate () {
         if (start_flag)
         {
-            transform.Translate(target_pos * Time.deltaTime * Speed, Space.World);
+            transform.Translate(target_pos * Time.deltaTime * InitSpeed, Space.World);
         }
     }
 
@@ -72,7 +74,8 @@ public class Missile : MonoBehaviour {
             Instantiate(explosion_OBJ, transform.position, new Quaternion());
             Destroy(gameObject);
         }
-        StartCoroutine(MDGC_script.check_missile_number());
+        //StartCoroutine(MDGC_script.check_missile_number());
+        MDGC_script.check_missile_number();
 
     }
 }

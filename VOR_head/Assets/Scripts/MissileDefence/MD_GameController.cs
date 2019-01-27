@@ -24,12 +24,17 @@ public class MD_GameController : MonoBehaviour {
     [SerializeField] private MD_TargetRayCast MDTRC_script;
     [SerializeField] private GameObject ExplodePrefab;
     [SerializeField] private GameObject[] MissilePrefabs;
+    //[SerializeField] private Transform ExplodeOutline_TRANS;
 
+    [Header("Variables")]
     public float InstRandomRange = 9.0f;
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
     public float MissileInterTime = 3.0f;
     public int ScoreIncerase = 10;
+    public float ExplodeRaduis = 3.0f;
+    public float ExplodeTime = 1.5f;
+    public bool UsingExplodeOutline = false;
     [Header("BonusSystem")]
     public bool UsingBonusSystem = false;
     public int[] BonusScores;
@@ -37,12 +42,12 @@ public class MD_GameController : MonoBehaviour {
     public bool UsingPunishSystem = false;
     public int GetHitPunish = 0;
     public int GetDestroyPunish = 0;
-
     [Header("")]
     [SerializeField] private float SmallExplodeScale = 0.1f;
     [SerializeField] private float WaveInterTime = 1.0f;
     [SerializeField] private int AmmoOffSet = 0;
     [SerializeField] private bool ScoreNotNegative = true;
+    
 
     public bool City_destroied { get; set; }
 
@@ -88,6 +93,9 @@ public class MD_GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        //Debug.Log("missile number " + current_missile_number);
+
         if(missile_timer_flag)
         {
             missile_timer -= Time.deltaTime;
@@ -194,16 +202,19 @@ public class MD_GameController : MonoBehaviour {
     {
         GameObject explode =
                     Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
-        explode.GetComponent<Explode>().start_exp();
+        explode.GetComponent<ExplodeGroup>().
+                        start_explode_group(ExplodeTime,ExplodeRaduis,UsingBonusSystem,
+                                            UsingExplodeOutline);
     }
 
-    private void instantiate_explode(Vector3 target_pos,float scale)
-    {
-        GameObject explode =
-                    Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
-        explode.GetComponent<Explode>().set_radius_scale(scale);
-        explode.GetComponent<Explode>().start_exp();
-    }
+    //private void instantiate_explode(Vector3 target_pos,float scale)
+    //{
+    //    GameObject explode =
+    //                Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
+    //    explode.GetComponent<Explode>().set_radius_scale(scale);
+    //    explode.GetComponent<Explode>().
+    //                        start_exp(ExplodeTime, ExplodeRaduis, UsingBonusSystem);
+    //}
 
     public void missile_destroyed()
     {
@@ -275,8 +286,12 @@ public class MD_GameController : MonoBehaviour {
         WorldCanvas_GO.SetActive(true);
         toggle_camera();
         start_flag = true;
-        Aim_script.state_one_flag = true;
+        //Aim_script.state_one_flag = true;
         WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        if(UsingExplodeOutline)
+        {
+            //ExplodeOutline_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        }
     }
 
     private void restart()
@@ -286,7 +301,7 @@ public class MD_GameController : MonoBehaviour {
 
     public void state_one_Iexplosion()
     {
-        instantiate_explode(AimT_TRANS.position,SmallExplodeScale);
+        //instantiate_explode(AimT_TRANS.position,SmallExplodeScale);
     }
 
     public void ToStart()
@@ -308,12 +323,24 @@ public class MD_GameController : MonoBehaviour {
             wave_inter_flag = true;
             AS_script.set_ammo(current_MTI_number + AmmoOffSet);
             ammo_changed_flag = true;
+
+            show_score_text();
         }
         else
         {
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorFinishTrigger_str);
         }
 
+    }
+
+    private void show_score_text()
+    {
+        ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    private void hide_score_text()
+    {
+        ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void StartWave()
@@ -324,12 +351,21 @@ public class MD_GameController : MonoBehaviour {
             wave_inter_flag = false;
             WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+
+            hide_score_text();
         }
     }
 
-    public IEnumerator check_missile_number()
+
+
+    public void check_missile_number()
     {
-        yield return new WaitForSeconds(0.1f);
+        StartCoroutine(delayed_check_missile_number(0.1f));
+    }
+
+    public IEnumerator delayed_check_missile_number(float time)
+    {
+        yield return new WaitForSeconds(time);
         current_missile_number =
                 GameObject.FindGameObjectsWithTag(MD_StrDefiner.Missile_tag).Length;
     }

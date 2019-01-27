@@ -5,5 +5,5 @@ using UnityEngine;
 public static class MD_WaveDefiner
 {
     public static List<int> WaveInfo_list =
-                        new List<int> { 100, 100, 5, 5, 5 };
+                        new List<int> { 10, 10, 10, 10, 10 };
 }

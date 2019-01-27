@@ -17,6 +17,7 @@ public class Controller_Input : MonoBehaviour {
     public bool Right_flag { get; set; }
     public System.Action Button_A { get; set; }
     public System.Action Button_B { get; set; }
+    //public System.Action IndexTrigger { get; set; }
 
     private void Awake()
     {

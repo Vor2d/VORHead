@@ -7,9 +7,12 @@ public class City : MonoBehaviour {
 
     [SerializeField] private GameObject HittedText_Prefab;
     [SerializeField] private GameObject DestroiedText_Prefab;
+    [SerializeField] private Transform Shield_TRANS;
 
     public TextMesh BIndicatorText;
 
+    [SerializeField] private bool UsingShield = true;
+    [SerializeField] private int CityLifeOffset = 1;
     [SerializeField] private Vector3 TextOffSet = Vector3.zero;
 
     public int Health = 3;
@@ -37,7 +40,12 @@ public class City : MonoBehaviour {
     public void get_hit()
     {
         Health--;
-        if(check_destroied())
+        if(check_shield_broke())
+        {
+            disable_shield();
+        }
+        
+        if (check_destroied())
         {
             if(!already_destroied)
             {
@@ -61,6 +69,20 @@ public class City : MonoBehaviour {
 
         GetComponent<AudioSource>().Play();
 
+    }
+
+    private bool check_shield_broke()
+    {
+        if(UsingShield && Health == CityLifeOffset)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void disable_shield()
+    {
+        Shield_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
     private bool check_destroied()
