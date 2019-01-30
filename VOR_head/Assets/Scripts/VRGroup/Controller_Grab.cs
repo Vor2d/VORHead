@@ -31,16 +31,16 @@ public class Controller_Grab : MonoBehaviour {
   //          release();
   //      }
 
-        if(CI_script.Index_trigger && GT_script.other_TRANS == null)
+        if(CI_script.Index_trigger_holding && GT_script.other_TRANS == null)
         {
             empty_grabed = true;
         }
-        else if(CI_script.Index_trigger && !empty_grabed && !grab_triggered)
+        else if(CI_script.Index_trigger_holding && !empty_grabed && !grab_triggered)
         {
             grab_triggered = true;
             grab();
         }
-        else if(!CI_script.Index_trigger)
+        else if(!CI_script.Index_trigger_holding)
         {
             empty_grabed = false;
             release();

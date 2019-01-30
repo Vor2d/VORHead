@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SC_GameController : MonoBehaviour {
+public class SC_GameController : GeneralGameController {
 
     [SerializeField] private GameObject sceneManager_prefab;
+
+    //[SerializeField] private bool UsingHeadToMenu = false;
 
 	// Use this for initialization
 	void Start () {

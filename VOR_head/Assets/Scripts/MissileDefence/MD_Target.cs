@@ -14,7 +14,7 @@ public class MD_Target : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        transform.position = MDTRC_script.Hit_position;
+        transform.position = MDTRC_script.TB_hit_position;
 
         transform.forward = (new Vector3(0.0f, 1.0f, 0.0f));
 

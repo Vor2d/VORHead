@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using TMPro;
 
 [RequireComponent(typeof(AmmoSystem))]
-public class MD_GameController : MonoBehaviour {
+public class MD_GameController : GeneralGameController {
 
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
@@ -15,7 +15,7 @@ public class MD_GameController : MonoBehaviour {
     [SerializeField] private Aim Aim_script;
     [SerializeField] private RightController RC_script;
     [SerializeField] private Transform AimT_TRANS;
-    [SerializeField] private GameObject WorldCanvas_GO;
+    //[SerializeField] private GameObject WorldCanvas_GO;
     [SerializeField] private Transform ScoreText_TRANS;
     [SerializeField] private Transform WaveText_TRANS;
     [SerializeField] private AmmoSystem AS_script;
@@ -24,6 +24,7 @@ public class MD_GameController : MonoBehaviour {
     [SerializeField] private MD_TargetRayCast MDTRC_script;
     [SerializeField] private GameObject ExplodePrefab;
     [SerializeField] private GameObject[] MissilePrefabs;
+    [SerializeField] private Transform TutorialTest_TRANS;
     //[SerializeField] private Transform ExplodeOutline_TRANS;
 
     [Header("Variables")]
@@ -35,6 +36,7 @@ public class MD_GameController : MonoBehaviour {
     public float ExplodeRaduis = 3.0f;
     public float ExplodeTime = 1.5f;
     public bool UsingExplodeOutline = false;
+    //public bool UsingHeadForMenu = false;
     [Header("BonusSystem")]
     public bool UsingBonusSystem = false;
     public int[] BonusScores;
@@ -50,6 +52,7 @@ public class MD_GameController : MonoBehaviour {
     
 
     public bool City_destroied { get; set; }
+    public bool Menu_gazing_flag { get; set; }
 
     private GameObject[] cities;
     private float missile_timer;
@@ -86,6 +89,7 @@ public class MD_GameController : MonoBehaviour {
         this.wave_inter_flag = false;
         this.current_missile_number = -1;
         this.ammo_changed_flag = true;
+        this.Menu_gazing_flag = false;
 
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         update_cities();
@@ -195,7 +199,7 @@ public class MD_GameController : MonoBehaviour {
 
     public void IE_with_raycast()
     {
-        instantiate_explode(MDTRC_script.Hit_position);
+        instantiate_explode(MDTRC_script.TB_hit_position);
     }
 
     private void instantiate_explode(Vector3 target_pos)
@@ -266,7 +270,7 @@ public class MD_GameController : MonoBehaviour {
 
     public void back_button()
     {
-        GameObject.Find(MD_StrDefiner.SceneManagerGO_name).
+        GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
                         GetComponent<MySceneManager>().to_start_scene();
     }
 
@@ -283,7 +287,7 @@ public class MD_GameController : MonoBehaviour {
 
     public void ToInit()
     {
-        WorldCanvas_GO.SetActive(true);
+        //WorldCanvas_GO.SetActive(true);
         toggle_camera();
         start_flag = true;
         //Aim_script.state_one_flag = true;
@@ -292,6 +296,7 @@ public class MD_GameController : MonoBehaviour {
         {
             //ExplodeOutline_TRANS.GetComponent<MeshRenderer>().enabled = true;
         }
+        TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 
     private void restart()
@@ -306,8 +311,9 @@ public class MD_GameController : MonoBehaviour {
 
     public void ToStart()
     {
-        WorldCanvas_GO.SetActive(false);
+        //WorldCanvas_GO.SetActive(false);
         MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+        TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void ToStartWave()
@@ -400,19 +406,22 @@ public class MD_GameController : MonoBehaviour {
 
     public bool ammo_spend()
     {
-        if(AS_script.ammo_spend())
+        if(!Menu_gazing_flag)
         {
-            ammo_changed_flag = true;
-            return true;
-        }
-        else
-        {
-            if (!OOAText_TRANS.GetComponent<MeshRenderer>().enabled)
+            if (AS_script.ammo_spend())
             {
-                StartCoroutine(outofammo_warning());
+                ammo_changed_flag = true;
+                return true;
             }
-            return false;
+            else
+            {
+                if (!OOAText_TRANS.GetComponent<MeshRenderer>().enabled)
+                {
+                    StartCoroutine(outofammo_warning());
+                }
+            }
         }
+        return false;
     }
 
     private IEnumerator outofammo_warning()

@@ -220,5 +220,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 279341e17d03bb0489819cff89bd6894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LifeTime: 1
+  LifeTime: 1.5
   MoveDistance: {x: 0, y: 2, z: 0}

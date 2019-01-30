@@ -11,7 +11,7 @@
     //public const string rightC_Oname_str = "RightController";    //Right controller object name;
     public const string City_tag = "City";
     public const string Missile_tag = "MD_Missile";
-    public const string SceneManagerGO_name = "SceneManager";  //SceneManager object name;
+    public const string TargetBorder_tag = "MD_TargetBorder";
     public const string GameController_name = "MD_GameController";
 
 }

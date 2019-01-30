@@ -5,8 +5,11 @@ using UnityEngine.EventSystems;
 
 public class WorldCanvasController : MonoBehaviour {
 
+    [SerializeField] private GeneralGameController GGC_script;
     [SerializeField] private Camera RayCastCamera;
-    [SerializeField] private RightController RC_script;
+    //[SerializeField] private RightController RC_script;
+    [SerializeField] private GeneralRayCast GRC_script;
+    [SerializeField] private Controller_Input CI_script;
 
     private GameObject hit_OBJ;
     private PointerEventData point_data;
@@ -14,8 +17,15 @@ public class WorldCanvasController : MonoBehaviour {
     private bool entered_flag;
     private bool Rcontroller_trigger_flag;
 
+    private void Awake()
+    {
+        
+    }
+
     // Use this for initialization
     void Start () {
+        CI_script.IndexTrigger += execute_event;
+
         this.point_data = new PointerEventData(EventSystem.current);
         this.hit_to_screen = new Vector3();
         this.hit_OBJ = null;
@@ -27,29 +37,21 @@ public class WorldCanvasController : MonoBehaviour {
 	void Update () {
         try
         {
-            hit_to_screen = RayCastCamera.WorldToScreenPoint(RC_script.hit_point);
+            hit_to_screen = 
+                    RayCastCamera.WorldToScreenPoint(GRC_script.Canvas_hit_position);
+            
         }
         catch { }
         hit_to_screen.z = 0.0f;
         point_data.position = hit_to_screen;
 
-        //Debug.Log("hit_to_screen" + hit_to_screen);
-        //Vector3[] positions = { transform.position, RC_script.hit_point };
-        //GetComponent<LineRenderer>().SetPositions(positions);
-
-        right_controller();
+        //right_controller();
     }
 
     private void FixedUpdate()
     {
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(point_data, results);
-
-        //Debug.Log("result " + results.Count);
-        //foreach(RaycastResult rcr in results)
-        //{
-        //    Debug.Log("result object " + rcr.gameObject.name);
-        //}
 
         if (results.Count > 0)
         {
@@ -89,5 +91,19 @@ public class WorldCanvasController : MonoBehaviour {
         {
             Rcontroller_trigger_flag = false;
         }
+    }
+
+    private void execute_event()
+    {
+        if (hit_OBJ != null)
+        {
+            ExecuteEvents.Execute(hit_OBJ, point_data,
+                                                ExecuteEvents.pointerClickHandler);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CI_script.IndexTrigger -= execute_event;
     }
 }

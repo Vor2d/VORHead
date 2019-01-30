@@ -286,6 +286,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 625742038}
+    - target: {fileID: 1909390692277104, guid: 95bc2a769112c784cb6aaace6d32c587, type: 3}
+      propertyPath: m_TagString
+      value: WorldCanvasCollider
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95bc2a769112c784cb6aaace6d32c587, type: 3}
 --- !u!1001 &301337117
@@ -490,6 +494,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 60, y: 30, z: 120}
+--- !u!114 &593820162 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 114699048615588128, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1716289544}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a22985e445740a43a2adb1c0e87af08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &625742036
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +769,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6437522dad32e74dada1188242301cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UsingHeadForMenu: 0
   sceneManager_prefab: {fileID: 1560035312830508, guid: e60b5c868d769fa4691626c0ff844ddf,
     type: 3}
 --- !u!4 &1029232638
@@ -1303,6 +1320,26 @@ PrefabInstance:
       propertyPath: RC_script
       value: 
       objectReference: {fileID: 1716289546}
+    - target: {fileID: 114653810565416800, guid: d632b584e8075bc4fb4ba3dbb65426e6,
+        type: 3}
+      propertyPath: GC_script
+      value: 
+      objectReference: {fileID: 1029232637}
+    - target: {fileID: 114653810565416800, guid: d632b584e8075bc4fb4ba3dbb65426e6,
+        type: 3}
+      propertyPath: GGC_script
+      value: 
+      objectReference: {fileID: 1029232637}
+    - target: {fileID: 114653810565416800, guid: d632b584e8075bc4fb4ba3dbb65426e6,
+        type: 3}
+      propertyPath: CI_script
+      value: 
+      objectReference: {fileID: 593820162}
+    - target: {fileID: 114653810565416800, guid: d632b584e8075bc4fb4ba3dbb65426e6,
+        type: 3}
+      propertyPath: GRC_script
+      value: 
+      objectReference: {fileID: 1716289546}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d632b584e8075bc4fb4ba3dbb65426e6, type: 3}
 --- !u!1001 &1716289544
@@ -1312,6 +1349,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4204060000834340, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.32
+      objectReference: {fileID: 0}
     - target: {fileID: 4358196630222928, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1397,11 +1438,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fb611746bad784448c30f3101511629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RCRayMask:
+  RayCastDistance: 100
+  RayLayerMask:
     serializedVersion: 2
     m_Bits: 12288
-  HitIndicator: {fileID: 224919959}
-  MaxDistance: 1000
+  HitIndicator_TRANS: {fileID: 224919959}
 --- !u!224 &1785471378 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 224771152083682922, guid: 95bc2a769112c784cb6aaace6d32c587,

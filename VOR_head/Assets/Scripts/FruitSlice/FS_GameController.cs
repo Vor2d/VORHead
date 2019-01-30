@@ -32,13 +32,10 @@ public class FS_GameController : MonoBehaviour {
     private int score;
     private bool score_changed;
 
-    private void Awake()
-    {
-        RightCI_script.Button_B += restart;
-    }
-
     // Use this for initialization
     void Start () {
+        RightCI_script.Button_B += restart;
+
         this.fruit_inte_timer = FruitIntervalTime;
         this.fruit_Itimer_flag = false;
         this.FSGCAnimator = GetComponent<Animator>();

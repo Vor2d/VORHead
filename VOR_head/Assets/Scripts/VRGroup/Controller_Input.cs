@@ -12,26 +12,31 @@ public class Controller_Input : MonoBehaviour {
     public OVRInput.Controller Controller_type;
 
     public bool Forward_flag { get; set; }
-    public bool Index_trigger { get; set; }
+    public bool Index_trigger_holding { get; set; }
     public bool Left_flag { get; set; }
     public bool Right_flag { get; set; }
     public System.Action Button_A { get; set; }
     public System.Action Button_B { get; set; }
-    //public System.Action IndexTrigger { get; set; }
+    public System.Action IndexTrigger { get; set; }
+
+    private bool index_triggered_flag;
 
     private void Awake()
     {
         this.Button_A = null;
         this.Button_B = null;
+        this.IndexTrigger = null;
     }
 
     // Use this for initialization
     void Start () {
         this.Forward_flag = false;
-        this.Index_trigger = false;
+        this.Index_trigger_holding = false;
         this.Left_flag = false;
         this.Right_flag = false;
-	}
+        this.index_triggered_flag = false;
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -52,11 +57,11 @@ public class Controller_Input : MonoBehaviour {
 
                     if (Input.GetAxis(LeftIndexTrigger_str) > 0.5f)
                     {
-                        Index_trigger = true;
+                        Index_trigger_holding = true;
                     }
                     else
                     {
-                        Index_trigger = false;
+                        Index_trigger_holding = false;
                     }
                     if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
                                                                 < -0.5f)
@@ -96,11 +101,17 @@ public class Controller_Input : MonoBehaviour {
                     //R index trigger;
                     if (Input.GetAxis(RightIndexTrigger_str) > 0.5f)
                     {
-                        Index_trigger = true;
+                        Index_trigger_holding = true;
+                        if(!index_triggered_flag && IndexTrigger != null)
+                        {
+                            IndexTrigger();
+                            index_triggered_flag = true;
+                        }
                     }
                     else
                     {
-                        Index_trigger = false;
+                        index_triggered_flag = false;
+                        Index_trigger_holding = false;
                     }
                     //R B button;
                     if(Input.GetKeyDown(KeyCode.JoystickButton1) && Button_B != null)

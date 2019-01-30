@@ -21,7 +21,7 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
 
         if (FSF_script.Aim_changed)
         {
-            if (!FSF_script.Is_aimed_flag && FSF_script.CI_script.Index_trigger)  //Exiting;
+            if (!FSF_script.Is_aimed_flag && FSF_script.CI_script.Index_trigger_holding)  //Exiting;
             {
                 speed_cal_flag = true;
             }

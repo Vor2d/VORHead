@@ -2,23 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RightController : MonoBehaviour {
+public class RightController : GeneralRayCast {
 
-    private const string UILayerMaskName = "WorldUI";
+    [SerializeField] private Transform HitIndicator_TRANS;
 
-    [SerializeField] private LayerMask RCRayMask;
-    [SerializeField] private Transform HitIndicator;
-
-    [SerializeField] private float MaxDistance = 100.0f;
-
-    public Vector3 hit_point { get; set; }
-
-    private RaycastHit hit;
     private bool using_controller;
+    private bool canvas_hitted;
 
 	// Use this for initialization
-	void Start () {
-        this.hit = new RaycastHit();
+	protected override void Start () {
+        base.Start();
+
+        this.using_controller = false;
+        this.canvas_hitted = false;
 
         turn_on_controller();
 	}
@@ -32,11 +28,13 @@ public class RightController : MonoBehaviour {
         }
     }
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
         if(using_controller)
         {
-            controller_raycast();
+            base.FixedUpdate();
+
+            multiple_ray_check();
         }
     }
 
@@ -50,32 +48,63 @@ public class RightController : MonoBehaviour {
 
     private void update_indicator()
     {
-        Vector3[] positions = { transform.position, hit.point };
+        Vector3[] positions;
+        if (canvas_hitted)
+        {
+            Debug.Log("canvas_hitted");
+            positions = new Vector3[] { transform.position, Canvas_hit_position };
+        }
+        else
+        {
+            positions = new Vector3[] { transform.position, Hit_position };
+        }
         GetComponent<LineRenderer>().SetPositions(positions);
-        transform.parent.Find("HitIndicator").position = hit.point;
+        HitIndicator_TRANS.position = positions[1];
     }
 
-    private void controller_raycast()
+    //private void controller_raycast()
+    //{
+    //    Ray ray = new Ray(transform.position, transform.forward);
+    //    Physics.Raycast(ray, out hit, MaxDistance, RCRayMask);
+    //    if (hit.transform.gameObject.layer == LayerMask.NameToLayer(UILayerMaskName))
+    //    {
+    //        hit_point = hit.point;
+    //    }
+    //}
+
+    private void multiple_ray_check()
     {
-        Ray ray = new Ray(transform.position, transform.forward);
-        Physics.Raycast(ray, out hit, MaxDistance, RCRayMask);
-        if (hit.transform.gameObject.layer == LayerMask.NameToLayer(UILayerMaskName))
+        canvas_hitted = false;
+        if(Hits != null)
         {
-            hit_point = hit.point;
+            foreach (RaycastHit hit in Hits)
+            {
+                if (hit.transform.CompareTag(GeneralStrDefiner.WorldCanvasCollider_tag))
+                {
+                    Canvas_hit_position = hit.point;
+                    canvas_hitted = true;
+                }
+                else
+                {
+                    Hit_position = hit.point;
+                }
+            }
         }
+
+
     }
 
     public void turn_on_controller()
     {
         GetComponent<LineRenderer>().enabled = true;
-        HitIndicator.GetComponent<MeshRenderer>().enabled = true;
+        HitIndicator_TRANS.GetComponent<MeshRenderer>().enabled = true;
         using_controller = true;
     }
 
     public void turn_off_controller()
     {
         GetComponent<LineRenderer>().enabled = false;
-        HitIndicator.GetComponent<MeshRenderer>().enabled = false;
+        HitIndicator_TRANS.GetComponent<MeshRenderer>().enabled = false;
         using_controller = false;
     }
 }
