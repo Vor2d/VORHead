@@ -36,7 +36,6 @@ public class MD_GameController : GeneralGameController {
     public float ExplodeRaduis = 3.0f;
     public float ExplodeTime = 1.5f;
     public bool UsingExplodeOutline = false;
-    //public bool UsingHeadForMenu = false;
     [Header("BonusSystem")]
     public bool UsingBonusSystem = false;
     public int[] BonusScores;
@@ -49,7 +48,8 @@ public class MD_GameController : GeneralGameController {
     [SerializeField] private float WaveInterTime = 1.0f;
     [SerializeField] private int AmmoOffSet = 0;
     [SerializeField] private bool ScoreNotNegative = true;
-    
+    [SerializeField] private bool UsingRandomSeed = false;
+    [SerializeField] private int RandomSeed = 0;
 
     public bool City_destroied { get; set; }
     public bool Menu_gazing_flag { get; set; }
@@ -93,26 +93,27 @@ public class MD_GameController : GeneralGameController {
 
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         update_cities();
+        set_random();
     }
 	
 	// Update is called once per frame
-	void Update () {
-
-        //Debug.Log("missile number " + current_missile_number);
+	protected override void Update ()
+    {
+        base.Update();
 
         if(missile_timer_flag)
         {
-            missile_timer -= Time.deltaTime;
+            missile_timer -= GeneralGameController.GameDeltaTime;
         }
         if(wave_inter_flag)
         {
-            wave_inter_timer -= Time.deltaTime;
+            wave_inter_timer -= GeneralGameController.GameDeltaTime;
         }
 
-        if(Input.GetKeyDown(KeyCode.JoystickButton1))
-        {
-            restart();
-        }
+        //if(Input.GetKeyDown(KeyCode.JoystickButton1))
+        //{
+        //    restart();
+        //}
 
         update_score_text();
         update_ammo_text();
@@ -268,13 +269,14 @@ public class MD_GameController : GeneralGameController {
         }
     }
 
-    public void back_button()
+    public void back_to_start_scene()
     {
+        Time.timeScale = 1.0f;
         GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
                         GetComponent<MySceneManager>().to_start_scene();
     }
 
-    public void start_button()
+    public void start_game()
     {
         if(start_flag)
         {
@@ -296,11 +298,12 @@ public class MD_GameController : GeneralGameController {
         {
             //ExplodeOutline_TRANS.GetComponent<MeshRenderer>().enabled = true;
         }
-        TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        //TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 
-    private void restart()
+    public void restart()
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -313,7 +316,7 @@ public class MD_GameController : GeneralGameController {
     {
         //WorldCanvas_GO.SetActive(false);
         MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
-        TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        //TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
     public void ToStartWave()
@@ -435,5 +438,31 @@ public class MD_GameController : GeneralGameController {
     {
         score += bonus_score;
         score_changed_flag = true;
+    }
+
+    public void ToFinish()
+    {
+        WaveText_TRANS.GetComponent<TextMesh>().text = "Congrats! You finish the game!";
+        WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public void pause_game()
+    {
+        //GeneralGameController.GameTimeScale = 0.0f;
+        Time.timeScale = 0.0f;
+    }
+
+    public void resume_game()
+    {
+        Time.timeScale = 1.0f;
+    }
+
+    private void set_random()
+    {
+        if(UsingRandomSeed)
+        {
+            Random.InitState(RandomSeed);
+        }
     }
 }

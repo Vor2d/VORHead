@@ -19,7 +19,7 @@ public class GeneralRayCast : MonoBehaviour {
     }
 
     // Update is called once per frame
-    protected virtual void FixedUpdate()
+    protected virtual void Update()
     {
         multi_raycast_hit();
     }

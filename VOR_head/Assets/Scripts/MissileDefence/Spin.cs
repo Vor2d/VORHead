@@ -21,16 +21,7 @@ public class Spin : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //switch(ObjectSpinMode)
-        //{
-        //    case SpinMode.A_forWard:
-        //        transform.Rotate(SpinSpeed * Time.deltaTime);
-        //        break;
-        //    case SpinMode.all_axes:
-        //        transform.Rotate(SpinSpeed * Time.deltaTime);
-        //        break;
-        //}
-        transform.Rotate(SpinSpeed * Time.deltaTime);
+        transform.Rotate(SpinSpeed * GeneralGameController.GameDeltaTime);
 
     }
 }

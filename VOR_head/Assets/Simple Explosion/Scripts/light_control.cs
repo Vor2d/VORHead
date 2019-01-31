@@ -13,7 +13,7 @@ public class light_control : MonoBehaviour {
 	void Update () {
 		if(timeout>0.1f)
 		{
-			timeout-=Time.deltaTime;
+			timeout-=GeneralGameController.GameDeltaTime;
 			Light.range=15;
 		}
 		else

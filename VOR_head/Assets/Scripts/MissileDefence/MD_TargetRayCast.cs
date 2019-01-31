@@ -18,9 +18,9 @@ public class MD_TargetRayCast : GeneralRayCast
 	}
 	
 	// Update is called once per frame
-	protected override void FixedUpdate ()
+	protected override void Update ()
     {
-        base.FixedUpdate();
+        base.Update();
 
         check_multi_hits();
     }

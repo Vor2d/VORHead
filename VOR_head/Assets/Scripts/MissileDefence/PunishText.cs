@@ -25,7 +25,8 @@ public class PunishText : MonoBehaviour
     {
         if(start_flag)
         {
-            transform.Translate(MoveDistance * Time.deltaTime * (1 / LifeTime));
+            transform.
+                Translate(MoveDistance * GeneralGameController.GameDeltaTime * (1 / LifeTime));
         }
     }
 

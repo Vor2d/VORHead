@@ -20,21 +20,19 @@ public class RightController : GeneralRayCast {
 	}
 	
 	// Update is called once per frame
-	void Update () {
-        //update_hand();
-        if(using_controller)
-        {
-            update_indicator();
-        }
-    }
 
-    protected override void FixedUpdate()
+    protected override void Update()
     {
         if(using_controller)
         {
-            base.FixedUpdate();
+            base.Update();
 
             multiple_ray_check();
+        }
+
+        if (using_controller)
+        {
+            update_indicator();
         }
     }
 
@@ -51,7 +49,7 @@ public class RightController : GeneralRayCast {
         Vector3[] positions;
         if (canvas_hitted)
         {
-            Debug.Log("canvas_hitted");
+            //Debug.Log("canvas_hitted");
             positions = new Vector3[] { transform.position, Canvas_hit_position };
         }
         else

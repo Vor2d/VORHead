@@ -20,8 +20,8 @@ public class GraphicExplosion : MonoBehaviour {
 
     void Update () {
 		Destroy(gameObject, loopduration);
-        ramptime+=Time.deltaTime*2;
-        alphatime-=Time.deltaTime;		
+        ramptime+=GeneralGameController.GameDeltaTime*2;
+        alphatime-=GeneralGameController.GameDeltaTime;		
         float r = Mathf.Sin((Time.time / loopduration) * (2 * Mathf.PI)) * 0.5f + 0.25f;
         float g = Mathf.Sin((Time.time / loopduration + 0.33333333f) * 2 * Mathf.PI) * 0.5f + 0.25f;
         float b = Mathf.Sin((Time.time / loopduration + 0.66666667f) * 2 * Mathf.PI) * 0.5f + 0.25f;
@@ -43,7 +43,7 @@ public class GraphicExplosion : MonoBehaviour {
         while(timer >= 0.0f)
         {
             explosion_SE.volume = timer / loopduration;
-            timer -= Time.deltaTime;
+            timer -= GeneralGameController.GameDeltaTime;
 
             yield return null;
         }

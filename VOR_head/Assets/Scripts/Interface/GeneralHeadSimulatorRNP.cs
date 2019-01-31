@@ -12,15 +12,20 @@ public class GeneralHeadSimulatorRNP : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        this.PDC_script =
-            GameObject.Find(DC_name).GetComponent<ParentDataController>();
+        try
+        {
+            this.PDC_script =
+                GameObject.Find(DC_name).GetComponent<ParentDataController>();
+        }
+        catch { Debug.Log("Can not find object! " + DC_name); }
+
     }
 
     // Update is called once per frame
     void Update()
     {
         transform.position = Camera_TRANS.position;
-        if (PDC_script.using_VR)
+        if (PDC_script != null && PDC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
         }

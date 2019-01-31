@@ -32,7 +32,8 @@ public class Missile : MonoBehaviour {
 	void FixedUpdate () {
         if (start_flag)
         {
-            transform.Translate(target_pos * Time.deltaTime * InitSpeed, Space.World);
+            transform.Translate(target_pos * GeneralGameController.GameDeltaTime * InitSpeed, 
+                                Space.World);
         }
     }
 

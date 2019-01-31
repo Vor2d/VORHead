@@ -39,17 +39,11 @@ public class WorldCanvasController : MonoBehaviour {
         {
             hit_to_screen = 
                     RayCastCamera.WorldToScreenPoint(GRC_script.Canvas_hit_position);
-            
         }
         catch { }
         hit_to_screen.z = 0.0f;
         point_data.position = hit_to_screen;
 
-        //right_controller();
-    }
-
-    private void FixedUpdate()
-    {
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(point_data, results);
 
@@ -64,7 +58,7 @@ public class WorldCanvasController : MonoBehaviour {
         }
         else
         {
-            if(entered_flag)
+            if (entered_flag)
             {
                 ExecuteEvents.Execute(hit_OBJ, point_data, ExecuteEvents.pointerExitHandler);
                 entered_flag = false;
@@ -75,23 +69,23 @@ public class WorldCanvasController : MonoBehaviour {
         results.Clear();
     }
 
-    private void right_controller()
-    {
-        if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f &&
-                                                                !Rcontroller_trigger_flag)
-        {
-            if (hit_OBJ != null)
-            {
-                ExecuteEvents.Execute(hit_OBJ, point_data,
-                                                    ExecuteEvents.pointerClickHandler);
-            }
-            Rcontroller_trigger_flag = true;
-        }
-        else if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") < 0.1f)
-        {
-            Rcontroller_trigger_flag = false;
-        }
-    }
+    //private void right_controller()
+    //{
+    //    if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f &&
+    //                                                            !Rcontroller_trigger_flag)
+    //    {
+    //        if (hit_OBJ != null)
+    //        {
+    //            ExecuteEvents.Execute(hit_OBJ, point_data,
+    //                                                ExecuteEvents.pointerClickHandler);
+    //        }
+    //        Rcontroller_trigger_flag = true;
+    //    }
+    //    else if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") < 0.1f)
+    //    {
+    //        Rcontroller_trigger_flag = false;
+    //    }
+    //}
 
     private void execute_event()
     {

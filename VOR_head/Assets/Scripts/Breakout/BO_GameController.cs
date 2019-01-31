@@ -59,7 +59,7 @@ public class BO_GameController : MonoBehaviour {
 	void Update () {
 
         //Debug.Log("pad position " + BOPad_TRANS.position);
-        if(Input.GetKeyDown(KeyCode.JoystickButton1))
+        if (Input.GetKeyDown(KeyCode.JoystickButton1))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }

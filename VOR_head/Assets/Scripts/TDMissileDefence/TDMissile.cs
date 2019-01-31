@@ -45,7 +45,7 @@ public class TDMissile : MonoBehaviour
 
         if(Aimed_flag)
         {
-            explode_timer -= Time.deltaTime;
+            explode_timer -= GeneralGameController.GameDeltaTime;
             change_color();
             if(explode_timer <= 0.0f)
             {
@@ -62,7 +62,7 @@ public class TDMissile : MonoBehaviour
         }
         else
         {
-            explode_timer += Time.deltaTime;
+            explode_timer += GeneralGameController.GameDeltaTime;
             if(explode_timer > ExplodeTime)
             {
                 explode_timer = ExplodeTime;
@@ -79,7 +79,8 @@ public class TDMissile : MonoBehaviour
     {
         if (start_flag)
         {
-            transform.Translate(target_pos * Time.deltaTime * Speed, Space.World);
+            transform.Translate(target_pos * GeneralGameController.GameDeltaTime * Speed, 
+                                Space.World);
         }
     }
 

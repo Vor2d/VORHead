@@ -47,7 +47,7 @@ public class Explode : MonoBehaviour {
 
     private void expand()
     {
-        explode_timer += Time.deltaTime;
+        explode_timer += GeneralGameController.GameDeltaTime;
         float radius = (explode_timer / EG_script.Explode_time) * EG_script.Explode_radius;
         transform.localScale = new Vector3(radius, radius, radius);
         if (explode_timer >= EG_script.Explode_time)

@@ -47,7 +47,7 @@ public class TDMD_GameController : MonoBehaviour {
 
         if (wait_missile_timer)
         {
-            miss_interval_timer -= Time.deltaTime;
+            miss_interval_timer -= GeneralGameController.GameDeltaTime;
         }
 
         if(Input.GetKeyDown(KeyCode.JoystickButton0))
