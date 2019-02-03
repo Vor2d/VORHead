@@ -1426,10 +1426,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4204060000834340, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.32
-      objectReference: {fileID: 0}
     - target: {fileID: 4358196630222928, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1466,10 +1462,6 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1564426903201468, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
     - target: {fileID: 1223457667921482, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_Name
       value: RightController
@@ -1477,6 +1469,18 @@ PrefabInstance:
     - target: {fileID: 1223457667921482, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4204060000834340, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.32
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564426903201468, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1062511296667550, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_Layer
@@ -1497,10 +1501,6 @@ PrefabInstance:
     - target: {fileID: 1328868983561846, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_Layer
       value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 114809484149787440, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
@@ -1730,7 +1730,7 @@ PrefabInstance:
     - target: {fileID: 114950056346621008, guid: dfd3e1b32559bab4da74ab4749040a32,
         type: 3}
       propertyPath: m_Text
-      value: Missile Defence
+      value: Missile Defense
       objectReference: {fileID: 0}
     - target: {fileID: 114859304855338188, guid: dfd3e1b32559bab4da74ab4749040a32,
         type: 3}

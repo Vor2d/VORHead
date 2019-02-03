@@ -5,23 +5,23 @@ using TMPro;
 
 public class City : MonoBehaviour {
 
+    public TextMesh BIndicatorText;
     [SerializeField] private GameObject HittedText_Prefab;
     [SerializeField] private GameObject DestroiedText_Prefab;
     [SerializeField] private Transform Shield_TRANS;
 
-    public TextMesh BIndicatorText;
-
+    [SerializeField] private int Health;
     [SerializeField] private bool UsingShield = true;
     [SerializeField] private int CityLifeOffset = 1;
     [SerializeField] private Vector3 TextOffSet = Vector3.zero;
 
-    public int Health = 3;
-
     private MD_GameController MD_GC_Script;
-    private bool already_destroied;
 
-	// Use this for initialization
-	void Start () {
+    public bool already_destroied { get; private set; }
+    public int curr_health { get; private set; }
+
+    // Use this for initialization
+    void Start () {
         if(MD_GC_Script == null)
         {
             MD_GC_Script = 
@@ -29,17 +29,18 @@ public class City : MonoBehaviour {
         }
 
         this.already_destroied = false;
+        this.curr_health = Health + CityLifeOffset;
 
     }
 	
 	// Update is called once per frame
 	void Update () {
-        BIndicatorText.text = Health.ToString();
+        BIndicatorText.text = curr_health.ToString();
 	}
 
     public void get_hit()
     {
-        Health--;
+        curr_health--;
         if(check_shield_broke())
         {
             disable_shield();
@@ -55,7 +56,8 @@ public class City : MonoBehaviour {
                 {
                     instantiate_punish_text(true);
                 }
-                Destroy(gameObject, 1.0f);
+                //Destroy(gameObject, 1.0f);
+                fake_destroy();
             }
         }
         else
@@ -71,9 +73,22 @@ public class City : MonoBehaviour {
 
     }
 
+    private void fake_destroy()
+    {
+        gameObject.SetActive(false);
+    }
+
+    public void resummon()
+    {
+        gameObject.SetActive(true);
+        curr_health = Health + CityLifeOffset;
+        Shield_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        already_destroied = false;
+    }
+
     private bool check_shield_broke()
     {
-        if(UsingShield && Health == CityLifeOffset)
+        if(UsingShield && curr_health == CityLifeOffset)
         {
             return true;
         }
@@ -87,7 +102,7 @@ public class City : MonoBehaviour {
 
     private bool check_destroied()
     {
-        return Health <= 0;
+        return curr_health <= 0;
     }
 
     private void instantiate_punish_text(bool destroied)

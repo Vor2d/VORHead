@@ -1,0 +1,6 @@
+MissileRate 5.0
+MissileSpeed 0.2
+AmmoOffset 10
+MissileNumberEachWave 10
+MSDifficultyIncrease 0.025
+MRDifficultyIncrease 0.1

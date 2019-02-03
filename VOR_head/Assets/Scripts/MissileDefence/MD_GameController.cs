@@ -24,7 +24,9 @@ public class MD_GameController : GeneralGameController {
     [SerializeField] private MD_TargetRayCast MDTRC_script;
     [SerializeField] private GameObject ExplodePrefab;
     [SerializeField] private GameObject[] MissilePrefabs;
-    [SerializeField] private Transform TutorialTest_TRANS;
+    [SerializeField] private Transform MenuTMP_TRANS;
+    [SerializeField] private Transform LogSystem_TRANS;
+    [SerializeField] private Controller_Input CI_script;
     //[SerializeField] private Transform ExplodeOutline_TRANS;
 
     [Header("Variables")]
@@ -32,10 +34,20 @@ public class MD_GameController : GeneralGameController {
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
     public float MissileInterTime = 3.0f;
+    public float MissileSpeed = 0.2f;
     public int ScoreIncerase = 10;
     public float ExplodeRaduis = 3.0f;
     public float ExplodeTime = 1.5f;
     public bool UsingExplodeOutline = false;
+    [SerializeField] private float SmallExplodeScale = 0.1f;
+    [SerializeField] private float WaveInterTime = 2.0f;
+    [SerializeField] private int AmmoOffSet = 0;
+    [SerializeField] private bool ScoreNotNegative = true;
+    [SerializeField] private bool UsingRandomSeed = false;
+    [SerializeField] private int RandomSeed = 0;
+    [SerializeField] private bool ReadDataFromFile = false;
+    [SerializeField] private bool AutoLogVR = false;
+    [SerializeField] private bool ReSummonCity = false;
     [Header("BonusSystem")]
     public bool UsingBonusSystem = false;
     public int[] BonusScores;
@@ -43,18 +55,19 @@ public class MD_GameController : GeneralGameController {
     public bool UsingPunishSystem = false;
     public int GetHitPunish = 0;
     public int GetDestroyPunish = 0;
-    [Header("")]
-    [SerializeField] private float SmallExplodeScale = 0.1f;
-    [SerializeField] private float WaveInterTime = 1.0f;
-    [SerializeField] private int AmmoOffSet = 0;
-    [SerializeField] private bool ScoreNotNegative = true;
-    [SerializeField] private bool UsingRandomSeed = false;
-    [SerializeField] private int RandomSeed = 0;
+    [Header("InfiniteWaves")]
+    [SerializeField] private bool InfiniteWaves = false;
+    [SerializeField] private float MSDifficultyIncrease = 0.1f;
+    [SerializeField] private float MRDifficultyIncrease = 0.1f;
+    [SerializeField] private int MissileNumberEachWave;
+
 
     public bool City_destroied { get; set; }
     public bool Menu_gazing_flag { get; set; }
 
-    private GameObject[] cities;
+    private MD_DataController MDDC_script;
+    private GameObject[] alive_cities;
+    private GameObject[] total_cities;
     private float missile_timer;
     private bool missile_timer_flag;
     private Animator MD_GC_Animator;
@@ -70,9 +83,18 @@ public class MD_GameController : GeneralGameController {
     private bool wave_inter_flag;
     private int current_missile_number;
     private bool ammo_changed_flag;
+    private bool city_destroyed_this_wave;
 
     // Use this for initialization
     void Start () {
+        if(MDDC_script == null)
+        {
+            MDDC_script = GameObject.Find(MD_StrDefiner.DataController_name).
+                                            GetComponent<MD_DataController>();
+        }
+
+        load_game_data();
+
         this.City_destroied = false;
         this.city_number = 0;
         this.MD_GC_Animator = GetComponent<Animator>();
@@ -90,10 +112,14 @@ public class MD_GameController : GeneralGameController {
         this.current_missile_number = -1;
         this.ammo_changed_flag = true;
         this.Menu_gazing_flag = false;
+        this.city_destroyed_this_wave = false;
 
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         update_cities();
+        this.total_cities = alive_cities;
         set_random();
+        log_VR();
+        register_controller();
     }
 	
 	// Update is called once per frame
@@ -129,6 +155,78 @@ public class MD_GameController : GeneralGameController {
         }
     }
 
+    private void OnDestroy()
+    {
+        de_register_controller();
+    }
+
+    private void register_controller()
+    {
+        CI_script.Button_B += recenter;
+    }
+
+    private void de_register_controller()
+    {
+        CI_script.Button_B -= recenter;
+    }
+
+    private void recenter()
+    {
+        UnityEngine.XR.InputTracking.Recenter();
+    }
+
+    private void load_game_data()
+    {
+        if(ReadDataFromFile)
+        {
+            try
+            {
+                MissileInterTime = 
+                        float.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileRate]);
+            }
+            catch { }
+            try
+            {
+                MissileSpeed =
+                        float.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileSpeed]);
+            }
+            catch { }
+            try
+            {
+                AmmoOffSet =
+                        int.Parse(MDDC_script.GameData_Dict[MD_GameData.AmmoOffset]);
+            }
+            catch { }
+            try
+            {
+                MSDifficultyIncrease =
+                    float.Parse(MDDC_script.GameData_Dict[MD_GameData.MSDifficultyIncrease]);
+            }
+            catch { }
+            try
+            {
+                MRDifficultyIncrease =
+                    float.Parse(MDDC_script.GameData_Dict[MD_GameData.MRDifficultyIncrease]);
+            }
+            catch { }
+            try
+            {
+                MissileNumberEachWave =
+                        int.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileNumberEachWave]);
+            }
+            catch { }
+        }
+    }
+
+    private void log_VR()
+    {
+        if(AutoLogVR)
+        {
+            LogSystem_TRANS.GetComponent<VRLogSystem>().toggle_Thread();
+        }
+    }
+        
+
     public void ToInstantiatetMissile()
     {
         current_MTI_number--;
@@ -137,14 +235,22 @@ public class MD_GameController : GeneralGameController {
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorStartWaveTrigger_str);
             return;
         }
-        GameObject Missile =
-                    Instantiate(MissilePrefabs[Random.Range(0,MissilePrefabs.Length)],
-                                RandomPosGenerate(), Quaternion.identity);
-        Missile Missile_Script = Missile.GetComponent<Missile>();
-        int city_index = Random.Range(0, city_number);
-        Missile_Script.set_target(cities[city_index].transform);
-        Missile_Script.start_move();
+        instantiate_missiles();
         MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+    }
+
+    private void instantiate_missiles()
+    {
+        if(city_number > 0)
+        {
+            GameObject Missile_OBJ =
+            Instantiate(MissilePrefabs[Random.Range(0, MissilePrefabs.Length)],
+                        RandomPosGenerate(), Quaternion.identity);
+            Missile Missile_Script = Missile_OBJ.GetComponent<Missile>();
+            int city_index = Random.Range(0, city_number);
+            Missile_Script.set_target(alive_cities[city_index].transform);
+            Missile_Script.start_move(MissileSpeed);
+        }
     }
 
     private Vector3 RandomPosGenerate()
@@ -175,6 +281,7 @@ public class MD_GameController : GeneralGameController {
 
     private void city_destroied()
     {
+        city_destroyed_this_wave = true;
         if(UsingPunishSystem)
         {
             score -= GetDestroyPunish;
@@ -187,15 +294,24 @@ public class MD_GameController : GeneralGameController {
         List<GameObject> temp_cities = new List<GameObject>();
         foreach(GameObject city in GameObject.FindGameObjectsWithTag(MD_StrDefiner.City_tag))
         {
-            if(city.GetComponent<City>().Health > 0)
+            if(city.GetComponent<City>().curr_health > 0)
             {
                 temp_cities.Add(city);
             }
         }
 
-        cities = temp_cities.ToArray();
-        city_number = cities.Length;
-        Debug.Log("city_number " + city_number);
+        alive_cities = temp_cities.ToArray();
+        city_number = alive_cities.Length;
+        //Debug.Log("city_number " + city_number);
+        check_game_over();
+    }
+
+    private void check_game_over()
+    {
+        if (city_number <= 0)
+        {
+            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorGameOverTrigger_str);
+        }
     }
 
     public void IE_with_raycast()
@@ -322,24 +438,76 @@ public class MD_GameController : GeneralGameController {
     public void ToStartWave()
     {
         wave_number++;
-        if(wave_number < wave_info.WaveNumber)
+        if(!InfiniteWaves)
         {
-            current_MTI_number = wave_info.WaveInfoList[wave_number];
-            //MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+            if (wave_number < wave_info.WaveNumber)
+            {
+                current_MTI_number = wave_info.WaveInfoList[wave_number];
+                //MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+                WaveText_TRANS.GetComponent<TextMesh>().text =
+                        MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
+                WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+                wave_inter_flag = true;
+                AS_script.set_ammo(current_MTI_number + AmmoOffSet);
+                ammo_changed_flag = true;
+
+                show_score_text();
+            }
+            else
+            {
+                MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorFinishTrigger_str);
+            }
+        }
+        else
+        {
+            if (!city_destroyed_this_wave)
+            {
+                increase_difficulty();
+            }
+            else
+            {
+                decrease_difficulty();
+            }
+            current_MTI_number = MissileNumberEachWave;
             WaveText_TRANS.GetComponent<TextMesh>().text =
-                    MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
+                        MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
             WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
             wave_inter_flag = true;
             AS_script.set_ammo(current_MTI_number + AmmoOffSet);
             ammo_changed_flag = true;
-
             show_score_text();
         }
-        else
+
+        if(ReSummonCity)
         {
-            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorFinishTrigger_str);
+            
+            foreach(GameObject city in total_cities)
+            {
+                //Debug.Log("already_destroied " + city.name + city.GetComponent<City>().already_destroied);
+                city.GetComponent<City>().resummon();
+                update_cities();
+            }
         }
 
+    }
+
+    private void increase_difficulty()
+    {
+        MissileInterTime -= MissileInterTime * MRDifficultyIncrease;
+        missile_timer = MissileInterTime;
+        MissileSpeed += MissileSpeed * MSDifficultyIncrease;
+        MissileNumberEachWave += (int)(MissileNumberEachWave * MRDifficultyIncrease);
+        //Debug.Log("MissileInterTime " + MissileInterTime);
+        //Debug.Log("MissileSpeed " + MissileSpeed);
+    }
+
+    private void decrease_difficulty()
+    {
+        MissileInterTime += MissileInterTime * MRDifficultyIncrease;
+        missile_timer = MissileInterTime;
+        MissileSpeed -= MissileSpeed * MSDifficultyIncrease;
+        MissileNumberEachWave -= (int)(MissileNumberEachWave * MSDifficultyIncrease);
+        city_destroyed_this_wave = false;
     }
 
     private void show_score_text()
@@ -464,5 +632,22 @@ public class MD_GameController : GeneralGameController {
         {
             Random.InitState(RandomSeed);
         }
+    }
+
+    public string var_to_string()
+    {
+        string result_str = "";
+
+        result_str += "Missile Rate " + MissileInterTime.ToString("F2") + " ";
+        result_str += "Missile Speed " + MissileSpeed.ToString("F2") + " ";
+
+        return result_str;
+    }
+
+    public void ToGameOver()
+    {
+        WaveText_TRANS.GetComponent<TextMesh>().text = MD_StrDefiner.GameOverStr;
+        WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 }

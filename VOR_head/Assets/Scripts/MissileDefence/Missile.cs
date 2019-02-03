@@ -4,27 +4,30 @@ using UnityEngine;
 
 public class Missile : MonoBehaviour {
 
-    [SerializeField] private GameObject explosion_OBJ;
-
-    public float InitSpeed = 0.5f;
+    [SerializeField] private GameObject Explosion_Prefab;
     [SerializeField] private float SpeedRandomRange = 0.0f;
+
+    private MD_GameController MDGC_script;
 
     private bool start_flag;
     private Vector3 target_pos;
-
-    private MD_GameController MDGC_script;
+    private float init_speed;
 
     //Need to init objects here since it is a prefab;
     private void Awake()
     {
+        this.MDGC_script =
+            GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
+
         this.target_pos = new Vector3();
         this.start_flag = false;
-        this.MDGC_script = GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
+        this.init_speed = 0.0f;
+
     }
 
     // Use this for initialization
     void Start () {
-        InitSpeed += Random.Range(-SpeedRandomRange,SpeedRandomRange);
+        //init_speed += Random.Range(-SpeedRandomRange,SpeedRandomRange);
 
     }
 	
@@ -32,7 +35,7 @@ public class Missile : MonoBehaviour {
 	void FixedUpdate () {
         if (start_flag)
         {
-            transform.Translate(target_pos * GeneralGameController.GameDeltaTime * InitSpeed, 
+            transform.Translate(target_pos * GeneralGameController.GameDeltaTime * init_speed, 
                                 Space.World);
         }
     }
@@ -48,6 +51,18 @@ public class Missile : MonoBehaviour {
         start_flag = true;
     }
 
+    public void start_move(float speed)
+    {
+        set_speed(speed);
+        face(target_pos);
+        start_flag = true;
+    }
+
+    private void set_speed(float speed)
+    {
+        init_speed = speed;
+    }
+
     public void face(Vector3 pos)
     {
         transform.forward = pos;
@@ -59,7 +74,7 @@ public class Missile : MonoBehaviour {
         if (other_GO.tag == "City")
         {
             other_GO.GetComponent<City>().get_hit();
-            Instantiate(explosion_OBJ, transform.position,new Quaternion());
+            Instantiate(Explosion_Prefab, transform.position,new Quaternion());
             //MDGC_script.City_hitted();
             Destroy(gameObject);
         }
@@ -67,12 +82,12 @@ public class Missile : MonoBehaviour {
         {
             MDGC_script.missile_destroyed();
             other_GO.GetComponent<Explode>().missile_hitted();
-            Instantiate(explosion_OBJ, transform.position, new Quaternion());
+            Instantiate(Explosion_Prefab, transform.position, new Quaternion());
             Destroy(gameObject);
         }
         else if(other_GO.tag == "MD_GroundBorder")
         {
-            Instantiate(explosion_OBJ, transform.position, new Quaternion());
+            Instantiate(Explosion_Prefab, transform.position, new Quaternion());
             Destroy(gameObject);
         }
         //StartCoroutine(MDGC_script.check_missile_number());

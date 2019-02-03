@@ -95,16 +95,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e2a877b2e144e649b5642b7051d8e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BIndicatorText: {fileID: 102343650119963624}
   HittedText_Prefab: {fileID: 3870003892759033477, guid: a02c04f0318be9d44b650cc6930147d6,
     type: 3}
   DestroiedText_Prefab: {fileID: 2657104402623887220, guid: f3b5402b99c46394e832fa9c3fb4dc04,
     type: 3}
   Shield_TRANS: {fileID: 4934865980624068404}
-  BIndicatorText: {fileID: 102343650119963624}
+  Health: 3
   UsingShield: 1
   CityLifeOffset: 1
   TextOffSet: {x: 0, y: 1, z: 0}
-  Health: 4
 --- !u!82 &82119930575744092
 AudioSource:
   m_ObjectHideFlags: 0

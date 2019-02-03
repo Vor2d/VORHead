@@ -989,7 +989,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_text: Menu Tmp
+  m_text: Menu TMP
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1145,7 +1145,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480587018}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 10}
+  m_LocalPosition: {x: 0, y: 0, z: 7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1434,6 +1434,67 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 626345461}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &645350161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 645350163}
+  - component: {fileID: 645350162}
+  - component: {fileID: 645350164}
+  m_Layer: 0
+  m_Name: LogSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &645350162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645350161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11cc6ed67a135224ea971862b80cb8ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: MD_Log/VRLOG/
+  LogTypeName: MD_VRLog
+  MDGC_script: {fileID: 818488913}
+--- !u!4 &645350163
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645350161}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 19
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &645350164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645350161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 925a69beafc9e9045ad688bbdee62ed0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LogSystemToSave: {fileID: 645350162}
+  AutoSaveTime: 300
 --- !u!1 &665485255
 GameObject:
   m_ObjectHideFlags: 0
@@ -1783,6 +1844,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 114809484149787440, guid: 5215ab598d10c17499ad0d33cf88f7a7,
         type: 3}
       propertyPath: HitIndicator_TRANS
@@ -1792,10 +1857,6 @@ PrefabInstance:
         type: 3}
       propertyPath: RayLayerMask.m_Bits
       value: 12288
-      objectReference: {fileID: 0}
-    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 65287011603127100, guid: 5215ab598d10c17499ad0d33cf88f7a7,
         type: 3}
@@ -1972,26 +2033,36 @@ MonoBehaviour:
   MissilePrefabs:
   - {fileID: 8423722233592978825, guid: 915cdd99f24e6a142884ce5dfe4cc3fb, type: 3}
   - {fileID: 3490343209754182077, guid: d00442f4667f62948bc72843821ffe55, type: 3}
-  TutorialTest_TRANS: {fileID: 480587023}
+  MenuTMP_TRANS: {fileID: 0}
+  LogSystem_TRANS: {fileID: 645350163}
+  CI_script: {fileID: 708906595}
   InstRandomRange: 9
-  InstY: 6
+  InstY: 8
   InstZ: 10
   MissileInterTime: 1
+  MissileSpeed: 0.2
   ScoreIncerase: 10
   ExplodeRaduis: 3
   ExplodeTime: 1.5
   UsingExplodeOutline: 1
+  SmallExplodeScale: 1
+  WaveInterTime: 2
+  AmmoOffSet: 0
+  ScoreNotNegative: 1
+  UsingRandomSeed: 1
+  RandomSeed: 1000
+  ReadDataFromFile: 1
+  AutoLogVR: 0
+  ReSummonCity: 1
   UsingBonusSystem: 1
   BonusScores: 1e0000003200000064000000c8000000
   UsingPunishSystem: 1
   GetHitPunish: 50
   GetDestroyPunish: 200
-  SmallExplodeScale: 1
-  WaveInterTime: 1
-  AmmoOffSet: 0
-  ScoreNotNegative: 1
-  UsingRandomSeed: 1
-  RandomSeed: 1000
+  InfiniteWaves: 1
+  MSDifficultyIncrease: 0.1
+  MRDifficultyIncrease: 0.1
+  MissileNumberEachWave: 100
 --- !u!4 &818488914
 Transform:
   m_ObjectHideFlags: 0
@@ -2780,6 +2851,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1067178457}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1250376701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1250376702}
+  m_Layer: 0
+  m_Name: RePlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1250376702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250376701}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.018012734, y: 0.023171037, z: 0.013236523}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1261077979
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3153,7 +3254,7 @@ MonoBehaviour:
 
 
     Try to stop the asteroids before they hit the city!'
-  ConfirmText: '<align="center">Are you sure about this?
+  ConfirmText: '<align="center"><color="yellow">Are you sure about this?
 
 
     (Game progress will not be saved)</align>'
