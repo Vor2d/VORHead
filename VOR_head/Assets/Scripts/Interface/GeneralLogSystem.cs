@@ -74,7 +74,7 @@ public class GeneralLogSystem : MonoBehaviour
         }
     }
 
-    private void turn_on_Thread()
+    public void turn_on_Thread()
     {
         Debug.Log("Start Logging LOG!! "+LogTypeName);
         LOG_Thread = new Thread(logging);
@@ -87,7 +87,7 @@ public class GeneralLogSystem : MonoBehaviour
 
     }
 
-    private void turn_off_Thread()
+    public void turn_off_Thread()
     {
         quit_LOG_Thread();
         Debug.Log("LOG Stoped!! "+LogTypeName);

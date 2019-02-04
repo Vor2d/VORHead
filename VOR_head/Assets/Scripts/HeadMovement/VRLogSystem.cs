@@ -11,8 +11,8 @@ public class VRLogSystem : GeneralLogSystem
 
     private DataController DC_script;
     private AutoLogSystem ALS_script;
-    private Vector3 last_velocity;
-    private Vector3 curr_velocity;
+    protected Vector3 last_velocity;
+    protected Vector3 curr_velocity;
     private Quaternion curr_orientation;
 
 

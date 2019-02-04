@@ -10,22 +10,25 @@ public class AutoLogSystem : MonoBehaviour {
 
     const string path = "Log/AutoLog/";
 
+    [SerializeField] private VRLogSystem VRLog_script;
+
     public bool VRAutoLog_On = false;
     public bool JumpAutoLog_On = true;
-    public float JAL_time = 30.0f;
-    public float JAL_changefile_time = 90.0f;
+    public float JAL_Time = 30.0f;
+    public float JAL_Changefile_Time = 90.0f;
+    public float VRAL_Time = 300.0f;
 
     private string folder_path;
-    //public bool VRthread_state_flag { get; set; }
+    public bool VRthread_state_flag { get; set; }
     public bool Jumpthread_state_flag { get; set; }
     public StringBuilder VRAutoLog_string { get; set; }
     public StringBuilder JumpAutoLog_string { get; set; }
-    //public bool VRWriteLock { get; set; }
-    //public bool JumpWriteLock { get; set; }
-    private string file_name;
+    private string jump_file_name;
+    private string VR_file_name;
     private DataController DC_script;
     private float jump_timer;
     private float jump_changefile_timer;
+    private float VR_timer;
 
     private Thread VRAutoLog_Thread;
     private Thread JumpAutoLog_Thread;
@@ -35,16 +38,16 @@ public class AutoLogSystem : MonoBehaviour {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
         this.folder_path = path + String.Format("{0:_yyyy_MM_dd}", DateTime.Today) + "/";
-        //this.VRthread_state_flag = false;
+        this.VRthread_state_flag = false;
         this.Jumpthread_state_flag = false;
-        this.VRAutoLog_string = new StringBuilder();
         this.JumpAutoLog_string = new StringBuilder();
-        //this.VRWriteLock = false;
-        //this.JumpWriteLock = false;
-        this.file_name = folder_path + "JumpAutoLog_" +
+        this.jump_file_name = folder_path + "JumpAutoLog_" +
                             String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
-        this.jump_timer = JAL_time;
-        this.jump_changefile_timer = JAL_changefile_time;
+        this.VR_file_name = folder_path + "VRAutoLog_" +
+                            String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
+        this.jump_timer = JAL_Time;
+        this.jump_changefile_timer = JAL_Changefile_Time;
+        this.VR_timer = VRAL_Time;
 
         this.JumpAutoLog_Thread = new Thread(write_jumpauto_file);
 
@@ -59,28 +62,57 @@ public class AutoLogSystem : MonoBehaviour {
                 Debug.Log("Folder creation failed, " + e);
             }
         }
+
+        if(VRAutoLog_On)
+        {
+            VRLog_script.turn_on_Thread();
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
+        jump_auto_log();
+        VR_auto_log();
+	}
+
+    private void jump_auto_log()
+    {
+        //Jump Log;
         jump_timer -= Time.deltaTime;
         jump_changefile_timer -= Time.deltaTime;
 
-        if(JumpAutoLog_On && jump_timer <= 0.0f && !Jumpthread_state_flag)
+        if (JumpAutoLog_On && jump_timer < 0 && !Jumpthread_state_flag)
         {
-            //Debug.Log("start thread");
-            jump_timer = JAL_time;
+            jump_timer = JAL_Time;
             JumpAutoLog_Thread = new Thread(write_jumpauto_file);
             JumpAutoLog_Thread.Start();
         }
 
-        if(jump_changefile_timer <= 0.0f)
+        if (jump_changefile_timer <= 0.0f)
         {
-            file_name = folder_path + "JumpAutoLog_" +
+            jump_file_name = folder_path + "JumpAutoLog_" +
                     String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
-            jump_changefile_timer = JAL_changefile_time;
+            jump_changefile_timer = JAL_Changefile_Time;
         }
-	}
+    }
+
+    private void VR_auto_log()
+    {
+        VR_timer -= Time.unscaledDeltaTime;
+        if (VRAutoLog_On && VR_timer < 0 && !VRthread_state_flag)
+        {
+            VR_timer = VRAL_Time;
+            VRAutoLog_Thread = new Thread(start_VR_log);
+            VRAutoLog_Thread.Start();
+        }
+    }
+
+    private void start_VR_log()
+    {
+        VRthread_state_flag = true;
+        VRLog_script.write_file();
+        VRthread_state_flag = false;
+    }
 
     private void write_jumpauto_file()
     {
@@ -89,14 +121,14 @@ public class AutoLogSystem : MonoBehaviour {
         try
         {
             // create log file if it does not already exist. Otherwise open it for appending new trial
-            if (!File.Exists(file_name))
+            if (!File.Exists(jump_file_name))
             {
-                file = new StreamWriter(file_name);
+                file = new StreamWriter(jump_file_name);
                 file.WriteLine("Settings: "+DC_script.SystemSetting.VarToString());
             }
             else
             {
-                file = File.AppendText(file_name);
+                file = File.AppendText(jump_file_name);
             }
 
             StringBuilder temp_string = new StringBuilder(JumpAutoLog_string.ToString());
@@ -118,8 +150,14 @@ public class AutoLogSystem : MonoBehaviour {
         quit_Thread();
     }
 
+    private void OnApplicationQuit()
+    {
+        quit_Thread();
+    }
+
     private void quit_Thread()
     {
+        write_jumpauto_file();
         try
         {
             // attempt to join for 500ms
@@ -127,6 +165,21 @@ public class AutoLogSystem : MonoBehaviour {
             {
                 // force shutdown
                 JumpAutoLog_Thread.Abort();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
+        }
+
+        try
+        {
+            // attempt to join for 500ms
+            if (!VRAutoLog_Thread.Join(2000))
+            {
+                // force shutdown
+                VRAutoLog_Thread.Abort();
             }
         }
         catch (Exception e)

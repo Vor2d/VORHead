@@ -1,6 +1,6 @@
 PlayerScreenCM	100
 ScreenWidthCM	100
-Camera1Display	1
+Camera1Display	0
 Camera2Display	0
 GazeTime	1.5
 RandomGazeTime	0.5

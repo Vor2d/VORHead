@@ -20,6 +20,7 @@ public class CoilData : MonoBehaviour {
     private static IPEndPoint EP = new IPEndPoint(addr, port);
     //members;
     private Thread RCThread;
+    private DataController DC_script;
 
     // Use this for initialization
     void Start () {
@@ -27,8 +28,13 @@ public class CoilData : MonoBehaviour {
         this.currentHeadVelocity = new Vector3();
         this.simulinkSample = (UInt32)0;
 
-        RCThread = new Thread(read_coil);
-        RCThread.Start();
+        this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+
+        if(DC_script.using_coil)
+        {
+            RCThread = new Thread(read_coil);
+            RCThread.Start();
+        }
     }
 	
 	// Update is called once per frame

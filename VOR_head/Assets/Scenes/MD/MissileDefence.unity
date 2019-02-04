@@ -1467,6 +1467,7 @@ MonoBehaviour:
   path: MD_Log/VRLOG/
   LogTypeName: MD_VRLog
   MDGC_script: {fileID: 818488913}
+  CI_script: {fileID: 708906595}
 --- !u!4 &645350163
 Transform:
   m_ObjectHideFlags: 0
@@ -2052,7 +2053,7 @@ MonoBehaviour:
   UsingRandomSeed: 1
   RandomSeed: 1000
   ReadDataFromFile: 1
-  AutoLogVR: 0
+  AutoLogVR: 1
   ReSummonCity: 1
   UsingBonusSystem: 1
   BonusScores: 1e0000003200000064000000c8000000

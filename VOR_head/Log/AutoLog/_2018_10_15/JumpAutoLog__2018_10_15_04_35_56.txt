@@ -1,6 +1,0 @@
-Settings: Player_screen_cm 50 Screen_width_cm 40 Camera1_display 1 Camera2_display 0 
-
-
-
-
-

@@ -1,8 +1,0 @@
-Settings: Player_screen_cm 100 Screen_width_cm 100 Camera1_display 1 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 
-2335	0	-1	GameMode	
-2346	0	0	ReSet	0.00	0
-2352	0	0	ShowTarget	0.00	0
-3845	0	0	MoveTarget	10.00	1
-3850	0	0	ShowTarget	10.00	1
-3964	0	0	TargetHided	10.00	1
-
