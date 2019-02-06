@@ -15,7 +15,6 @@ public class MD_GameController : GeneralGameController {
     [SerializeField] private Aim Aim_script;
     [SerializeField] private RightController RC_script;
     [SerializeField] private Transform AimT_TRANS;
-    //[SerializeField] private GameObject WorldCanvas_GO;
     [SerializeField] private Transform ScoreText_TRANS;
     [SerializeField] private Transform WaveText_TRANS;
     [SerializeField] private AmmoSystem AS_script;
@@ -27,25 +26,15 @@ public class MD_GameController : GeneralGameController {
     [SerializeField] private Transform MenuTMP_TRANS;
     [SerializeField] private Transform LogSystem_TRANS;
     [SerializeField] private Controller_Input CI_script;
-    //[SerializeField] private Transform ExplodeOutline_TRANS;
 
     [Header("Variables")]
     public float InstRandomRange = 9.0f;
     public float InstY = 4.0f;
     public float InstZ = 10.0f;
-    public float MissileInterTime = 3.0f;
-    public float MissileSpeed = 0.2f;
+    public float WaveInterTime = 2.0f;
     public int ScoreIncerase = 10;
-    public float ExplodeRaduis = 3.0f;
-    public float ExplodeTime = 1.5f;
-    public bool UsingExplodeOutline = false;
     [SerializeField] private float SmallExplodeScale = 0.1f;
-    [SerializeField] private float WaveInterTime = 2.0f;
-    [SerializeField] private int AmmoOffSet = 0;
     [SerializeField] private bool ScoreNotNegative = true;
-    [SerializeField] private bool UsingRandomSeed = false;
-    [SerializeField] private int RandomSeed = 0;
-    [SerializeField] private bool ReadDataFromFile = false;
     [SerializeField] private bool AutoLogVR = false;
     [SerializeField] private bool ReSummonCity = false;
     [Header("BonusSystem")]
@@ -55,51 +44,59 @@ public class MD_GameController : GeneralGameController {
     public bool UsingPunishSystem = false;
     public int GetHitPunish = 0;
     public int GetDestroyPunish = 0;
-    [Header("InfiniteWaves")]
-    [SerializeField] private bool InfiniteWaves = false;
-    [SerializeField] private float MSDifficultyIncrease = 0.1f;
-    [SerializeField] private float MRDifficultyIncrease = 0.1f;
-    [SerializeField] private int MissileNumberEachWave;
 
-
+    public MD_DataController MDDC_script { get; private set; }
+    private Animator MD_GC_Animator;
+    private GameObject[] total_cities;
+    private MD_WaveInfo wave_info;
+    private Transform reload_collider_TRANS;
+    #region(ThisWaveInfo)
+    private int wave_number;
+    private int difficulty_ratio;
+    private int missile_number_this_wave;
+    private float missile_Itime_this_wave;
+    private float missile_speed_this_wave;
+    private int ammo_this_wave;
+    #endregion
+    #region(RunTimeInfo)
     public bool City_destroied { get; set; }
     public bool Menu_gazing_flag { get; set; }
-
-    private MD_DataController MDDC_script;
-    private GameObject[] alive_cities;
-    private GameObject[] total_cities;
-    private float missile_timer;
-    private bool missile_timer_flag;
-    private Animator MD_GC_Animator;
-    private int city_number;
-    private int score;
-    private bool score_changed_flag;
+    public bool Reload_gazing_flag { get; set; }
     private bool first_camera_on;
     private bool start_flag;
-    private int wave_number;
-    private MD_WaveInfo wave_info;
-    private int current_MTI_number; //missile to instantiate;
-    private float wave_inter_timer;
+    private GameObject[] alive_cities;
+    private int alive_city_number;
+    private bool missile_timer_flag;
+    private float missile_timer;
+    private bool score_changed_flag;
+    private int score;
     private bool wave_inter_flag;
-    private int current_missile_number;
+    private float wave_inter_timer;
+    private int current_alive_missile_number;
     private bool ammo_changed_flag;
+    private int current_MTI_number; //missile to instantiate;
+    private bool missile_number_checked;
     private bool city_destroyed_this_wave;
+    #endregion
 
-    // Use this for initialization
-    void Start () {
-        if(MDDC_script == null)
+    private void Awake()
+    {
+        if (MDDC_script == null)
         {
             MDDC_script = GameObject.Find(MD_StrDefiner.DataController_name).
                                             GetComponent<MD_DataController>();
         }
+    }
 
-        load_game_data();
+    // Use this for initialization
+    void Start ()
+    {
 
         this.City_destroied = false;
-        this.city_number = 0;
+        this.alive_city_number = 0;
         this.MD_GC_Animator = GetComponent<Animator>();
         this.missile_timer_flag = false;
-        this.missile_timer = MissileInterTime;
+        this.missile_timer = MDDC_script.MissileInterTime;
         this.score = 0;
         this.score_changed_flag = true;
         this.first_camera_on = false;
@@ -109,10 +106,18 @@ public class MD_GameController : GeneralGameController {
         this.current_MTI_number = -1;
         this.wave_inter_timer = WaveInterTime;
         this.wave_inter_flag = false;
-        this.current_missile_number = -1;
+        this.current_alive_missile_number = -1;
         this.ammo_changed_flag = true;
         this.Menu_gazing_flag = false;
         this.city_destroyed_this_wave = false;
+        this.ammo_this_wave = 0;
+        this.missile_number_this_wave = 0;
+        this.Reload_gazing_flag = false;
+        this.reload_collider_TRANS = null;
+        this.missile_number_checked = false;
+        this.missile_Itime_this_wave = 0.0f;
+        this.difficulty_ratio = 0;
+        this.missile_speed_this_wave = 0.0f;
 
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         update_cities();
@@ -136,11 +141,6 @@ public class MD_GameController : GeneralGameController {
             wave_inter_timer -= GeneralGameController.GameDeltaTime;
         }
 
-        //if(Input.GetKeyDown(KeyCode.JoystickButton1))
-        //{
-        //    restart();
-        //}
-
         update_score_text();
         update_ammo_text();
     }
@@ -163,59 +163,24 @@ public class MD_GameController : GeneralGameController {
     private void register_controller()
     {
         CI_script.Button_B += recenter;
+        if(MDDC_script.UsingReloadSystem)
+        {
+            CI_script.IndexTrigger += reload_ammo;
+        }
     }
 
     private void de_register_controller()
     {
         CI_script.Button_B -= recenter;
+        if (MDDC_script.UsingReloadSystem)
+        {
+            CI_script.IndexTrigger -= reload_ammo;
+        }
     }
 
-    private void recenter()
+    public void recenter()
     {
         UnityEngine.XR.InputTracking.Recenter();
-    }
-
-    private void load_game_data()
-    {
-        if(ReadDataFromFile)
-        {
-            try
-            {
-                MissileInterTime = 
-                        float.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileRate]);
-            }
-            catch { }
-            try
-            {
-                MissileSpeed =
-                        float.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileSpeed]);
-            }
-            catch { }
-            try
-            {
-                AmmoOffSet =
-                        int.Parse(MDDC_script.GameData_Dict[MD_GameData.AmmoOffset]);
-            }
-            catch { }
-            try
-            {
-                MSDifficultyIncrease =
-                    float.Parse(MDDC_script.GameData_Dict[MD_GameData.MSDifficultyIncrease]);
-            }
-            catch { }
-            try
-            {
-                MRDifficultyIncrease =
-                    float.Parse(MDDC_script.GameData_Dict[MD_GameData.MRDifficultyIncrease]);
-            }
-            catch { }
-            try
-            {
-                MissileNumberEachWave =
-                        int.Parse(MDDC_script.GameData_Dict[MD_GameData.MissileNumberEachWave]);
-            }
-            catch { }
-        }
     }
 
     private void log_VR()
@@ -241,15 +206,15 @@ public class MD_GameController : GeneralGameController {
 
     private void instantiate_missiles()
     {
-        if(city_number > 0)
+        if(alive_city_number > 0)
         {
             GameObject Missile_OBJ =
             Instantiate(MissilePrefabs[Random.Range(0, MissilePrefabs.Length)],
                         RandomPosGenerate(), Quaternion.identity);
             Missile Missile_Script = Missile_OBJ.GetComponent<Missile>();
-            int city_index = Random.Range(0, city_number);
+            int city_index = Random.Range(0, alive_city_number);
             Missile_Script.set_target(alive_cities[city_index].transform);
-            Missile_Script.start_move(MissileSpeed);
+            Missile_Script.start_move(missile_speed_this_wave);
         }
     }
 
@@ -261,16 +226,33 @@ public class MD_GameController : GeneralGameController {
 
     public void ToWaitForNextMissile()
     {
-        missile_timer_flag = true;
+        if(!MDDC_script.OneMissilePreTime)
+        {
+            missile_timer_flag = true;
+        }
+        else
+        {
+            check_missile_number();
+        }
     }
 
     public void WaitForNextMissile()
     {
-        if(missile_timer <= 0.0f)
+        if(!MDDC_script.OneMissilePreTime)
         {
-            missile_timer_flag = false;
-            missile_timer = MissileInterTime;
-            MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+            if (missile_timer <= 0.0f)
+            {
+                missile_timer_flag = false;
+                missile_timer = missile_Itime_this_wave;
+                MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+            }
+        }
+        else
+        {
+            if(missile_number_checked && current_alive_missile_number <= 0)
+            {
+                MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+            }
         }
     }
 
@@ -301,14 +283,14 @@ public class MD_GameController : GeneralGameController {
         }
 
         alive_cities = temp_cities.ToArray();
-        city_number = alive_cities.Length;
+        alive_city_number = alive_cities.Length;
         //Debug.Log("city_number " + city_number);
         check_game_over();
     }
 
     private void check_game_over()
     {
-        if (city_number <= 0)
+        if (alive_city_number <= 0)
         {
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorGameOverTrigger_str);
         }
@@ -323,9 +305,11 @@ public class MD_GameController : GeneralGameController {
     {
         GameObject explode =
                     Instantiate(ExplodePrefab, target_pos, Quaternion.identity);
-        explode.GetComponent<ExplodeGroup>().
-                        start_explode_group(ExplodeTime,ExplodeRaduis,UsingBonusSystem,
-                                            UsingExplodeOutline);
+        explode.GetComponent<ExplodeGroup>().start_explode_group(MDDC_script.ExplodeTime,
+                                                            MDDC_script.ExplodeRaduis,
+                                                            UsingBonusSystem,
+                                                            MDDC_script.UsingExplodeOutline);
+
     }
 
     //private void instantiate_explode(Vector3 target_pos,float scale)
@@ -410,7 +394,7 @@ public class MD_GameController : GeneralGameController {
         start_flag = true;
         //Aim_script.state_one_flag = true;
         WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        if(UsingExplodeOutline)
+        if(MDDC_script.UsingExplodeOutline)
         {
             //ExplodeOutline_TRANS.GetComponent<MeshRenderer>().enabled = true;
         }
@@ -438,20 +422,13 @@ public class MD_GameController : GeneralGameController {
     public void ToStartWave()
     {
         wave_number++;
-        if(!InfiniteWaves)
+        if(!MDDC_script.InfiniteWaves)
         {
             if (wave_number < wave_info.WaveNumber)
             {
-                current_MTI_number = wave_info.WaveInfoList[wave_number];
-                //MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
-                WaveText_TRANS.GetComponent<TextMesh>().text =
-                        MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
-                WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
                 wave_inter_flag = true;
-                AS_script.set_ammo(current_MTI_number + AmmoOffSet);
-                ammo_changed_flag = true;
-
-                show_score_text();
+                missile_refill_wave_info(wave_number);
+                show_interwave_text();
             }
             else
             {
@@ -460,54 +437,78 @@ public class MD_GameController : GeneralGameController {
         }
         else
         {
-            if (!city_destroyed_this_wave)
-            {
-                increase_difficulty();
-            }
-            else
-            {
-                decrease_difficulty();
-            }
-            current_MTI_number = MissileNumberEachWave;
-            WaveText_TRANS.GetComponent<TextMesh>().text =
-                        MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
-            WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
             wave_inter_flag = true;
-            AS_script.set_ammo(current_MTI_number + AmmoOffSet);
-            ammo_changed_flag = true;
-            show_score_text();
+            missile_refill_infinity();
+            show_interwave_text();
         }
+        ammo_refill();
+        resummon_city();
+    }
 
-        if(ReSummonCity)
+    private void missile_refill_wave_info(int wave_number)
+    {
+        missile_number_this_wave = wave_info.WaveInfoList[wave_number];
+        current_MTI_number = missile_number_this_wave;
+    }
+
+    private void missile_refill_infinity()
+    {
+        if (!city_destroyed_this_wave)
         {
-            
-            foreach(GameObject city in total_cities)
-            {
-                //Debug.Log("already_destroied " + city.name + city.GetComponent<City>().already_destroied);
-                city.GetComponent<City>().resummon();
-                update_cities();
-            }
+            increase_difficulty();
         }
+        else
+        {
+            decrease_difficulty();
+        }
+        current_MTI_number = missile_number_this_wave;
+    }
 
+    private void show_interwave_text()
+    {
+        WaveText_TRANS.GetComponent<TextMesh>().text =
+                        MD_StrDefiner.WaveTextPreStr + (wave_number + 1);
+        WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        show_score_text();
+    }
+
+    private void ammo_refill()
+    {
+        if(MDDC_script.UsingAutoAmmoNumber)
+        {
+            ammo_this_wave = missile_number_this_wave + MDDC_script.AmmoOffSet;
+        }
+        else
+        {
+            ammo_this_wave = MDDC_script.AmmoConstant;
+        }
+        AS_script.set_ammo(ammo_this_wave);
+        ammo_changed_flag = true;
     }
 
     private void increase_difficulty()
     {
-        MissileInterTime -= MissileInterTime * MRDifficultyIncrease;
-        missile_timer = MissileInterTime;
-        MissileSpeed += MissileSpeed * MSDifficultyIncrease;
-        MissileNumberEachWave += (int)(MissileNumberEachWave * MRDifficultyIncrease);
-        //Debug.Log("MissileInterTime " + MissileInterTime);
-        //Debug.Log("MissileSpeed " + MissileSpeed);
+        difficulty_ratio++;
+        apply_difficulty_ratio();
     }
 
     private void decrease_difficulty()
     {
-        MissileInterTime += MissileInterTime * MRDifficultyIncrease;
-        missile_timer = MissileInterTime;
-        MissileSpeed -= MissileSpeed * MSDifficultyIncrease;
-        MissileNumberEachWave -= (int)(MissileNumberEachWave * MSDifficultyIncrease);
+        difficulty_ratio--;
+        difficulty_ratio = difficulty_ratio <= 0 ? 0 : difficulty_ratio;
+        apply_difficulty_ratio();
         city_destroyed_this_wave = false;
+    }
+
+    private void apply_difficulty_ratio()
+    {
+        missile_Itime_this_wave = MDDC_script.MissileInterTime *
+                            (MDDC_script.MRDifficultyIncrease * difficulty_ratio + 1);
+        missile_timer = missile_Itime_this_wave;
+        missile_speed_this_wave = MDDC_script.MissileSpeed *
+                                    (MDDC_script.MSDifficultyIncrease * difficulty_ratio + 1);
+        missile_number_this_wave = (int)(MDDC_script.MissileNumberEachWave *
+                                    (MDDC_script.MRDifficultyIncrease * difficulty_ratio + 1));
     }
 
     private void show_score_text()
@@ -520,20 +521,35 @@ public class MD_GameController : GeneralGameController {
         ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
+    private void resummon_city()
+    {
+        if (ReSummonCity)
+        {
+
+            foreach (GameObject city in total_cities)
+            {
+                city.GetComponent<City>().resummon();
+                update_cities();
+            }
+        }
+    }
+
     public void StartWave()
     {
         if(wave_inter_timer < 0.0f)
         {
             wave_inter_timer = WaveInterTime;
             wave_inter_flag = false;
-            WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+            hide_interwave_text();
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
-
-            hide_score_text();
         }
     }
 
-
+    private void hide_interwave_text()
+    {
+        WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        hide_score_text();
+    }
 
     public void check_missile_number()
     {
@@ -542,14 +558,16 @@ public class MD_GameController : GeneralGameController {
 
     public IEnumerator delayed_check_missile_number(float time)
     {
+        missile_number_checked = false;
         yield return new WaitForSeconds(time);
-        current_missile_number =
+        current_alive_missile_number =
                 GameObject.FindGameObjectsWithTag(MD_StrDefiner.Missile_tag).Length;
+        missile_number_checked = true;
     }
 
     public void WaitMissileClear()
     {
-        if (current_missile_number == 0)
+        if (current_alive_missile_number == 0)
         {
             MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
         }
@@ -577,7 +595,7 @@ public class MD_GameController : GeneralGameController {
 
     public bool ammo_spend()
     {
-        if(!Menu_gazing_flag)
+        if(!Menu_gazing_flag && !Reload_gazing_flag)
         {
             if (AS_script.ammo_spend())
             {
@@ -628,20 +646,10 @@ public class MD_GameController : GeneralGameController {
 
     private void set_random()
     {
-        if(UsingRandomSeed)
+        if(MDDC_script.UsingRandomSeed)
         {
-            Random.InitState(RandomSeed);
+            Random.InitState(MDDC_script.RandomSeed);
         }
-    }
-
-    public string var_to_string()
-    {
-        string result_str = "";
-
-        result_str += "Missile Rate " + MissileInterTime.ToString("F2") + " ";
-        result_str += "Missile Speed " + MissileSpeed.ToString("F2") + " ";
-
-        return result_str;
     }
 
     public void ToGameOver()
@@ -649,5 +657,32 @@ public class MD_GameController : GeneralGameController {
         WaveText_TRANS.GetComponent<TextMesh>().text = MD_StrDefiner.GameOverStr;
         WaveText_TRANS.GetComponent<MeshRenderer>().enabled = true;
         ScoreText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public void reload_gazing(Transform reload_coll_TRANS)
+    {
+        reload_collider_TRANS = reload_coll_TRANS;
+        reload_collider_TRANS.GetComponentInParent<ReloadGroup>().activate();
+    }
+
+    public void reload_ammo()
+    {
+        if(MDDC_script.UsingReloadSystem && Reload_gazing_flag)
+        {
+            if (MDDC_script.UsingReloadAutoNumber)
+            {
+                AS_script.set_ammo(ammo_this_wave + MDDC_script.ReloadAmmoOffset);
+            }
+            else
+            {
+                AS_script.set_ammo(MDDC_script.ReloadAmmoNumber);
+            }
+            ammo_changed_flag = true;
+
+            if(reload_collider_TRANS != null)
+            {
+                reload_collider_TRANS.GetComponentInParent<ReloadGroup>().reload_action();
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ public class MD_VRLogSystem : VRLogSystem
 
     public override void update_headline()
     {
-        head_line = MDGC_script.var_to_string();
+        head_line = MDGC_script.MDDC_script.var_to_string();
     }
 
     private void log_controller()

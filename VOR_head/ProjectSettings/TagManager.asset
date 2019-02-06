@@ -30,6 +30,7 @@ TagManager:
   - FS_FruitPlane
   - MD_Missile
   - WorldCanvasCollider
+  - MD_ReloadCollider
   layers:
   - Default
   - TransparentFX

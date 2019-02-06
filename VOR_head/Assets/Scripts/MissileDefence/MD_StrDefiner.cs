@@ -21,6 +21,7 @@
     public const string City_tag = "City";
     public const string Missile_tag = "MD_Missile";
     public const string TargetBorder_tag = "MD_TargetBorder";
+    public const string ReloadCollider_tag = "MD_ReloadCollider";
     public const string DataController_name = "MD_DataController";
     public const string GameController_name = "MD_GameController";
     public const string UIController_name = "MD_UIController";

@@ -9,7 +9,36 @@ public class MD_DataController : ParentDataController
     private const string game_data_path = "MD_GameData.txt";
 
     public MD_WaveInfo Wave_info { get; set; }
-    public Dictionary<MD_GameData, string> GameData_Dict;
+    public Dictionary<MD_GameData, string> GameData_Dict { get; private set; }
+
+    [Header("Variables")]
+    public bool ReadDataFromFile = false;
+    [Header("Missile")]
+    public float MissileSpeed = 0.2f;
+    public bool OneMissilePreTime = false;
+    public float MissileInterTime = 3.0f;
+    [Header("Explode")]
+    public float ExplodeRaduis = 3.0f;
+    public float ExplodeTime = 1.5f;
+    public bool UsingExplodeOutline = false;
+    [Header("Random")]
+    public bool UsingRandomSeed = false;
+    public int RandomSeed = 0;
+    [Header("InfiniteWaves")]
+    public bool InfiniteWaves = false;
+    public float MSDifficultyIncrease = 0.1f;
+    public float MRDifficultyIncrease = 0.1f;
+    public int MissileNumberEachWave;
+    [Header("AmmoSystem")]
+    public bool UsingAutoAmmoNumber = false;
+    public int AmmoOffSet = 0;
+    public int AmmoConstant = 10;
+    public bool UsingDualHeadIndicator = false;
+    [Header("ReloadSystem")]
+    public bool UsingReloadSystem = false;
+    public bool UsingReloadAutoNumber = false;
+    public int ReloadAmmoOffset = 0;
+    public int ReloadAmmoNumber = 0;
 
     private void Awake()
     {
@@ -23,7 +52,11 @@ public class MD_DataController : ParentDataController
         this.Wave_info = new MD_WaveInfo();
         this.GameData_Dict = new Dictionary<MD_GameData, string>();
 
-        load_game_data(game_data_path);
+        if (ReadDataFromFile)
+        {
+            load_game_data_file(game_data_path);
+            parse_variables();
+        }
 	}
 	
 	// Update is called once per frame
@@ -31,7 +64,7 @@ public class MD_DataController : ParentDataController
 		
 	}
 
-    private void load_game_data(string path)
+    private void load_game_data_file(string path)
     {
         int line_counter = -1;
         StreamReader reader = new StreamReader(path);
@@ -63,6 +96,56 @@ public class MD_DataController : ParentDataController
                     break;
             }
         }
+    }
+
+    private void parse_variables()
+    {
+        try
+        {
+            MissileInterTime =
+                    float.Parse(GameData_Dict[MD_GameData.MissileRate]);
+        }
+        catch { }
+        try
+        {
+            MissileSpeed =
+                    float.Parse(GameData_Dict[MD_GameData.MissileSpeed]);
+        }
+        catch { }
+        try
+        {
+            AmmoOffSet =
+                    int.Parse(GameData_Dict[MD_GameData.AmmoOffset]);
+        }
+        catch { }
+        try
+        {
+            MSDifficultyIncrease =
+                float.Parse(GameData_Dict[MD_GameData.MSDifficultyIncrease]);
+        }
+        catch { }
+        try
+        {
+            MRDifficultyIncrease =
+                float.Parse(GameData_Dict[MD_GameData.MRDifficultyIncrease]);
+        }
+        catch { }
+        try
+        {
+            MissileNumberEachWave =
+                    int.Parse(GameData_Dict[MD_GameData.MissileNumberEachWave]);
+        }
+        catch { }
+    }
+
+    public string var_to_string()
+    {
+        string result_str = "";
+
+        result_str += "Missile Rate " + MissileInterTime.ToString("F2") + " ";
+        result_str += "Missile Speed " + MissileSpeed.ToString("F2") + " ";
+
+        return result_str;
     }
 }
 
