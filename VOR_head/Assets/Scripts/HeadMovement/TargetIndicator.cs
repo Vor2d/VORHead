@@ -22,11 +22,13 @@ public class TargetIndicator : MonoBehaviour {
 
     public void turn_on_mesh()
     {
+        //Debug.Log("circle turned on");
         mesh_render.enabled = true;
     }
 
     public void turn_off_mesh()
     {
+        //Debug.Log("circle turned off!!!");
         mesh_render.enabled = false;
     }
 

@@ -9,11 +9,14 @@ public class MD_SettingController : MonoBehaviour
     [SerializeField] private MD_GameController MDGC_script;
     [SerializeField] private Transform ObserverPage_TRANS;
     [SerializeField] private Transform SettingPage_TRANS;
+    [SerializeField] private Transform MainCamera_TRANS;
+    [SerializeField] private Transform SettingCamera_TRANS;
 
     [SerializeField] private InputField MissileISpeedIF;
     [SerializeField] private Toggle OneMissileTToggle;
     [SerializeField] private InputField MissileITimeIF;
     [SerializeField] private InputField ExplodeRadiusIF;
+    [SerializeField] private InputField ExplodeTimeIF;
     [SerializeField] private Toggle RandomSeedToggle;
     [SerializeField] private InputField RandomSeedIF;
     [SerializeField] private Toggle InfiniteWavesToggle;
@@ -48,7 +51,12 @@ public class MD_SettingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        update_camera();
+    }
+
+    private void update_camera()
+    {
+        SettingCamera_TRANS.position = MainCamera_TRANS.position;
     }
 
     private void update_data()
@@ -57,6 +65,7 @@ public class MD_SettingController : MonoBehaviour
         OneMissileTToggle.isOn = MDDC_script.OneMissilePreTime;
         MissileITimeIF.text = MDDC_script.MissileInterTime.ToString();
         ExplodeRadiusIF.text = MDDC_script.ExplodeRaduis.ToString();
+        ExplodeTimeIF.text = MDDC_script.ExplodeTime.ToString();
         RandomSeedToggle.isOn = MDDC_script.UsingRandomSeed;
         RandomSeedIF.text = MDDC_script.RandomSeed.ToString();
         InfiniteWavesToggle.isOn = MDDC_script.InfiniteWaves;
@@ -80,6 +89,7 @@ public class MD_SettingController : MonoBehaviour
             MDDC_script.OneMissilePreTime = OneMissileTToggle.isOn;
             MDDC_script.MissileInterTime = float.Parse(MissileITimeIF.text);
             MDDC_script.ExplodeRaduis = float.Parse(ExplodeRadiusIF.text);
+            MDDC_script.ExplodeTime = float.Parse(ExplodeTimeIF.text);
             MDDC_script.UsingRandomSeed = RandomSeedToggle.isOn;
             MDDC_script.RandomSeed = int.Parse(RandomSeedIF.text);
             MDDC_script.InfiniteWaves = InfiniteWavesToggle.isOn;

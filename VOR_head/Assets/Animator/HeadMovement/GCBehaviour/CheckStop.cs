@@ -25,7 +25,7 @@ public class CheckStop : StateMachineBehaviour {
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         GC_script.Check_stop_flag = false;
-        GC_script.Target_raycast_flag = true;
+        //GC_script.LeaveCheckStop();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here

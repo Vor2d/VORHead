@@ -49,10 +49,18 @@ public class MD_HeadSimulator : MonoBehaviour {
         HeadIndicator2_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 
+    ////Obsolete;
+    //public void switch_to_HI2()
+    //{
+    //    head_indicator1_on = false;
+    //    HeadIndicator1_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    //    HeadIndicator2_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    //}
+
     public void switch_to_HI2()
     {
         head_indicator1_on = false;
-        HeadIndicator1_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        HeadIndicator1_TRANS.GetComponent<MeshRenderer>().enabled = true;
         HeadIndicator2_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 

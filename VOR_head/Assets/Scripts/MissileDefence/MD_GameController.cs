@@ -118,18 +118,18 @@ public class MD_GameController : GeneralGameController {
         this.missile_Itime_this_wave = 0.0f;
         this.difficulty_ratio = 0;
         this.missile_speed_this_wave = 0.0f;
-
+        
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
-        update_cities();
-        this.total_cities = alive_cities;
         set_random();
-        log_VR();
         register_controller();
     }
 	
 	// Update is called once per frame
 	protected override void Update ()
     {
+        //Debug.Log("city number " + alive_city_number);
+        //Debug.Log("City_tag " + MD_StrDefiner.City_tag);
+
         base.Update();
 
         if(missile_timer_flag)
@@ -281,10 +281,8 @@ public class MD_GameController : GeneralGameController {
                 temp_cities.Add(city);
             }
         }
-
         alive_cities = temp_cities.ToArray();
         alive_city_number = alive_cities.Length;
-        //Debug.Log("city_number " + city_number);
         check_game_over();
     }
 
@@ -389,16 +387,13 @@ public class MD_GameController : GeneralGameController {
 
     public void ToInit()
     {
-        //WorldCanvas_GO.SetActive(true);
+        update_cities();
+        total_cities = alive_cities;
+        log_VR();
+
         toggle_camera();
         start_flag = true;
-        //Aim_script.state_one_flag = true;
         WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        if(MDDC_script.UsingExplodeOutline)
-        {
-            //ExplodeOutline_TRANS.GetComponent<MeshRenderer>().enabled = true;
-        }
-        //TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 
     public void restart()

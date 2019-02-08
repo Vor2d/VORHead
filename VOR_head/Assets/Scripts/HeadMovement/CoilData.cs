@@ -14,13 +14,27 @@ public class CoilData : MonoBehaviour {
 
     //static information;
     private const int port = 5123;
-    private static IPAddress addr = new IPAddress(new byte[] { 192, 168, 2, 130 });
+    private static IPAddress addr;
     private bool stopListening;
-    private static UdpClient udpClient = new UdpClient(port);
-    private static IPEndPoint EP = new IPEndPoint(addr, port);
+    private static UdpClient udpClient;
+    private static IPEndPoint EP;
     //members;
     private Thread RCThread;
     private DataController DC_script;
+
+    private void Awake()
+    {
+        try
+        {
+            addr = new IPAddress(new byte[] { 192, 168, 2, 130 });
+            udpClient = new UdpClient(port);
+            EP = new IPEndPoint(addr, port);
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
 
     // Use this for initialization
     void Start () {
@@ -32,6 +46,7 @@ public class CoilData : MonoBehaviour {
 
         if(DC_script.using_coil)
         {
+            
             RCThread = new Thread(read_coil);
             RCThread.Start();
         }

@@ -14,8 +14,10 @@ public class JumpLogSystem : MonoBehaviour
     const string first_line = "Line_#\tTime_Stamp\tSimulink_Sample\tTrail_#\tAction\t" +
                                 "Degree\tDirection";
 
-    public bool log_state_flag { get; set; }
+    [SerializeField] private bool UsingSharedTime = false;
+    [SerializeField] private LogSystem LS_script;
 
+    public bool log_state_flag { get; set; }
     private Thread JumpLog_Thread;
     private StringBuilder JumpLog;
     private string file_name;
@@ -37,7 +39,14 @@ public class JumpLogSystem : MonoBehaviour
         this.log_state_flag = false;
         this.file_name = path + "JumpLog_" +
                             String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
-        this.stop_watch = new System.Diagnostics.Stopwatch();
+        if(UsingSharedTime)
+        {
+            this.stop_watch = LS_script.stop_watch;
+        }
+        else
+        {
+            this.stop_watch = new System.Diagnostics.Stopwatch();
+        }
         this.line_counter = 0;
         this.JumpLog_Thread = new Thread(write_file);
         this.time_stamp = 0;
@@ -83,9 +92,12 @@ public class JumpLogSystem : MonoBehaviour
     public void log_action(uint stimulink_sample, int trail_number, string action,float degree,
                                                                                 int direction)
     {
+        line_counter++;
         time_stamp = stop_watch.ElapsedMilliseconds;
         if (log_state_flag)
-        {            
+        {
+            JumpLog.Append(line_counter.ToString());
+            JumpLog.Append("\t");
             JumpLog.Append(time_stamp.ToString());
             JumpLog.Append("\t");
             JumpLog.Append(stimulink_sample.ToString());
@@ -103,6 +115,8 @@ public class JumpLogSystem : MonoBehaviour
         {
             try
             {
+                ALS_script.JumpAutoLog_string.Append(line_counter.ToString());
+                ALS_script.JumpAutoLog_string.Append("\t");
                 ALS_script.JumpAutoLog_string.Append(time_stamp.ToString());
                 ALS_script.JumpAutoLog_string.Append("\t");
                 ALS_script.JumpAutoLog_string.Append(stimulink_sample.ToString());

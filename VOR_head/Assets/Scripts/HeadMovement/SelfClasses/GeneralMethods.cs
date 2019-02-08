@@ -356,5 +356,9 @@ public static class GeneralMethods {
         b = y1 - (k * x1);
     }
 
+    public static void recenter_VR()
+    {
+        UnityEngine.XR.InputTracking.Recenter();
+    }
 
 }

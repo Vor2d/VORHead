@@ -24,8 +24,8 @@ public class City : MonoBehaviour {
     void Start () {
         if(MD_GC_Script == null)
         {
-            MD_GC_Script = 
-                GameObject.Find("MD_GameController").GetComponent<MD_GameController>();
+            MD_GC_Script = GameObject.Find(MD_StrDefiner.GameController_name).
+                                                GetComponent<MD_GameController>();
         }
 
         this.already_destroied = false;
@@ -56,7 +56,6 @@ public class City : MonoBehaviour {
                 {
                     instantiate_punish_text(true);
                 }
-                //Destroy(gameObject, 1.0f);
                 fake_destroy();
             }
         }

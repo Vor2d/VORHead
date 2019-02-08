@@ -6,21 +6,31 @@ using UnityEngine.SceneManagement;
 public class SC_GameController : GeneralGameController {
 
     [SerializeField] private GameObject sceneManager_prefab;
+    [SerializeField] private Controller_Input CI_script;
+
+    private GameObject scene_manager_OBJ;
 
     //[SerializeField] private bool UsingHeadToMenu = false;
 
 	// Use this for initialization
 	void Start () {
-		if(GameObject.Find("SceneManager") == null)
+        GameObject scene_manager_temp = GameObject.Find("SceneManager");
+        if (scene_manager_temp == null)
         {
-            sceneManager_prefab = Instantiate(sceneManager_prefab, new Vector3(), new Quaternion());
-            sceneManager_prefab.name = "SceneManager";
+            scene_manager_OBJ = 
+                        Instantiate(sceneManager_prefab, new Vector3(), new Quaternion());
+            scene_manager_OBJ.name = "SceneManager";
         }
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+        else
+        {
+            scene_manager_OBJ = scene_manager_temp;
+        }
+
+        
+        if(scene_manager_OBJ.GetComponent<MySceneManager>().using_VR)
+        {
+            CI_script.Button_B += recenter_VR;
+        }
 	}
 
     public void to_HMTS_scene()

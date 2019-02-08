@@ -347,4 +347,9 @@ public class GameController_Setting : MonoBehaviour {
         }
     }
 
+    public void BackToMainMenuButton()
+    {
+        GC_script.back_to_main_menu();
+    }
+
 }

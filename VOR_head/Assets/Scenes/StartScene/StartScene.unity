@@ -772,6 +772,7 @@ MonoBehaviour:
   UsingHeadForMenu: 1
   sceneManager_prefab: {fileID: 1560035312830508, guid: e60b5c868d769fa4691626c0ff844ddf,
     type: 3}
+  CI_script: {fileID: 593820162}
 --- !u!4 &1029232638
 Transform:
   m_ObjectHideFlags: 0
@@ -1426,6 +1427,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4204060000834340, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.32
+      objectReference: {fileID: 0}
     - target: {fileID: 4358196630222928, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1473,10 +1478,6 @@ PrefabInstance:
     - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4204060000834340, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.32
       objectReference: {fileID: 0}
     - target: {fileID: 1564426903201468, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_Layer

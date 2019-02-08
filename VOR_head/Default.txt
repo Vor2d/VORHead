@@ -1,4 +1,4 @@
-GameMode	Default
+GameMode	GazeTest
 ________________________________
 10
 20	20

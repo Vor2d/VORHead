@@ -15,5 +15,10 @@ public class GeneralGameController : MonoBehaviour
         UIDeltaTime = Time.deltaTime * UITimeScale;
     }
 
+    protected virtual void recenter_VR()
+    {
+        GeneralMethods.recenter_VR();
+    }
+
 
 }

@@ -76,6 +76,7 @@ public class GameController : MonoBehaviour {
     private CoilData CD_script;
     private VRLogSystem VRLS_script;
     private JumpLogSystem JLS_script;
+    private MySceneManager MSM_script;
     //Objects;
     private Animator GCAnimator;
     //Variables;
@@ -95,7 +96,12 @@ public class GameController : MonoBehaviour {
     private bool stopped_flag;
     private bool centered_flag;
     private bool collaberating_flag;
-    
+
+    private void Awake()
+    {
+        this.MSM_script = GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
+                                                    GetComponent<MySceneManager>();
+    }
 
     // Use this for initialization
     void Start() {
@@ -169,6 +175,8 @@ public class GameController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+
+        //Debug.Log("Target_raycast_flag " + Target_raycast_flag);
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -317,6 +325,7 @@ public class GameController : MonoBehaviour {
 
     public void ToTargetToGaze()
     {
+        //Debug.Log("ToTargetToGaze");
         if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag)
                 || DC_script.Current_GM.HideHeadIndicator)
         {
@@ -345,6 +354,7 @@ public class GameController : MonoBehaviour {
 
     public void LeaveTargetGaze()
     {
+        //Debug.Log("LeaveTargetGaze");
         Target_raycast_flag = true;
         Hide_raycast_flag = false;
     }
@@ -433,6 +443,7 @@ public class GameController : MonoBehaviour {
 
     public void ToWaitForTurn()
     {
+        //Debug.Log("ToWaitForTurn");
         //if (DC_script.HeadIndicatorChange)
         //{
         //    HeadIndicator.GetComponent<Renderer>().enabled = false;
@@ -516,6 +527,12 @@ public class GameController : MonoBehaviour {
             //stopped_flag = false;
         }
     }
+
+    //Obsoleted;
+    //public void LeaveCheckStop()
+    //{
+    //    Target_raycast_flag = true;
+    //}
 
     public void ShowResult()
     {
@@ -756,6 +773,7 @@ public class GameController : MonoBehaviour {
 
     public void ToShowHeadIndicator()
     {
+        //Debug.Log("ToShowHeadIndicator");
         if (DC_script.Current_GM.HeadIndicatorChange)
         {
             HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
@@ -832,5 +850,10 @@ public class GameController : MonoBehaviour {
         //IndiText1.GetComponent<MeshRenderer>().enabled = false;
 
         GCS_script.turn_off_text();
+    }
+
+    public void back_to_main_menu()
+    {
+        MSM_script.to_start_scene();
     }
 }

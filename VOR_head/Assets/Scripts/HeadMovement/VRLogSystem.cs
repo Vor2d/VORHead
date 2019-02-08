@@ -19,7 +19,7 @@ public class VRLogSystem : GeneralLogSystem
     // Use this for initialization
     protected override void Start () {
         load_data_controller();
-        this.ALS_script = GetComponent<AutoLogSystem>();
+        //this.ALS_script = GetComponent<AutoLogSystem>();
 
         base.Start();
 
@@ -43,7 +43,6 @@ public class VRLogSystem : GeneralLogSystem
 
     private void log_headset()
     {
-        stop_watch.Start();
         last_time = stop_watch.Elapsed.Milliseconds;
         while (thread_state_flag)
         {

@@ -5,18 +5,29 @@ using UnityEngine;
 public class StartJumpLog : StateMachineBehaviour {
 
     private JumpLogSystem JLS_script;
+    private VRLogSystem VRLS_script;
+    private LogSystem LS_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        GameObject logsystem_OBJ = GameObject.Find("LogSystem");
         if (JLS_script == null)
         {
-            JLS_script = GameObject.Find("LogSystem").GetComponent<JumpLogSystem>();
+            JLS_script = logsystem_OBJ.GetComponent<JumpLogSystem>();
+            VRLS_script = logsystem_OBJ.GetComponent<VRLogSystem>();
+            LS_script = logsystem_OBJ.GetComponent<LogSystem>();
         }
-        
+
+        LS_script.start_stopwatch();
         if(!JLS_script.log_state_flag)
         {
             JLS_script.toggle_Log();
+        }
+
+        if(!VRLS_script.thread_state_flag)
+        {
+            VRLS_script.toggle_Thread();
         }
 
         animator.SetTrigger("NextStep");

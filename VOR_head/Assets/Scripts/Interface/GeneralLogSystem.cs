@@ -12,6 +12,8 @@ public class GeneralLogSystem : MonoBehaviour
 
     [SerializeField] private string path = "Log/__Log/";
     [SerializeField] private string LogTypeName = "";
+    [SerializeField] private bool UsingSharedTime;
+    [SerializeField] LogSystem LS_script;
 
     private Thread LOG_Thread;
     protected StringBuilder Log_SB;
@@ -29,7 +31,14 @@ public class GeneralLogSystem : MonoBehaviour
         this.thread_state_flag = false;
         this.file_name = path + LogTypeName +
                             String.Format("{0:_yyyy_MM_dd_hh_mm_ss}", DateTime.Now) + ".txt";
-        this.stop_watch = new System.Diagnostics.Stopwatch();
+        if(UsingSharedTime)
+        {
+            this.stop_watch = LS_script.stop_watch;
+        }
+        else
+        {
+            this.stop_watch = new System.Diagnostics.Stopwatch();
+        }
         this.last_time = 0;
         this.total_time = 0;
         this.line_counter = 0;
@@ -70,21 +79,24 @@ public class GeneralLogSystem : MonoBehaviour
         else
         {
             turn_on_Thread();
-
         }
     }
 
     public void turn_on_Thread()
     {
+        if (!UsingSharedTime)
+        {
+            stop_watch.Start();
+        }
+        thread_state_flag = true;
         Debug.Log("Start Logging LOG!! "+LogTypeName);
         LOG_Thread = new Thread(logging);
         LOG_Thread.Start();
-        thread_state_flag = true;
     }
 
     protected virtual void logging()
     {
-
+        Debug.Log("Logging!!!!");
     }
 
     public void turn_off_Thread()

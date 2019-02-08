@@ -15,10 +15,7 @@ public class MySceneManager : MonoBehaviour {
     private void Awake()
     {
         DontDestroyOnLoad(this);
-    }
 
-    // Use this for initialization
-    void Start () {
         using_VR = true;
         using_coil = false;
     }

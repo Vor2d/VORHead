@@ -63,10 +63,10 @@ public class AutoLogSystem : MonoBehaviour {
             }
         }
 
-        if(VRAutoLog_On)
-        {
-            VRLog_script.turn_on_Thread();
-        }
+        //if(VRAutoLog_On)
+        //{
+        //    VRLog_script.turn_on_Thread();
+        //}
     }
 	
 	// Update is called once per frame
