@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class BP_Init : StateMachineBehaviour {
 
+    private BP_GameController BPGC_script;
+
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetTrigger("NextStep");
+        if(BPGC_script == null)
+        {
+            BPGC_script = animator.GetComponent<BP_GameController>();
+        }
+
+        BPGC_script.ToInit();
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

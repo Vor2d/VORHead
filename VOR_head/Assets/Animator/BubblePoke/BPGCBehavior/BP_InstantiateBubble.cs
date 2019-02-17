@@ -13,8 +13,6 @@ public class BP_InstantiateBubble : StateMachineBehaviour {
         {
             this.BPGC_script = 
                     GameObject.Find("BP_GameController").GetComponent<BP_GameController>();
-
-            Debug.Log("init BPGC");
         }
 
         BPGC_script.ToInstantiateBubble();        

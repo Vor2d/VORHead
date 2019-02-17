@@ -307,6 +307,7 @@ public static class GeneralMethods {
     {
         if((ang_deg+90)%180 == 0)
         {
+            Debug.Log("Angle can not be 0 or 180");
             return float.MaxValue;
         }
 
@@ -322,11 +323,33 @@ public static class GeneralMethods {
         return destnation;
     }
 
+    private static float DestinationCal(float init_dist, float ang_deg)
+    {
+        if ((ang_deg + 90) % 180 == 0)
+        {
+            Debug.Log("Angle can not be 0 or 180");
+            return float.MaxValue;
+        }
+
+        float ang_rand = ang_deg * Mathf.PI / 180.0f;
+
+        float destnation = Mathf.Tan(ang_rand) * init_dist;
+
+        return destnation;
+    }
+
     public static Vector3 PositionCal(float init_dist, float ang_degX, float ang_degY,
                                                                     int direcX, int direcY)
     {
         return new Vector3(DestinationCal(init_dist,ang_degX,direcX),
                             DestinationCal(init_dist,ang_degY,direcY),
+                            init_dist);
+    }
+
+    public static Vector3 PositionCal(float init_dist, float ang_degX, float ang_degY)
+    {
+        return new Vector3(DestinationCal(init_dist, ang_degX),
+                            DestinationCal(init_dist, ang_degY),
                             init_dist);
     }
 
@@ -359,6 +382,31 @@ public static class GeneralMethods {
     public static void recenter_VR()
     {
         UnityEngine.XR.InputTracking.Recenter();
+    }
+
+    //Loading trials for both vertical and horizontal. Vertical first, horizontal second.
+    public static List<Vector2> read_trial_file_VNH(string path)
+    {
+        
+        List<Vector2> trial_data = new List<Vector2>();
+        Debug.Log("Loading trials from file " + path);
+        try
+        {
+            StreamReader reader = new StreamReader(path);
+            while (!reader.EndOfStream)
+            {
+                string[] splitstr = reader.ReadLine().Split(file_spliter);
+                trial_data.Add(new Vector2(float.Parse(splitstr[0]), float.Parse(splitstr[1])));
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log("Loading Failed! " + e);
+        }
+        Debug.Log("Loading Successful!");
+
+        return trial_data;
+
     }
 
 }
