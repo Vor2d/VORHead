@@ -1,5 +1,5 @@
 PlayerScreenCM	100
-ScreenWidthCM	100
+ScreenWidthCM	60
 Camera1Display	0
 Camera2Display	0
 GazeTime	1.5
@@ -9,3 +9,4 @@ ErrorTime	2.0
 SpeedThreshold	10
 StopWindow	0.1
 TargetChangeTime	2.0
+UsingCurvedScreen	True

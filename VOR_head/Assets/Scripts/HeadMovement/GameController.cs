@@ -376,24 +376,41 @@ public class GameController : MonoBehaviour {
 
         Debug.Log("turning " + turn_degree);
 
-        if(DC_script.using_coil)
-        {
-            float virtual_degree = 
-                GeneralMethods.RealToVirtualy(DC_script.SystemSetting.Player_screen_cm,
-                                                DC_script.SystemSetting.Screen_width_cm,
-                                                turn_degree);
-            tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct, 0);
-            current_rot_ang_dir = new Vector2(virtual_degree, turn_direct);
-        }
-        if(DC_script.using_VR)
-        {
-            tar_CP_script.changePosition(turn_degree, 0.0f, turn_direct, 0);
-            current_rot_ang_dir = new Vector2(turn_degree, turn_direct);
-        }
-
-        //Debug.Log("turning virtual " + virtual_degree);
+        float turned_degree = move_target(turn_degree, turn_direct);
+        current_rot_ang_dir = new Vector2(turned_degree, turn_direct);
 
         GCAnimator.SetTrigger("NextStep");
+    }
+
+    private float move_target(float turn_degre,int turn_direc)
+    {
+        if (DC_script.using_coil)
+        {
+            float virtual_degree = 0.0f;
+            if (!DC_script.SystemSetting.Using_curved_screen)
+            {
+                virtual_degree = GeneralMethods.
+                                RealToVirtualy(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
+                                                turn_degre);
+            }
+            else
+            {
+                virtual_degree = GeneralMethods.
+                        RealToVirtualy_curved(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
+                                                turn_degre);
+            }
+
+            tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direc, 0);
+            return virtual_degree;
+        }
+        if (DC_script.using_VR)
+        {
+            tar_CP_script.changePosition(turn_degre, 0.0f, turn_direc, 0);
+            return turn_degre;
+        }
+        return turn_degre;
     }
 
     public void ToJumpBack()
@@ -412,13 +429,9 @@ public class GameController : MonoBehaviour {
         turn_direct = turn_dir_temp;
 
         Debug.Log("jumping " + turn_degree);
-        float virtual_degree = 
-            GeneralMethods.RealToVirtualy(DC_script.SystemSetting.Player_screen_cm, 
-                                          DC_script.SystemSetting.Screen_width_cm,
-                                          turn_degree);
-        //Debug.Log("jumping virtual " + virtual_degree);
-        tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direct,0);
-        //to_log_jumpdata();
+
+        move_target(turn_degree, turn_direct);
+
         GCAnimator.SetTrigger("NextStep");
     }
 

@@ -38,6 +38,28 @@ public static class GeneralMethods {
         return virtual_degreey;
     }
 
+    public static float RealToVirtualy_curved(float player_screen_cm, float screen_width_cm,
+                                                                                float degree)
+    {
+        float abs_degree = Mathf.Abs(degree);
+        float dest_on_screen_cm = (abs_degree / 360.0f) * 2 * Mathf.PI * player_screen_cm;   //DOSC;
+        //Debug.Log("dest_on_screen_cm " + dest_on_screen_cm);
+        float prop_DOSC_to_halfwcm = dest_on_screen_cm / (screen_width_cm / 2.0f);
+        float dest_on_screen_pixel = ((float)Screen.width / 2.0f) * prop_DOSC_to_halfwcm
+                                        + ((float)Screen.width / 2.0f);
+        Vector3 virtual_position_base10 =
+            Camera.main.ScreenToWorldPoint(new Vector3(dest_on_screen_pixel, 0.0f, 10.0f));
+        float prop_virx_to_base10 = virtual_position_base10.x / 10.0f;
+        float virtual_degreey = Mathf.Atan(prop_virx_to_base10) / Mathf.PI * 180.0f;
+
+        if (degree < 0.0f)
+        {
+            virtual_degreey = -virtual_degreey;
+        }
+
+        return virtual_degreey;
+    }
+
     private static float RealToVirtualx(float player_screen_cm, float screen_height_cm,
                                                                                 float degree)
     {
@@ -74,6 +96,20 @@ public static class GeneralMethods {
 
         virtual_rotex = RealToVirtualx(player_screen_cm, screen_height_cm, rot_degreex);
         virtual_rotey = RealToVirtualy(player_screen_cm, screen_width_cm, rot_degreey);
+
+        return new Vector3(virtual_rotex, virtual_rotey, 0.0f);
+    }
+
+    public static Vector3 RealToVirtual_curved(float player_screen_cm, float screen_width_cm,
+                                                float rot_degreex, float rot_degreey)
+    {
+        float screen_htow_scale = (float)Screen.height / (float)Screen.width;
+        float screen_height_cm = screen_htow_scale * screen_width_cm;
+        float virtual_rotex = 0.0f;
+        float virtual_rotey = 0.0f;
+
+        virtual_rotex = RealToVirtualx(player_screen_cm, screen_height_cm, rot_degreex);
+        virtual_rotey = RealToVirtualy_curved(player_screen_cm, screen_width_cm, rot_degreey);
 
         return new Vector3(virtual_rotex, virtual_rotey, 0.0f);
     }

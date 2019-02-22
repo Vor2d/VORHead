@@ -7,6 +7,7 @@ public class GameSetting
 {
     public string Camera1_display { get; set; }
     public string Camera2_display { get; set; }
+    public bool Using_curved_screen { get; set; }
     public float Player_screen_cm { get; set; }
     public float Screen_width_cm { get; set; }
 
@@ -30,6 +31,8 @@ public class GameSetting
 
     public void set_preset_setting(Dictionary<string, string> setting_dict)
     {
+        try { Using_curved_screen = setting_dict["UsingCurvedScreen"] == "True"; }
+        catch { Using_curved_screen = false; }
         try { Player_screen_cm = float.Parse(setting_dict["PlayerScreenCM"]); }
         catch { Player_screen_cm = 100.0f; }
         try { Screen_width_cm = float.Parse(setting_dict["ScreenWidthCM"]); }
@@ -59,6 +62,7 @@ public class GameSetting
     {
         string result_str = "";
 
+        result_str += "Using_curved_screen" + " " + Using_curved_screen.ToString() + " ";
         result_str += "Player_screen_cm" + " " + Player_screen_cm.ToString() + " ";
         result_str += "Screen_width_cm" + " " + Screen_width_cm.ToString() + " ";
         result_str += "Camera1_display" + " " + Camera1_display.ToString() + " ";

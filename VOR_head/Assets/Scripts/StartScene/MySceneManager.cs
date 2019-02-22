@@ -9,15 +9,12 @@ public class MySceneManager : MonoBehaviour {
                         "MD_DataController","TDMD_DataController","BO_DataController",
                         "FS_DataController"};
 
-    public bool using_VR { get; set; }
-    public bool using_coil { get; set; }
+    public bool using_VR;
+    public bool using_coil;
 
     private void Awake()
     {
         DontDestroyOnLoad(this);
-
-        using_VR = true;
-        using_coil = false;
     }
 	
 	// Update is called once per frame

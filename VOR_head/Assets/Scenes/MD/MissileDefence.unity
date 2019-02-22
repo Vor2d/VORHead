@@ -5925,14 +5925,7 @@ MonoBehaviour:
   ReStartButton_TRANS: {fileID: 394340594}
   YesButton_TRANS: {fileID: 1263152026}
   NoButton_TRANS: {fileID: 320973429}
-  TutorialText: 'Use yor <color="red">Head</color> to control the cursor in game.
-    And press the <color="red"> Index Trigger</color> button to shoot.
-
-
-    Use the menu button down below to control the game.
-
-
-    Try to stop the asteroids before they hit the city!'
+  TutorialText: Try to stop the asteroids before they hit the city!
   ConfirmText: '<align="center"><color="yellow">Are you sure about this?
 
 

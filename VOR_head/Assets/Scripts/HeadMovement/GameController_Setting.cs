@@ -30,6 +30,7 @@ public class GameController_Setting : MonoBehaviour {
     public InputField LoopNumber_IF;
     //Page2;
     [Header("Page2")]
+    public Toggle UsingCurvedScreenToggle;
     public Toggle HideFlagToggle;
     public Toggle JumpFlagToggle;
     public Toggle ShowTargetFlagToggle;
@@ -209,6 +210,14 @@ public class GameController_Setting : MonoBehaviour {
     {
         try
         {
+            DC_script.SystemSetting.Using_curved_screen = UsingCurvedScreenToggle.isOn;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+        try
+        {
             DC_script.SystemSetting.Player_screen_cm = float.Parse(PTS_IF.text);
         }
         catch(Exception e)
@@ -228,6 +237,7 @@ public class GameController_Setting : MonoBehaviour {
 
     private void update_page1()
     {
+        UsingCurvedScreenToggle.isOn = DC_script.SystemSetting.Using_curved_screen;
         PTS_IF.text = DC_script.SystemSetting.Player_screen_cm.ToString();
         SW_IF.text = DC_script.SystemSetting.Screen_width_cm.ToString();
         try

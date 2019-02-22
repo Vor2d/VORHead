@@ -42,11 +42,23 @@ public class HeadSimulator : MonoBehaviour {
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
             //Debug.Log("RRotateDegree " + RRotateDegree);
+            if (!DC_script.SystemSetting.Using_curved_screen)
+            {
+                transform.localEulerAngles = GeneralMethods.
+                                    RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                                                    DC_script.SystemSetting.Screen_width_cm, 
+                                                    RRotateDegree.x, 
+                                                    RRotateDegree.y);
+            }
+            else
+            {
+                transform.localEulerAngles = GeneralMethods.
+                            RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
+                                                    DC_script.SystemSetting.Screen_width_cm,
+                                                    RRotateDegree.x,
+                                                    RRotateDegree.y);
+            }
 
-            transform.localEulerAngles =
-                GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
-                                                DC_script.SystemSetting.Screen_width_cm,
-                                                RRotateDegree.x, RRotateDegree.y);
         }
         if(DC_script.using_VR)
         {
