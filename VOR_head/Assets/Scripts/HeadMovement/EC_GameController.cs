@@ -14,6 +14,7 @@ public class EC_GameController : MonoBehaviour {
     public GameObject IndicatorText1;
     public Camera GameCamera;
     public Camera UICamera;
+    [SerializeField] private CoilData CD_script;
 
     public float StairingTime = 5.0f;
     public bool EnableAnim = true;
@@ -30,6 +31,8 @@ public class EC_GameController : MonoBehaviour {
     private Transform target_crossTrans;
     private bool start_flag;
     private DataController DC_script;
+    private List<Vector2> Left_eye_data;
+    private List<Vector2> Right_eye_data;
 
     // Use this for initialization
     void Start() {
@@ -50,6 +53,8 @@ public class EC_GameController : MonoBehaviour {
         this.start_flag = false;
         this.GameCamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.UICamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
+        this.Left_eye_data = new List<Vector2>();
+        this.Right_eye_data = new List<Vector2>();
     }
 
     // Update is called once per frame
@@ -126,6 +131,11 @@ public class EC_GameController : MonoBehaviour {
             stair_timer = StairingTime;
             Stairing_flag = false;
         }
+    }
+
+    private void record_data()
+    {
+
     }
 
     public void finised()

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum EyeFunction { linear }
-public enum EyeIndex { left,right}
-
 public class EyeInfo
 {
+    public enum EyeFunction { linear }
+    public enum EyeIndex { left, right }
+
     public EyeFunction Eye_function { get; set; }
 
     private float linear_leftk;
@@ -33,43 +33,58 @@ public class EyeInfo
     }
 
     public void fit_function(EyeFunction target_EF, EyeIndex target_EI,
-                                List<List<float>> x_list, List<List<float>> y_list)
+                                List<KeyValuePair<float, List<float>>> eye_data)
     {
         switch(target_EF)
         {
             case EyeFunction.linear:
                 {
-                    if (x_list.Count < 2 || y_list.Count < 2)
+                    if (eye_data.Count < 2)
                     {
                         Debug.Log("Fit function error!");
                         return;
                     }
-                    fit_linear(target_EI,x_list,y_list);
+                    fit_linear(target_EI, eye_data);
                     break;
                 }
         }
     }
 
-    private void fit_linear(EyeIndex target_EI,
-                                List<List<float>> x_list, List<List<float>> y_list)
+    private void fit_linear(EyeIndex target_EI, List<KeyValuePair<float,List<float>>> eye_data)
     {
-        float x_median1 = GeneralMethods.get_median(x_list[0]);
-        float x_median2 = GeneralMethods.get_median(x_list[1]);
-        float y_median1 = GeneralMethods.get_median(y_list[0]);
-        float y_median2 = GeneralMethods.get_median(y_list[1]);
+        //float x_median1 = GeneralMethods.get_median(x_list[0]);
+        //float x_median2 = GeneralMethods.get_median(x_list[1]);
+        //float y_median1 = GeneralMethods.get_median(y_list[0]);
+        //float y_median2 = GeneralMethods.get_median(y_list[1]);
+        List<Vector2> x_y_list = new List<Vector2>();
+        foreach (KeyValuePair<float, List<float>> ED_each_trial in eye_data)
+        {
+            x_y_list.Add(new Vector2(GeneralMethods.get_median(ED_each_trial.Value),
+                                      ED_each_trial.Key));
+        }
 
-        switch(target_EI)
+        List<Vector2> k_b_list = new List<Vector2>();
+        float k, b;
+        switch (target_EI)
         {
             case EyeIndex.left:
                 {
-                    GeneralMethods.fit_linear(x_median1, x_median2, y_median1, y_median2,
-                                                out linear_leftk, out linear_leftb);
+                    //GeneralMethods.fit_linear(x_median1, x_median2, y_median1, y_median2,
+                    //                            out linear_leftk, out linear_leftb);
+                    for(int i = 0;i< x_y_list.Count;i+=2)
+                    {
+                        if(i+1 < x_y_list.Count)
+                        {
+                            //GeneralMethods.fit_linear(x_y_list[i].x,x_y_list[i+1].x,
+                            //                            x_y_list[i].y,x_y)
+                        }
+                    }
                     break;
                 }
             case EyeIndex.right:
                 {
-                    GeneralMethods.fit_linear(x_median1, x_median2, y_median1, y_median2,
-                                                out linear_rightk, out linear_rightb);
+                    //GeneralMethods.fit_linear(x_median1, x_median2, y_median1, y_median2,
+                    //                            out linear_rightk, out linear_rightb);
                     break;
                 }
         }

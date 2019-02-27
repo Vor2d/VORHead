@@ -11,6 +11,8 @@ public class CoilData : MonoBehaviour {
     public Quaternion currentHeadOrientation { get; set; }
     public Vector3 currentHeadVelocity { get; set; }
     public UInt32 simulinkSample { get; set; }
+    public Vector2 Left_eye_voltage { get; private set; }   //horizontal then vertical;
+    public Vector2 Right_eye_voltage { get; private set; }
 
     //static information;
     private const int port = 5123;
@@ -84,11 +86,17 @@ public class CoilData : MonoBehaviour {
                     float vx = BitConverter.ToSingle(receiveBytes, offset + 20);
                     float vy = BitConverter.ToSingle(receiveBytes, offset + 24);
                     float vz = BitConverter.ToSingle(receiveBytes, offset + 28);
+                    float rh = BitConverter.ToSingle(receiveBytes, offset + 32);  // right eye horizontal
+                    float rv = BitConverter.ToSingle(receiveBytes, offset + 36);  // right eye vertical
+                    float lh = BitConverter.ToSingle(receiveBytes, offset + 40);  // left eye horizontal
+                    float lv = BitConverter.ToSingle(receiveBytes, offset + 44);  // left eye vertical
                     offset += 32;
 
                     currentHeadOrientation = new Quaternion(x, y, z, w);
                     currentHeadVelocity = new Vector3(vx, vy, vz);
                     simulinkSample = (UInt32)s;
+                    Left_eye_voltage = new Vector2(lh, lv);
+                    Right_eye_voltage = new Vector2(rh, rv);
                 }
 
                 //Debug.Log("currentHeadOrientation1 " + currentHeadOrientation);
