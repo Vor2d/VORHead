@@ -927,7 +927,7 @@ GameObject:
   - component: {fileID: 68942818}
   - component: {fileID: 68942817}
   - component: {fileID: 68942820}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: TPlane
   m_TagString: TargetSensor
   m_Icon: {fileID: 0}
@@ -3148,7 +3148,7 @@ GameObject:
   - component: {fileID: 448532721}
   - component: {fileID: 448532720}
   - component: {fileID: 448532719}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: LeftBorder
   m_TagString: TurnBorder
   m_Icon: {fileID: 0}
@@ -3783,7 +3783,7 @@ GameObject:
   - component: {fileID: 531922811}
   - component: {fileID: 531922810}
   - component: {fileID: 531922809}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HideDetector
   m_TagString: HideDetector
   m_Icon: {fileID: 0}
@@ -4900,7 +4900,6 @@ GameObject:
   - component: {fileID: 773851914}
   - component: {fileID: 773851915}
   - component: {fileID: 773851916}
-  - component: {fileID: 773851917}
   m_Layer: 0
   m_Name: HeadSimulator
   m_TagString: Untagged
@@ -4935,6 +4934,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77ae275524cc87429a96f9116fc2314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GC_script: {fileID: 913016690}
   CD_script: {fileID: 499942472}
 --- !u!114 &773851916
 MonoBehaviour:
@@ -4948,20 +4948,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208a4611d84f7d149ad100516af6e98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ray_cast_distance: 100
---- !u!114 &773851917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 773851913}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51be521903b0bbb4391e25d80f539119, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensitivity: 10
+  RayCastDistance: 100
+  RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 4096
 --- !u!1 &791844856
 GameObject:
   m_ObjectHideFlags: 0
@@ -5083,7 +5073,7 @@ GameObject:
   - component: {fileID: 805754649}
   - component: {fileID: 805754648}
   - component: {fileID: 805754647}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RightBorder
   m_TagString: TurnBorder
   m_Icon: {fileID: 0}
@@ -5796,6 +5786,7 @@ GameObject:
   - component: {fileID: 913016691}
   - component: {fileID: 913016690}
   - component: {fileID: 913016692}
+  - component: {fileID: 913016693}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -5815,6 +5806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46b788c09ba264547afc0eaab7a377c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test1: 0
   ShowResultFlag: 0
   TurnSpeedWindow: 0
   ResultTarget: {fileID: 1714732898}
@@ -5863,6 +5855,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &913016693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913016689}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 304bf0c1087b6ab4e9ae8595bf3447e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GC_script: {fileID: 913016690}
 --- !u!1 &979479868
 GameObject:
   m_ObjectHideFlags: 0

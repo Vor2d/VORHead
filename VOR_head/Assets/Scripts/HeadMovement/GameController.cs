@@ -127,17 +127,12 @@ public class GameController : MonoBehaviour {
         this.stopped_flag = false;
         this.head_speed_y = 0.0f;
         this.error_timer = DC_script.SystemSetting.ErrorTime;
-        //this.indi_text1 = GameObject.Find("IndicatorText1");
-        //this.head_indicator = GameObject.Find("HeadIndicator");
         this.turn_data = new List<float>(DC_script.Current_TI.Turn_data);
         this.trial_iter = -1;
         this.jump_data = new List<float>(DC_script.Current_TI.Jump_data);
-        //this.HSC_script = GetComponent<HeadStateController>();
-        //this.LPI_script = LastPosIndocator.GetComponent<LastPosIndicator>();
         this.stop_window_timer = DC_script.SystemSetting.StopWinodow;
         this.Target_raycast_flag = true;
         this.HS_script = HeadSimulator.GetComponent<HeadSimulator>();
-        //this.HI_CP_script = HeadIndicator.GetComponent<ChangePosition>();
         this.tar_CP_script = Target.GetComponent<ChangePosition>();
         this.CD_script = CoilData.GetComponent<CoilData>();
         this.VRLS_script = LogSystem.GetComponent<VRLogSystem>();
@@ -332,6 +327,11 @@ public class GameController : MonoBehaviour {
             Target_raycast_flag = false;
             Hide_raycast_flag = true;
         }
+        else
+        {
+            Target_raycast_flag = true;
+            Hide_raycast_flag = false;
+        }
 
         gaze_timer_rand = DC_script.SystemSetting.GazeTime +
                 UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
@@ -456,13 +456,8 @@ public class GameController : MonoBehaviour {
 
     public void ToWaitForTurn()
     {
-        //Debug.Log("ToWaitForTurn");
-        //if (DC_script.HeadIndicatorChange)
-        //{
-        //    HeadIndicator.GetComponent<Renderer>().enabled = false;
-        //}
-
-        //HSC_script.reset_data();
+        Check_speed_flag = true;
+        Target_raycast_flag = false;
     }
 
     public void WaitForTurn()

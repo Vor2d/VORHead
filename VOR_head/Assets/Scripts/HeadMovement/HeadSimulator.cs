@@ -5,6 +5,8 @@ using UnityEngine.XR;
 
 public class HeadSimulator : MonoBehaviour {
 
+    public GameController GC_script;
+
     //public Quaternion OriginalheadQ { get; set; }
     public Vector3 RRotateDegree {get;set;}
     public Vector3 TrueHeadRR { get; set; }
@@ -63,9 +65,6 @@ public class HeadSimulator : MonoBehaviour {
         if(DC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
-            //Debug.Log("GeneralMethods.getVRrotation() "+ GeneralMethods.getVRrotation());
-            //Debug.Log("GetNodePose " + OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
-            //            ToOVRPose().orientation);
             TrueHeadRR = GeneralMethods.normalize_degree(transform.rotation.eulerAngles);
         }
     }

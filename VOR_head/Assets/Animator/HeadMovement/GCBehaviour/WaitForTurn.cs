@@ -15,10 +15,6 @@ public class WaitForTurn : StateMachineBehaviour {
         //                GameObject.Find("GameController").GetComponent<HeadStateController>();
         GC_script.Current_state = "WaitForTurn";
 
-        //HSC_script.Check_speed_flag = true;
-        GC_script.Check_speed_flag = true;
-        GC_script.Target_raycast_flag = false;
-
         GC_script.ToWaitForTurn();
     }
 
