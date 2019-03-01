@@ -389,6 +389,14 @@ public static class GeneralMethods {
                             init_dist);
     }
 
+    public static Vector3 PositionCal(float init_dist, Vector3 degrees)
+    {
+        Vector3 n_degrees = normalize_degree(degrees);
+        return new Vector3(DestinationCal(init_dist, n_degrees.y),
+                            DestinationCal(init_dist, n_degrees.x),
+                            init_dist);
+    }
+
     public static float get_median(List<float> data_list)
     {
         data_list.Sort();

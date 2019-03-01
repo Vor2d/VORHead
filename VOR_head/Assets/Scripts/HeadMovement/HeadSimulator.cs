@@ -5,7 +5,7 @@ using UnityEngine.XR;
 
 public class HeadSimulator : MonoBehaviour {
 
-    public GameController GC_script;
+    [SerializeField] private HMTS_Debug HMTSD_script;
 
     //public Quaternion OriginalheadQ { get; set; }
     public Vector3 RRotateDegree {get;set;}
@@ -60,13 +60,14 @@ public class HeadSimulator : MonoBehaviour {
                                                     RRotateDegree.x,
                                                     RRotateDegree.y);
             }
-
         }
         if(DC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
             TrueHeadRR = GeneralMethods.normalize_degree(transform.rotation.eulerAngles);
         }
+
+        transform.localEulerAngles = new Vector3(0.0f, HMTSD_script.R_Degree, 0.0f);
     }
 
     public void reset_originQ()

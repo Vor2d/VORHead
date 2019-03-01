@@ -1,0 +1,14 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold -1 StopWinodow 0.1 TargetChangeTime 2 
+
+
+8	375384	0	1	MoveTarget	16.00	0
+9	375405	0	1	ShowTarget	16.00	0
+10	375513	0	1	TargetHided	16.00	0
+11	389131	0	2	MoveTarget	17.00	1
+12	389142	0	2	ShowTarget	17.00	1
+13	389250	0	2	TargetHided	17.00	1
+14	393161	0	3	MoveTarget	18.00	0
+15	393172	0	3	ShowTarget	18.00	0
+16	393281	0	3	TargetHided	18.00	0
+
+

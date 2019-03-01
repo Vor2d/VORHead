@@ -1,0 +1,20 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold -1 StopWinodow 0.1 TargetChangeTime 2 
+7	0	-1	GameMode Training HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator False Gain 1 	
+3	291	0	0	ReSet	0.00	0
+4	296	0	0	ShowTarget	0.00	0
+5	1519	0	0	MoveTarget	15.00	1
+6	1530	0	0	ShowTarget	15.00	1
+7	38830	0	1	MoveTarget	16.00	0
+8	38842	0	1	ShowTarget	16.00	0
+
+9	89328	0	2	MoveTarget	17.00	1
+10	89340	0	2	ShowTarget	17.00	1
+11	95297	0	3	MoveTarget	18.00	0
+12	95309	0	3	ShowTarget	18.00	0
+13	101619	0	0	MoveTarget	15.00	1
+14	101632	0	0	ShowTarget	15.00	1
+15	116310	0	1	MoveTarget	16.00	0
+16	116322	0	1	ShowTarget	16.00	0
+
+
+

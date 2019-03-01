@@ -7,9 +7,6 @@ TagManager:
   - Scene Camera
   - Face
   - TargetSensor
-  - CenterSensor
-  - TargetSphere
-  - CenterTest
   - TurnBorder
   - HideDetector
   - City
@@ -31,6 +28,7 @@ TagManager:
   - MD_Missile
   - WorldCanvasCollider
   - MD_ReloadCollider
+  - HeadIndicatorDetector
   layers:
   - Default
   - TransparentFX

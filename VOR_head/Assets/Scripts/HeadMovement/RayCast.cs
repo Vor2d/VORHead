@@ -57,6 +57,10 @@ public class RayCast : GeneralRayCast {
                 {
                     hit_hideDetector_flag = true;
                 }
+                if(object_hit.tag == "HeadIndicatorDetector")
+                {
+                    Hit_position = hit.point;
+                }
 
             }
         }

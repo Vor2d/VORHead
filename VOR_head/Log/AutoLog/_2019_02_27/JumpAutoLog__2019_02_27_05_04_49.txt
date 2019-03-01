@@ -1,4 +1,0 @@
-Settings: Using_curved_screen True Player_screen_cm 100 Screen_width_cm 60 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 
-4	0	-1	GameMode Training HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator False Gain 1 	
-
-
