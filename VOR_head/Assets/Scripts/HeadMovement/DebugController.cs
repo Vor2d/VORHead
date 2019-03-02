@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class DebugController : MonoBehaviour {
 
+    //Debug Tests;
+    public float RotateDegree = 0.0f;
+
     const string HT_init_text = "Head Rotation: ";
     const string ST_init_text = "Current State: ";
     const string VRLST_init_text = "VR Logging: ";    //VRLoggingState init text;

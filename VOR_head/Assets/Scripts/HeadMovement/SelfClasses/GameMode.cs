@@ -71,7 +71,7 @@ public class GameMode
                     HideHeadIndicator = true;
                     SkipCenterFlag = true;
                     HideFlag = true;
-                    ShowTargetFlag = true;
+                    ShowTargetFlag = false;
                     break;
                 }
             case GameModeEnum.Feedback_Learning:

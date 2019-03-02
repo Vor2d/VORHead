@@ -46,6 +46,7 @@ public class GameController_Setting : MonoBehaviour {
     public InputField RandomGazeTime_IF;
     public InputField Gain_IF;
     public InputField TargetChangeTime_IF;
+    public InputField TargetChangeTimeRRange_IF;
 
     //Variables;
     private DataController DC_script;
@@ -185,6 +186,8 @@ public class GameController_Setting : MonoBehaviour {
             DC_script.SystemSetting.StopWinodow = float.Parse(StopWinodow_IF.text);
             DC_script.SystemSetting.RandomGazeTime = float.Parse(RandomGazeTime_IF.text);
             DC_script.SystemSetting.TargetChangeTime = float.Parse(TargetChangeTime_IF.text);
+            DC_script.SystemSetting.TargetChangeTimeRRange = 
+                                                float.Parse(TargetChangeTimeRRange_IF.text);
 
             DC_script.Current_GM.Gain = float.Parse(Gain_IF.text);
         }
@@ -272,6 +275,8 @@ public class GameController_Setting : MonoBehaviour {
             RandomGazeTime_IF.text = DC_script.SystemSetting.RandomGazeTime.ToString("F2");
             Gain_IF.text = DC_script.Current_GM.Gain.ToString("F2");
             TargetChangeTime_IF.text = DC_script.SystemSetting.TargetChangeTime.ToString("F2");
+            TargetChangeTimeRRange_IF.text = 
+                            DC_script.SystemSetting.TargetChangeTimeRRange.ToString("F2");
         }
         catch (Exception e)
         {

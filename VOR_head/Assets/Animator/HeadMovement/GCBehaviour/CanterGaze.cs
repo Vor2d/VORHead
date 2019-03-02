@@ -11,7 +11,7 @@ public class CanterGaze : StateMachineBehaviour {
     {
         if (GC_script == null)
         {
-            this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
+            this.GC_script = animator.GetComponent<GameController>();
         }
         GC_script.Current_state = "CenterGaze";
 
@@ -25,9 +25,10 @@ public class CanterGaze : StateMachineBehaviour {
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        GC_script.LeaveCenterGaze();
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {

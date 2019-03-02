@@ -308,6 +308,7 @@ public class GameController : MonoBehaviour {
 
     public void ToCenterGaze()
     {
+        turn_on_raycasts();
         gaze_timer_rand = DC_script.SystemSetting.GazeTime +
                 UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
                                             DC_script.SystemSetting.RandomGazeTime);
@@ -315,14 +316,34 @@ public class GameController : MonoBehaviour {
 
     public void CenterGaze()
     {
-        Gaze(GazeTarget.DefaultTarget);
+        if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag)
+            || DC_script.Current_GM.HideHeadIndicator)
+        {
+            Gaze(GazeTarget.HideDetector);
+        }
+        else
+        {
+            Gaze(GazeTarget.DefaultTarget);
+        }
+    }
+
+    public void LeaveCenterGaze()
+    {
+        turn_off_raycasts();
     }
 
     public void ToTargetToGaze()
     {
-        //Debug.Log("ToTargetToGaze");
+        turn_on_raycasts();
+        gaze_timer_rand = DC_script.SystemSetting.GazeTime +
+                UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
+                                            DC_script.SystemSetting.RandomGazeTime);
+    }
+
+    private void turn_on_raycasts()
+    {
         if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag)
-                || DC_script.Current_GM.HideHeadIndicator)
+            || DC_script.Current_GM.HideHeadIndicator)
         {
             Target_raycast_flag = false;
             Hide_raycast_flag = true;
@@ -332,11 +353,6 @@ public class GameController : MonoBehaviour {
             Target_raycast_flag = true;
             Hide_raycast_flag = false;
         }
-
-        gaze_timer_rand = DC_script.SystemSetting.GazeTime +
-                UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
-                                            DC_script.SystemSetting.RandomGazeTime);
-
     }
 
     public void TargetToGaze()
@@ -354,8 +370,12 @@ public class GameController : MonoBehaviour {
 
     public void LeaveTargetGaze()
     {
-        //Debug.Log("LeaveTargetGaze");
-        Target_raycast_flag = true;
+        turn_off_raycasts();
+    }
+
+    private void turn_off_raycasts()
+    {
+        Target_raycast_flag = false;
         Hide_raycast_flag = false;
     }
 
@@ -821,6 +841,9 @@ public class GameController : MonoBehaviour {
 
     public void ToChangeTargetWaitTime()
     {
+        target_change_timer = DC_script.SystemSetting.TargetChangeTime +
+                    UnityEngine.Random.Range(-DC_script.SystemSetting.TargetChangeTimeRRange,
+                                            DC_script.SystemSetting.TargetChangeTimeRRange);
         TargetTimerFlag = true;
     }
 
