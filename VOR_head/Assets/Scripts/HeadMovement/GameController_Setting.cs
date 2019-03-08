@@ -17,6 +17,8 @@ public class GameController_Setting : MonoBehaviour {
     public GameObject Page2;
     public GameObject Page3;
     public GameObject UIIndicatorText1_OBJ;
+    [SerializeField] private Transform EyeIndi_TRNAS1;
+    [SerializeField] private Transform EyeIndi_TRNAS2;
     //Page1;
     [Header("Page1")]
     //public Toggle LoopTrialsToggle;
@@ -51,23 +53,25 @@ public class GameController_Setting : MonoBehaviour {
     //Variables;
     private DataController DC_script;
     private string path;
-    private List<float> turn_data;
-    private List<float> jump_data;
+    private List<Vector2> turn_data;
+    private List<Vector2> jump_data;
     private List<GameObject> pages;
     private int current_page;
     private GameController GC_script;
+    private bool eye_enabled_flag;
 
     // Use this for initialization
     void Start () {
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
         this.path = "";
-        this.turn_data = new List<float>();
-        this.jump_data = new List<float>();
+        this.turn_data = new List<Vector2>();
+        this.jump_data = new List<Vector2>();
         this.pages = new List<GameObject>();
         this.current_page = 0;
         this.GC_script = Game_Controller.GetComponent<GameController>();
         this.camera1.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.camera2.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
+        this.eye_enabled_flag = EyeIndi_TRNAS1.GetComponent<MeshRenderer>().enabled;
 
         UIIndicatorText1_OBJ.GetComponent<Text>().text = "";
 
@@ -161,7 +165,7 @@ public class GameController_Setting : MonoBehaviour {
     {
         path = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false)[0];
 
-        load_turn_jump_data(path);
+        //load_turn_jump_data(path);
     }
 
     private void apply_game_mode()
@@ -314,8 +318,8 @@ public class GameController_Setting : MonoBehaviour {
         Debug.Log("Loading complete! ");
         ReadFileIndicator.text = "Loading complete!";
 
-        DC_script.Current_TI.Turn_data = new List<float>(this.turn_data);
-        DC_script.Current_TI.Jump_data = new List<float>(this.jump_data);
+        DC_script.Current_TI.Turn_data = new List<Vector2>(this.turn_data);
+        DC_script.Current_TI.Jump_data = new List<Vector2>(this.jump_data);
     }
 
     private void display_list(IEnumerable list)
@@ -367,4 +371,19 @@ public class GameController_Setting : MonoBehaviour {
         GC_script.back_to_main_menu();
     }
 
+    public void ToggleEyeButton()
+    {
+        if (eye_enabled_flag)
+        {
+            EyeIndi_TRNAS1.GetComponent<MeshRenderer>().enabled = false;
+            EyeIndi_TRNAS2.GetComponent<MeshRenderer>().enabled = false;
+            eye_enabled_flag = false;
+        }
+        else
+        {
+            EyeIndi_TRNAS1.GetComponent<MeshRenderer>().enabled = true;
+            EyeIndi_TRNAS2.GetComponent<MeshRenderer>().enabled = true;
+            eye_enabled_flag = true;
+        }
+    }
 }

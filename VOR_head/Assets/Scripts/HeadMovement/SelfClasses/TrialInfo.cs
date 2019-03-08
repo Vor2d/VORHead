@@ -6,27 +6,27 @@ public class TrialInfo
 {
     
     public int Loop_number { get; set; }
-    public List<float> Turn_data { get; set; }
-    public List<float> Jump_data { get; set; }
+    public List<Vector2> Turn_data { get; set; }
+    public List<Vector2> Jump_data { get; set; }
 
     public TrialInfo()
     {
         this.Loop_number = -1;
-        this.Turn_data = new List<float>();
-        this.Jump_data = new List<float>();
+        this.Turn_data = new List<Vector2>();
+        this.Jump_data = new List<Vector2>();
     }
 
     public TrialInfo(TrialInfo other_TI)
     {
         this.Loop_number = other_TI.Loop_number;
-        this.Turn_data = new List<float>(other_TI.Turn_data);
-        this.Jump_data = new List<float>(other_TI.Jump_data);
+        this.Turn_data = new List<Vector2>(other_TI.Turn_data);
+        this.Jump_data = new List<Vector2>(other_TI.Jump_data);
     }
 
-    public TrialInfo(List<float> tu_data, List<float> ju_data)
+    public TrialInfo(List<Vector2> tu_data, List<Vector2> ju_data)
     {
-        this.Turn_data = new List<float>(tu_data);
-        this.Jump_data = new List<float>(ju_data);
+        this.Turn_data = new List<Vector2>(tu_data);
+        this.Jump_data = new List<Vector2>(ju_data);
     }
 
     public string VarToString()

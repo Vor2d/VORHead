@@ -2,52 +2,78 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EyeSimulator : MonoBehaviour {
+public class EyeSimulator : MonoBehaviour
+{
+    [SerializeField] private CoilData CD_script;
 
-    public ET_FileReader ETFR_script;
+    [SerializeField] private EyeInfo.EyeIndex CurrEyeIndex;
 
-    public float TimeInterval = 0.01f;
-    public int column;
+    private Vector2 voltage;
+    private float real_hori_degree;
+    private float real_vert_degree;
+    private Vector3 real_rotate;
+    private Vector3 virtual_rotate;
 
-    private int counter;
-    private float timer;
+    private DataController DC_script;
 
-	// Use this for initialization
-	void Start () {
-        this.counter = 0;
-        this.timer = 0.0f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-
-        timer += Time.deltaTime;
-        counter = (int)(timer / TimeInterval);
-
-        if(counter <= ETFR_script.data.Count)
+    private void Start()
+    {
+        if(DC_script == null)
         {
-            if(column == 1)
-            {
-                float eye_h = 
-                    ETFR_script.excute_linear_left(ETFR_script.data[counter][1]);
-                transform.eulerAngles = new Vector3(0.0f, eye_h, 0.0f);
-            }
-            if (column == 4)
-            {
-                float eye_h =
-                    ETFR_script.excute_linear_right(ETFR_script.data[counter][4]);
-                transform.eulerAngles = new Vector3(0.0f, eye_h, 0.0f);
-            }
+            DC_script = GameObject.Find("DataController").GetComponent<DataController>();
         }
-        counter++;
 
+        this.voltage = new Vector2();
+        this.real_rotate = new Vector3();
+        this.real_hori_degree = 0.0f;
+        this.real_vert_degree = 0.0f;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        //float left_eye_h = ETFR_script.excute_linear(ETFR_script.data[counter][1]);
-        //transform.eulerAngles = new Vector3(0.0f, left_eye_h, 0.0f);
-        //counter++;
+
+        switch(CurrEyeIndex)
+        {
+            case EyeInfo.EyeIndex.left:
+                voltage = CD_script.Left_eye_voltage;
+                real_hori_degree = GeneralMethods.linear_cal_back(
+                                        DC_script.Eye_info.linear_left_hori_k, 
+                                        DC_script.Eye_info.linear_left_hori_b, 
+                                        voltage.x);
+                real_vert_degree = GeneralMethods.linear_cal_back(
+                                        DC_script.Eye_info.linear_left_vert_k,
+                                        DC_script.Eye_info.linear_left_vert_b,
+                                        voltage.y);
+                //real_rotate = new Vector3(real_vert_degree, real_hori_degree, 0.0f);
+
+                break;
+            case EyeInfo.EyeIndex.right:
+                voltage = CD_script.Right_eye_voltage;
+                real_hori_degree = GeneralMethods.linear_cal_back(
+                                        DC_script.Eye_info.linear_right_hori_k,
+                                        DC_script.Eye_info.linear_right_hori_b,
+                                        voltage.x);
+                real_vert_degree = GeneralMethods.linear_cal_back(
+                                        DC_script.Eye_info.linear_right_vert_k,
+                                        DC_script.Eye_info.linear_right_vert_b,
+                                        voltage.y);
+                break;
+        }
+        if (DC_script.SystemSetting.Using_curved_screen)
+        {
+            virtual_rotate = GeneralMethods.RealToVirtual_curved(
+                                DC_script.SystemSetting.Player_screen_cm,
+                                DC_script.SystemSetting.Screen_width_cm,
+                                real_vert_degree, real_hori_degree);
+        }
+        else
+        {
+            virtual_rotate = GeneralMethods.RealToVirtual(
+                                DC_script.SystemSetting.Player_screen_cm,
+                                DC_script.SystemSetting.Screen_width_cm,
+                                real_vert_degree, real_hori_degree);
+        }
+        transform.localEulerAngles = virtual_rotate;
     }
 
 

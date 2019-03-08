@@ -216,6 +216,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoilData
       objectReference: {fileID: 0}
+    - target: {fileID: 202514294654516482, guid: 3bef250f348f2634493c2f05139a7785,
+        type: 3}
+      propertyPath: ECGC_script
+      value: 
+      objectReference: {fileID: 144536414}
     - target: {fileID: 202514294654516483, guid: 3bef250f348f2634493c2f05139a7785,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -273,6 +278,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3bef250f348f2634493c2f05139a7785, type: 3}
+--- !u!114 &37295100 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 202514294654516482, guid: 3bef250f348f2634493c2f05139a7785,
+    type: 3}
+  m_PrefabInstance: {fileID: 37295099}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d158e3cf4243ab49a385d8f7b1d324a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &108890110
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,8 +439,8 @@ MonoBehaviour:
   IndicatorText1: {fileID: 2085083123}
   GameCamera: {fileID: 1130644139}
   UICamera: {fileID: 108890111}
-  CD_script: {fileID: 0}
-  StairingTime: 5
+  CD_script: {fileID: 37295100}
+  StairingTime: 1
   EnableAnim: 0
   LowerBound: 0.3
 --- !u!1 &304087607

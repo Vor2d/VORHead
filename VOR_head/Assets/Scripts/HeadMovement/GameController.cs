@@ -48,8 +48,8 @@ public class GameController : MonoBehaviour {
     //Hiden;
     public uint simulink_sample { get; set; }
     public int trial_iter { get; set; }
-    public float turn_degree { get; set; }
-    public int turn_direct { get; set; }
+    public float turn_degree_x { get; set; }
+    public int turn_direct_x { get; set; }
     public Vector2 last_rot_ang_dir { get; set; }
     public string Current_state { get; set; }
     public bool Hide_time_flag { get; set; }
@@ -84,10 +84,10 @@ public class GameController : MonoBehaviour {
     private float gaze_timer;
     private float head_speed_y;
     private float error_timer;
-    private List<float> turn_data;
-    private List<float> jump_data;
+    private List<Vector2> turn_data;
+    private List<Vector2> jump_data;
     private float stop_window_timer;
-    private Vector2 current_rot_ang_dir;
+    private Vector2 current_rot_ang_dir_x;
     private float hide_gaze_timer;
     private float gaze_timer_rand;
     private float target_change_timer;
@@ -117,7 +117,7 @@ public class GameController : MonoBehaviour {
         //this.SNJstatus = SNJSteps.ToReset;
         //this.center_rotatey = 0.0f;
         this.last_rot_ang_dir = new Vector2(0.0f,0.0f);
-        this.current_rot_ang_dir = new Vector2(0.0f, 0.0f);
+        this.current_rot_ang_dir_x = new Vector2(0.0f, 0.0f);
         this.GCAnimator = GetComponent<Animator>();
         this.head_speed_flag = false;
         this.Check_speed_flag = false;
@@ -127,9 +127,9 @@ public class GameController : MonoBehaviour {
         this.stopped_flag = false;
         this.head_speed_y = 0.0f;
         this.error_timer = DC_script.SystemSetting.ErrorTime;
-        this.turn_data = new List<float>(DC_script.Current_TI.Turn_data);
+        this.turn_data = new List<Vector2>(DC_script.Current_TI.Turn_data);
         this.trial_iter = -1;
-        this.jump_data = new List<float>(DC_script.Current_TI.Jump_data);
+        this.jump_data = new List<Vector2>(DC_script.Current_TI.Jump_data);
         this.stop_window_timer = DC_script.SystemSetting.StopWinodow;
         this.Target_raycast_flag = true;
         this.HS_script = HeadSimulator.GetComponent<HeadSimulator>();
@@ -138,8 +138,8 @@ public class GameController : MonoBehaviour {
         this.VRLS_script = LogSystem.GetComponent<VRLogSystem>();
         this.JLS_script = LogSystem.GetComponent<JumpLogSystem>();
         this.simulink_sample = 0;
-        this.turn_degree = 0.1f;
-        this.turn_direct = 0;
+        this.turn_degree_x = 0.1f;
+        this.turn_direct_x = 0;
         this.collaberating_flag = false;
         this.Current_state = "";
         this.loop_iter = -1;
@@ -171,7 +171,11 @@ public class GameController : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        //Debug.Log("Target_raycast_flag " + Target_raycast_flag);
+        //CD_script.Left_eye_voltage = 
+        //        new Vector2(turn_direct_x == 0 ? -turn_degree_x : turn_degree_x,0.0f);
+        //CD_script.Right_eye_voltage =
+        //        new Vector2(turn_direct_x == 0 ? -turn_degree_x : turn_degree_x, 0.0f);
+        //Debug.Log("CD_script.Left_eye_voltage " + CD_script.Left_eye_voltage);
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -274,8 +278,8 @@ public class GameController : MonoBehaviour {
         //{
         //    HeadIndicator.GetComponent<Renderer>().enabled = true;
         //}
-        turn_degree = 0;
-        tar_CP_script.changePosition(turn_degree, 0.0f, 0, 0);
+        turn_degree_x = 0;
+        tar_CP_script.changePosition(turn_degree_x, 0.0f, 0, 0);
         GCAnimator.SetTrigger("NextStep");
         //center_rotatey = turn_degree;
         last_rot_ang_dir = new Vector2(0.0f, 1);
@@ -381,23 +385,27 @@ public class GameController : MonoBehaviour {
 
     public void ToMoveTarget()
     {
-        float turn_deg_temp = 0.1f;
-        int turn_dir_temp = 0;
+        float turn_deg_temp_x = 0.1f;
+        int turn_dir_temp_x = 0;
+        float turn_deg_temp_y = 0.1f;
+        int turn_dir_temp_y = 0;
         try
         {
-            get_degree_direct(turn_data, trial_iter, out turn_deg_temp, out turn_dir_temp);
+            get_degree_direct(turn_data, trial_iter,
+                                out turn_deg_temp_x, out turn_dir_temp_x,
+                                out turn_deg_temp_y, out turn_dir_temp_y);
         }
         catch(Exception e)
         {
             Debug.Log(e);
         }
-        turn_degree = turn_deg_temp;
-        turn_direct = turn_dir_temp;
+        turn_degree_x = turn_deg_temp_x;
+        turn_direct_x = turn_dir_temp_x;
 
-        Debug.Log("turning " + turn_degree);
+        Debug.Log("turning " + turn_degree_x);
 
-        float turned_degree = move_target(turn_degree, turn_direct);
-        current_rot_ang_dir = new Vector2(turned_degree, turn_direct);
+        float turned_degree_x = move_target(turn_degree_x, turn_direct_x);
+        current_rot_ang_dir_x = new Vector2(turned_degree_x, turn_direct_x);
 
         GCAnimator.SetTrigger("NextStep");
     }
@@ -435,22 +443,26 @@ public class GameController : MonoBehaviour {
 
     public void ToJumpBack()
     {
-        float turn_deg_temp = 0.1f;
-        int turn_dir_temp = 0;
+        float turn_deg_temp_x = 0.1f;
+        int turn_dir_temp_x = 0;
+        float turn_deg_temp_y = 0.1f;
+        int turn_dir_temp_y = 0;
         try
         {
-            get_degree_direct(jump_data, trial_iter, out turn_deg_temp, out turn_dir_temp);
+            get_degree_direct(jump_data, trial_iter, 
+                                out turn_deg_temp_x, out turn_dir_temp_x,
+                                out turn_deg_temp_y, out turn_dir_temp_y);
         }
         catch (Exception e)
         {
             Debug.Log(e);
         }
-        turn_degree = turn_deg_temp;
-        turn_direct = turn_dir_temp;
+        turn_degree_x = turn_deg_temp_x;
+        turn_direct_x = turn_dir_temp_x;
 
-        Debug.Log("jumping " + turn_degree);
+        Debug.Log("jumping " + turn_degree_x);
 
-        move_target(turn_degree, turn_direct);
+        move_target(turn_degree_x, turn_direct_x);
 
         GCAnimator.SetTrigger("NextStep");
     }
@@ -678,7 +690,7 @@ public class GameController : MonoBehaviour {
         }
         else
         {
-            last_rot_ang_dir = current_rot_ang_dir;
+            last_rot_ang_dir = current_rot_ang_dir_x;
             LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0);
             trial_iter++;
             if (trial_iter >= turn_data.Count)
@@ -810,18 +822,29 @@ public class GameController : MonoBehaviour {
         GCAnimator.SetTrigger("NextStep");
     }
 
-    private void get_degree_direct(List<float> list, int iter, 
-                                    out float turn_deg, out int turn_dir)
+    private void get_degree_direct(List<Vector2> list, int iter, 
+                                    out float turn_deg_x, out int turn_dir_x,
+                                    out float turn_deg_y, out int turn_dir_y)
     {
-        float temp_degree = list[iter];
-        turn_deg = Mathf.Abs(temp_degree);
-        if (temp_degree < 0)
+        float temp_degree_x = list[iter].x;
+        turn_deg_x = Mathf.Abs(temp_degree_x);
+        if (temp_degree_x < 0)
         {
-            turn_dir = 0;
+            turn_dir_x = 0;
         }
         else
         {
-            turn_dir = 1;
+            turn_dir_x = 1;
+        }
+        float temp_degree_y = list[iter].y;
+        turn_deg_y = Mathf.Abs(temp_degree_y);
+        if (temp_degree_y < 0)
+        {
+            turn_dir_y = 0;
+        }
+        else
+        {
+            turn_dir_y = 1;
         }
     }
 

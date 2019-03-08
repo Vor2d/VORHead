@@ -18,7 +18,7 @@ public class MoveTarget : StateMachineBehaviour {
         GC_script.ToMoveTarget();
         GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "MoveTarget", 
-                                                GC_script.turn_degree,GC_script.turn_direct);
+                                                GC_script.turn_degree_x,GC_script.turn_direct_x);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

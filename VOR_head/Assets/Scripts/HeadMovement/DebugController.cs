@@ -28,9 +28,18 @@ public class DebugController : MonoBehaviour {
 
     private DataController DC_script;
 
+    private List<Vector2> LR_test;
+
 	// Use this for initialization
 	void Start () {
         DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+
+        this.LR_test = 
+            new List<Vector2>{new Vector2(10,10),new Vector2(-10,-10),new Vector2(0,0),
+                                new Vector2(0,0)};
+        float b0,b1;
+        GeneralMethods.linear_regression(LR_test, out b0, out b1);
+        Debug.Log("b0 " + b0 + " b1 " + b1);
 	}
 	
 	// Update is called once per frame
@@ -38,7 +47,7 @@ public class DebugController : MonoBehaviour {
         //Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
 
         Headrr_Text.text = HT_init_text + HS_script.TrueHeadRR.ToString("F2")
-                            + "\t" + GC_script.turn_degree.ToString("F2");
+                            + "\t" + GC_script.turn_degree_x.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
         JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;

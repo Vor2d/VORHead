@@ -8,11 +8,13 @@ using System.Threading;
 
 public class CoilData : MonoBehaviour {
 
+    //public EC_GameController ECGC_script;
+
     public Quaternion currentHeadOrientation { get; set; }
     public Vector3 currentHeadVelocity { get; set; }
     public UInt32 simulinkSample { get; set; }
-    public Vector2 Left_eye_voltage { get; private set; }   //horizontal then vertical;
-    public Vector2 Right_eye_voltage { get; private set; }
+    public Vector2 Left_eye_voltage { get; set; }   //horizontal then vertical;
+    public Vector2 Right_eye_voltage { get; set; }
 
     //static information;
     private const int port = 5123;
@@ -48,15 +50,16 @@ public class CoilData : MonoBehaviour {
 
         if(DC_script.using_coil)
         {
-            
             RCThread = new Thread(read_coil);
             RCThread.Start();
         }
     }
 	
 	// Update is called once per frame
-	void Update () {
-
+	void Update ()
+    {
+        //Left_eye_voltage = ECGC_script.Curr_target;
+        //Right_eye_voltage = ECGC_script.Curr_target * 2 + new Vector2(1.0f,1.0f);
     }
 
     private void read_coil()

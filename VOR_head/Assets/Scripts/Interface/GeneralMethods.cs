@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using UnityEngine.XR;
 using System.IO;
+using System.Linq;
 
 public static class GeneralMethods {
 
@@ -11,7 +12,7 @@ public static class GeneralMethods {
     private const char line_separator = '_';
     private enum Direction { left, right };
 
-    //y is horizontal; x is vertical;
+    //y is horizontal, rotate by y axis; x is vertical, rotate by x axis;
     //Convert the real world angles to virtual world angles;
     public static float RealToVirtualy(float player_screen_cm,float screen_width_cm,
                                                                                 float degree)
@@ -86,8 +87,9 @@ public static class GeneralMethods {
         return virtual_degreey;
     }
 
+    //rot_degreex is vertical, rotate by x axis; Vertical first!!!
     public static Vector3 RealToVirtual(float player_screen_cm, float screen_width_cm, 
-                                        float rot_degreex,float rot_degreey)
+                                        float rot_degreex, float rot_degreey)
     {
         float screen_htow_scale = (float)Screen.height / (float)Screen.width;
         float screen_height_cm = screen_htow_scale * screen_width_cm;
@@ -293,8 +295,10 @@ public static class GeneralMethods {
                         }
                         else
                         {
-                            temp_trialInfo.Turn_data.Add(float.Parse(splitstr[0]));
-                            temp_trialInfo.Jump_data.Add(float.Parse(splitstr[1]));
+                            temp_trialInfo.Turn_data.
+                                    Add(new Vector2(float.Parse(splitstr[0]),0.0f));
+                            temp_trialInfo.Jump_data.
+                                    Add(new Vector2(float.Parse(splitstr[1]),0.0f));
                         }
                     }
                 }
@@ -423,6 +427,36 @@ public static class GeneralMethods {
         b = y1 - (k * x1);
     }
 
+    public static void linear_regression(List<Vector2> x_y_list, out float b0, out float b1)
+    {
+        float x_sum = 0.0f;
+        float y_sum = 0.0f;
+        foreach (Vector2 x_y in x_y_list)
+        {
+            x_sum += x_y.x;
+            y_sum += x_y.y;
+        }
+        float x_mean = x_sum / x_y_list.Count;
+        float y_mean = y_sum / x_y_list.Count;
+        float x_variance = 0.0f;
+        float x_Vsum = 0.0f;
+        float x_standardD = 0.0f;
+        float y_standardD = 0.0f;
+        float xSD_TySD = 0.0f;  //x standard division times y standard division;
+        float xSD_TySD_sum = 0.0f;
+        foreach (Vector2 x_y in x_y_list)
+        {
+            x_standardD = x_y.x - x_mean;
+            y_standardD = x_y.y - y_mean;
+            xSD_TySD = x_standardD * y_standardD;
+            xSD_TySD_sum += xSD_TySD;
+            x_variance = Mathf.Pow(x_standardD, 2);
+            x_Vsum += x_variance;
+        }
+        b1 = xSD_TySD_sum / x_Vsum;
+        b0 = y_mean - b1 * x_mean;
+    }
+
     public static void recenter_VR()
     {
         UnityEngine.XR.InputTracking.Recenter();
@@ -451,6 +485,11 @@ public static class GeneralMethods {
 
         return trial_data;
 
+    }
+
+    public static float linear_cal_back(float k, float b, float x)
+    {
+        return k * x + b;
     }
 
 }

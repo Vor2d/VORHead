@@ -11,17 +11,17 @@ public class ECGC_Finish : StateMachineBehaviour {
     {
         if (ECGC_script == null)
         {
-            this.ECGC_script =
-                GameObject.Find("EC_GameController").GetComponent<EC_GameController>();
+            this.ECGC_script = animator.GetComponent<EC_GameController>();
         }
 
-        ECGC_script.finised();
+        ECGC_script.ToFinish();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
-    //
-    //}
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        ECGC_script.Finish();
+    }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {

@@ -25,7 +25,7 @@ public class ChangeTargetWaitTime : StateMachineBehaviour {
 
         GC_script.update_SS();
         JLS_script.log_action(GC_script.simulink_sample, GC_script.trial_iter, "ChangeTargetWaitTime",
-                                                GC_script.turn_degree, GC_script.turn_direct);
+                                                GC_script.turn_degree_x, GC_script.turn_direct_x);
 
     }
 

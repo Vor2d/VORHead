@@ -67,7 +67,7 @@ public class HeadSimulator : MonoBehaviour {
             TrueHeadRR = GeneralMethods.normalize_degree(transform.rotation.eulerAngles);
         }
 
-        transform.localEulerAngles = new Vector3(0.0f, DebC_script.RotateDegree, 0.0f);
+        //transform.localEulerAngles = new Vector3(0.0f, DebC_script.RotateDegree, 0.0f);
     }
 
     public void reset_originQ()

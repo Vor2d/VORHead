@@ -5,10 +5,9 @@ using System;
 using System.IO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Threading;
 
 public class EC_GameController : MonoBehaviour {
-
-    private const string ECTrial_path = "ECTrial.txt";
 
     public GameObject TargetOBJ;
     public GameObject IndicatorText1;
@@ -21,9 +20,10 @@ public class EC_GameController : MonoBehaviour {
     public float LowerBound = 0.3f;
 
     public bool Stairing_flag { get; set; }
+    public Vector2 Curr_target { get; private set; }
 
     private float stair_timer;
-    private List<float> EC_trials;
+    private List<Vector2> EC_trials;
     private Animator ECGCAnimator;
     private int trial_iter;
     private ChangePosition TCP_script;
@@ -31,8 +31,11 @@ public class EC_GameController : MonoBehaviour {
     private Transform target_crossTrans;
     private bool start_flag;
     private DataController DC_script;
-    private List<Vector2> Left_eye_data;
-    private List<Vector2> Right_eye_data;
+    private List<KeyValuePair<Vector2, Vector2>> Left_eye_data;   //target degrees and eye degrees;
+    private List<KeyValuePair<Vector2, Vector2>> Right_eye_data;
+    private bool calibration_finished_flag;
+
+    private Thread CalibrationThread;
 
     // Use this for initialization
     void Start() {
@@ -44,7 +47,7 @@ public class EC_GameController : MonoBehaviour {
 
         this.stair_timer = StairingTime;
         this.Stairing_flag = false;
-        this.EC_trials = new List<float>();
+        this.EC_trials = new List<Vector2>(DC_script.Eye_TI.Turn_data);
         this.ECGCAnimator = GetComponent<Animator>();
         this.trial_iter = -1;
         this.TCP_script = TargetOBJ.GetComponent<ChangePosition>();
@@ -53,47 +56,44 @@ public class EC_GameController : MonoBehaviour {
         this.start_flag = false;
         this.GameCamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.UICamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
-        this.Left_eye_data = new List<Vector2>();
-        this.Right_eye_data = new List<Vector2>();
+        this.Left_eye_data = new List<KeyValuePair<Vector2, Vector2>>();
+        this.Right_eye_data = new List<KeyValuePair<Vector2, Vector2>>();
+        this.CalibrationThread = new Thread(calibrate);
+        this.calibration_finished_flag = false;
     }
 
     // Update is called once per frame
     void Update() {
-        if (Stairing_flag)
+
+        //CD_script.Left_eye_voltage = Curr_target;
+        //CD_script.Right_eye_voltage = Curr_target*2;
+
+        if (Stairing_flag && start_flag)
         {
             stair_timer -= Time.deltaTime;
+            record_data();
+            //Debug.Log("stair_timer " + stair_timer);
         }
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
         {
             start_flag = true;
         }
     }
 
-    public void read_trials()
+    public void ToInit()
     {
-        Debug.Log("Loading ECTrial_path " + ECTrial_path);
-        try
-        {
-            StreamReader reader = new StreamReader(ECTrial_path);
-            while (!reader.EndOfStream)
-            {
-                EC_trials.Add(float.Parse(reader.ReadLine()));
-            }
-        }
-        catch (Exception e) { Debug.Log(e); }
-        Debug.Log("Loading ECTrial_path finished");
+
     }
 
-    public void ECGC_Init()
+    public void Init()
     {
         if(start_flag)
         {
-            start_flag = false;
             ECGCAnimator.SetTrigger("NextStep");
         }
     }
 
-    public void start_trial()
+    public void StartTrial()
     {
         trial_iter++;
         if(trial_iter >= EC_trials.Count)
@@ -108,18 +108,44 @@ public class EC_GameController : MonoBehaviour {
 
     public void change_position()
     {
-        float degree_data = EC_trials[trial_iter];
-        TCP_script.changePosition(Mathf.Abs(degree_data), 0.0f,
-                                    (degree_data < 0) ? 0 : 1, 0);
+        float turn_degre_x = EC_trials[trial_iter].x;
+        int turn_direc_x = turn_degre_x < 0 ? 0 : 1;
+        float turn_degre_y = EC_trials[trial_iter].y;
+        int turn_direc_y = turn_degre_y < 0 ? 0 : 1;
+        Curr_target = new Vector2(turn_degre_x, turn_degre_y);
+        turn_degre_x = Mathf.Abs(turn_degre_x);
+        turn_degre_y = Mathf.Abs(turn_degre_y);
+        if (DC_script.using_coil)
+        {
+            Vector3 virtual_degree = new Vector3();
+            if (!DC_script.SystemSetting.Using_curved_screen)
+            {
+                virtual_degree = GeneralMethods.
+                                RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
+                                                turn_degre_y,turn_direc_x);
+            }
+            else
+            {
+                virtual_degree = GeneralMethods.
+                        RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
+                                                DC_script.SystemSetting.Screen_width_cm,
+                                                turn_degre_y,turn_degre_x);
+            }
+            TCP_script.changePosition(virtual_degree.y, virtual_degree.x, 
+                                        turn_direc_x, turn_direc_y);
+            
+        }
         ECGCAnimator.SetTrigger("NextStep");
+        
     }
 
-    public void ToECGC_WaitTime()
+    public void ToWaitTime()
     {
         Stairing_flag = true;
     }
 
-    public void wait_time()
+    public void WaitTime()
     {
         if(EnableAnim)
         {
@@ -135,13 +161,33 @@ public class EC_GameController : MonoBehaviour {
 
     private void record_data()
     {
-
+        Left_eye_data.Add(new KeyValuePair<Vector2, Vector2>(
+                EC_trials[trial_iter], CD_script.Left_eye_voltage));
+        Right_eye_data.Add(new KeyValuePair<Vector2, Vector2>(
+                EC_trials[trial_iter], CD_script.Right_eye_voltage));
     }
 
-    public void finised()
+    public void ToFinish()
     {
         IndicatorText1.GetComponent<MeshRenderer>().enabled = true;
-        IndicatorText1.GetComponent<TextMesh>().text = "Finished";
+        IndicatorText1.GetComponent<TextMesh>().text = "Calibrating";
+        CalibrationThread.Start();
+    }
+
+    private void calibrate()
+    {
+        DC_script.Eye_info.calibration(Left_eye_data,Right_eye_data);
+        calibration_finished_flag = true;
+    }
+
+    public void Finish()
+    {
+        if(calibration_finished_flag)
+        {
+            calibration_finished_flag = false;
+            IndicatorText1.GetComponent<TextMesh>().text = "Calibration Finished";
+            Debug.Log(DC_script.Eye_info.var_to_string());
+        }
     }
 
     private float scale_cal()

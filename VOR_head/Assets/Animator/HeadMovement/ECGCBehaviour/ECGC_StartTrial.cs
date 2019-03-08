@@ -11,11 +11,10 @@ public class ECGC_StartTrial : StateMachineBehaviour {
     {
         if (ECGC_script == null)
         {
-            this.ECGC_script =
-                GameObject.Find("EC_GameController").GetComponent<EC_GameController>();
+            this.ECGC_script = animator.GetComponent<EC_GameController>();
         }
 
-        ECGC_script.start_trial();
+        ECGC_script.StartTrial();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

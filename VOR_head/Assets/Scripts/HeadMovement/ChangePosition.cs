@@ -38,7 +38,7 @@ public class ChangePosition : MonoBehaviour {
     //    transform.LookAt(Camera.main.transform);
     //}
 
-
+    //x is horizontal, y is vertical;
     public void changePosition(float ang_degX, float ang_degY, int direcX, int direcY)
     {
         transform.position =

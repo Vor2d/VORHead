@@ -8,11 +8,15 @@ public class DataController : ParentDataController {
 
     private const string trial_path = "Default.txt";
     private const string setting_path = "SettingDefault.txt";
+    private const string ECTrial_path = "ECTrial.txt";
+    private readonly char[] line_spliter = new char[] { ' ', '\t' };
 
     public List<Section> Sections { get; set; }
     public GameMode Current_GM { get; set; }
     public TrialInfo Current_TI { get; set; }
     public GameSetting SystemSetting { get; set; }
+    public EyeInfo Eye_info { get; set; }
+    public TrialInfo Eye_TI { get; set; }
 
     //System data;
 
@@ -31,11 +35,12 @@ public class DataController : ParentDataController {
         this.Current_GM = new GameMode();
         this.Current_TI = new TrialInfo();
         this.SystemSetting = new GameSetting();
+        this.Eye_info = new EyeInfo();
+        this.Eye_TI = new TrialInfo();
 
         Sections = GeneralMethods.load_game_data_general(trial_path);
         SystemSetting = GeneralMethods.read_game_setting_general(setting_path);
-
-
+        read_eye_trials();
     }
 
     private void Start()
@@ -55,6 +60,27 @@ public class DataController : ParentDataController {
         }
     }
 
+    public void read_eye_trials()
+    {
+        Debug.Log("Loading ECTrial_path " + ECTrial_path);
+        try
+        {
+            StreamReader reader = new StreamReader(ECTrial_path);
+            string[] line_str;
+            string x_degree = "";
+            string y_degree = "";
+            while (!reader.EndOfStream)
+            {
+                line_str = reader.ReadLine().Split(line_spliter);
+                x_degree = line_str[0];
+                y_degree = line_str[1];
+                Eye_TI.Turn_data.
+                    Add(new Vector2(float.Parse(x_degree),float.Parse(y_degree)));
+            }
+        }
+        catch (Exception e) { Debug.Log(e); }
+        Debug.Log("Loading ECTrial_path finished");
+    }
 
 
 
