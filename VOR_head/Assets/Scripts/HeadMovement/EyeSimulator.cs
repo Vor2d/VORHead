@@ -7,14 +7,19 @@ public class EyeSimulator : MonoBehaviour
     [SerializeField] private CoilData CD_script;
 
     [SerializeField] private EyeInfo.EyeIndex CurrEyeIndex;
+    [SerializeField] private HeadSimulator HS_script;
+    [SerializeField] private Transform EyeIndicator_TRANS;
 
     private Vector2 voltage;
     private float real_hori_degree;
     private float real_vert_degree;
     private Vector3 real_rotate;
     private Vector3 virtual_rotate;
+    private float combined_RHDegr; //degree combined with head rotation.
+    private float combined_RVDegr;
 
     private DataController DC_script;
+    private ChangePosition CP_script;
 
     private void Start()
     {
@@ -27,6 +32,9 @@ public class EyeSimulator : MonoBehaviour
         this.real_rotate = new Vector3();
         this.real_hori_degree = 0.0f;
         this.real_vert_degree = 0.0f;
+        this.combined_RHDegr = 0.0f;
+        this.combined_RVDegr = 0.0f;
+        this.CP_script = EyeIndicator_TRANS.GetComponent<ChangePosition>();
     }
 
     private void Update()
@@ -44,8 +52,7 @@ public class EyeSimulator : MonoBehaviour
                                         DC_script.Eye_info.linear_left_vert_k,
                                         DC_script.Eye_info.linear_left_vert_b,
                                         voltage.y);
-                //real_rotate = new Vector3(real_vert_degree, real_hori_degree, 0.0f);
-
+                //Debug.Log("real_vert_degree " + real_vert_degree);
                 break;
             case EyeInfo.EyeIndex.right:
                 voltage = CD_script.Right_eye_voltage;
@@ -59,21 +66,24 @@ public class EyeSimulator : MonoBehaviour
                                         voltage.y);
                 break;
         }
+        combined_RHDegr = HS_script.TrueHeadRR.y + real_hori_degree;
+        combined_RVDegr = HS_script.TrueHeadRR.x + real_vert_degree;
         if (DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rotate = GeneralMethods.RealToVirtual_curved(
                                 DC_script.SystemSetting.Player_screen_cm,
                                 DC_script.SystemSetting.Screen_width_cm,
-                                real_vert_degree, real_hori_degree);
+                                combined_RVDegr, combined_RHDegr);
         }
         else
         {
             virtual_rotate = GeneralMethods.RealToVirtual(
                                 DC_script.SystemSetting.Player_screen_cm,
                                 DC_script.SystemSetting.Screen_width_cm,
-                                real_vert_degree, real_hori_degree);
+                                combined_RVDegr, combined_RHDegr);
         }
         transform.localEulerAngles = virtual_rotate;
+        CP_script.changePosition(virtual_rotate.y, virtual_rotate.x);
     }
 
 

@@ -5,17 +5,18 @@ using UnityEngine.XR;
 
 public class HeadSimulator : MonoBehaviour {
 
-    [SerializeField] private DebugController DebC_script;
-
     //public Quaternion OriginalheadQ { get; set; }
     public Vector3 RRotateDegree {get;set;}
     public Vector3 TrueHeadRR { get; set; }
     public CoilData CD_script;
+    public Vector3 VirtualRDeg { get; set; }
+    [SerializeField] private Transform HeadIndicator_TRANS;
 
     private DataController DC_script;
     private float player_screen_cm;
     private float screen_width_cm;
     private Quaternion current_headQ;
+    private ChangePosition CP_script;
 
     // Use this for initialization
     void Start () {
@@ -23,9 +24,10 @@ public class HeadSimulator : MonoBehaviour {
 
         this.player_screen_cm = DC_script.SystemSetting.Player_screen_cm;
         this.screen_width_cm = DC_script.SystemSetting.Screen_width_cm;
-        //this.OriginalheadQ = new Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
         this.RRotateDegree = new Vector3();
         this.TrueHeadRR = new Vector3();
+        this.VirtualRDeg = new Vector3();
+        this.CP_script = HeadIndicator_TRANS.GetComponent<ChangePosition>();
     }
 	
 	// Update is called once per frame
@@ -35,39 +37,39 @@ public class HeadSimulator : MonoBehaviour {
         {
             Quaternion coil_rotation = CD_script.currentHeadOrientation;
 
-            //coil_rotation = new Quaternion(0.0f, 0.03f, -0.05f, 1.0f);
-
             current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
 
+            //////////
             TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
 
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
-            //Debug.Log("RRotateDegree " + RRotateDegree);
             if (!DC_script.SystemSetting.Using_curved_screen)
             {
-                transform.localEulerAngles = GeneralMethods.
+                VirtualRDeg = GeneralMethods.
                                     RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
-                                                    DC_script.SystemSetting.Screen_width_cm, 
-                                                    RRotateDegree.x, 
+                                                    DC_script.SystemSetting.Screen_width_cm,
+                                                    RRotateDegree.x,
                                                     RRotateDegree.y);
+                transform.localEulerAngles = VirtualRDeg;
             }
             else
             {
-                transform.localEulerAngles = GeneralMethods.
+                VirtualRDeg = GeneralMethods.
                             RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
                                                     DC_script.SystemSetting.Screen_width_cm,
                                                     RRotateDegree.x,
                                                     RRotateDegree.y);
+                transform.localEulerAngles = VirtualRDeg;
             }
+            CP_script.changePosition(VirtualRDeg.y, VirtualRDeg.x);
         }
         if(DC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();
             TrueHeadRR = GeneralMethods.normalize_degree(transform.rotation.eulerAngles);
         }
-
-        //transform.localEulerAngles = new Vector3(0.0f, DebC_script.RotateDegree, 0.0f);
+        
     }
 
     public void reset_originQ()

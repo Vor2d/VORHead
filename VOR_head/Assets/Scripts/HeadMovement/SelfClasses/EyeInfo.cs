@@ -6,10 +6,9 @@ public class EyeInfo
 {
     public enum EyeFunction { linear }
     public enum EyeIndex { left, right }
-    public enum FitMode { P2P, continuously }
 
     public EyeFunction Eye_function { get; set; }
-    public FitMode Fit_mode { get; set; }
+    //[SerializeField] private EC_GameController ECGC_script;
 
     public float linear_left_hori_k { get; private set; }
     public float linear_left_hori_b { get; private set; }
@@ -23,7 +22,6 @@ public class EyeInfo
     public EyeInfo()
     {
         this.Eye_function = EyeFunction.linear;
-        this.Fit_mode = FitMode.P2P;
         this.linear_left_hori_k = 0;
         this.linear_left_hori_b = 0;
         this.linear_left_vert_k = 0;
@@ -37,7 +35,6 @@ public class EyeInfo
     public EyeInfo(EyeInfo otherEI)
     {
         this.Eye_function = otherEI.Eye_function;
-        this.Fit_mode = otherEI.Fit_mode;
         this.linear_left_hori_k = otherEI.linear_left_hori_k;
         this.linear_left_hori_b = otherEI.linear_left_hori_b;
         this.linear_left_vert_k = otherEI.linear_left_hori_k;
@@ -48,18 +45,25 @@ public class EyeInfo
         this.linear_right_vert_b = otherEI.linear_right_hori_b;
     }
 
+    //left_eye_voltages: target position (degree), then eye voltages;
+    //Horizontal then Vertical;
     public void calibration(List<KeyValuePair<Vector2,Vector2>> left_eye_voltages,
-                            List<KeyValuePair<Vector2, Vector2>> right_eye_voltages)
+                            List<KeyValuePair<Vector2, Vector2>> right_eye_voltages,
+                            EC_GameController.FitMode fit_mode)
     {
-        switch(Fit_mode)
+        switch(fit_mode)
         {
-            case FitMode.P2P:
+            case EC_GameController.FitMode.P2P:
                 List<KeyValuePair<Vector2, Vector2>> left_target_Volmedian =
                                                 get_median_list(left_eye_voltages);
                 List<KeyValuePair<Vector2, Vector2>> right_target_Volmedian =
                                                 get_median_list(right_eye_voltages);
                 fit_function(EyeFunction.linear, EyeIndex.left, left_target_Volmedian);
                 fit_function(EyeFunction.linear, EyeIndex.right, right_target_Volmedian);
+                break;
+            case EC_GameController.FitMode.continuously:
+                fit_function(EyeFunction.linear, EyeIndex.left, left_eye_voltages);
+                fit_function(EyeFunction.linear, EyeIndex.right, right_eye_voltages);
                 break;
         }
     }
@@ -100,6 +104,8 @@ public class EyeInfo
         return target_Volmedian;
     }
 
+    //Eye_data: target position (degrees), then eye voltages;
+    //Horizontal first;
     public void fit_function(EyeFunction target_EF, EyeIndex target_EI,
                                     List<KeyValuePair<Vector2, Vector2>> eye_data)
     {
@@ -171,6 +177,7 @@ public class EyeInfo
         result += " LLVk " + linear_left_vert_k.ToString("F2");
         result += " LLVb " + linear_left_vert_b.ToString("F2");
         result += " LRHk " + linear_right_hori_k.ToString("F2");
+        result += " LRHb " + linear_right_hori_b.ToString("F2");
         result += " LRVk " + linear_right_vert_k.ToString("F2");
         result += " LRVb " + linear_right_vert_b.ToString("F2");
 

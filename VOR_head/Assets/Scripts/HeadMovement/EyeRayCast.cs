@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class EyeRayCast : GeneralRayCast
 {
-    [SerializeField] Transform EyeIndicator_TRANS;
+    [SerializeField] private Transform EyeIndicator_TRANS;
+
+    private DataController DC_script;
+
+    protected override void Start()
+    {
+        base.Start();
+        this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+    }
 
     protected override void Update()
     {

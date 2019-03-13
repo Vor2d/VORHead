@@ -19,6 +19,12 @@ public class DebugController : MonoBehaviour {
     public HeadSimulator HS_script;
     public VRLogSystem VRLS_script;
     public JumpLogSystem JLS_script;
+    public CoilData CD_script;
+    public Transform DebugTarget_TRANS;
+    public Vector3 DebugTargetDegree;
+    public Vector3 RealToVirtualTest;
+    public Text RealToVirtualTest_Text;
+    public Text Debug_taget_Text;
 
     public Text Headrr_Text;
     public Text State_Text;
@@ -34,20 +40,26 @@ public class DebugController : MonoBehaviour {
 	void Start () {
         DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
-        this.LR_test = 
-            new List<Vector2>{new Vector2(10,10),new Vector2(-10,-10),new Vector2(0,0),
-                                new Vector2(0,0)};
-        float b0,b1;
-        GeneralMethods.linear_regression(LR_test, out b0, out b1);
-        Debug.Log("b0 " + b0 + " b1 " + b1);
+        //this.LR_test = 
+        //    new List<Vector2>{new Vector2(10,10),new Vector2(-10,-10),new Vector2(0,0),
+        //                        new Vector2(0,0)};
+        //float b0,b1;
+        //GeneralMethods.linear_regression(LR_test, out b0, out b1);
+        //Debug.Log("b0 " + b0 + " b1 " + b1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        //Debug.Log("GC_script.loop_iter" + GC_script.loop_iter);
 
+        //eye_test();                                        
+
+        show_info();
+    }
+
+    private void show_info()
+    {
         Headrr_Text.text = HT_init_text + HS_script.TrueHeadRR.ToString("F2")
-                            + "\t" + GC_script.turn_degree_x.ToString("F2");
+                    + "\t" + GC_script.turn_degree_x.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
         JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;
@@ -55,5 +67,22 @@ public class DebugController : MonoBehaviour {
                                             + "\t & \t" + GC_script.trial_iter.ToString()
                                             + "\t & \t" + GC_script.section_number
                                             + "\t" + DC_script.Current_GM.GameModeName;
+    }
+
+    private void eye_test()
+    {
+        CD_script.Left_eye_voltage = new Vector2(DebugTargetDegree.y, DebugTargetDegree.x) +
+                                        new Vector2(10.0f, -3.0f);
+        CD_script.Right_eye_voltage = (new Vector2(DebugTargetDegree.y, DebugTargetDegree.x) +
+                                        new Vector2(10.5f, -2.5f)) * 2.0f;
+        HS_script.TrueHeadRR = new Vector3(3.0f, -10.0f, 0.0f);
+        Vector3 Debug_taget = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
+                                DebugTargetDegree.x, DebugTargetDegree.y);
+        Debug_taget_Text.text = Debug_taget.ToString("F2");
+        DebugTarget_TRANS.GetComponent<ChangePosition>().changePosition(
+                                    Debug_taget.y, Debug_taget.x);
+
+        RealToVirtualTest_Text.text = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
+                                    RealToVirtualTest.x, RealToVirtualTest.y).ToString("F2");
     }
 }

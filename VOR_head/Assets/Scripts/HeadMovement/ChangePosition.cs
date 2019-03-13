@@ -43,7 +43,15 @@ public class ChangePosition : MonoBehaviour {
     {
         transform.position =
                 GeneralMethods.PositionCal(init_dist, ang_degX, ang_degY, direcX, direcY);
+        //Debug.Log("changePosition " + ang_degX);
 
         //transform.LookAt(Camera.main.transform);
+    }
+
+    public void changePosition(float ang_degX, float ang_degY)
+    {
+        transform.position =
+                GeneralMethods.PositionCal(init_dist, ang_degX, ang_degY);
+        //Debug.Log("changePosition2 " + ang_degX);
     }
 }

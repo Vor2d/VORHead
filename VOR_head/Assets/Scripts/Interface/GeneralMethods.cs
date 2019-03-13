@@ -389,7 +389,7 @@ public static class GeneralMethods {
     public static Vector3 PositionCal(float init_dist, float ang_degX, float ang_degY)
     {
         return new Vector3(DestinationCal(init_dist, ang_degX),
-                            DestinationCal(init_dist, ang_degY),
+                            -DestinationCal(init_dist, ang_degY),   //Invert sign because rotation and position have different positive direction;
                             init_dist);
     }
 
@@ -397,7 +397,7 @@ public static class GeneralMethods {
     {
         Vector3 n_degrees = normalize_degree(degrees);
         return new Vector3(DestinationCal(init_dist, n_degrees.y),
-                            DestinationCal(init_dist, n_degrees.x),
+                            -DestinationCal(init_dist, n_degrees.x),
                             init_dist);
     }
 

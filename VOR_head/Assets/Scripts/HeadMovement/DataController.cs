@@ -19,6 +19,7 @@ public class DataController : ParentDataController {
     public TrialInfo Eye_TI { get; set; }
 
     //System data;
+    public EC_GameController.FitMode Fit_Mode;
 
     public Quaternion Head_origin { get; set; }
 

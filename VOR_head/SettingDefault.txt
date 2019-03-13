@@ -1,5 +1,5 @@
-PlayerScreenCM	100
-ScreenWidthCM	60
+PlayerScreenCM	180
+ScreenWidthCM	121
 Camera1Display	0
 Camera2Display	0
 GazeTime	1.5

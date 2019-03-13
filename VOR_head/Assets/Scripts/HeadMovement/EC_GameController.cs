@@ -9,11 +9,14 @@ using System.Threading;
 
 public class EC_GameController : MonoBehaviour {
 
+    public enum FitMode { P2P, continuously }
+
     public GameObject TargetOBJ;
-    public GameObject IndicatorText1;
     public Camera GameCamera;
     public Camera UICamera;
     [SerializeField] private CoilData CD_script;
+    [SerializeField] private HeadSimulator HS_script;
+    [SerializeField] private Transform IndicatorText1_TRANS;
 
     public float StairingTime = 5.0f;
     public bool EnableAnim = true;
@@ -21,7 +24,7 @@ public class EC_GameController : MonoBehaviour {
 
     public bool Stairing_flag { get; set; }
     public Vector2 Curr_target { get; private set; }
-
+    public DataController DC_script { get; private set; }
     private float stair_timer;
     private List<Vector2> EC_trials;
     private Animator ECGCAnimator;
@@ -30,10 +33,10 @@ public class EC_GameController : MonoBehaviour {
     private Vector3 original_scale;
     private Transform target_crossTrans;
     private bool start_flag;
-    private DataController DC_script;
     private List<KeyValuePair<Vector2, Vector2>> Left_eye_data;   //target degrees and eye degrees;
     private List<KeyValuePair<Vector2, Vector2>> Right_eye_data;
     private bool calibration_finished_flag;
+    private bool record_Cdata_flag;
 
     private Thread CalibrationThread;
 
@@ -60,35 +63,55 @@ public class EC_GameController : MonoBehaviour {
         this.Right_eye_data = new List<KeyValuePair<Vector2, Vector2>>();
         this.CalibrationThread = new Thread(calibrate);
         this.calibration_finished_flag = false;
+        this.record_Cdata_flag = false;
     }
 
     // Update is called once per frame
     void Update() {
-
-        //CD_script.Left_eye_voltage = Curr_target;
-        //CD_script.Right_eye_voltage = Curr_target*2;
-
         if (Stairing_flag && start_flag)
         {
             stair_timer -= Time.deltaTime;
-            record_data();
-            //Debug.Log("stair_timer " + stair_timer);
+            record_data_P2P();
         }
         if (Input.GetKeyDown(KeyCode.S))
         {
             start_flag = true;
         }
+        if(record_Cdata_flag)
+        {
+            record_data_continuously();
+        }
     }
+
+
 
     public void ToInit()
     {
+        set_anim_bool();
+        IndicatorText1_TRANS.GetComponent<TextMesh>().text = "Paused";
+        IndicatorText1_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
 
+    private void set_anim_bool()
+    {
+        switch(DC_script.Fit_Mode)
+        {
+            case FitMode.P2P:
+                ECGCAnimator.SetBool("UsingP2P", true);
+                ECGCAnimator.SetBool("UsingContinuously", false);
+                break;
+            case FitMode.continuously:
+                ECGCAnimator.SetBool("UsingP2P", false);
+                ECGCAnimator.SetBool("UsingContinuously", true);
+                break;
+        }
     }
 
     public void Init()
     {
         if(start_flag)
         {
+            IndicatorText1_TRANS.GetComponent<MeshRenderer>().enabled = false;
             ECGCAnimator.SetTrigger("NextStep");
         }
     }
@@ -159,7 +182,7 @@ public class EC_GameController : MonoBehaviour {
         }
     }
 
-    private void record_data()
+    private void record_data_P2P()
     {
         Left_eye_data.Add(new KeyValuePair<Vector2, Vector2>(
                 EC_trials[trial_iter], CD_script.Left_eye_voltage));
@@ -169,14 +192,14 @@ public class EC_GameController : MonoBehaviour {
 
     public void ToFinish()
     {
-        IndicatorText1.GetComponent<MeshRenderer>().enabled = true;
-        IndicatorText1.GetComponent<TextMesh>().text = "Calibrating";
+        IndicatorText1_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        IndicatorText1_TRANS.GetComponent<TextMesh>().text = "Calibrating";
         CalibrationThread.Start();
     }
 
     private void calibrate()
     {
-        DC_script.Eye_info.calibration(Left_eye_data,Right_eye_data);
+        DC_script.Eye_info.calibration(Left_eye_data,Right_eye_data,DC_script.Fit_Mode);
         calibration_finished_flag = true;
     }
 
@@ -185,7 +208,7 @@ public class EC_GameController : MonoBehaviour {
         if(calibration_finished_flag)
         {
             calibration_finished_flag = false;
-            IndicatorText1.GetComponent<TextMesh>().text = "Calibration Finished";
+            IndicatorText1_TRANS.GetComponent<TextMesh>().text = "Calibration Finished";
             Debug.Log(DC_script.Eye_info.var_to_string());
         }
     }
@@ -199,4 +222,29 @@ public class EC_GameController : MonoBehaviour {
     {
         SceneManager.LoadScene("HeadMovement");
     }
+
+    public void ToContiuously()
+    {
+        record_Cdata_flag = true;
+    }
+
+    private void record_data_continuously()
+    {
+        Left_eye_data.Add(new KeyValuePair<Vector2, Vector2>(
+                                new Vector2(-HS_script.TrueHeadRR.y, -HS_script.TrueHeadRR.x), 
+                                CD_script.Left_eye_voltage));
+        Right_eye_data.Add(new KeyValuePair<Vector2, Vector2>(
+                                new Vector2(-HS_script.TrueHeadRR.y, -HS_script.TrueHeadRR.x),
+                                CD_script.Right_eye_voltage));
+    }
+
+    public void Continuously()
+    {
+        if(Input.GetKeyDown(KeyCode.S))
+        {
+            record_Cdata_flag = false;
+            ECGCAnimator.SetTrigger("Finished");
+        }
+    }
+
 }
