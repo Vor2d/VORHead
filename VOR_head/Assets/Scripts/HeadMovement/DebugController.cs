@@ -15,7 +15,6 @@ public class DebugController : MonoBehaviour {
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
 
     public GameController GC_script;
-    //public GameController_Setting GC_S_script;
     public HeadSimulator HS_script;
     public VRLogSystem VRLS_script;
     public JumpLogSystem JLS_script;
@@ -25,33 +24,27 @@ public class DebugController : MonoBehaviour {
     public Vector3 RealToVirtualTest;
     public Text RealToVirtualTest_Text;
     public Text Debug_taget_Text;
-
     public Text Headrr_Text;
     public Text State_Text;
     public Text VRLoggingState_Text;
     public Text JumpLoggingState_Text;
     public Text LoopTrialNumber_Text;
+    public bool UsingEyeSimulator;
 
     private DataController DC_script;
-
-    private List<Vector2> LR_test;
 
 	// Use this for initialization
 	void Start () {
         DC_script = GameObject.Find("DataController").GetComponent<DataController>();
-
-        //this.LR_test = 
-        //    new List<Vector2>{new Vector2(10,10),new Vector2(-10,-10),new Vector2(0,0),
-        //                        new Vector2(0,0)};
-        //float b0,b1;
-        //GeneralMethods.linear_regression(LR_test, out b0, out b1);
-        //Debug.Log("b0 " + b0 + " b1 " + b1);
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
-        //eye_test();                                        
+        if(UsingEyeSimulator)
+        {
+            eye_test();
+        }
 
         show_info();
     }

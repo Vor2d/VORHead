@@ -1,14 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+
 
 public class BP_GameController : MonoBehaviour {
 
     private const string score_init_str = "Score: ";
 
-    public GameObject BubblePrefab;
-    public Text ScoreText;
+    [SerializeField] private BP_RC BPRC;
 
     public float BubbleIntervalTime = 3.0f;
     public float RandRangeX = 15.0f;
@@ -16,8 +15,8 @@ public class BP_GameController : MonoBehaviour {
     public float RandRangeZ1 = 5.0f;
     public float RandRangeZ2 = 15.0f;
     public int ScoreIncrease = 10;
+    public float CharaMovingSpeed = 1.0f;
 
-    private BP_DataController BPDC_script;
     private float bubble_inte_timer;
     private bool bubble_Itimer_flag;
     private Animator BPGCAnimator;
@@ -25,11 +24,10 @@ public class BP_GameController : MonoBehaviour {
     private bool score_changed;
     private int total_trials;
     private int curr_trial;
+    private int curr_station_index;
 
 	// Use this for initialization
 	void Start () {
-        this.BPDC_script = GameObject.Find(BP_StrDefiner.DataController_name).
-                                                GetComponent<BP_DataController>();
         this.bubble_inte_timer = BubbleIntervalTime;
         this.bubble_Itimer_flag = false;
         this.BPGCAnimator = GetComponent<Animator>();
@@ -37,6 +35,7 @@ public class BP_GameController : MonoBehaviour {
         this.score_changed = true;
         this.total_trials = 0;
         this.curr_trial = 0;
+        this.curr_station_index = 0;
 	}
 	
 	// Update is called once per frame
@@ -47,6 +46,7 @@ public class BP_GameController : MonoBehaviour {
         }
 
         update_score();
+        move_charator();
 	}
 
     public void ToInit()
@@ -57,16 +57,16 @@ public class BP_GameController : MonoBehaviour {
 
     private void init_game_para()
     {
-        if(BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if(BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
         {
-            total_trials = BPDC_script.trial_info.degree_info.Count;
+            total_trials = BPRC.BPDC_script.trial_info.degree_info.Count;
             curr_trial = -1;
         }
     }
 
     public void ToInstantiateBubble()
     {
-        if (BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if (BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
         {
             curr_trial++;
             if (curr_trial < total_trials)
@@ -86,17 +86,17 @@ public class BP_GameController : MonoBehaviour {
     private void instantiate_bubble()
     {
         GameObject bubble_obj = null;
-        if (BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if (BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
         {
-            Vector2 curr_degree = BPDC_script.trial_info.degree_info[curr_trial];
-            bubble_obj = Instantiate(BubblePrefab, 
+            Vector2 curr_degree = BPRC.BPDC_script.trial_info.degree_info[curr_trial];
+            bubble_obj = Instantiate(BPRC.BubblePrefab,
                             GeneralMethods.PositionCal(10.0f, curr_degree.x, curr_degree.y), 
                             new Quaternion());
         }
-        else if(BPDC_script.GameMode == BP_GameMode.Random)
+        else if(BPRC.BPDC_script.GameMode == BP_GameMode.Random)
         {
             bubble_obj =
-                    Instantiate(BubblePrefab, rand_pos_generator(), new Quaternion());
+                    Instantiate(BPRC.BubblePrefab, rand_pos_generator(), new Quaternion());
         }
 
         bubble_obj.GetComponent<Bubble>().start_bubble();
@@ -136,9 +136,31 @@ public class BP_GameController : MonoBehaviour {
     {
         if(score_changed)
         {
-            ScoreText.text = score_init_str + score.ToString();
+            BPRC.ScoreText_TRANS.GetComponent<TextMesh>().text = 
+                                            score_init_str + score.ToString();
             score_changed = false;
         }
+    }
+
+    private void move_charator()
+    {
+        BPRC.Charator_TRANS.Translate(
+            (BPRC.Stations_TRANS[curr_station_index].position - BPRC.Charator_TRANS.position).
+                normalized * Time.deltaTime * CharaMovingSpeed, Space.World);
+        if(Vector3.Distance(BPRC.Charator_TRANS.position, 
+                            BPRC.Stations_TRANS[curr_station_index].position) < 0.3f)
+        {
+            curr_station_index++;
+            if(curr_station_index >= BPRC.Stations_TRANS.Length)
+            {
+                stop_moving_charator();
+            }
+        }
+    }
+
+    private void stop_moving_charator()
+    {
+
     }
 }
 

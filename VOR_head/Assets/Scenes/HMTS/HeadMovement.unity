@@ -6895,6 +6895,7 @@ MonoBehaviour:
   VRLoggingState_Text: {fileID: 1424569859}
   JumpLoggingState_Text: {fileID: 112607240}
   LoopTrialNumber_Text: {fileID: 583546790}
+  UsingEyeSimulator: 0
 --- !u!4 &1097997828
 Transform:
   m_ObjectHideFlags: 0

@@ -19,7 +19,10 @@ public class BP_DataController : ParentDataController
         init_DC();
 
         this.trial_info = new BP_TrailInfo();
-        read_data_fromfile(file_path);
+        if (GameMode == BP_GameMode.UsingFile)
+        {
+            read_data_fromfile(file_path);
+        }
     }
 	
 	// Update is called once per frame
@@ -29,10 +32,7 @@ public class BP_DataController : ParentDataController
 
     private void read_data_fromfile(string path)
     {
-        if(GameMode == BP_GameMode.UsingFile)
-        {
-            trial_info.set_deg_info(GeneralMethods.read_trial_file_VNH(path));
-        }
+        trial_info.set_deg_info(GeneralMethods.read_trial_file_VNH(path));
     }
 }
 

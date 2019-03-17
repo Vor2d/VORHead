@@ -240,7 +240,7 @@ public class EC_GameController : MonoBehaviour {
 
     public void Continuously()
     {
-        if(Input.GetKeyDown(KeyCode.S))
+        if(Input.GetKeyDown(KeyCode.D))
         {
             record_Cdata_flag = false;
             ECGCAnimator.SetTrigger("Finished");
