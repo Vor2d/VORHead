@@ -6,16 +6,18 @@ using UnityEngine.UI;
 //Reference Controller;
 public class BP_RC : MonoBehaviour
 {
-    public BP_GameController BPGC_script;
-    public BP_DataController BPDC_script;
-    public GameObject BubblePrefab;
+    public BP_GameController GC_script;
+    public BP_DataController DC_script;
+    public GameObject Bubble_Prefab;
+    public GameObject Charator_Prefeb;
+    public GameObject Path_Prefeb;
     public Transform ScoreText_TRANS;
-    public Transform[] Stations_TRANS;
-    public Transform Charator_TRANS;
+    public Transform[] Paths_TRANS;
+    public Transform[] Charators_TRANS;
 
     private void Awake()
     {
-        this.BPDC_script = GameObject.Find(BP_StrDefiner.DataController_name).
+        this.DC_script = GameObject.Find(BP_StrDefiner.DataController_name).
                                                 GetComponent<BP_DataController>();
     }
 

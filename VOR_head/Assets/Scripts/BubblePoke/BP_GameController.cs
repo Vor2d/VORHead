@@ -16,6 +16,7 @@ public class BP_GameController : MonoBehaviour {
     public float RandRangeZ2 = 15.0f;
     public int ScoreIncrease = 10;
     public float CharaMovingSpeed = 1.0f;
+    public bool DrawPathFlag = true;
 
     private float bubble_inte_timer;
     private bool bubble_Itimer_flag;
@@ -25,6 +26,7 @@ public class BP_GameController : MonoBehaviour {
     private int total_trials;
     private int curr_trial;
     private int curr_station_index;
+    private int chara_counter;
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +38,7 @@ public class BP_GameController : MonoBehaviour {
         this.total_trials = 0;
         this.curr_trial = 0;
         this.curr_station_index = 0;
+        this.chara_counter = 0;
 	}
 	
 	// Update is called once per frame
@@ -46,7 +49,6 @@ public class BP_GameController : MonoBehaviour {
         }
 
         update_score();
-        move_charator();
 	}
 
     public void ToInit()
@@ -57,16 +59,16 @@ public class BP_GameController : MonoBehaviour {
 
     private void init_game_para()
     {
-        if(BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if(BPRC.DC_script.GameMode == BP_GameMode.UsingFile)
         {
-            total_trials = BPRC.BPDC_script.trial_info.degree_info.Count;
+            total_trials = BPRC.DC_script.trial_info.degree_info.Count;
             curr_trial = -1;
         }
     }
 
     public void ToInstantiateBubble()
     {
-        if (BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if (BPRC.DC_script.GameMode == BP_GameMode.UsingFile)
         {
             curr_trial++;
             if (curr_trial < total_trials)
@@ -86,17 +88,17 @@ public class BP_GameController : MonoBehaviour {
     private void instantiate_bubble()
     {
         GameObject bubble_obj = null;
-        if (BPRC.BPDC_script.GameMode == BP_GameMode.UsingFile)
+        if (BPRC.DC_script.GameMode == BP_GameMode.UsingFile)
         {
-            Vector2 curr_degree = BPRC.BPDC_script.trial_info.degree_info[curr_trial];
-            bubble_obj = Instantiate(BPRC.BubblePrefab,
+            Vector2 curr_degree = BPRC.DC_script.trial_info.degree_info[curr_trial];
+            bubble_obj = Instantiate(BPRC.Bubble_Prefab,
                             GeneralMethods.PositionCal(10.0f, curr_degree.x, curr_degree.y), 
                             new Quaternion());
         }
-        else if(BPRC.BPDC_script.GameMode == BP_GameMode.Random)
+        else if(BPRC.DC_script.GameMode == BP_GameMode.Random)
         {
             bubble_obj =
-                    Instantiate(BPRC.BubblePrefab, rand_pos_generator(), new Quaternion());
+                    Instantiate(BPRC.Bubble_Prefab, rand_pos_generator(), new Quaternion());
         }
 
         bubble_obj.GetComponent<Bubble>().start_bubble();
@@ -142,26 +144,33 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
-    private void move_charator()
+    public void ToInstantiateCharactor()
     {
-        BPRC.Charator_TRANS.Translate(
-            (BPRC.Stations_TRANS[curr_station_index].position - BPRC.Charator_TRANS.position).
-                normalized * Time.deltaTime * CharaMovingSpeed, Space.World);
-        if(Vector3.Distance(BPRC.Charator_TRANS.position, 
-                            BPRC.Stations_TRANS[curr_station_index].position) < 0.3f)
+        Vector3 p_position;
+        chara_counter++;
+        if(chara_counter%2 == 0)
         {
-            curr_station_index++;
-            if(curr_station_index >= BPRC.Stations_TRANS.Length)
-            {
-                stop_moving_charator();
-            }
+            p_position = new Vector3(-10.0f, 0.0f, 10.0f);
         }
+        else
+        {
+            p_position = new Vector3(10.0f, 0.0f, 10.0f);
+        }
+        GameObject path_OBJ =
+            Instantiate(BPRC.Path_Prefeb, p_position, Quaternion.identity);
+        path_OBJ.GetComponent<BP_Path>().init_path(BPRC);
+        GameObject charactor_OBJ =
+            Instantiate(BPRC.Charator_Prefeb, 
+                        path_OBJ.GetComponent<BP_Path>().Stations_TRANS[0].position, 
+                        Quaternion.identity);
+
+        charactor_OBJ.GetComponent<BP_Charactor>().init_chara(BPRC,path_OBJ.transform);
+        charactor_OBJ.GetComponent<BP_Charactor>().start_chara();
+
+        BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
     }
 
-    private void stop_moving_charator()
-    {
 
-    }
 }
 
 
