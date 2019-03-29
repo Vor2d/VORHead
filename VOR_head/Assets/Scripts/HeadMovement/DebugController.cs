@@ -67,10 +67,16 @@ public class DebugController : MonoBehaviour {
     private void eye_test()
     {
         float random = Random.Range(-100.0f, 100.0f);
-        CD_script.Left_eye_voltage = 
+        CD_script.Left_eye_voltage =
                                 new Vector2(-random, -(DebugTargetDegree.x - random));
-        CD_script.Right_eye_voltage = 
+        CD_script.Right_eye_voltage =
             (new Vector2(DebugTargetDegree.y, DebugTargetDegree.x * 2.0f));
+
+        //CD_script.Left_eye_voltage =
+        //    new Vector2(DebugTargetDegree.y, DebugTargetDegree.x);
+        //CD_script.Left_eye_voltage =
+        //    new Vector2(DebugTargetDegree.y, DebugTargetDegree.x);
+
         //HS_script.TrueHeadRR = new Vector3(3.0f, -10.0f, 0.0f);
         Vector3 Debug_taget = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
                                 DebugTargetDegree.x, DebugTargetDegree.y);

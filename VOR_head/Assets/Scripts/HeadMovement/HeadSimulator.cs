@@ -40,7 +40,7 @@ public class HeadSimulator : MonoBehaviour {
             current_headQ = coil_rotation * Quaternion.Inverse(DC_script.Head_origin);
 
             //////////
-            //TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
+            TrueHeadRR = CRotaQuatToRRotaDegr(current_headQ);
 
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 

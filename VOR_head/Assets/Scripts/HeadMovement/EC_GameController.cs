@@ -102,8 +102,8 @@ public class EC_GameController : MonoBehaviour {
             NN_init_wait_timer -= Time.deltaTime;
         }
 
-        LErrorText.text = NN1Left_Thread.Error_rate.ToString("F4");
-        RErrorText.text = NN1Right_Thread.Error_rate.ToString("F4");
+        LErrorText.text = NN1Left_Thread.Error_rate.ToString("F10");
+        RErrorText.text = NN1Right_Thread.Error_rate.ToString("F10");
     }
 
 
@@ -327,6 +327,11 @@ public class EC_GameController : MonoBehaviour {
             NN_init_wati_flag = false;
             ECGCAnimator.SetTrigger("NextStep");
         }
+    }
+
+    public NN1Tread get_NN1thread()
+    {
+        return NN1Left_Thread;
     }
 }
 

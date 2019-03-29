@@ -27,5 +27,14 @@ public class NN1Model : GeneralModel
         return (float)NNetwork.Compute(input)[H_V_index];
     }
 
+    public override string var_to_string()
+    {
+        string result = "";
+
+        result += " 2 -> 2";
+
+        return result;
+    }
+
 
 }

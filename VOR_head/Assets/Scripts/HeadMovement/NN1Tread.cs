@@ -24,8 +24,9 @@ public class NN1Tread : MonoBehaviour
         this.NNThread = new Thread(trainning);
 
         this.NNetwork = 
-            new AForge.Neuro.ActivationNetwork(new AForge.Neuro.SigmoidFunction(), 2, 2);
+            new AForge.Neuro.ActivationNetwork(new AForge.Neuro.SigmoidFunction(), 2, 2, 2);
         this.BPLearner = new AForge.Neuro.Learning.BackPropagationLearning(NNetwork);
+        BPLearner.LearningRate = 5.0d;
         this.running_flag = false;
         this.HV_E_voltage = new double[2] { 0.0d, 0.0d };
         this.HV_H_degree = new double[2] { 0.0d, 0.0d };
@@ -65,8 +66,10 @@ public class NN1Tread : MonoBehaviour
                         HV_E_voltage[1] = (double)CD_script.Right_eye_voltage.y;
                         break;
                 }
-                HV_H_degree[0] = -HS_script.TrueHeadRR.y;
-                HV_H_degree[1] = -HS_script.TrueHeadRR.x;
+                HV_H_degree[0] = -(HS_script.TrueHeadRR.y + 90.0f) / 180.0f;
+                HV_H_degree[1] = -(HS_script.TrueHeadRR.x + 90.0f) / 180.0f;
+                //Debug.Log("HV_E_voltage "+ HV_E_voltage[0] + " " + HV_E_voltage[1]);
+                //Debug.Log("HV_H_degree " + HV_H_degree[0] + " " + HV_H_degree[1]);
                 Error_rate = BPLearner.Run(HV_E_voltage, HV_H_degree);
             }
         }
@@ -118,5 +121,10 @@ public class NN1Tread : MonoBehaviour
             Debug.Log(e);
             Debug.Log("unable to close the connection thread upon application exit. This is not a critical exception.");
         }
+    }
+
+    public double get_learning_rate()
+    {
+        return BPLearner.LearningRate;
     }
 }
