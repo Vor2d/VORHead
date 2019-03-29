@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HMTS_enum;
 
 public class EyeSimulator : MonoBehaviour
 {
     [SerializeField] private CoilData CD_script;
 
-    [SerializeField] private EyeInfo.EyeIndex CurrEyeIndex;
+    [SerializeField] private EyeIndex CurrEyeIndex;
     [SerializeField] private HeadSimulator HS_script;
     [SerializeField] private Transform EyeIndicator_TRANS;
 
@@ -39,31 +40,46 @@ public class EyeSimulator : MonoBehaviour
 
     private void Update()
     {
+        simulate_eye();
 
-        switch(CurrEyeIndex)
+    }
+
+    private void simulate_eye()
+    {
+        switch (CurrEyeIndex)
         {
-            case EyeInfo.EyeIndex.left:
+            case EyeIndex.left:
                 voltage = CD_script.Left_eye_voltage;
-                real_hori_degree = GeneralMethods.linear_cal_back(
-                                        DC_script.Eye_info.linear_left_hori_k, 
-                                        DC_script.Eye_info.linear_left_hori_b, 
-                                        voltage.x);
-                real_vert_degree = GeneralMethods.linear_cal_back(
-                                        DC_script.Eye_info.linear_left_vert_k,
-                                        DC_script.Eye_info.linear_left_vert_b,
-                                        voltage.y);
-                //Debug.Log("real_vert_degree " + real_vert_degree);
+                switch(DC_script.FitFunction)
+                {
+                    case EyeFunction.linear:
+                        real_hori_degree = DC_script.Eye_info.LeftHModel.get_value(voltage.x);
+                        real_vert_degree = DC_script.Eye_info.LeftVModel.get_value(voltage.y);
+                        break;
+                    case EyeFunction.TDlinear:
+                        real_hori_degree = DC_script.Eye_info.LeftHModel.
+                                                get_value(new Vector2(voltage.x,voltage.y));
+                        real_vert_degree = DC_script.Eye_info.LeftVModel.
+                                                get_value(new Vector2(voltage.x, voltage.y));
+                        break;
+                }
                 break;
-            case EyeInfo.EyeIndex.right:
+            case EyeIndex.right:
                 voltage = CD_script.Right_eye_voltage;
-                real_hori_degree = GeneralMethods.linear_cal_back(
-                                        DC_script.Eye_info.linear_right_hori_k,
-                                        DC_script.Eye_info.linear_right_hori_b,
-                                        voltage.x);
-                real_vert_degree = GeneralMethods.linear_cal_back(
-                                        DC_script.Eye_info.linear_right_vert_k,
-                                        DC_script.Eye_info.linear_right_vert_b,
-                                        voltage.y);
+                switch (DC_script.FitFunction)
+                {
+                    case EyeFunction.linear:
+                        real_hori_degree = DC_script.Eye_info.RightHModel.get_value(voltage.x);
+                        real_vert_degree = DC_script.Eye_info.RightVModel.get_value(voltage.y);
+                        break;
+                    case EyeFunction.TDlinear:
+                        real_hori_degree = DC_script.Eye_info.RightHModel.
+                                                get_value(new Vector2(voltage.x,voltage.y));
+                        real_vert_degree = DC_script.Eye_info.RightVModel.
+                                                get_value(new Vector2(voltage.x, voltage.y));
+                        break;
+                }
+
                 break;
         }
         combined_RHDegr = HS_script.TrueHeadRR.y + real_hori_degree;
@@ -85,6 +101,5 @@ public class EyeSimulator : MonoBehaviour
         transform.localEulerAngles = virtual_rotate;
         CP_script.changePosition(virtual_rotate.y, virtual_rotate.x);
     }
-
 
 }

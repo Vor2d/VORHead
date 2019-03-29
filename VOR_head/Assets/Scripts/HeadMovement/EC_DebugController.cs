@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HMTS_enum;
 
 public class EC_DebugController : MonoBehaviour
 {
@@ -18,20 +19,20 @@ public class EC_DebugController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch(ECGC_script.DC_script.Fit_Mode)
+        switch(ECGC_script.DC_script.FitMode)
         {
-            case EC_GameController.FitMode.P2P:
+            case EyeFitMode.P2P:
                 CD_script.Left_eye_voltage = ECGC_script.Curr_target;
                 CD_script.Right_eye_voltage = 
                                 ECGC_script.Curr_target * 2 + new Vector2(1.0f, 1.0f);
                 break;
-            case EC_GameController.FitMode.continuously:
+            case EyeFitMode.continuously:
                 HS_script.TrueHeadRR = ManuHeadRotate;
+                float random = Random.Range(-100.0f, 100.0f);
                 CD_script.Left_eye_voltage = 
-                    new Vector2(-HS_script.TrueHeadRR.y, -HS_script.TrueHeadRR.x);
-                CD_script.Right_eye_voltage = 
-                    new Vector2(-HS_script.TrueHeadRR.y, -HS_script.TrueHeadRR.x) * 2.0f +
-                    new Vector2(1.0f,1.0f);
+                    new Vector2(random, HS_script.TrueHeadRR.x - random);
+                CD_script.Right_eye_voltage =
+                    new Vector2(-HS_script.TrueHeadRR.y, -HS_script.TrueHeadRR.x * 2.0f);
                 break;
         }
         

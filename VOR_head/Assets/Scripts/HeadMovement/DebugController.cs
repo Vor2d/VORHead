@@ -40,13 +40,15 @@ public class DebugController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        show_info();
+    }
 
-        if(UsingEyeSimulator)
+    private void LateUpdate()
+    {
+        if (UsingEyeSimulator)
         {
             eye_test();
         }
-
-        show_info();
     }
 
     private void show_info()
@@ -64,11 +66,12 @@ public class DebugController : MonoBehaviour {
 
     private void eye_test()
     {
-        CD_script.Left_eye_voltage = new Vector2(DebugTargetDegree.y, DebugTargetDegree.x) +
-                                        new Vector2(10.0f, -3.0f);
-        CD_script.Right_eye_voltage = (new Vector2(DebugTargetDegree.y, DebugTargetDegree.x) +
-                                        new Vector2(10.5f, -2.5f)) * 2.0f;
-        HS_script.TrueHeadRR = new Vector3(3.0f, -10.0f, 0.0f);
+        float random = Random.Range(-100.0f, 100.0f);
+        CD_script.Left_eye_voltage = 
+                                new Vector2(-random, -(DebugTargetDegree.x - random));
+        CD_script.Right_eye_voltage = 
+            (new Vector2(DebugTargetDegree.y, DebugTargetDegree.x * 2.0f));
+        //HS_script.TrueHeadRR = new Vector3(3.0f, -10.0f, 0.0f);
         Vector3 Debug_taget = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
                                 DebugTargetDegree.x, DebugTargetDegree.y);
         Debug_taget_Text.text = Debug_taget.ToString("F2");

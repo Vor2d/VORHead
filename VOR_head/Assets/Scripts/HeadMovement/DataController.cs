@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+using HMTS_enum;
 
 public class DataController : ParentDataController {
 
@@ -19,7 +20,8 @@ public class DataController : ParentDataController {
     public TrialInfo Eye_TI { get; set; }
 
     //System data;
-    public EC_GameController.FitMode Fit_Mode;
+    public EyeFitMode FitMode;
+    public EyeFunction FitFunction;
 
     public Quaternion Head_origin { get; set; }
 
@@ -37,6 +39,7 @@ public class DataController : ParentDataController {
         this.Current_TI = new TrialInfo();
         this.SystemSetting = new GameSetting();
         this.Eye_info = new EyeInfo();
+        Eye_info.set_model(FitFunction);
         this.Eye_TI = new TrialInfo();
 
         Sections = GeneralMethods.load_game_data_general(trial_path);

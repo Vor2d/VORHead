@@ -5,12 +5,16 @@ using System;
 using UnityEngine.XR;
 using System.IO;
 using UnityEngine.SceneManagement;
+using HMTS_enum;
+
+namespace HMTS_enum
+{
+    public enum GazeTarget { DefaultTarget, HideDetector };
+}
 
 public class GameController : MonoBehaviour {
 
     //Direction: 0 is left, 1 is right;
-
-    public enum GazeTarget { DefaultTarget, HideDetector}
 
     //Obsolete;
     public Dictionary<string, string> GameModeToIndiText = new Dictionary<string, string>()
@@ -911,3 +915,4 @@ public class GameController : MonoBehaviour {
         MSM_script.to_start_scene();
     }
 }
+

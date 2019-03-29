@@ -367,8 +367,8 @@ public static class GeneralMethods {
     {
         if ((ang_deg + 90) % 180 == 0)
         {
-            Debug.Log("Angle can not be 0 or 180");
-            return float.MaxValue;
+            throw new Exception("Angle can not be 90 or 0");
+            //return float.MaxValue;
         }
 
         float ang_rand = ang_deg * Mathf.PI / 180.0f;
@@ -427,35 +427,36 @@ public static class GeneralMethods {
         b = y1 - (k * x1);
     }
 
-    public static void linear_regression(List<Vector2> x_y_list, out float b0, out float b1)
-    {
-        float x_sum = 0.0f;
-        float y_sum = 0.0f;
-        foreach (Vector2 x_y in x_y_list)
-        {
-            x_sum += x_y.x;
-            y_sum += x_y.y;
-        }
-        float x_mean = x_sum / x_y_list.Count;
-        float y_mean = y_sum / x_y_list.Count;
-        float x_variance = 0.0f;
-        float x_Vsum = 0.0f;
-        float x_standardD = 0.0f;
-        float y_standardD = 0.0f;
-        float xSD_TySD = 0.0f;  //x standard division times y standard division;
-        float xSD_TySD_sum = 0.0f;
-        foreach (Vector2 x_y in x_y_list)
-        {
-            x_standardD = x_y.x - x_mean;
-            y_standardD = x_y.y - y_mean;
-            xSD_TySD = x_standardD * y_standardD;
-            xSD_TySD_sum += xSD_TySD;
-            x_variance = Mathf.Pow(x_standardD, 2);
-            x_Vsum += x_variance;
-        }
-        b1 = xSD_TySD_sum / x_Vsum;
-        b0 = y_mean - b1 * x_mean;
-    }
+    //Put in LinearModel;
+    //public static void linear_regression(List<Vector2> x_y_list, out float b0, out float b1)
+    //{
+    //    float x_sum = 0.0f;
+    //    float y_sum = 0.0f;
+    //    foreach (Vector2 x_y in x_y_list)
+    //    {
+    //        x_sum += x_y.x;
+    //        y_sum += x_y.y;
+    //    }
+    //    float x_mean = x_sum / x_y_list.Count;
+    //    float y_mean = y_sum / x_y_list.Count;
+    //    float x_variance = 0.0f;
+    //    float x_Vsum = 0.0f;
+    //    float x_standardD = 0.0f;
+    //    float y_standardD = 0.0f;
+    //    float xSD_TySD = 0.0f;  //x standard division times y standard division;
+    //    float xSD_TySD_sum = 0.0f;
+    //    foreach (Vector2 x_y in x_y_list)
+    //    {
+    //        x_standardD = x_y.x - x_mean;
+    //        y_standardD = x_y.y - y_mean;
+    //        xSD_TySD = x_standardD * y_standardD;
+    //        xSD_TySD_sum += xSD_TySD;
+    //        x_variance = Mathf.Pow(x_standardD, 2);
+    //        x_Vsum += x_variance;
+    //    }
+    //    b1 = xSD_TySD_sum / x_Vsum;
+    //    b0 = y_mean - b1 * x_mean;
+    //}
 
     public static void recenter_VR()
     {
@@ -487,9 +488,10 @@ public static class GeneralMethods {
 
     }
 
-    public static float linear_cal_back(float k, float b, float x)
-    {
-        return k * x + b;
-    }
+    //Put into LinearModel;
+    //public static float linear_cal_back(float k, float b, float x)
+    //{
+    //    return k * x + b;
+    //}
 
 }

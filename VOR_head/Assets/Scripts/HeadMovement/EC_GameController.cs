@@ -6,10 +6,14 @@ using System.IO;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Threading;
+using HMTS_enum;
+
+namespace HMTS_enum
+{
+    public enum EyeFitMode { P2P, continuously, self_detect }
+}
 
 public class EC_GameController : MonoBehaviour {
-
-    public enum FitMode { P2P, continuously }
 
     public GameObject TargetOBJ;
     public Camera GameCamera;
@@ -17,10 +21,16 @@ public class EC_GameController : MonoBehaviour {
     [SerializeField] private CoilData CD_script;
     [SerializeField] private HeadSimulator HS_script;
     [SerializeField] private Transform IndicatorText1_TRANS;
+    [SerializeField] private NN1Tread NN1Left_Thread;
+    [SerializeField] private NN1Tread NN1Right_Thread;
+    [SerializeField] private Text LErrorText;
+    [SerializeField] private Text RErrorText;
 
     public float StairingTime = 5.0f;
     public bool EnableAnim = true;
     public float LowerBound = 0.3f;
+    [SerializeField] float TrainingBound = 0.02f;
+    [SerializeField] float NNInitWaitTime = 5.0f;
 
     public bool Stairing_flag { get; set; }
     public Vector2 Curr_target { get; private set; }
@@ -37,6 +47,10 @@ public class EC_GameController : MonoBehaviour {
     private List<KeyValuePair<Vector2, Vector2>> Right_eye_data;
     private bool calibration_finished_flag;
     private bool record_Cdata_flag;
+    private AForge.Neuro.ActivationNetwork NN1_Left;
+    private AForge.Neuro.ActivationNetwork NN1_Right;
+    private float NN_init_wait_timer;
+    private bool NN_init_wati_flag;
 
     private Thread CalibrationThread;
 
@@ -64,6 +78,8 @@ public class EC_GameController : MonoBehaviour {
         this.CalibrationThread = new Thread(calibrate);
         this.calibration_finished_flag = false;
         this.record_Cdata_flag = false;
+        this.NN_init_wait_timer = NNInitWaitTime;
+        this.NN_init_wati_flag = false;
     }
 
     // Update is called once per frame
@@ -81,6 +97,13 @@ public class EC_GameController : MonoBehaviour {
         {
             record_data_continuously();
         }
+        if(NN_init_wati_flag)
+        {
+            NN_init_wait_timer -= Time.deltaTime;
+        }
+
+        LErrorText.text = NN1Left_Thread.Error_rate.ToString("F4");
+        RErrorText.text = NN1Right_Thread.Error_rate.ToString("F4");
     }
 
 
@@ -94,15 +117,22 @@ public class EC_GameController : MonoBehaviour {
 
     private void set_anim_bool()
     {
-        switch(DC_script.Fit_Mode)
+        switch(DC_script.FitMode)
         {
-            case FitMode.P2P:
+            case EyeFitMode.P2P:
                 ECGCAnimator.SetBool("UsingP2P", true);
                 ECGCAnimator.SetBool("UsingContinuously", false);
+                ECGCAnimator.SetBool("UsingSelfDetect", false);
                 break;
-            case FitMode.continuously:
+            case EyeFitMode.continuously:
                 ECGCAnimator.SetBool("UsingP2P", false);
                 ECGCAnimator.SetBool("UsingContinuously", true);
+                ECGCAnimator.SetBool("UsingSelfDetect", false);
+                break;
+            case EyeFitMode.self_detect:
+                ECGCAnimator.SetBool("UsingP2P", false);
+                ECGCAnimator.SetBool("UsingContinuously", false);
+                ECGCAnimator.SetBool("UsingSelfDetect", true);
                 break;
         }
     }
@@ -199,7 +229,9 @@ public class EC_GameController : MonoBehaviour {
 
     private void calibrate()
     {
-        DC_script.Eye_info.calibration(Left_eye_data,Right_eye_data,DC_script.Fit_Mode);
+        DC_script.Eye_info.calibration(Left_eye_data,Right_eye_data,
+                                        DC_script.FitMode,DC_script.FitFunction,
+                                        NN1_Left,NN1_Right);
         calibration_finished_flag = true;
     }
 
@@ -225,7 +257,20 @@ public class EC_GameController : MonoBehaviour {
 
     public void ToContiuously()
     {
-        record_Cdata_flag = true;
+        switch(DC_script.FitMode)
+        {
+            case EyeFitMode.continuously:
+                record_Cdata_flag = true;
+                break;
+            case EyeFitMode.self_detect:
+                break;
+        }
+    }
+
+    private void start_train()
+    {
+        NN1Left_Thread.start_training();
+        NN1Right_Thread.start_training();
     }
 
     private void record_data_continuously()
@@ -240,11 +285,49 @@ public class EC_GameController : MonoBehaviour {
 
     public void Continuously()
     {
-        if(Input.GetKeyDown(KeyCode.D))
+        switch(DC_script.FitMode)
         {
-            record_Cdata_flag = false;
-            ECGCAnimator.SetTrigger("Finished");
+            case EyeFitMode.continuously:
+                if (Input.GetKeyDown(KeyCode.D))
+                {
+                    record_Cdata_flag = false;
+                    ECGCAnimator.SetTrigger("Finished");
+                }
+                break;
+            case EyeFitMode.self_detect:
+                if (NN1Left_Thread.Error_rate <= TrainingBound && 
+                    NN1Right_Thread.Error_rate <= TrainingBound)
+                {
+                    stop_train();
+                    ECGCAnimator.SetTrigger("Finished");
+                }
+                break;
         }
     }
 
+    private void stop_train()
+    {
+        NN1Left_Thread.stop_trainning();
+        NN1Right_Thread.stop_trainning();
+        NN1_Left = NN1Left_Thread.get_network();
+        NN1_Right = NN1Right_Thread.get_network();
+    }
+
+    public void ToNNInitWait()
+    {
+        NN_init_wati_flag = true;
+        start_train();
+    }
+
+    public void NNInitWait()
+    {
+        if(NN_init_wait_timer < 0.0f)
+        {
+            NN_init_wait_timer = NNInitWaitTime;
+            NN_init_wati_flag = false;
+            ECGCAnimator.SetTrigger("NextStep");
+        }
+    }
 }
+
+
