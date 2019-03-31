@@ -394,6 +394,8 @@ public class MD_GameController : GeneralGameController {
         toggle_camera();
         start_flag = true;
         WaveText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+
+        ammo_this_wave = 1;
     }
 
     public void restart()
@@ -556,7 +558,7 @@ public class MD_GameController : GeneralGameController {
         missile_number_checked = false;
         yield return new WaitForSeconds(time);
         current_alive_missile_number =
-                GameObject.FindGameObjectsWithTag(MD_StrDefiner.Missile_tag).Length;
+                GameObject.FindGameObjectsWithTag(MD_StrDefiner.Enemy_tag).Length;
         missile_number_checked = true;
     }
 
@@ -679,5 +681,10 @@ public class MD_GameController : GeneralGameController {
                 reload_collider_TRANS.GetComponentInParent<ReloadGroup>().reload_action();
             }
         }
+    }
+
+    public void start_tutorial()
+    {
+
     }
 }

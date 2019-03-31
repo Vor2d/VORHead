@@ -12,8 +12,8 @@ public class SC_GameController : GeneralGameController {
 
     //[SerializeField] private bool UsingHeadToMenu = false;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         GameObject scene_manager_temp = GameObject.Find("SceneManager");
         if (scene_manager_temp == null)
         {

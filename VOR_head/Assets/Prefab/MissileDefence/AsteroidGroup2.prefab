@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 6466539333962038921}
   m_Layer: 0
   m_Name: AsteroidGroup2
-  m_TagString: MD_Missile
+  m_TagString: MD_Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

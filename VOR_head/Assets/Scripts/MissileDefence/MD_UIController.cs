@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class MD_UIController : MonoBehaviour
 {
@@ -8,23 +9,37 @@ public class MD_UIController : MonoBehaviour
     [SerializeField] private MD_GameController MDGC_script;
     [SerializeField] private Animator UIC_Animator;
     [SerializeField] private Transform MenuTMP_TRANS;
-    [SerializeField] private Transform BackButton_TRANS;
-    [SerializeField] private Transform StartButton_TRANS;
-    [SerializeField] private Transform PauseButton_TRANS;
-    [SerializeField] private Transform ContinueButton_TRANS;
-    [SerializeField] private Transform ReStartButton_TRANS;
-    [SerializeField] private Transform YesButton_TRANS;
-    [SerializeField] private Transform NoButton_TRANS;
+    [SerializeField] private MD_TutorialController MDTC_script;
+
+    [SerializeField] private Transform InitPage_TRANS;
+    [SerializeField] private Transform InGamePage_TRANS;
+    [SerializeField] private Transform PausePage_TRANS;
+    [SerializeField] private Transform TutorialPage_TRANS;
+    [SerializeField] private Transform ConfirmPage_TRANS;
+
+    //[SerializeField] private Transform BackButton_TRANS;
+    //[SerializeField] private Transform StartButton_TRANS;
+    //[SerializeField] private Transform PauseButton_TRANS;
+    //[SerializeField] private Transform ContinueButton_TRANS;
+    //[SerializeField] private Transform ReStartButton_TRANS;
+    //[SerializeField] private Transform YesButton_TRANS;
+    //[SerializeField] private Transform NoButton_TRANS;
+    //[SerializeField] private Transform TutorialButton_TRANS;
+    //[SerializeField] private Transform EndTutorialButton_TRANS;
 
     [TextArea]
     [SerializeField] private string TutorialText;
     [TextArea]
     [SerializeField] private string ConfirmText;
 
+    private Dictionary<string, Transform> page_dictionary;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.page_dictionary = new Dictionary<string, Transform>();
+
+        init_dictionary();
     }
 
     // Update is called once per frame
@@ -33,17 +48,30 @@ public class MD_UIController : MonoBehaviour
         
     }
 
+    private void init_dictionary()
+    {
+        page_dictionary.Add(MD_StrDefiner.UIInitPage, InitPage_TRANS);
+        page_dictionary.Add(MD_StrDefiner.UIConfirmPage, ConfirmPage_TRANS);
+        page_dictionary.Add(MD_StrDefiner.UIInGamePage, InGamePage_TRANS);
+        page_dictionary.Add(MD_StrDefiner.UIPausePage, PausePage_TRANS);
+        page_dictionary.Add(MD_StrDefiner.UITutorialPage, TutorialPage_TRANS);
+    }
+
     public void ToInit()
     {
         MenuTMP_TRANS.GetComponent<TextMeshPro>().text = TutorialText;
         MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = true;
-        BackButton_TRANS.gameObject.SetActive(true);
-        StartButton_TRANS.gameObject.SetActive(true);
-        PauseButton_TRANS.gameObject.SetActive(false);
-        ContinueButton_TRANS.gameObject.SetActive(false);
-        ReStartButton_TRANS.gameObject.SetActive(false);
-        YesButton_TRANS.gameObject.SetActive(false);
-        NoButton_TRANS.gameObject.SetActive(false);
+        set_active_page(MD_StrDefiner.UIInitPage);
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+    }
+
+    private void set_active_page(string page_name)
+    {
+        foreach(Transform p_TRANS in page_dictionary.Values)
+        {
+            p_TRANS.gameObject.SetActive(false);
+        }
+        page_dictionary[page_name].gameObject.SetActive(true);
     }
 
     public void ToStartGame()
@@ -57,25 +85,13 @@ public class MD_UIController : MonoBehaviour
     {
         MDGC_script.resume_game();
         MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        BackButton_TRANS.gameObject.SetActive(false);
-        StartButton_TRANS.gameObject.SetActive(false);
-        PauseButton_TRANS.gameObject.SetActive(true);
-        ContinueButton_TRANS.gameObject.SetActive(false);
-        ReStartButton_TRANS.gameObject.SetActive(false);
-        YesButton_TRANS.gameObject.SetActive(false);
-        NoButton_TRANS.gameObject.SetActive(false);
+        set_active_page(MD_StrDefiner.UIInGamePage);
     }
 
     public void ToPause()
     {
         MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        BackButton_TRANS.gameObject.SetActive(true);
-        StartButton_TRANS.gameObject.SetActive(false);
-        PauseButton_TRANS.gameObject.SetActive(false);
-        ContinueButton_TRANS.gameObject.SetActive(true);
-        ReStartButton_TRANS.gameObject.SetActive(true);
-        YesButton_TRANS.gameObject.SetActive(false);
-        NoButton_TRANS.gameObject.SetActive(false);
+        set_active_page(MD_StrDefiner.UIPausePage);
 
         MDGC_script.pause_game();
     }
@@ -84,13 +100,14 @@ public class MD_UIController : MonoBehaviour
     {
         MenuTMP_TRANS.GetComponent<TextMeshPro>().text = ConfirmText;
         MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = true;
-        BackButton_TRANS.gameObject.SetActive(false);
-        StartButton_TRANS.gameObject.SetActive(false);
-        PauseButton_TRANS.gameObject.SetActive(false);
-        ContinueButton_TRANS.gameObject.SetActive(false);
-        ReStartButton_TRANS.gameObject.SetActive(false);
-        YesButton_TRANS.gameObject.SetActive(true);
-        NoButton_TRANS.gameObject.SetActive(true);
+        set_active_page(MD_StrDefiner.UIConfirmPage);
+    }
+
+    public void ToTutorial()
+    {
+        MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        set_active_page(MD_StrDefiner.UITutorialPage);
+        MDTC_script.GetComponent<Animator>().SetTrigger(MD_StrDefiner.AnimatorStartTrigger_str);
     }
 
     public void ToBack()
@@ -115,14 +132,12 @@ public class MD_UIController : MonoBehaviour
 
     public void back_button()
     {
-        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorConfirmTrigger_str);
-        UIC_Animator.SetBool(MD_StrDefiner.AnimatorBackBool_str, true);
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorBackTrigger_str);
     }
 
     public void restart_button()
     {
-        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorConfirmTrigger_str);
-        UIC_Animator.SetBool(MD_StrDefiner.AnimatorReStartBool_str, true);
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorReStartTrigger_str);
     }
 
     public void continue_button()
@@ -138,7 +153,23 @@ public class MD_UIController : MonoBehaviour
     public void no_button()
     {
         UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorNoTrigger_str);
-        UIC_Animator.SetBool(MD_StrDefiner.AnimatorBackBool_str, false);
-        UIC_Animator.SetBool(MD_StrDefiner.AnimatorReStartBool_str, false);
     }
+
+    public void tutorial_button()
+    {
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorTutorialTrigger_str);
+        start_tutorial();
+    }
+
+    private void start_tutorial()
+    {
+        MDGC_script.start_tutorial();
+    }
+
+    public void end_tutorial_button()
+    {
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorEndTutoTrigger_str);
+    }
+
+
 }

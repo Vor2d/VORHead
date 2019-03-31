@@ -71,21 +71,21 @@ public class Missile : MonoBehaviour {
     private void OnTriggerEnter(Collider other)
     {
         GameObject other_GO = other.transform.gameObject;
-        if (other_GO.tag == "City")
+        if (other_GO.tag == MD_StrDefiner.City_tag)
         {
             other_GO.GetComponent<City>().get_hit();
             Instantiate(Explosion_Prefab, transform.position,new Quaternion());
             //MDGC_script.City_hitted();
             Destroy(gameObject);
         }
-        else if(other_GO.tag == "Explode")
+        else if(other_GO.tag == MD_StrDefiner.Explode_tag)
         {
             MDGC_script.missile_destroyed();
             other_GO.GetComponent<Explode>().missile_hitted();
             Instantiate(Explosion_Prefab, transform.position, new Quaternion());
             Destroy(gameObject);
         }
-        else if(other_GO.tag == "MD_GroundBorder")
+        else if(other_GO.tag == MD_StrDefiner.GroundBorder_tag)
         {
             Instantiate(Explosion_Prefab, transform.position, new Quaternion());
             Destroy(gameObject);

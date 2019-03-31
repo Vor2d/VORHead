@@ -25,10 +25,10 @@ TagManager:
   - BO_Ball
   - FS_FruitStartI
   - FS_FruitPlane
-  - MD_Missile
   - WorldCanvasCollider
   - MD_ReloadCollider
   - HeadIndicatorDetector
+  - MD_Enemy
   layers:
   - Default
   - TransparentFX
