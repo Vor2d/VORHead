@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MD_TC_Reload : StateMachineBehaviour
 {
+    public float WaitTime;
+
     private MD_TutorialController MDTC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -14,6 +16,7 @@ public class MD_TC_Reload : StateMachineBehaviour
             MDTC_script = animator.GetComponent<MD_TutorialController>();
         }
 
+        MDTC_script.set_wait_time(WaitTime);
         MDTC_script.ToReload();
     }
 
@@ -26,7 +29,7 @@ public class MD_TC_Reload : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     //{
-    //    
+
     //}
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

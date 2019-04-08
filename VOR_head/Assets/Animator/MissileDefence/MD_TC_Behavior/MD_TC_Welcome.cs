@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MD_TC_Welcome : StateMachineBehaviour
 {
+    public float WaitTime = 5.0f;
+
     private MD_TutorialController MDTC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -14,6 +16,7 @@ public class MD_TC_Welcome : StateMachineBehaviour
             MDTC_script = animator.GetComponent<MD_TutorialController>();
         }
 
+        MDTC_script.set_wait_time(WaitTime);
         MDTC_script.ToWelcome();
     }
 

@@ -7,84 +7,55 @@ public class Bubble : MonoBehaviour {
     public GameObject BubbleRender;
     public GameObject BubbleAimIndicator;
 
-    public bool Is_aimed_flag { get; set; }
-
     public float IncreaseSpeed = 1.0f;
-    public float LastTime = 3.0f;
+    //public float LastTime = 3.0f;
     public float LastTransparent = 0.3f;
     public float InitTransparent = 0.6f;
-    
-    private float last_timer;
+
+    public bool Is_aimed_listener { get; set; }
+    public bool Is_aimed_flag { get; private set; }  //Inner is aimed;
+    //private float last_timer;
     private bool start_flag;
     private float BR_init_scale;
     private Color init_aimIn_color;
     private bool last_aimed_flag;
+    private BP_RC BPRC;
 
-    private BP_GameController BPGC_script;
-    private BP_InputManager BPIM_script;
 
     // Use this for initialization
     void Awake () {
         this.start_flag = false;
-        this.BPIM_script = 
-                    GameObject.Find("BP_InputManager").GetComponent<BP_InputManager>();
-        this.BPGC_script =
-                    GameObject.Find("BP_GameController").GetComponent<BP_GameController>();
         this.last_aimed_flag = false;
-	}
+        this.Is_aimed_listener = false;
+        this.Is_aimed_flag = false;
+        this.BR_init_scale = BubbleRender.transform.localScale.x;
+        this.init_aimIn_color =
+            BubbleAimIndicator.GetComponent<MeshRenderer>().material.color;
+    }
 
     private void Start()
     {
-        this.last_timer = LastTime;
-        this.BR_init_scale = BubbleRender.transform.localScale.x;
-        this.Is_aimed_flag = false;
-        this.init_aimIn_color = 
-                    BubbleAimIndicator.GetComponent<MeshRenderer>().material.color;
-
-        start_bubble();
+        GeneralMethods.check_ref<BP_RC>(ref BPRC, BP_StrDefiner.RC_name);
     }
 
     // Update is called once per frame
     void Update () {
-		
-        if(start_flag)
-        {
-            last_timer -= Time.deltaTime;
-            float radius = (LastTime - last_timer) * IncreaseSpeed + BR_init_scale;
-            BubbleRender.transform.localScale = new Vector3(radius, radius, radius);
+        Is_aimed_flag = false;
+        Is_aimed_flag = Is_aimed_listener;
 
-            float time_scale = last_timer / LastTime;
+        toggle_color();
 
-            BubbleRender.GetComponent<MeshRenderer>().material.color =
-                                                    new Color(1.0f * time_scale,
-                                                                1.0f * time_scale,
-                                                                0.0f,
-                        (InitTransparent - LastTransparent) * time_scale + LastTransparent);
+        Is_aimed_listener = false;
+    }
 
-            if (last_timer < 0.0f)
-            {
-                Destroy(gameObject);
-            }
-        }
-
-	}
-
-    private void LateUpdate()
+    private void toggle_color()
     {
         if (Is_aimed_flag)
         {
-            if(last_aimed_flag != Is_aimed_flag)
+            if (last_aimed_flag != Is_aimed_flag)
             {
                 BubbleAimIndicator.GetComponent<MeshRenderer>().material.color = Color.red;
                 last_aimed_flag = Is_aimed_flag;
-            }
-
-            Is_aimed_flag = false;
-
-            if(BPIM_script.Key_pressed)
-            {
-                BPGC_script.bubble_destroyed();
-                Destroy(gameObject);
             }
         }
         else
@@ -98,9 +69,28 @@ public class Bubble : MonoBehaviour {
         }
     }
 
+    public void bubble_shooted()
+    {
+        BPRC.GC_script.bubble_destroyed();
+        BPRC.Bubble_TRANSs.Remove(transform);
+        Destroy(gameObject);
+    }
+
     public void start_bubble()
     {
         start_flag = true;
+    }
+
+    public void start_bubble(BP_RC _BPRC)
+    {
+        BPRC = _BPRC;
+        start_flag = true;
+    }
+
+    public void force_destroy()
+    {
+        BPRC.Bubble_TRANSs.Remove(transform);
+        Destroy(gameObject);
     }
 
 }

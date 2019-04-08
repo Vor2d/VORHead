@@ -2,38 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BP_WaitTime : StateMachineBehaviour {
-
-    public bool OverwriteTimer = false;
-    public float WaitTime = 5.0f;
+public class BP_ReverseState : StateMachineBehaviour {
 
     private BP_GameController BPGC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (BPGC_script == null)
+        if(BPGC_script == null)
         {
-            this.BPGC_script =
-                    GameObject.Find("BP_GameController").GetComponent<BP_GameController>();
+            BPGC_script = animator.GetComponent<BP_GameController>();
         }
 
-        if (OverwriteTimer)
-        {
-            BPGC_script.ToWaitTime(WaitTime);
-        }
-        else
-        {
-            BPGC_script.ToWaitTime();
-        }
+        BPGC_script.ToReverseState();
         
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        BPGC_script.WaitTime();
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {

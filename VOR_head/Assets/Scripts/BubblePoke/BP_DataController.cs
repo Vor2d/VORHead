@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum BP_GameMode { UsingFile, AlongPath, Random };
+
 public class BP_DataController : ParentDataController
 {
     private const string file_path = "BP_TrialData.txt";
@@ -35,5 +37,3 @@ public class BP_DataController : ParentDataController
         trial_info.set_deg_info(GeneralMethods.read_trial_file_VNH(path));
     }
 }
-
-public enum BP_GameMode { UsingFile, Random };

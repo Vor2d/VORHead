@@ -12,8 +12,10 @@ GameObject:
   - component: {fileID: 366806011305195516}
   - component: {fileID: 366806011305195519}
   - component: {fileID: 366806011305195518}
+  - component: {fileID: 3267578182113116368}
+  - component: {fileID: 2250627037156594074}
   m_Layer: 0
-  m_Name: Character
+  m_Name: BP_Character1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -58,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: e48e209b5c854d74a8f68e7eb181c8e1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -90,5 +92,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a14b9e104fe5c04ba6fa55ec06c9a44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DistantToDest: 0.1
+  Next_station_TRANS: {fileID: 0}
+  curr_station_index: 0
+  start_flag: 0
   BPRC: {fileID: 0}
   BPP_script: {fileID: 0}
+--- !u!135 &3267578182113116368
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366806011305195513}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &2250627037156594074
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 366806011305195513}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

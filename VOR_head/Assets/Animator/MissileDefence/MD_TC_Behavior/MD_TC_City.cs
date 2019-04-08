@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MD_TC_City : StateMachineBehaviour
 {
+    public float WaitTime;
+
     private MD_TutorialController MDTC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
@@ -14,6 +16,7 @@ public class MD_TC_City : StateMachineBehaviour
             MDTC_script = animator.GetComponent<MD_TutorialController>();
         }
 
+        MDTC_script.set_wait_time(WaitTime);
         MDTC_script.ToCity();
     }
 
@@ -24,10 +27,10 @@ public class MD_TC_City : StateMachineBehaviour
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
-    //override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-    //    
-    //}
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        MDTC_script.ExitCity();
+    }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()
     //override public void OnStateMove(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

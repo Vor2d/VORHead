@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class GeneralHeadSimulatorRNP : MonoBehaviour {
 
-    [SerializeField] private string DC_name;
-    [SerializeField] private Transform Camera_TRANS;
+    [SerializeField] protected string DC_name;
+    [SerializeField] protected Transform Camera_TRANS;
 
-    private ParentDataController PDC_script;
+    protected ParentDataController PDC_script;
 
     // Use this for initialization
-    void Start()
+    protected virtual void Start()
     {
         try
         {
@@ -22,7 +22,7 @@ public class GeneralHeadSimulatorRNP : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
         transform.position = Camera_TRANS.position;
         if (PDC_script != null && PDC_script.using_VR)

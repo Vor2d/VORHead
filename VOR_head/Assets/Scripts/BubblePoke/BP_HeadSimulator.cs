@@ -2,23 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BP_HeadSimulator : MonoBehaviour {
-
-    private BP_DataController BPDC_script;
+public class BP_HeadSimulator : GeneralHeadSimulatorRNP {
 
     // Use this for initialization
-    void Start()
+    protected override void Start()
     {
-        this.BPDC_script =
-            GameObject.Find("BP_DataController").GetComponent<BP_DataController>();
+        this.DC_name = BP_StrDefiner.DataController_name;
+        base.Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (BPDC_script.using_VR)
-        {
-            transform.rotation = GeneralMethods.getVRrotation();
-        }
-    }
+
 }

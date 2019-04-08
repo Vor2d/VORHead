@@ -494,4 +494,52 @@ public static class GeneralMethods {
     //    return k * x + b;
     //}
 
+    //Have to stop from outside;
+    public static IEnumerator blink_object(GameObject target_OBJ, float inter_time, 
+                                            Color target_color)
+    {
+        
+        Material target_material_REF = target_OBJ.GetComponent<MeshRenderer>().material;
+        Color init_color = target_material_REF.color;
+        bool orin_color_flag = true;
+        while (true)
+        {
+            if(orin_color_flag)
+            {
+                target_material_REF.color = target_color;
+            }
+            else
+            {
+                target_material_REF.color = init_color;
+            }
+            orin_color_flag = !orin_color_flag;
+            yield return new WaitForSeconds(inter_time);
+        }
+    }
+
+    public static void start_timer(ref float timer, ref bool timer_flag, float init_time)
+    {
+        timer_flag = true;
+        timer = init_time;
+    }
+
+    public static bool check_timer(float timer,ref bool timer_flag)
+    {
+        if (timer < 0.0f)
+        {
+            timer = float.MaxValue;
+            timer_flag = false;
+            return true;
+        }
+        return false;
+    }
+
+    public static void check_ref<T>(ref T target_OBJ, string obj_name) 
+                                                                where T : MonoBehaviour
+    {
+        if(target_OBJ == null)
+        {
+            target_OBJ = GameObject.Find(obj_name).GetComponent<T>();
+        }
+    }
 }

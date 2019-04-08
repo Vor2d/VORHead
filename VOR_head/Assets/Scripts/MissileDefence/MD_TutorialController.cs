@@ -12,15 +12,22 @@ public class MD_TutorialController : MonoBehaviour
     [SerializeField] private Transform HeadCursor_TRANS;
     [SerializeField] private GameObject Asteroid_Prefab;
     [SerializeField] private AmmoSystem AS_script;
+    [SerializeField] private Transform[] City_Shield_TRANSs;
+    [SerializeField] private Transform[] Reload_TRANSs;
 
-    [SerializeField] private float InterTime;
+    [SerializeField] private float blink_inter_time = 0.1f;
     [TextArea]
     [SerializeField] private string[] TutorialStrings;
 
+    public float WaitTime { get; private set; }
+
     private Animator MDTCAnimator;
     private int text_index;
-    private float inter_timer;
-    private bool inter_timer_flag;
+    private float wait_timer;
+    private bool wait_timer_flag;
+    private List<IEnumerator> coroutine_insts;
+    private Color city_s_init_color;
+    private Color reload_init_color;
 
     // Start is called before the first frame update
     void Start()
@@ -28,17 +35,28 @@ public class MD_TutorialController : MonoBehaviour
         this.MDTCAnimator = GetComponent<Animator>();
 
         this.text_index = 0;
-        this.inter_timer = InterTime;
-        this.inter_timer_flag = false;
+        this.wait_timer = 0.0f;
+        this.wait_timer_flag = false;
+        this.WaitTime = 0.0f;
+        this.coroutine_insts = new List<IEnumerator>();
+        this.city_s_init_color = 
+                    City_Shield_TRANSs[0].GetComponent<MeshRenderer>().material.color;
+        this.reload_init_color =
+                        Reload_TRANSs[0].GetComponent<MeshRenderer>().material.color;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(inter_timer_flag)
+        if(wait_timer_flag)
         {
-            inter_timer -= Time.deltaTime;
+            wait_timer += Time.deltaTime;
         }
+    }
+
+    public void set_wait_time(float wait_time)
+    {
+        WaitTime = wait_time;
     }
 
     public void ToInit()
@@ -47,10 +65,15 @@ public class MD_TutorialController : MonoBehaviour
         AS_script.set_ammo(1);
     }
 
+    private void start_wait_time(ref bool timer_flag)
+    {
+        timer_flag = true;
+    }
+
     public void ToWelcome()
     {
         show_next_T_TMP(0);
-        inter_timer_flag = true;
+        start_wait_time(ref wait_timer_flag);
     }
 
     private void show_next_T_TMP(int pos_index)
@@ -68,14 +91,14 @@ public class MD_TutorialController : MonoBehaviour
 
     public void Welcome()
     {
-        fade_out();
-        check_timer(ref inter_timer,ref inter_timer_flag, InterTime);
+        fade_out(wait_timer,5.0f);
+        check_timer(ref wait_timer,ref wait_timer_flag, 5.0f);
     }
 
-    private void fade_out()
+    private void fade_out(float timer, float target_time)
     {
         TutorialTMP_TRANS.GetComponent<TextMeshPro>().faceColor = 
-                                new Color(1.0f,1.0f,1.0f,(1.0f - inter_timer/InterTime));
+                                new Color(1.0f,1.0f,1.0f,(1.0f - timer/target_time));
     }
 
     public void ExitWelcome()
@@ -84,11 +107,11 @@ public class MD_TutorialController : MonoBehaviour
                                                         new Color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    private void check_timer(ref float timer,ref bool timer_flag, float Time)
+    private void check_timer(ref float timer,ref bool timer_flag, float target_time)
     {
-        if (timer < 0.0f)
+        if (timer > target_time)
         {
-            timer = Time;
+            timer = 0.0f;
             timer_flag = false;
             MDTCAnimator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
             turn_off_line();
@@ -98,14 +121,14 @@ public class MD_TutorialController : MonoBehaviour
 
     public void ToCursor()
     {
-        inter_timer_flag = true;
+        start_wait_time(ref wait_timer_flag);
         show_next_T_TMP(0);
     }
 
     public void Cursor()
     {
         show_line(Position_Indicator_TRANSs[6].position, HeadCursor_TRANS.position);
-        check_timer(ref inter_timer,ref inter_timer_flag, InterTime);
+        check_timer(ref wait_timer,ref wait_timer_flag, WaitTime);
     }
 
     private void show_line(Vector3 start_pos, Vector3 end_pos)
@@ -122,30 +145,73 @@ public class MD_TutorialController : MonoBehaviour
 
     public void ToEnemy()
     {
-        inter_timer_flag = true;
+        start_wait_time(ref wait_timer_flag);
         show_next_T_TMP(0);
         GameObject fake_asteroid_OBJ = Instantiate(Asteroid_Prefab, 
                                                         Position_Indicator_TRANSs[1].position, 
                                                         Quaternion.identity);
-        //fake_asteroid_OBJ.GetComponent<Missile>().set_target(fake_asteroid_OBJ.transform);
-        show_line(TutorialTMP_TRANS.position, fake_asteroid_OBJ.transform.position);
+        fake_asteroid_OBJ.GetComponent<Missile>().set_target(City_Shield_TRANSs[0]);
+        fake_asteroid_OBJ.GetComponent<Missile>().start_move(0.001f);
+        show_line(Position_Indicator_TRANSs[6].position, fake_asteroid_OBJ.transform.position);
     }
 
     public void Enemy()
     {
-        check_timer(ref inter_timer,ref inter_timer_flag,InterTime);
+        check_timer(ref wait_timer,ref wait_timer_flag,WaitTime);
     }
 
     public void ToCity()
     {
-        inter_timer_flag = true;
+        start_wait_time(ref wait_timer_flag);
         show_next_T_TMP(0);
-        show_line(TutorialTMP_TRANS.position, Position_Indicator_TRANSs[2].position);
+        //show_line(Position_Indicator_TRANSs[6].position, Position_Indicator_TRANSs[2].position);
+        blink_cities();
+    }
+
+    public void blink_cities()
+    {
+        foreach(Transform city_shield in City_Shield_TRANSs)
+        {
+            coroutine_insts.Add(GeneralMethods.blink_object(city_shield.gameObject,
+                                                            blink_inter_time, Color.white));
+        }
+        start_insts_list();
+    }
+
+    private void start_insts_list()
+    {
+        foreach(IEnumerator c_inst in coroutine_insts)
+        {
+            StartCoroutine(c_inst);
+        }
     }
 
     public void City()
     {
-        check_timer(ref inter_timer,ref inter_timer_flag, InterTime);
+        check_timer(ref wait_timer,ref wait_timer_flag, WaitTime);
+    }
+
+    public void ExitCity()
+    {
+        stop_insts_list();
+        set_back_city_color();
+    }
+
+    private void set_back_city_color()
+    {
+        foreach(Transform city_TRANS in City_Shield_TRANSs)
+        {
+            city_TRANS.GetComponent<MeshRenderer>().material.color = city_s_init_color;
+        }
+    }
+
+    private void stop_insts_list()
+    {
+        foreach (IEnumerator c_inst in coroutine_insts)
+        {
+            StopCoroutine(c_inst);
+        }
+        coroutine_insts = new List<IEnumerator>();
     }
 
     public void ToDE()
@@ -177,20 +243,45 @@ public class MD_TutorialController : MonoBehaviour
 
     public void ToReload()
     {
-        inter_timer_flag = true;
-        show_next_T_TMP(0);
-        show_line(TutorialTMP_TRANS.position, Position_Indicator_TRANSs[3].position);
+        start_wait_time(ref wait_timer_flag);
+        show_next_T_TMP(7);
+        //show_line(Position_Indicator_TRANSs[6].position, Position_Indicator_TRANSs[3].position);
         AS_script.set_ammo(0);
+        blink_reload();
+    }
+
+    private void blink_reload()
+    {
+        foreach(Transform reload_TRANS in Reload_TRANSs)
+        {
+            coroutine_insts.Add(GeneralMethods.blink_object(reload_TRANS.gameObject, 
+                                                                blink_inter_time, Color.red));
+        }
+        start_insts_list();
     }
 
     public void Reload()
     {
-        check_timer(ref inter_timer,ref inter_timer_flag, InterTime);
+        check_timer(ref wait_timer,ref wait_timer_flag, WaitTime);
+    }
+
+    private void set_back_reload_color()
+    {
+        foreach (Transform reload_TRANS in Reload_TRANSs)
+        {
+            reload_TRANS.GetComponent<MeshRenderer>().material.color = reload_init_color;
+        }
     }
 
     public void ToReload_DE()
     {
-        show_next_T_TMP(0);
+        show_next_T_TMP(7);
+        spawn_enemies_reload();
+        StartCoroutine(check_asteroid());
+    }
+
+    private void spawn_enemies_reload()
+    {
         GameObject fake_asteroid_TRANS1 = Instantiate(Asteroid_Prefab,
                                                         Position_Indicator_TRANSs[1].position,
                                                         Quaternion.identity);
@@ -200,7 +291,18 @@ public class MD_TutorialController : MonoBehaviour
         GameObject fake_asteroid_TRANS3 = Instantiate(Asteroid_Prefab,
                                                         Position_Indicator_TRANSs[5].position,
                                                         Quaternion.identity);
-        StartCoroutine(check_asteroid());
+        fake_asteroid_TRANS1.GetComponent<Missile>().set_target(City_Shield_TRANSs[0]);
+        fake_asteroid_TRANS2.GetComponent<Missile>().set_target(City_Shield_TRANSs[1]);
+        fake_asteroid_TRANS3.GetComponent<Missile>().set_target(City_Shield_TRANSs[2]);
+        fake_asteroid_TRANS1.GetComponent<Missile>().start_move(0.001f);
+        fake_asteroid_TRANS2.GetComponent<Missile>().start_move(0.001f);
+        fake_asteroid_TRANS3.GetComponent<Missile>().start_move(0.001f);
+    }
+
+    public void ExitReload_DE()
+    {
+        stop_insts_list();
+        set_back_reload_color();
     }
 
     public void ToEnd()
