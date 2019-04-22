@@ -4,6 +4,7 @@ public static class BP_StrDefiner
     //Animator;
     public const string AniNextStepTrigger_str = "NextStep";
     public const string AniFinishedTrigger_str = "Finished";
+    public const string AniStartTrigger_str = "Start";
     public const string AniToCheckPoint_str = "ToCheckPoint";
     //Object;
     public const string DataController_name = "BP_DataController";

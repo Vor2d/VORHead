@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 using TMPro;
 
 [RequireComponent(typeof(AmmoSystem))]
+//[RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(Animator))]
 public class MD_GameController : GeneralGameController {
 
     [SerializeField] private Transform Camera1I_TRANS;
@@ -26,6 +28,11 @@ public class MD_GameController : GeneralGameController {
     [SerializeField] private Transform MenuTMP_TRANS;
     [SerializeField] private Transform LogSystem_TRANS;
     [SerializeField] private Controller_Input CI_script;
+    [SerializeField] private Transform ReloadSFX_TRANS;
+    [SerializeField] private Transform ErrorSFX_TRANS;
+    [SerializeField] private Transform ShootSFX_TRANS;
+    [SerializeField] private TextMesh ACounter_TextM;
+    [SerializeField] private TextMesh Timer_TextM;
 
     [Header("Variables")]
     public float InstRandomRange = 9.0f;
@@ -77,6 +84,8 @@ public class MD_GameController : GeneralGameController {
     private int current_MTI_number; //missile to instantiate;
     private bool missile_number_checked;
     private bool city_destroyed_this_wave;
+    private bool audio_source_flag;
+    private System.Diagnostics.Stopwatch session_timer;
     #endregion
 
     private void Awake()
@@ -118,10 +127,15 @@ public class MD_GameController : GeneralGameController {
         this.missile_Itime_this_wave = 0.0f;
         this.difficulty_ratio = 0;
         this.missile_speed_this_wave = 0.0f;
+        this.audio_source_flag = false;
+        this.session_timer = new System.Diagnostics.Stopwatch();
+
         
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         set_random();
         register_controller();
+        session_timer.Reset();
+        session_timer.Start();
     }
 	
 	// Update is called once per frame
@@ -143,6 +157,8 @@ public class MD_GameController : GeneralGameController {
 
         update_score_text();
         update_ammo_text();
+        update_Acounter_text();
+        update_session_timer();
     }
 
     private void LateUpdate()
@@ -160,12 +176,22 @@ public class MD_GameController : GeneralGameController {
         de_register_controller();
     }
 
+    private void update_session_timer()
+    {
+        Timer_TextM.text = session_timer.Elapsed.ToString("hh\\:mm\\:ss");
+    }
+
+    private void update_Acounter_text()
+    {
+        ACounter_TextM.text = current_MTI_number.ToString();
+    }
+
     private void register_controller()
     {
         CI_script.Button_B += recenter;
         if(MDDC_script.UsingReloadSystem)
         {
-            CI_script.IndexTrigger += reload_ammo;
+            CI_script.IndexTrigger += reload_ammo_input;
         }
     }
 
@@ -174,7 +200,7 @@ public class MD_GameController : GeneralGameController {
         CI_script.Button_B -= recenter;
         if (MDDC_script.UsingReloadSystem)
         {
-            CI_script.IndexTrigger -= reload_ammo;
+            CI_script.IndexTrigger -= reload_ammo_input;
         }
     }
 
@@ -307,7 +333,7 @@ public class MD_GameController : GeneralGameController {
                                                             MDDC_script.ExplodeRaduis,
                                                             UsingBonusSystem,
                                                             MDDC_script.UsingExplodeOutline);
-
+        ShootSFX_TRANS.GetComponent<AudioSource>().Play();
     }
 
     //private void instantiate_explode(Vector3 target_pos,float scale)
@@ -613,6 +639,7 @@ public class MD_GameController : GeneralGameController {
     private IEnumerator outofammo_warning()
     {
         OOAText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        play_sound2(ErrorSFX_TRANS);
         yield return new WaitForSeconds(1.0f);
         OOAText_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
@@ -662,7 +689,7 @@ public class MD_GameController : GeneralGameController {
         reload_collider_TRANS.GetComponentInParent<ReloadGroup>().activate();
     }
 
-    public void reload_ammo()
+    public void reload_ammo_input()
     {
         if(MDDC_script.UsingReloadSystem && Reload_gazing_flag)
         {
@@ -680,11 +707,30 @@ public class MD_GameController : GeneralGameController {
             {
                 reload_collider_TRANS.GetComponentInParent<ReloadGroup>().reload_action();
             }
+            play_sound2(ReloadSFX_TRANS);
         }
     }
 
     public void start_tutorial()
     {
 
+    }
+
+    private IEnumerator play_sound(AudioClip audio)
+    {
+        if(!audio_source_flag)
+        {
+            audio_source_flag = true;
+            GetComponent<AudioSource>().clip = audio;
+            GetComponent<AudioSource>().Play();
+            yield return new WaitForSeconds(audio.length);
+            audio_source_flag = false;
+        }
+    }
+
+    private void play_sound2(Transform AS_TRANS)
+    {
+        AS_TRANS.GetComponent<GeneralSoundCoroutine>().
+                        start_coroutine<AudioSource>(AS_TRANS.GetComponent<AudioSource>());
     }
 }

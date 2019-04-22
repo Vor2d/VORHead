@@ -706,6 +706,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edbb166b37a4e3f4e8127a6fe6fc194e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &920448956
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920448958}
+  - component: {fileID: 920448957}
+  m_Layer: 0
+  m_Name: AcuityController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &920448957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920448956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b420b89fb576d47b16cef6158f3404, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BPRC: {fileID: 1653265676}
+--- !u!4 &920448958
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920448956}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1897828989}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1011125313
 GameObject:
   m_ObjectHideFlags: 0
@@ -1095,17 +1139,20 @@ MonoBehaviour:
   GC_script: {fileID: 1897828990}
   Bubble_Prefab: {fileID: 1961178720339674, guid: 8222ec357afa3f74a8989c91c0a0281b,
     type: 3}
-  Charator_Prefebs:
-  - {fileID: 366806011305195513, guid: 3ed89e46011d13c4086b924b77712cbb, type: 3}
-  - {fileID: 366806011305195513, guid: a9ed934fe533abc45b546755b848f0ea, type: 3}
-  Path_Prefebs:
-  - {fileID: 5660908038261510664, guid: 2b5eb74d0530f364eb1358c95858c8c1, type: 3}
-  - {fileID: 6629995185665738555, guid: 78846ff4dfa16c94e85a9e6769df2756, type: 3}
-  PathPoseIndicators:
+  Charator_Prefebs: []
+  Path_Prefebs: []
+  PathPoseIs_TRANSs:
   - {fileID: 833852916}
   - {fileID: 1127948027}
   ScoreText_TRANS: {fileID: 245974107}
   CI_script: {fileID: 1876982056}
+  TrailController_Prefab: {fileID: 2080269305830889119, guid: 8d7dadf147987d546a6476f39dff2145,
+    type: 3}
+  Acuitys_Prefabs:
+  - {fileID: 792432986521160772, guid: 3b6895420bd3ab048a85c56d69fc04e0, type: 3}
+  - {fileID: 7260724568778778151, guid: a3585b4d5f90983458217695b0c062ef, type: 3}
+  - {fileID: 4836558881449821133, guid: 16fcadfa207439349988edcbacb93f9c, type: 3}
+  - {fileID: 3430035833906782512, guid: 88495ef74f1e1174e845fa2d51423888, type: 3}
 --- !u!4 &1653265677
 Transform:
   m_ObjectHideFlags: 0
@@ -1219,11 +1266,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+    - target: {fileID: 1223457667921482, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1223457667921482, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
+    - target: {fileID: 1411590354267870, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1294,7 +1341,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 920448958}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1311,13 +1359,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BPRC: {fileID: 1653265676}
+  BPAC_script: {fileID: 920448957}
   BubbleIntervalTime: 3
-  RandRangeX: 15
-  RandRangeY: 10
+  RandRangeX: 10
+  RandRangeY: 5
   RandRangeZ1: 10
   RandRangeZ2: 10
   ScoreIncrease: 10
-  CharaMovingSpeed: 1
+  CharaMovingSpeed: 0.3
   DrawPathFlag: 1
   PredictTime: 3.5
   PredictInterval: 0.1
+  UsingSaveMethod: 1
+  InitFuelLevel: 10
+  FuelConsuSpeed: 0.5
+  UsingFuelSystem: 1
+  RandomTrailFlag: 1
+  RandomPredictRange: {x: 10, y: 13}
+  UsingSynchronizedBubble: 1
+  UsingAcuity: 1
+  UsingRandomAcuity: 1
+  AcuityLength: 3
+  GameAcuityMode: 0

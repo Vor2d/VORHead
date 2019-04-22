@@ -2,26 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BP_ReverseState : StateMachineBehaviour {
-
-    private BP_GameController BPGC_script;
+public class BP_StartTrail : StateMachineBehaviour
+{
+    private BP_TrailController BPTC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(BPGC_script == null)
+        if (BPTC_script == null)
         {
-            BPGC_script = animator.GetComponent<BP_GameController>();
+            BPTC_script = animator.GetComponent<BP_TrailController>();
         }
 
-        BPGC_script.ToReverseState();
-        
+        BPTC_script.ToStartTrail();
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    //{
-
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex) {
+    //
     //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

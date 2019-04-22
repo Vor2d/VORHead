@@ -14,7 +14,7 @@ public class BP_InstantiateCharator : StateMachineBehaviour
             BPGC_script = animator.GetComponent<BP_GameController>();
         }
 
-        BPGC_script.ToInstantiateCharactor();
+        BPGC_script.ToInstantiateCharactor1();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

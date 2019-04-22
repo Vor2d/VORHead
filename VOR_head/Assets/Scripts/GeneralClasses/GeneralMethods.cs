@@ -542,4 +542,19 @@ public static class GeneralMethods {
             target_OBJ = GameObject.Find(obj_name).GetComponent<T>();
         }
     }
+
+    public static void reset_animator_triggers(Animator animator)
+    {
+        foreach (AnimatorControllerParameter parameter in animator.parameters)
+        {
+            try
+            {
+                animator.ResetTrigger(parameter.name);
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+        }
+    }
 }

@@ -38,5 +38,7 @@
     public const string UIPausePage = "UIPausePage";
     public const string UIConfirmPage = "UIConfirmPage";
     public const string UITutorialPage = "UITutorialPage";
+    public const string UICVInitPage = "CVInitPage";
+    public const string UICVTutoFinishedPage = "UICVTutoFinishedPage";
 
 }

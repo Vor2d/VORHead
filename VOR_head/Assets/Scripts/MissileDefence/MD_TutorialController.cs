@@ -6,6 +6,7 @@ using TMPro;
 [RequireComponent(typeof(Animator))]
 public class MD_TutorialController : MonoBehaviour
 {
+    [SerializeField] private MD_UIController MDUIC_script;
     [SerializeField] private Transform TutorialTMP_TRANS;
     [SerializeField] private Transform[] Position_Indicator_TRANSs;
     [SerializeField] private Transform LineRender_TRANS;
@@ -308,6 +309,7 @@ public class MD_TutorialController : MonoBehaviour
     public void ToEnd()
     {
         show_next_T_TMP(0);
+        MDUIC_script.tutorial_finished();
     }
 
 

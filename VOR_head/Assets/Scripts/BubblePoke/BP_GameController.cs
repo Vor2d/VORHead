@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using BP_EC;
 
 
 public class BP_GameController : MonoBehaviour {
@@ -11,6 +12,7 @@ public class BP_GameController : MonoBehaviour {
     private const string score_init_str = "Score: ";
 
     [SerializeField] private BP_RC BPRC;
+    [SerializeField] private BP_AcuityController BPAC_script;
 
     public float BubbleIntervalTime = 3.0f;
     public float RandRangeX = 15.0f;
@@ -22,7 +24,22 @@ public class BP_GameController : MonoBehaviour {
     public bool DrawPathFlag = true;
     public float PredictTime = 5.0f;
     public float PredictInterval = 0.1f;
+    public int UsingSaveMethod = 1;
+    public bool RandomTrailFlag = true;
+    public Vector2 RandomPredictRange = Vector2.zero;
+    public bool UsingSynchronizedBubble = true;
+    [Header("FuelSystem")]
+    public float InitFuelLevel = 10.0f;
+    public float FuelConsuSpeed = 0.5f;
+    public bool UsingFuelSystem = true;
+    public float RefillAmount = 5.0f;
+    [Header("Acuity")]
+    public bool UsingAcuity = true;
+    public bool UsingRandomAcuity = true;
+    public int AcuityLength = 1;
+    public AcuityMode GameAcuityMode = AcuityMode.OneByOne;
 
+    public bool Bubble_ready_flag { get; private set; }
     private float bubble_inte_timer;
     private bool bubble_Itimer_flag;
     private Animator BPGCAnimator;
@@ -33,6 +50,8 @@ public class BP_GameController : MonoBehaviour {
     private int curr_station_index;
     private int chara_counter;
     private BP_StateInfo state_info;
+    private bool check_bubble_flag;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -46,6 +65,13 @@ public class BP_GameController : MonoBehaviour {
         this.curr_station_index = 0;
         this.chara_counter = 0;
         this.state_info = new BP_StateInfo();
+        this.Bubble_ready_flag = false;
+        this.check_bubble_flag = false;
+
+        if(UsingSynchronizedBubble)
+        {
+            StartCoroutine(check_bubble_ready());
+        }
 	}
 	
 	// Update is called once per frame
@@ -73,6 +99,7 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
+    [Obsolete("Bubble sponed in the TrailContriller")]
     public void ToInstantiateBubble()
     {
         switch(BPRC.DC_script.GameMode)
@@ -116,6 +143,7 @@ public class BP_GameController : MonoBehaviour {
         bubble_obj.GetComponent<Bubble>().start_bubble();
     }
 
+    [Obsolete("")]
     private void instantiate_bubble_Apath(Transform chara_TRANS, float predict_time, 
                                                                 float predict_interval)
     {
@@ -126,6 +154,7 @@ public class BP_GameController : MonoBehaviour {
         BPRC.Bubble_TRANSs.Add(bubble_obj.transform);
     }
 
+    [Obsolete("")]
     private Vector3 chara_pos_predict(Transform chara_TRANS, float predict_time, 
                                                                 float predict_interval)
     {
@@ -165,6 +194,28 @@ public class BP_GameController : MonoBehaviour {
         score_changed = true;
     }
 
+    public void bubble_destroyed(Transform chara_TRANS)
+    {
+        score += ScoreIncrease;
+        score_changed = true;
+        if(UsingFuelSystem)
+        {
+            refill_fuel(chara_TRANS);
+        }
+    }
+
+    private void refill_fuel(Transform chara_TRANS)
+    {
+        foreach(Transform TC_TRANS in BPRC.TrailControllers_TRANSs)
+        {
+            Transform temp_CTRANS = TC_TRANS.GetComponent<BP_TrailController>().chara_TRANS;
+            if (temp_CTRANS != chara_TRANS)
+            {
+                temp_CTRANS.GetComponent<BP_Charactor>().refill_fuel(RefillAmount);
+            }
+        }
+    }
+
     private void update_score()
     {
         if(score_changed)
@@ -175,18 +226,39 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
+    [Obsolete("See TrailController")]
+    public void ToInstantiateCharactor1()
+    {
+        instantiate_TC(BPRC.PathPoseIs_TRANSs[0].position, Color.blue);
+        instantiate_TC(BPRC.PathPoseIs_TRANSs[1].position, Color.green);
+
+        BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
+    }
+
+    private Transform instantiate_TC(Vector3 position,Color color)
+    {
+        Transform trailC_TRANS = Instantiate(BPRC.TrailController_Prefab, Vector3.zero,
+                                    Quaternion.identity).transform;
+        trailC_TRANS.GetComponent<BP_TrailController>().init_TC(BPRC, position, color);
+        trailC_TRANS.GetComponent<BP_TrailController>().start_trail();
+        BPRC.TrailControllers_TRANSs.Add(trailC_TRANS);
+        
+        return trailC_TRANS;
+    }
+
+    [Obsolete("See TrailController")]
     public void ToInstantiateCharactor()
     {
         Transform path0_TRANS =
-                instantiate_path(BPRC.Path_Prefebs[0], BPRC.PathPoseIndicators[0].position);
+                instantiate_path(BPRC.Path_Prefebs[0], BPRC.PathPoseIs_TRANSs[0].position);
         Transform path1_TRANS =
-                instantiate_path(BPRC.Path_Prefebs[1], BPRC.PathPoseIndicators[1].position);
+                instantiate_path(BPRC.Path_Prefebs[1], BPRC.PathPoseIs_TRANSs[1].position);
 
         Transform chara0_TRANS = instantiate_chara(BPRC.Charator_Prefebs[0], 
-                                                    BPRC.PathPoseIndicators[0].position,
+                                                    BPRC.PathPoseIs_TRANSs[0].position,
                                                     path0_TRANS);
         Transform chara1_TRANS = instantiate_chara(BPRC.Charator_Prefebs[1],
-                                                    BPRC.PathPoseIndicators[1].position,
+                                                    BPRC.PathPoseIs_TRANSs[1].position,
                                                     path1_TRANS);
 
         BPRC.Paths_TRANSs.Add(path0_TRANS);
@@ -199,6 +271,7 @@ public class BP_GameController : MonoBehaviour {
         BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
     }
 
+    [Obsolete("See TrailController")]
     private Transform instantiate_path(GameObject prefab, Vector3 postition)
     {
         GameObject path_OBJ =
@@ -208,6 +281,7 @@ public class BP_GameController : MonoBehaviour {
         return path_OBJ.transform;
     }
 
+    [Obsolete("See TrailController")]
     private Transform instantiate_chara(GameObject prefab,Vector3 position, 
                                                         Transform target_TRANS)
     {
@@ -218,38 +292,57 @@ public class BP_GameController : MonoBehaviour {
         return charactor_OBJ.transform;
     }
 
+    [Obsolete("See TrailController")]
     public void ToSaveState()
     {
-        state_info.Chara_list.Clear();
-        Transform temp_TRANS;
-        foreach(Transform chara_TRANS in BPRC.Charators_TRANSs)
-        {
-            temp_TRANS = Instantiate(chara_TRANS);
-            temp_TRANS.name = chara_TRANS.name + "#backup";
-            temp_TRANS.GetComponent<BP_Charactor>().
-                                    set_state(chara_TRANS.GetComponent<BP_Charactor>());
-            temp_TRANS.gameObject.SetActive(false);
-            state_info.Chara_list.Add(temp_TRANS);
-            //Debug.Log("foreach");
-        }
-        //Debug.Log("ToSaveState before");
+        save_state1();
         BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
-        //Debug.Log("ToSaveState later");
-
     }
 
+    //private void save_state2()
+    //{
+    //    state_info.Chara_byte_list.Clear();
+    //    foreach (Transform chara_TRANS in BPRC.Charators_TRANSs)
+    //    {
+
+    //    }
+    //}
+
+    [Obsolete("See TrailController")]
+    private void save_state1()
+    {
+        state_info.Chara_list.Clear();
+        foreach (Transform chara_TRANS in BPRC.Charators_TRANSs)
+        {
+            save_chara(chara_TRANS);
+        }
+    }
+
+    [Obsolete("See TrailController")]
+    private void save_chara(Transform chara_TRANS)
+    {
+        Transform temp_TRANS = Instantiate(chara_TRANS);
+        temp_TRANS.name = chara_TRANS.name + "#backup";
+        temp_TRANS.GetComponent<BP_Charactor>().
+                        set_state(chara_TRANS.GetComponent<BP_Charactor>());
+        temp_TRANS.gameObject.SetActive(false);
+        state_info.Chara_list.Add(temp_TRANS);
+    }
+
+    [Obsolete("See TrailController")]
     public void ToReverseState()
     {
         ////Another approach;
         //destroy_previous();
         //spawn_saved();
         reset_triggers();
-        destroy_bubble();
+        //destroy_bubble();
         revers_state();
 
         BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
     }
 
+    [Obsolete("See TrailController")]
     private void destroy_previous()
     {
         foreach (Transform chara_TRANS in BPRC.Charators_TRANSs)
@@ -259,6 +352,7 @@ public class BP_GameController : MonoBehaviour {
         BPRC.Charators_TRANSs.Clear();
     }
 
+    [Obsolete("See TrailController")]
     private void spawn_saved()
     {
         Transform new_chara = null;
@@ -273,6 +367,7 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
+    [Obsolete("See TrailController")]
     private void revers_state()
     {
         int i = 0;
@@ -291,9 +386,19 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
-    public void bubble_collidered()
+    public void bubble_collided()
     {
-        BPGCAnimator.SetTrigger(BP_StrDefiner.AniToCheckPoint_str);
+
+    }
+
+    public void activated_Bcollided()
+    {
+        switch (GameAcuityMode)
+        {
+            case AcuityMode.OneByOne:
+                BPAC_script.rotate_acuity();
+                break;
+        }
     }
 
     private void reset_triggers()
@@ -309,6 +414,40 @@ public class BP_GameController : MonoBehaviour {
                 Debug.Log(e);
             }
             
+        }
+    }
+
+    private IEnumerator check_bubble_ready()
+    {
+        check_bubble_flag = true;
+        while (check_bubble_flag)
+        {
+            Bubble_ready_flag = true;
+            foreach(Transform TC_TRANS in BPRC.TrailControllers_TRANSs)
+            {
+                if(!TC_TRANS.GetComponent<BP_TrailController>().Ready_flag)
+                {
+                    Bubble_ready_flag = false;
+                    break;
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        check_bubble_flag = false;
+    }
+
+    public void bubble_hitted()
+    {
+        switch(GameAcuityMode)
+        {
+            case AcuityMode.OneByOne:
+                BPAC_script.rotate_acuity();
+                break;
         }
     }
 
