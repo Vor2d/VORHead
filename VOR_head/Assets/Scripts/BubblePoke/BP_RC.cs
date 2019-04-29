@@ -29,7 +29,7 @@ public class BP_RC : MonoBehaviour
     private void Awake()
     {
         this.DC_script = GameObject.Find(BP_StrDefiner.DataController_name).
-                                                GetComponent<BP_DataController>();
+                                                        GetComponent<BP_DataController>();
 
         this.Paths_TRANSs = new List<Transform>();
         this.Charators_TRANSs = new List<Transform>();
@@ -48,4 +48,6 @@ public class BP_RC : MonoBehaviour
     {
         
     }
+
+    
 }

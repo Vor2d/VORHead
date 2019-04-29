@@ -8,19 +8,20 @@ public class Bubble : MonoBehaviour {
 
     public GameObject BubbleRender;
     public GameObject BubbleAimIndicator;
+    [SerializeField] private Transform AcuityIndicator_TRANS;
+    [SerializeField] private Transform AcuityHolder_TRANS;
+    [SerializeField] private Transform ParticleS_TRANS;
 
     public float IncreaseSpeed = 1.0f;
     //public float LastTime = 3.0f;
     public float LastTransparent = 0.3f;
     public float InitTransparent = 0.6f;
-    [SerializeField] private Transform AcutityIndicator_TRANS;
-    [SerializeField] private Transform AcutityHolder_TRANS;
+    [SerializeField] private bool UsingParticleSystem = true;
 
     public bool activated_flag { get; private set; }
     public List<AcuityDir> acuity_list { get; private set; }
     public bool Is_aimed_listener { get; set; }
     public bool Is_aimed_flag { get; private set; }  //Inner is aimed;
-    //private float last_timer;
     private bool start_flag;
     private float BR_init_scale;
     private Color init_aimIn_color;
@@ -115,17 +116,28 @@ public class Bubble : MonoBehaviour {
             case AcuityMode.OneByOne:
                 if(activated_flag && judge_acuity(acuityDir))
                 {
+                    particle_system();
                     bubble_hitted();
                 }
                 break;
             case AcuityMode.None:
                 if (judge_acuity(acuityDir))
                 {
+                    particle_system();
                     bubble_hitted();
                 }
                 break;
         }
 
+    }
+
+    private void particle_system()
+    {
+        if(UsingParticleSystem)
+        {
+            ParticleS_TRANS.position = AcuityIndicator_TRANS.position;
+            ParticleS_TRANS.GetComponent<ParticleSystem>().Play();
+        }
     }
 
     private void bubble_hitted()
@@ -204,9 +216,9 @@ public class Bubble : MonoBehaviour {
             //Debug.Log("pre index " + (int)(acuity_list[acuity_index]));
             //Debug.Log("acu enum " + (acuity_list[acuity_index]));
             GameObject temp_Prefab = BPRC.Acuitys_Prefabs[(int)(acuity_list[acuity_index])];
-            curr_acuity_TRANS = Instantiate(temp_Prefab, AcutityIndicator_TRANS.position,
+            curr_acuity_TRANS = Instantiate(temp_Prefab, AcuityIndicator_TRANS.position,
                                                 temp_Prefab.transform.rotation).transform;
-            curr_acuity_TRANS.SetParent(AcutityHolder_TRANS);
+            curr_acuity_TRANS.SetParent(AcuityHolder_TRANS);
             return true;
         }
         return false;
@@ -224,13 +236,13 @@ public class Bubble : MonoBehaviour {
     public void deactivate_acuity()
     {
         activated_flag = false;
-        AcutityHolder_TRANS.gameObject.SetActive(false);
+        AcuityHolder_TRANS.gameObject.SetActive(false);
     }
 
     public void activate_acuity()
     {
         activated_flag = true;
-        AcutityHolder_TRANS.gameObject.SetActive(true);
+        AcuityHolder_TRANS.gameObject.SetActive(true);
     }
 
 }

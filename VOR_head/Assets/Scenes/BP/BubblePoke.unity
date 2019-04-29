@@ -630,7 +630,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833852915}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10, y: 0, z: 10}
+  m_LocalPosition: {x: -7, y: 0, z: 10}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 789382046}
@@ -810,7 +810,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127948026}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 10}
+  m_LocalPosition: {x: 7, y: 0, z: 10}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 789382046}
@@ -1361,8 +1361,8 @@ MonoBehaviour:
   BPRC: {fileID: 1653265676}
   BPAC_script: {fileID: 920448957}
   BubbleIntervalTime: 3
-  RandRangeX: 10
-  RandRangeY: 5
+  RandRangeX: 7
+  RandRangeY: 7
   RandRangeZ1: 10
   RandRangeZ2: 10
   ScoreIncrease: 10
@@ -1371,12 +1371,13 @@ MonoBehaviour:
   PredictTime: 3.5
   PredictInterval: 0.1
   UsingSaveMethod: 1
-  InitFuelLevel: 10
-  FuelConsuSpeed: 0.5
-  UsingFuelSystem: 1
   RandomTrailFlag: 1
   RandomPredictRange: {x: 10, y: 13}
   UsingSynchronizedBubble: 1
+  InitFuelLevel: 10
+  FuelConsuSpeed: 0.5
+  UsingFuelSystem: 1
+  RefillAmount: 5
   UsingAcuity: 1
   UsingRandomAcuity: 1
   AcuityLength: 3

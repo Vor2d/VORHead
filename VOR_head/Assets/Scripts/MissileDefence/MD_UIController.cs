@@ -64,10 +64,15 @@ public class MD_UIController : MonoBehaviour
 
     public void ToInit()
     {
+        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+    }
+
+    public void ToMenuScene()
+    {
         MenuTMP_TRANS.GetComponent<TextMeshPro>().text = TutorialText;
         MenuTMP_TRANS.GetComponent<MeshRenderer>().enabled = true;
-        set_active_page(new List<string>{ MD_StrDefiner.UIInitPage,MD_StrDefiner.UICVInitPage});
-        UIC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
+        set_active_page(new List<string>
+                        { MD_StrDefiner.UIInitPage, MD_StrDefiner.UICVInitPage });
     }
 
     private void set_active_page(string page_name)
