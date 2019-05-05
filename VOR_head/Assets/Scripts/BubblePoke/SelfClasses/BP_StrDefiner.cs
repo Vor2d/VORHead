@@ -11,4 +11,6 @@ public static class BP_StrDefiner
     public const string RC_name = "ReferenceController";
     //Tag;
     public const string Bubble_indi_tag_str = "BP_BubbleAimI";
+    //Str;
+    public const string MainScene_name = "BubblePoke";
 }

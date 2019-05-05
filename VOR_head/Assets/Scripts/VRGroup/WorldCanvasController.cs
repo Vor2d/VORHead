@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System;
 
 public class WorldCanvasController : MonoBehaviour {
 
-    [SerializeField] private GeneralGameController GGC_script;
+    public enum ControllerButton { IndexTrigger};
+
+    //[SerializeField] private GeneralGameController GGC_script;
     [SerializeField] private Camera RayCastCamera;
     //[SerializeField] private RightController RC_script;
     [SerializeField] private GeneralRayCast GRC_script;
     [SerializeField] private Controller_Input CI_script;
+
+    [SerializeField] private ControllerButton ClickButton = ControllerButton.IndexTrigger;
 
     private GameObject hit_OBJ;
     private PointerEventData point_data;
@@ -24,7 +29,7 @@ public class WorldCanvasController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        CI_script.IndexTrigger += execute_event;
+        register_click_button(execute_event);
 
         this.point_data = new PointerEventData(EventSystem.current);
         this.hit_to_screen = new Vector3();
@@ -69,6 +74,26 @@ public class WorldCanvasController : MonoBehaviour {
         results.Clear();
     }
 
+    private void register_click_button(Action event_fun)
+    {
+        switch(ClickButton)
+        {
+            case ControllerButton.IndexTrigger:
+                CI_script.IndexTrigger += event_fun;
+                break;
+        }
+    }
+
+    private void deregister_click_button(Action event_fun)
+    {
+        switch (ClickButton)
+        {
+            case ControllerButton.IndexTrigger:
+                CI_script.IndexTrigger -= event_fun;
+                break;
+        }
+    }
+
     //private void right_controller()
     //{
     //    if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f &&
@@ -98,6 +123,6 @@ public class WorldCanvasController : MonoBehaviour {
 
     private void OnDestroy()
     {
-        CI_script.IndexTrigger -= execute_event;
+        deregister_click_button(execute_event);
     }
 }

@@ -6,12 +6,14 @@ public class FS_DataController : ParentDataController {
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
+
+        init_DC();
     }
 
     // Use this for initialization
     void Start () {
-        init_DC();
+
 	}
 	
 	// Update is called once per frame

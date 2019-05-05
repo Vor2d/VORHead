@@ -540,6 +540,10 @@ public static class GeneralMethods {
         if(target_OBJ == null)
         {
             target_OBJ = GameObject.Find(obj_name).GetComponent<T>();
+            if(target_OBJ == null)
+            {
+                Debug.Log("Can't find the object for check_ref of " + typeof(T));
+            }
         }
     }
 

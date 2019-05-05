@@ -29,7 +29,7 @@ public class MD_TargetRayCast : GeneralRayCast
 
     private void check_multi_hits()
     {
-        MDGC_script.Menu_gazing_flag = false;
+        MDGC_script.Menu_gazing_flag = Canvas_hit_flag;
         MDGC_script.Reload_gazing_flag = false;
         for (int i = 0; i < Hits.Length; i++)
         {
@@ -42,12 +42,12 @@ public class MD_TargetRayCast : GeneralRayCast
                 {
                     TB_hit_position = hit.point;
                 }
-                if (MDGC_script.UsingHeadForMenu &&
-                            objectHit.CompareTag(GeneralStrDefiner.WorldCanvasCollider_tag))
-                {
-                    Canvas_hit_position = hit.point;
-                    MDGC_script.Menu_gazing_flag = true;
-                }
+                //if (MDGC_script.UsingHeadForMenu &&
+                //            objectHit.CompareTag(GeneralStrDefiner.WorldCanvasCollider_tag))
+                //{
+                //    Canvas_hit_position = hit.point;
+                //    MDGC_script.Menu_gazing_flag = true;
+                //}
                 if(MDGC_script.MDDC_script.UsingReloadSystem &&
                             objectHit.CompareTag(MD_StrDefiner.ReloadCollider_tag))
                 {

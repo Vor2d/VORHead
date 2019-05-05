@@ -17,6 +17,7 @@ public class GameMode
     public bool ChangeTargetByTime { get; set; }
     //Variables;
     public float Gain { get; set; }
+    public bool UsingAcuity { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -38,6 +39,7 @@ public class GameMode
         this.ChangeTargetByTime = other_GM.ChangeTargetByTime;
 
         this.Gain = other_GM.Gain;
+        this.UsingAcuity = other_GM.UsingAcuity;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -112,6 +114,8 @@ public class GameMode
     {
         try { Gain = float.Parse(para_dict["Gain"]); }
         catch { Gain = 1.0f; }
+        try { UsingAcuity = para_dict["UsingAcuity"] == "True"; }
+        catch { UsingAcuity = false; }
     }
 
     public string VarToString()
@@ -160,6 +164,7 @@ public class GameMode
         result_str += "HideHeadIndicator" + " " + HideHeadIndicator.ToString() + " ";
 
         result_str += "Gain" + " " + Gain.ToString() + " ";
+        result_str += "UsingAcuity" + " " + UsingAcuity.ToString() + " ";
 
         return result_str;
     }

@@ -980,6 +980,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15eecb822133c5440aa2be88af8d811c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GGC_script: {fileID: 1029232637}
+  UseForWorldCanvas: 1
   RayCastDistance: 100
   RayLayerMask:
     serializedVersion: 2
@@ -1524,6 +1526,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fb611746bad784448c30f3101511629, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GGC_script: {fileID: 0}
+  UseForWorldCanvas: 0
   RayCastDistance: 100
   RayLayerMask:
     serializedVersion: 2

@@ -43,6 +43,7 @@ public class GameSetting
         try { Camera2_display = setting_dict["Camera2Display"]; }
         catch { Camera2_display = "1"; }
 
+
         try { GazeTime = float.Parse(setting_dict["GazeTime"]); }
         catch { GazeTime = 1.5f; }
         try { RandomGazeTime = float.Parse(setting_dict["RandomGazeTime"]); }

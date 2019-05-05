@@ -12,7 +12,7 @@ namespace HMTS_enum
     public enum GazeTarget { DefaultTarget, HideDetector };
 }
 
-public class GameController : MonoBehaviour {
+public class GameController : GeneralGameController {
 
     //Direction: 0 is left, 1 is right;
 
@@ -48,6 +48,7 @@ public class GameController : MonoBehaviour {
     public GameObject HeadSParent;
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
+    public AcuityGroup AG_script;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -173,7 +174,7 @@ public class GameController : MonoBehaviour {
     //}
 
     // Update is called once per frame
-    void Update() {
+    protected override void Update() {
 
         //CD_script.Left_eye_voltage = 
         //        new Vector2(turn_direct_x == 0 ? -turn_degree_x : turn_degree_x,0.0f);
@@ -569,7 +570,18 @@ public class GameController : MonoBehaviour {
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
             stop_window_timer = DC_script.SystemSetting.StopWinodow;
             //stopped_flag = false;
+            if(DC_script.Current_GM.UsingAcuity)
+            {
+                StartCoroutine(show_acuity(0.1f));
+            }
         }
+    }
+
+    private IEnumerator show_acuity(float time_dure)
+    {
+        AG_script.turn_on_acuity();
+        yield return new WaitForSeconds(time_dure);
+        AG_script.turn_off_acuity();
     }
 
     //Obsoleted;
@@ -578,6 +590,7 @@ public class GameController : MonoBehaviour {
     //    Target_raycast_flag = true;
     //}
 
+    [Obsolete("Not showing result anymore")]
     public void ShowResult()
     {
         int direction = 0;

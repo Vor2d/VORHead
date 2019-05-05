@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class FS_Fruit : MonoBehaviour {
 
@@ -11,8 +12,7 @@ public class FS_Fruit : MonoBehaviour {
     public bool Aim_changed { get; set; }
 
     public FS_CheckRayHit FSCRH_script;
-    public FS_GameController FSGC_script;
-    public Controller_Input CI_script;
+    [SerializeField] public FS_RC FSRC;
 
     public bool speed_cal;
 
@@ -21,8 +21,6 @@ public class FS_Fruit : MonoBehaviour {
     // Use this for initialization
     void Awake () {
         this.Start_flag = false;
-        this.FSGC_script =
-                GameObject.Find(FS_VariableManager.FS_GC_str).GetComponent<FS_GameController>();
 	}
 
     private void Start()
@@ -76,17 +74,24 @@ public class FS_Fruit : MonoBehaviour {
         Start_flag = true;
     }
 
+    public void start_fruit(FS_RC _FSRC)
+    {
+        Start_flag = true;
+        FSRC = _FSRC;
+    }
+
+    [Obsolete("Use fruit_cutted")]
     private void fruit_sliced()
     {
         Sliced_flag = true;
-        FSGC_script.fruit_destroyed();
+        FSRC.GC_script.fruit_destroyed();
         Destroy(gameObject);
     }
 
     //Calculte speed when enter, must above the threshold at all time;
     private void check_speed1()
     {
-        if (FSGC_script.is_slicing)
+        if (FSRC.GC_script.is_slicing)
         {
             if (!Last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
             {
@@ -94,16 +99,21 @@ public class FS_Fruit : MonoBehaviour {
             }
             else if (Last_is_aimed_flag && Is_aimed_flag)    //In trigger;
             {
-                if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSGC_script.SliceSpeed)
+                if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSRC.GC_script.SliceSpeed)
                 {
                     speed_cal = false;
+                }
+                else
+                {
+                    speed_cal = true;
                 }
             }
             else if (Last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
             {
                 if (speed_cal)
                 {
-                    fruit_sliced();
+                    //fruit_sliced();
+                    fruit_cutted();
                 }
             }
         }

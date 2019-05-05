@@ -156,4 +156,17 @@ public class BP_TrailController : MonoBehaviour
         }
     }
 
+    public void ToCollisionAnimation()
+    {
+        StartCoroutine(CA_temp());
+    }
+
+    private IEnumerator CA_temp()
+    {
+        chara_TRANS.GetComponent<BP_Charactor>().set_theme_color(Color.red);
+        chara_TRANS.GetComponent<BP_Charactor>().pause_chara();
+        yield return new WaitForSeconds(1.0f);
+        chara_TRANS.GetComponent<BP_Charactor>().set_theme_color(theme_color);
+        TCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
+    }
 }

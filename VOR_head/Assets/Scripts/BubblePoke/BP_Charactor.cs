@@ -74,7 +74,7 @@ public class BP_Charactor : MonoBehaviour
             curr_station_index++;
             if (curr_station_index >= BPP_script.Stations_TRANSs.Count)
             {
-                stop_moving_charator();
+                end_charator();
             }
             else
             {
@@ -116,7 +116,7 @@ public class BP_Charactor : MonoBehaviour
         Next_station_TRANS = BPP_script.Stations_TRANSs[curr_station_index];
     }
 
-    private void stop_moving_charator()
+    private void end_charator()
     {
         start_flag = false;
         BPP_script.destroy_path();
@@ -168,7 +168,7 @@ public class BP_Charactor : MonoBehaviour
         set_theme_color(_theme_color);
     }
 
-    private void set_theme_color(Color _theme_color)
+    public void set_theme_color(Color _theme_color)
     {
         theme_color = _theme_color;
         Mesh_TRANS.GetComponent<MeshRenderer>().material.color = theme_color;
@@ -265,5 +265,10 @@ public class BP_Charactor : MonoBehaviour
             //BPRC.GC_script.bubble_collidered();
             BPTC_script.bubble_collided();
         }
+    }
+
+    public void pause_chara()
+    {
+        start_flag = false;
     }
 }

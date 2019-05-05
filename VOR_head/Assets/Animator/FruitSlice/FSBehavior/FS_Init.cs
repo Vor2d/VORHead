@@ -14,7 +14,7 @@ public class FS_Init : StateMachineBehaviour {
             FSGC_script =
                 GameObject.Find("FS_GameController").GetComponent<FS_GameController>();
         }
-        FSGC_script.FS_Init();
+        FSGC_script.ToInit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

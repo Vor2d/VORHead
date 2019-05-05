@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using BP_EC;
+using UnityEngine.SceneManagement;
 
 
-public class BP_GameController : MonoBehaviour {
+public class BP_GameController : GeneralGameController {
 
     private readonly char[] name_spliter = { '#' };
 
@@ -451,6 +452,15 @@ public class BP_GameController : MonoBehaviour {
         }
     }
 
+    public void restart_game()
+    {
+        SceneManager.LoadScene(BP_StrDefiner.MainScene_name);
+    }
+
+    public void quit_game()
+    {
+        BPRC.DC_script.MSM_script.to_start_scene();
+    }
 }
 
 

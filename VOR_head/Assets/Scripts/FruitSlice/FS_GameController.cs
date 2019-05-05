@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
-public class FS_GameController : MonoBehaviour {
+public class FS_GameController : GeneralGameController {
 
     private const string score_init_str = "Score: ";
 
-    public GameObject FruitPrefab;
-    [SerializeField] private GameObject ScoreText;
+    [SerializeField] private FS_RC FSRC;
+
     [SerializeField] private GameObject DebugText1;
-    //[SerializeField] private GameObject Debug_OBJ1;
-    [SerializeField] private RightController RC_script;
-    [SerializeField] private Controller_Input RightCI_script;
 
     public bool is_slicing { get; set; }
 
@@ -34,26 +32,24 @@ public class FS_GameController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        RightCI_script.Button_B += restart;
-
         this.fruit_inte_timer = FruitIntervalTime;
         this.fruit_Itimer_flag = false;
         this.FSGCAnimator = GetComponent<Animator>();
         this.score = 0;
         this.score_changed = true;
-        this.is_slicing = false;
+        this.is_slicing = true;
     }
 	
 	// Update is called once per frame
-	void Update () {
-		if(fruit_Itimer_flag)
-        {
-            fruit_inte_timer -= Time.deltaTime;
-        }
+	protected override void Update () {
+		//if(fruit_Itimer_flag)
+  //      {
+  //          fruit_inte_timer -= Time.deltaTime;
+  //      }
 
         update_score();
 
-        slice();
+        //slice();
 
         DebugText1.GetComponent<TextMesh>().text =
                                 GeneralMethods.getVRspeed().ToString("F2");
@@ -62,31 +58,30 @@ public class FS_GameController : MonoBehaviour {
 
     }
 
-    public void FS_Init()
+    public void ToInit()
     {
-        RC_script.turn_off_controller();
-        FSGCAnimator.SetTrigger("NextStep");
+        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
     }
 
     public void ToInstantiateFruit()
     {
         instantiate_fruit();
 
-        FSGCAnimator.SetTrigger("NextStep");
+        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
     }
 
     private void instantiate_fruit()
     {
         GameObject fruit_obj =
-                    Instantiate(FruitPrefab, rand_pos_generator(), new Quaternion());
+                    Instantiate(FSRC.Fruit_Prefab, rand_pos_generator(), new Quaternion());
         fruit_obj.GetComponent<FS_Fruit>().start_fruit();
     }
 
     private Vector3 rand_pos_generator()
     {
-        return new Vector3(Random.Range(-RandRangeX, RandRangeX),
-                            Random.Range(-RandRangeY, RandRangeY),
-                            Random.Range(RandRangeZ1, RandRangeZ2));
+        return new Vector3(UnityEngine.Random.Range(-RandRangeX, RandRangeX),
+                            UnityEngine.Random.Range(-RandRangeY, RandRangeY),
+                            UnityEngine.Random.Range(RandRangeZ1, RandRangeZ2));
     }
 
     public void ToWaitTime()
@@ -100,7 +95,7 @@ public class FS_GameController : MonoBehaviour {
         {
             fruit_inte_timer = FruitIntervalTime;
 
-            FSGCAnimator.SetTrigger("NextStep");
+            FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
         }
     }
 
@@ -114,15 +109,16 @@ public class FS_GameController : MonoBehaviour {
     {
         if(score_changed)
         {
-            ScoreText.GetComponent<TextMesh>().text = 
-                                score_init_str + score.ToString();
+            FSRC.ScoreText_TRANS.GetComponent<TextMesh>().text = 
+                                    score_init_str + score.ToString();
             score_changed = false;
         }
     }
 
+    [Obsolete("Not using controller to cut")]
     private void slice()
     {
-        if(Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f)
+        if(Input.GetAxis(FS_SD.SecondIndTrigger_name) > 0.5f)
         {
             is_slicing = true;
         }
@@ -132,8 +128,18 @@ public class FS_GameController : MonoBehaviour {
         }
     }
 
-    private void restart()
+    public void restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void ToStartGame()
+    {
+        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
+    }
+
+    public void quit_game()
+    {
+        FSRC.DC_script.MSM_script.to_start_scene();
     }
 }

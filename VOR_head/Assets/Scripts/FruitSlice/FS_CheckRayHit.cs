@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FS_CheckRayHit : MonoBehaviour {
 
@@ -22,8 +20,8 @@ public class FS_CheckRayHit : MonoBehaviour {
         {
             foreach (RaycastHit raycastHit in GRC_script.Hits)
             {
-                Debug.Log("raycastHit " + raycastHit.transform.name);
-                if (raycastHit.transform.CompareTag(FS_VariableManager.FruitStartI_Tag))
+                //Debug.Log("raycastHit " + raycastHit.transform.name);
+                if (raycastHit.transform.CompareTag(FS_SD.FruitStartI_Tag))
                 {
                     return true;
                 }
@@ -38,7 +36,7 @@ public class FS_CheckRayHit : MonoBehaviour {
         {
             foreach (RaycastHit raycastHit in GRC_script.Hits)
             {
-                if (raycastHit.transform.CompareTag(FS_VariableManager.FruitPlane_Tag))
+                if (raycastHit.transform.CompareTag(FS_SD.FruitPlane_Tag))
                 {
                     return raycastHit.point;
                 }

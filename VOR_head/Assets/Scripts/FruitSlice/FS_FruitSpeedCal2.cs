@@ -19,26 +19,31 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (FSF_script.Aim_changed)
-        {
-            if (!FSF_script.Is_aimed_flag && FSF_script.CI_script.Index_trigger_holding)  //Exiting;
-            {
-                speed_cal_flag = true;
-            }
-        }
+        check_start();
 
-        Debug.Log("speed_cal_flag " + speed_cal_flag);
+        //Debug.Log("speed_cal_flag " + speed_cal_flag);
 
         check_speed2();
 
 	}
+
+    private void check_start()
+    {
+        if (FSF_script.Aim_changed)
+        {
+            if (!FSF_script.Is_aimed_flag)  //Exiting;
+            {
+                speed_cal_flag = true;
+            }
+        }
+    }
 
     //Check the speed after exit until stop.
     private void check_speed2()
     {
         if(speed_cal_flag)
         {
-            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSF_script.FSGC_script.SliceSpeed)
+            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSF_script.FSRC.GC_script.SliceSpeed)
             {
                 FSF_script.fruit_cutted();
                 speed_cal_flag = false;

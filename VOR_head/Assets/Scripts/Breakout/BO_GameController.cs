@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class BO_GameController : MonoBehaviour {
+public class BO_GameController : GeneralGameController {
 
     public const string ball_Oname_str = "BO_Ball";
     public const string nextS_trigger_str = "NextStep";
@@ -170,7 +170,7 @@ public class BO_GameController : MonoBehaviour {
     {
         //CameraParent_TRANS.transform.position = PosManuIndicator.position;
         Body_TRANS.position = PosManuIndicator.position;
-        RC_script.turn_on_controller();
+        //RC_script.turn_on_controller();
         //BOPad_TRANS.GetComponent<BO_Pad>().move_with_raycast = false;
         //BOPad_TRANS.gameObject.SetActive(false);
         //FakePad.gameObject.SetActive(true);

@@ -16,15 +16,15 @@ public class SC_HSRayCheck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(SCGC_script.UsingHeadForMenu && GRC_script.Hits != null)
-        {
-            foreach(RaycastHit hit in GRC_script.Hits)
-            {
-                if(hit.transform.CompareTag(GeneralStrDefiner.WorldCanvasCollider_tag))
-                {
-                    GRC_script.Canvas_hit_position = hit.point;
-                }
-            }
-        }
+        //if(SCGC_script.UsingHeadForMenu && GRC_script.Hits != null)
+        //{
+        //    foreach(RaycastHit hit in GRC_script.Hits)
+        //    {
+        //        if(hit.transform.CompareTag(GeneralStrDefiner.WorldCanvasCollider_tag))
+        //        {
+        //            GRC_script.Canvas_hit_position = hit.point;
+        //        }
+        //    }
+        //}
     }
 }

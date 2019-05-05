@@ -3675,7 +3675,7 @@ PrefabInstance:
     - target: {fileID: 224743992691672848, guid: dfd3e1b32559bab4da74ab4749040a32,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 300.00003
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 224743992691672848, guid: dfd3e1b32559bab4da74ab4749040a32,
         type: 3}
@@ -8323,7 +8323,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9a8e3659b3a9e42b7fa8860885d64d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsingHeadForMenu: 1
   Camera1I_TRANS: {fileID: 1943960936}
   Camera2I_TRANS: {fileID: 380314658}
   CameraParent_TRANS: {fileID: 208612540}
@@ -10081,6 +10080,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 662aa7b3c2b13e04fa10e2fb8c0c0d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GGC_script: {fileID: 818488913}
+  UseForWorldCanvas: 1
   RayCastDistance: 100
   RayLayerMask:
     serializedVersion: 2

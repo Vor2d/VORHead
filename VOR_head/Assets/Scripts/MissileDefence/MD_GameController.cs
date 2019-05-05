@@ -183,7 +183,14 @@ public class MD_GameController : GeneralGameController {
 
     private void update_Acounter_text()
     {
-        ACounter_TextM.text = current_MTI_number.ToString();
+        if(current_MTI_number < 0)
+        {
+            ACounter_TextM.text = "0";
+        }
+        else
+        {
+            ACounter_TextM.text = current_MTI_number.ToString();
+        }
     }
 
     private void register_controller()
@@ -396,8 +403,9 @@ public class MD_GameController : GeneralGameController {
     public void back_to_start_scene()
     {
         Time.timeScale = 1.0f;
-        GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
-                        GetComponent<MySceneManager>().to_start_scene();
+        //GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
+        //                GetComponent<MySceneManager>().to_start_scene();
+        MDDC_script.MSM_script.to_start_scene();
     }
 
     public void start_game()
