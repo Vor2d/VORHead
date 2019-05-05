@@ -183,7 +183,7 @@ public class BO_Ball : MonoBehaviour {
     {
         if(other.CompareTag("BO_DeSpawnWall"))
         {
-            BOGC_script.restart_game();
+            BOGC_script.restart_ball();
             Destroy(gameObject);
         }
     }

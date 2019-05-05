@@ -5,14 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class BO_GameController : GeneralGameController {
 
-    public const string ball_Oname_str = "BO_Ball";
-    public const string nextS_trigger_str = "NextStep";
-    public const string restart_trigger_str = "ReStart";
-    public const string start_trigger_str = "Start";
-    public const string brick_tag_str = "BO_Brick";
-    public const string sceneM_Oname_str = "SceneManager";
     public const string ballM_text_str = "Ball Missed!";
 
+    [SerializeField] private BO_RC BORC;
     [SerializeField] private GameObject TextIndicator1;
     [SerializeField] private GameObject TextIndicator2;
     [SerializeField] private Transform BOPad_TRANS;
@@ -56,7 +51,7 @@ public class BO_GameController : GeneralGameController {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	protected override void Update () {
 
         //Debug.Log("pad position " + BOPad_TRANS.position);
         if (Input.GetKeyDown(KeyCode.JoystickButton1))
@@ -103,7 +98,7 @@ public class BO_GameController : GeneralGameController {
         BOBall_TRANS = Instantiate(BOBall_Prefab, 
                                 BOPad_TRANS.position + new Vector3(0.0f,0.0f,BallOffset),
                                 new Quaternion()).transform;
-        BOBall_TRANS.name = ball_Oname_str;
+        BOBall_TRANS.name = BO_SD.Ball_OBJ_name;
         trial_iter++;
         if(trial_iter > 0)
         {
@@ -119,7 +114,7 @@ public class BO_GameController : GeneralGameController {
             lost_wait_timer = LostWaitTime;
             lost_wait_flag = false;
             TextIndicator2.SetActive(false);
-            BOGCAnimator.SetTrigger(nextS_trigger_str);
+            BOGCAnimator.SetTrigger(BO_SD.AniNextStepTrigger_str);
         }
     }
 
@@ -139,7 +134,7 @@ public class BO_GameController : GeneralGameController {
             start_count_timer = StartCountTime;
             start_count_flag = false;
             TextIndicator2.SetActive(false);
-            BOGCAnimator.SetTrigger(nextS_trigger_str);
+            BOGCAnimator.SetTrigger(BO_SD.AniNextStepTrigger_str);
         }
     }
 
@@ -150,7 +145,12 @@ public class BO_GameController : GeneralGameController {
 
     public void restart_game()
     {
-        BOGCAnimator.SetTrigger(restart_trigger_str);
+        SceneManager.LoadScene(BO_SD.Scene_name);
+    }
+
+    public void restart_ball()
+    {
+        BOGCAnimator.SetTrigger(BO_SD.AniRestartTrigger_str);
     }
 
     public void brick_destroied()
@@ -160,7 +160,7 @@ public class BO_GameController : GeneralGameController {
 
     public void update_brick()
     {
-        foreach (GameObject brick_OBJ in GameObject.FindGameObjectsWithTag(brick_tag_str))
+        foreach (GameObject brick_OBJ in GameObject.FindGameObjectsWithTag(BO_SD.Brick_tag))
         {
             brick_OBJ.GetComponent<BO_Brick>().update_shadow();
         }
@@ -179,26 +179,27 @@ public class BO_GameController : GeneralGameController {
         Debug.Log("init_var");
     }
 
-    public void start_button()
+    public void pre_start_game()
     {
         if (check_start)
         {
             to_game();
-            BOGCAnimator.SetTrigger(start_trigger_str);
+            BOGCAnimator.SetTrigger(BO_SD.AniStartTrigger_str);
         }
     }
 
-    public void back_button()
+    public void quit_game()
     {
-        Debug.Log("back_button");
-        GameObject.Find(sceneM_Oname_str).GetComponent<MySceneManager>().to_start_scene();
+        //Debug.Log("back_button");
+        //GameObject.Find(sceneM_Oname_str).GetComponent<MySceneManager>().to_start_scene();
+        BORC.DC_script.MSM_script.to_start_scene();
     }
 
     private void to_game()
     {
         //CameraParent_TRANS.transform.position = PosPlayIndicator.position;
         Body_TRANS.position = PosPlayIndicator.position;
-        RC_script.turn_off_controller();
+        //RC_script.turn_off_controller();
         //BOPad_TRANS.GetComponent<BO_Pad>().move_with_raycast = true;
         //BOPad_TRANS.gameObject.SetActive(true);
         //FakePad.gameObject.SetActive(false);

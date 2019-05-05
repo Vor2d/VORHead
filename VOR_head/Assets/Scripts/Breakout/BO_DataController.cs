@@ -6,7 +6,7 @@ public class BO_DataController : ParentDataController {
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
     }
 
     // Use this for initialization
