@@ -89,39 +89,39 @@ public class FS_Fruit : MonoBehaviour {
     }
 
     //Calculte speed when enter, must above the threshold at all time;
-    private void check_speed1()
-    {
-        if (FSRC.GC_script.is_slicing)
-        {
-            if (!Last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
-            {
-                speed_cal = true;
-            }
-            else if (Last_is_aimed_flag && Is_aimed_flag)    //In trigger;
-            {
-                if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSRC.GC_script.SliceSpeed)
-                {
-                    speed_cal = false;
-                }
-                else
-                {
-                    speed_cal = true;
-                }
-            }
-            else if (Last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
-            {
-                if (speed_cal)
-                {
-                    //fruit_sliced();
-                    fruit_cutted();
-                }
-            }
-        }
-        else
-        {
-            speed_cal = false;
-        }
-    }
+    //private void check_speed1()
+    //{
+    //    if (FSRC.GC_script.is_slicing)
+    //    {
+    //        if (!Last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
+    //        {
+    //            speed_cal = true;
+    //        }
+    //        else if (Last_is_aimed_flag && Is_aimed_flag)    //In trigger;
+    //        {
+    //            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSRC.GC_script.SliceSpeed)
+    //            {
+    //                speed_cal = false;
+    //            }
+    //            else
+    //            {
+    //                speed_cal = true;
+    //            }
+    //        }
+    //        else if (Last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
+    //        {
+    //            if (speed_cal)
+    //            {
+    //                //fruit_sliced();
+    //                fruit_cutted();
+    //            }
+    //        }
+    //    }
+    //    else
+    //    {
+    //        speed_cal = false;
+    //    }
+    //}
 
     public void fruit_cutted()
     {

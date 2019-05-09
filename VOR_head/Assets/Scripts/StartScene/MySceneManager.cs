@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// The most persistence class, will exit for the whole game;
+/// </summary>
 public class MySceneManager : MonoBehaviour {
 
     private readonly string[] DC_names = {"DataController","BP_DataController",
@@ -14,12 +16,13 @@ public class MySceneManager : MonoBehaviour {
 
     private void Awake()
     {
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
     }
 	
 	// Update is called once per frame
 	void Update () {
 		
+        //Emergency setup?
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             to_start_scene();
@@ -29,18 +32,19 @@ public class MySceneManager : MonoBehaviour {
 
     public void to_start_scene()
     {
-        back_to_start_scene();
+        clean_up();
         SceneManager.LoadScene("StartScene");
     }
 
-    private void back_to_start_scene()
+
+    private void clean_up()
     {
         foreach(string DC_name in DC_names)
         {
-            GameObject temp_DC_obj = GameObject.Find(DC_name);
-            if (temp_DC_obj != null)
+            GameObject temp_DC_OBJ = GameObject.Find(DC_name);
+            if (temp_DC_OBJ != null)
             {
-                Destroy(temp_DC_obj);
+                Destroy(temp_DC_OBJ);
             }
             
         }

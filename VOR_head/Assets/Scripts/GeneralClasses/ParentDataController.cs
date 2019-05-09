@@ -1,15 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.IO;
+using System;
 
+/// <summary>
+/// Persistence class, will contain a single game data for the game play;
+/// </summary>
 public class ParentDataController : MonoBehaviour {
 
+    //Customize it for each data controller;
+    public string setting_file_name = "Setting.json";
+    public string setting_path = "";
+
+    //Flags to use to turn on and off the system;
     public bool using_VR { get; set; }
     public bool using_coil { get; set; }
 
-    public MySceneManager MSM_script { get; set; }
+    public MySceneManager MSM_script { get; private set; }
 
-    virtual public void init_DC()
+    protected virtual void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        init_DC();
+    }
+
+    public virtual void init_DC()
     {
         GameObject temp_SM_OBJ = GameObject.Find(GeneralStrDefiner.SceneManagerGO_name);
         if(temp_SM_OBJ != null)
@@ -19,4 +34,15 @@ public class ParentDataController : MonoBehaviour {
             this.using_coil = MSM_script.using_coil;
         }
     }
+
+    public virtual T load_setting<T>()
+    {
+        return GeneralMethods.load_setting<T>(setting_path, setting_file_name);
+    }
+
+    public virtual void generate_setting<T>(T setting_class)
+    {
+        GeneralMethods.generate_setting<T>(setting_class, setting_path, setting_file_name);
+    }
+
 }

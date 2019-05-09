@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using UnityEngine.XR;
 using System.IO;
-using System.Linq;
 
 public static class GeneralMethods {
 
@@ -150,35 +148,6 @@ public static class GeneralMethods {
 
         return VRrotation;
     }
-
-    ////Load trials data;
-    //public static void load_turn_jump_data_general(string path, 
-    //                                    out List<float> turn_data, out List<float> jump_data)
-    //{
-    //    turn_data = new List<float>();
-    //    jump_data = new List<float>();
-    //    Debug.Log("Loading file " + path);
-    //    try
-    //    {
-    //        StreamReader reader = new StreamReader(path);
-    //        while (!reader.EndOfStream)
-    //        {
-
-
-    //            //Turn degrees '\t' jump degrees;
-    //            string[] splitstr = reader.ReadLine().Split(file_spliter);
-    //            turn_data.Add(float.Parse(splitstr[0]));
-    //            jump_data.Add(float.Parse(splitstr[1]));
-    //        }
-    //        reader.Close();
-
-    //    }
-    //    catch (Exception e)
-    //    {
-    //        Debug.Log("Reading file error! " + e);
-    //    }
-    //    Debug.Log("Loading complete! ");
-    //}
 
     //Load trials data with TrialInfo class
     public static List<Section> load_game_data_general(string path)
@@ -368,7 +337,6 @@ public static class GeneralMethods {
         if ((ang_deg + 90) % 180 == 0)
         {
             throw new Exception("Angle can not be 90 or 0");
-            //return float.MaxValue;
         }
 
         float ang_rand = ang_deg * Mathf.PI / 180.0f;
@@ -427,37 +395,6 @@ public static class GeneralMethods {
         b = y1 - (k * x1);
     }
 
-    //Put in LinearModel;
-    //public static void linear_regression(List<Vector2> x_y_list, out float b0, out float b1)
-    //{
-    //    float x_sum = 0.0f;
-    //    float y_sum = 0.0f;
-    //    foreach (Vector2 x_y in x_y_list)
-    //    {
-    //        x_sum += x_y.x;
-    //        y_sum += x_y.y;
-    //    }
-    //    float x_mean = x_sum / x_y_list.Count;
-    //    float y_mean = y_sum / x_y_list.Count;
-    //    float x_variance = 0.0f;
-    //    float x_Vsum = 0.0f;
-    //    float x_standardD = 0.0f;
-    //    float y_standardD = 0.0f;
-    //    float xSD_TySD = 0.0f;  //x standard division times y standard division;
-    //    float xSD_TySD_sum = 0.0f;
-    //    foreach (Vector2 x_y in x_y_list)
-    //    {
-    //        x_standardD = x_y.x - x_mean;
-    //        y_standardD = x_y.y - y_mean;
-    //        xSD_TySD = x_standardD * y_standardD;
-    //        xSD_TySD_sum += xSD_TySD;
-    //        x_variance = Mathf.Pow(x_standardD, 2);
-    //        x_Vsum += x_variance;
-    //    }
-    //    b1 = xSD_TySD_sum / x_Vsum;
-    //    b0 = y_mean - b1 * x_mean;
-    //}
-
     public static void recenter_VR()
     {
         UnityEngine.XR.InputTracking.Recenter();
@@ -487,12 +424,6 @@ public static class GeneralMethods {
         return trial_data;
 
     }
-
-    //Put into LinearModel;
-    //public static float linear_cal_back(float k, float b, float x)
-    //{
-    //    return k * x + b;
-    //}
 
     //Have to stop from outside;
     public static IEnumerator blink_object(GameObject target_OBJ, float inter_time, 
@@ -560,5 +491,35 @@ public static class GeneralMethods {
                 Debug.Log(e);
             }
         }
+    }
+
+    /// <summary>
+    /// Load setting file from Json.
+    /// </summary>
+    public static T load_setting<T>(string setting_path, string setting_file_name)
+    {
+        try
+        {
+            string from_json = File.ReadAllText(setting_path + setting_file_name);
+            return JsonUtility.FromJson<T>(from_json);
+        }
+        catch (Exception e) { Debug.Log("Reading settings error " + e); return default(T); }
+    }
+
+    /// <summary>
+    /// Generate setting file template.
+    /// </summary>
+    public static void generate_setting<T>(T setting_class, string setting_path, string setting_file_name)
+    {
+        try
+        {
+            if (!Directory.Exists(setting_path))
+            {
+                Directory.CreateDirectory(setting_path);
+            }
+            string from_class = JsonUtility.ToJson(setting_class);
+            File.WriteAllText(setting_path + setting_file_name, from_class);
+        }
+        catch (Exception e) { Debug.Log("Generating settings error " + e); }
     }
 }

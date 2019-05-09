@@ -1,23 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿
+/// <summary>
+/// Fruit Slice persistence data;
+/// </summary>
+public class FS_DataController : ParentDataController
+{
+    public FS_Setting GameSetting { get; set; }
 
-public class FS_DataController : ParentDataController {
-
-    private void Awake()
+    protected override void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        base.Awake();
 
-        init_DC();
+        this.GameSetting = new FS_Setting();
+        GameSetting = load_setting<FS_Setting>();
     }
 
-    // Use this for initialization
-    void Start () {
-
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

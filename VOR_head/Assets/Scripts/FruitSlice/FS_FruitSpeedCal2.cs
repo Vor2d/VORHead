@@ -9,12 +9,14 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
 
     private bool last_aimed_flag;
     private bool speed_cal_flag;
+    private float slice_speed;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Awake () {
         this.last_aimed_flag = false;
         this.speed_cal_flag = false;
-	}
+        this.slice_speed = FSF_script.FSRC.DC_script.GameSetting.SliceSpeed;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -43,7 +45,7 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
     {
         if(speed_cal_flag)
         {
-            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSF_script.FSRC.GC_script.SliceSpeed)
+            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < slice_speed)
             {
                 FSF_script.fruit_cutted();
                 speed_cal_flag = false;
