@@ -1,9 +1,12 @@
 ﻿
-//FS string definer;
+/// <summary>
+/// Fruit Slice string definer;
+/// </summary>
 public static class FS_SD
 {
     //Animator;
     public const string AniNextStep_str = "NextStep";
+    public const string AniStart_str = "Start";
     //Input;
     public const string SecondIndTrigger_name = "Oculus_CrossPlatform_SecondaryIndexTrigger";
     //Tags;

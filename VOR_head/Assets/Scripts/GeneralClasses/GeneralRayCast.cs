@@ -34,7 +34,6 @@ public class GeneralRayCast : MonoBehaviour {
         Ray ray = new Ray(transform.position, transform.forward);
 
         Hits = Physics.RaycastAll(ray, RayCastDistance, RayLayerMask);
-
     }
 
     private void check_canvas()
@@ -59,5 +58,17 @@ public class GeneralRayCast : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public bool check_object(string tag)
+    {
+        foreach (RaycastHit hit in Hits)
+        {
+            if (hit.transform.CompareTag(tag))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

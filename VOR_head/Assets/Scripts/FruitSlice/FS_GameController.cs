@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
@@ -9,9 +7,9 @@ public class FS_GameController : GeneralGameController {
 
     [SerializeField] private FS_RC FSRC;    //Reference Controller;
 
-    public string score_init_str = "Score: ";   //Score text prefix;
+    [SerializeField] private string ScoreTextPre_str = "Score: ";   //Score text prefix;
 
-    public bool is_slicing { get; set; }
+    public bool Start_flag { get; private set; }
     private Animator FSGCAnimator;  //State machine animator;
     private int score;
     private int score_increase;
@@ -20,8 +18,8 @@ public class FS_GameController : GeneralGameController {
     void Start () {
         this.FSGCAnimator = GetComponent<Animator>();
         this.score = 0;
-        this.is_slicing = true;
         this.score_increase = FSRC.DC_script.GameSetting.ScoreIncrPerCut;
+        this.Start_flag = false;
     }
 	
 	// Update is called once per frame
@@ -30,11 +28,23 @@ public class FS_GameController : GeneralGameController {
 
     }
 
+    #region Animator
     //Init State;
     public void ToInit()
     {
+        
+    }
+
+    public void ToStartGame()
+    {
         FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
     }
+
+    public void ToInGame()
+    {
+
+    }
+    #endregion
 
     public void fruit_destroyed()
     {
@@ -42,28 +52,11 @@ public class FS_GameController : GeneralGameController {
         score_changed();
     }
 
-    [Obsolete("Not using controller to cut")]
-    private void slice()
-    {
-        if(Input.GetAxis(FS_SD.SecondIndTrigger_name) > 0.5f)
-        {
-            is_slicing = true;
-        }
-        else
-        {
-            is_slicing = false;
-        }
-    }
-
     public void restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void ToStartGame()
-    {
-        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
-    }
 
     public void quit_game()
     {
@@ -72,6 +65,15 @@ public class FS_GameController : GeneralGameController {
 
     private void score_changed()
     {
-        FSRC.ScoreText_TRANS.GetComponent<TextMesh>().text = score_init_str + score.ToString();
+        FSRC.ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreTextPre_str + score.ToString();
     }
+
+    public void start_game()
+    {
+        Start_flag = true;
+        FSGCAnimator.SetTrigger(FS_SD.AniStart_str);
+    }
+
+
+
 }

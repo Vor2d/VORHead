@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 //Reference Controller;
 public class FS_RC : MonoBehaviour
@@ -9,6 +7,7 @@ public class FS_RC : MonoBehaviour
     public FS_GameController GC_script;
     public Transform ScoreText_TRANS;
     public Controller_Input CI_script;
+    public FS_RayCast RC_script;
     //Prefabs;
     public GameObject Fruit_Prefab;
 
@@ -19,20 +18,5 @@ public class FS_RC : MonoBehaviour
     {
         GeneralMethods.check_ref<FS_DataController>(ref DC_script, FS_SD.DC_OBJ_name);
     }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
-
 
 }

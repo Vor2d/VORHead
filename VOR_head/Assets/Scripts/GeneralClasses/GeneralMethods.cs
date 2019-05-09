@@ -522,4 +522,20 @@ public static class GeneralMethods {
         }
         catch (Exception e) { Debug.Log("Generating settings error " + e); }
     }
+
+    public static void active_UI_page(Transform target_page,List<Transform> pages)
+    {
+        foreach(Transform page in pages)
+        {
+            if (GameObject.ReferenceEquals(target_page, page))
+            {
+                page.gameObject.SetActive(true);
+            }
+            else
+            {
+                page.gameObject.SetActive(false);
+            }
+        }
+
+    }
 }

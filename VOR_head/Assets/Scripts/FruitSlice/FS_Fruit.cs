@@ -1,20 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 public class FS_Fruit : MonoBehaviour {
 
     public bool Sliced_flag { get; set; }
     public bool Start_flag { get; set; }
-    public bool Last_is_aimed_flag { get; set; }
-    public bool Is_aimed_flag { get; set; }
     public bool Aim_changed { get; set; }
 
-    public FS_CheckRayHit FSCRH_script;
     [SerializeField] public FS_RC FSRC;
-
-    public bool speed_cal;
 
     private bool inner_sliced_flag;
 
@@ -25,9 +18,6 @@ public class FS_Fruit : MonoBehaviour {
 
     private void Start()
     {
-        this.Is_aimed_flag = false;
-        this.Last_is_aimed_flag = false;
-        this.speed_cal = false;
         this.Sliced_flag = false;
         this.inner_sliced_flag = false;
 
@@ -39,7 +29,6 @@ public class FS_Fruit : MonoBehaviour {
 		
         if(Start_flag)
         {
-            //check_speed1();
             check_start_aim();
 
             if (inner_sliced_flag)
@@ -87,41 +76,6 @@ public class FS_Fruit : MonoBehaviour {
         FSRC.GC_script.fruit_destroyed();
         Destroy(gameObject);
     }
-
-    //Calculte speed when enter, must above the threshold at all time;
-    //private void check_speed1()
-    //{
-    //    if (FSRC.GC_script.is_slicing)
-    //    {
-    //        if (!Last_is_aimed_flag && Is_aimed_flag)    //Enter trigger;
-    //        {
-    //            speed_cal = true;
-    //        }
-    //        else if (Last_is_aimed_flag && Is_aimed_flag)    //In trigger;
-    //        {
-    //            if (Mathf.Abs(GeneralMethods.getVRspeed().y) < FSRC.GC_script.SliceSpeed)
-    //            {
-    //                speed_cal = false;
-    //            }
-    //            else
-    //            {
-    //                speed_cal = true;
-    //            }
-    //        }
-    //        else if (Last_is_aimed_flag && !Is_aimed_flag)   //Exit trigger;
-    //        {
-    //            if (speed_cal)
-    //            {
-    //                //fruit_sliced();
-    //                fruit_cutted();
-    //            }
-    //        }
-    //    }
-    //    else
-    //    {
-    //        speed_cal = false;
-    //    }
-    //}
 
     public void fruit_cutted()
     {
