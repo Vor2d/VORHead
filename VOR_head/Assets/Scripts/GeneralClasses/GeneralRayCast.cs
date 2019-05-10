@@ -71,4 +71,16 @@ public class GeneralRayCast : MonoBehaviour {
         }
         return false;
     }
+
+    public bool check_object(string tag,Transform TRANS)
+    {
+        foreach(RaycastHit hit in Hits)
+        {
+            if(hit.transform.CompareTag(tag) && GameObject.ReferenceEquals(hit.transform, TRANS))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

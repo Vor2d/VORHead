@@ -31,13 +31,13 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
 
     private void check_start()
     {
-        if (FSF_script.Aim_changed)
-        {
-            if (!FSF_script.Is_aimed_flag)  //Exiting;
-            {
-                speed_cal_flag = true;
-            }
-        }
+        //if (FSF_script.Aim_changed)
+        //{
+        //    if (!FSF_script.Is_aimed_flag)  //Exiting;
+        //    {
+        //        speed_cal_flag = true;
+        //    }
+        //}
     }
 
     //Check the speed after exit until stop.

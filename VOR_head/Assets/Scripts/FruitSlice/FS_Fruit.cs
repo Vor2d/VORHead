@@ -29,7 +29,6 @@ public class FS_Fruit : MonoBehaviour {
 		
         if(Start_flag)
         {
-            check_start_aim();
 
             if (inner_sliced_flag)
             {
@@ -43,20 +42,6 @@ public class FS_Fruit : MonoBehaviour {
         }
 
 	}
-
-    private void check_start_aim()
-    {
-        Last_is_aimed_flag = Is_aimed_flag;
-        Is_aimed_flag = FSCRH_script.check_ray_to_start();
-        if (Is_aimed_flag != Last_is_aimed_flag)
-        {
-            Aim_changed = true;
-        }
-        else
-        {
-            Aim_changed = false;
-        }
-    }
 
     public void start_fruit()
     {

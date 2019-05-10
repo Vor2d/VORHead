@@ -1,73 +1,66 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class FS_FruitIndicator : MonoBehaviour {
 
-    [SerializeField] private FS_Fruit FSF_script;
+    public FS_Fruit FSF_script;
+    public Color ActivateColor = Color.green;
+    public Color FocusColor = Color.red;
+    public Color DeActivatedColor = Color.white;
     [SerializeField] private Transform FruitLineR_TRANS;
+    [SerializeField] private GameObject Indicator_Prefab;
+    [SerializeField] private Transform[] Position_indi;
 
-    [SerializeField] private Color FocusColor = Color.red;
+    private List<Transform> indicators_TRANSs;
 
-    public bool Is_aimed_flag { get; set; }
-    public bool Last_is_aimed_flag { get; set; }
-    private Color start_color;
+    private void Awake()
+    {
+        this.indicators_TRANSs = new List<Transform>();
+    }
 
     // Use this for initialization
     void Start ()
     {
-        this.start_color = GetComponent<MeshRenderer>().material.color;
-        this.Is_aimed_flag = false;
-        this.Last_is_aimed_flag = false;
-
         set_line_positions();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if(FSF_script.Start_flag)
-        {
-            check_aim();
-        }
-	}
 
-    private void check_aim()
-    {
-        Is_aimed_flag = FSF_script.FSRC.RC_script.check_object(FS_SD.FruitStartI_Tag);
-        if(Is_aimed_flag != Last_is_aimed_flag)
-        {
-            aim_changed(Is_aimed_flag);
-        }
-        Last_is_aimed_flag = Is_aimed_flag;
+
     }
 
-    private void aim_changed(bool aimmed)
+    private void init_indicators()
     {
-        if(aimmed)
+        Transform temp_TRANS;
+        for (int i = 0; i < Position_indi.Length; i++)
         {
-            set_start_focus_color();
-        }
-        else
-        {
-            set_start_unfocus_color();
+            temp_TRANS = 
+                Instantiate(Indicator_Prefab, Position_indi[i].position, Quaternion.identity).transform;
+            temp_TRANS.SetParent(transform);
+            if(i == 0)
+            {
+                temp_TRANS.GetComponent<FS_Indicator>().init_indicator(this, true);
+            }
+            else
+            {
+                temp_TRANS.GetComponent<FS_Indicator>().init_indicator(this, false);
+            }
+            indicators_TRANSs.Add(temp_TRANS);
         }
     }
 
     private void set_line_positions()
     {
-        Vector3[] positions = { transform.position, EndI_TRANS.position };
+        Vector3[] positions = new Vector3[Position_indi.Length];
+        for(int i = 0; i < Position_indi.Length;i++)
+        {
+            positions[i] = Position_indi[i].position;
+        }
         FruitLineR_TRANS.GetComponent<LineRenderer>().SetPositions(positions);
     }
 
-    private void set_start_focus_color()
-    {
-        Color focus_color = FocusColor;
-        focus_color.a = start_color.a;
-        GetComponent<MeshRenderer>().material.color = focus_color;
-    }
 
-    private void set_start_unfocus_color()
-    {
-        GetComponent<MeshRenderer>().material.color = start_color;
-    }
 
 }
