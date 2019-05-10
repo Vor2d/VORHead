@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class FS_FruitIndicator : MonoBehaviour {
 
-    public FS_Fruit FSF_script;
+    public FS_Fruit F_script;
     public Color ActivateColor = Color.green;
     public Color FocusColor = Color.red;
     public Color DeActivatedColor = Color.white;
@@ -11,16 +11,19 @@ public class FS_FruitIndicator : MonoBehaviour {
     [SerializeField] private GameObject Indicator_Prefab;
     [SerializeField] private Transform[] Position_indi;
 
-    private List<Transform> indicators_TRANSs;
+    public List<Transform> indicators_TRANSs { get; private set; }
+    public int activated_index { get; private set; }
 
     private void Awake()
     {
         this.indicators_TRANSs = new List<Transform>();
+        this.activated_index = 0;
     }
 
     // Use this for initialization
     void Start ()
     {
+        init_indicators();
         set_line_positions();
 	}
 	
@@ -49,6 +52,7 @@ public class FS_FruitIndicator : MonoBehaviour {
             }
             indicators_TRANSs.Add(temp_TRANS);
         }
+        activated_index = 0;
     }
 
     private void set_line_positions()

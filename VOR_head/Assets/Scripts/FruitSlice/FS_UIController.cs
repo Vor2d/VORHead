@@ -21,6 +21,7 @@ public class FS_UIController : MonoBehaviour
     private void init_page_list()
     {
         Pages_TRANSs.Add(InitPage_TRANS);
+        Pages_TRANSs.Add(InGamePage_TRANS);
     }
 
     #region Animator

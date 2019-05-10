@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GeneralRayCast : MonoBehaviour {
 
-    [SerializeField] protected GeneralGameController GGC_script;
     [SerializeField] protected bool UseForWorldCanvas = false;
     [SerializeField] protected float RayCastDistance = 100.0f;
     [SerializeField] protected LayerMask RayLayerMask;
@@ -69,6 +66,20 @@ public class GeneralRayCast : MonoBehaviour {
                 return true;
             }
         }
+        return false;
+    }
+
+    public bool check_object_pos(string tag, out Vector3 hit_pos)
+    {
+        foreach (RaycastHit hit in Hits)
+        {
+            if (hit.transform.CompareTag(tag))
+            {
+                hit_pos = hit.point;
+                return true;
+            }
+        }
+        hit_pos = Vector3.zero;
         return false;
     }
 

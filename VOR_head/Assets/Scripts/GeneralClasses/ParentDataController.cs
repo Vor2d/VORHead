@@ -45,4 +45,9 @@ public class ParentDataController : MonoBehaviour {
         GeneralMethods.generate_setting<T>(setting_class, setting_path, setting_file_name);
     }
 
+    public virtual void generate_setting()
+    {
+        Debug.Log("Class " + name + " generate_setting not implemented");
+    }
+
 }

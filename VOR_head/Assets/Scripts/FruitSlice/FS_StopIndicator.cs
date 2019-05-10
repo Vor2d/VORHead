@@ -4,13 +4,21 @@ using UnityEngine;
 
 public class FS_StopIndicator : MonoBehaviour {
 
-    [SerializeField] private FS_Fruit FSF_script;
+    [SerializeField] private FS_Fruit F_script;
     [SerializeField] private GameObject StopIndicator_Prefab;
     [SerializeField] private FS_FruitIndicator FSFI_script;
 
-    // Use this for initialization
-    void Start () {
+    private FS_RayCast RC_cache;
 
+    private void Awake()
+    {
+        this.RC_cache = null;
+    }
+
+    // Use this for initialization
+    void Start ()
+    {
+        RC_cache = F_script.FSRC.RC_script;
     }
 	
 	// Update is called once per frame
@@ -18,16 +26,20 @@ public class FS_StopIndicator : MonoBehaviour {
 
 	}
 
-    private void mark_cut()
+    public void mark_cut()
     {
-        //if(!FI_null)
-        //{
-        //    Vector3 hit_point = FSF_script.FSCRH_script.check_ray_to_plane();
-        //    GameObject stop_IOBJ = 
-        //            Instantiate(StopIndicator_Prefab, hit_point, new Quaternion());
-        //    Vector3[] positions = { FSFI_script.StartI_TRANS.position, hit_point };
-        //    stop_IOBJ.GetComponent<LineRenderer>().SetPositions(positions);
-        //}
+        Vector3 hit_point = new Vector3();
+        if(RC_cache.check_object_pos(FS_SD.FruitPlane_tag,out hit_point))
+        {
+            spawn_stop_indi(hit_point, 
+                    FSFI_script.indicators_TRANSs[FSFI_script.activated_index].position);
+        }
+    }
 
+    private void spawn_stop_indi(Vector3 pos, Vector3 start_pos)
+    {
+        GameObject stop_IOBJ = Instantiate(StopIndicator_Prefab, pos, new Quaternion());
+        Vector3[] positions = { start_pos, pos };
+        stop_IOBJ.GetComponent<LineRenderer>().SetPositions(positions);
     }
 }

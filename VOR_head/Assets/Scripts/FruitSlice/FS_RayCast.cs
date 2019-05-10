@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FS_RayCast : GeneralRayCast
 {
-
     protected override void Start()
     {
         base.Start();

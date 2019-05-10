@@ -8,6 +8,7 @@ public class FS_RC : MonoBehaviour
     public Transform ScoreText_TRANS;
     public Controller_Input CI_script;
     public FS_RayCast RC_script;
+    public Transform Fruit_TRANS;
     //Prefabs;
     public GameObject Fruit_Prefab;
 

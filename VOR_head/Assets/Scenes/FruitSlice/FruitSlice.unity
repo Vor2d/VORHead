@@ -211,9 +211,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FSRC: {fileID: 1989348006}
-  UIAnimator: {fileID: 0}
-  InitPage_TRANS: {fileID: 0}
-  InGamePage_TRANS: {fileID: 0}
+  UIAnimator: {fileID: 323177061}
+  InitPage_TRANS: {fileID: 768349080}
+  InGamePage_TRANS: {fileID: 776999508}
 --- !u!4 &323177060
 Transform:
   m_ObjectHideFlags: 0
@@ -325,8 +325,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 372634435}
-  - component: {fileID: 372634433}
   - component: {fileID: 372634436}
+  - component: {fileID: 372634433}
   m_Layer: 0
   m_Name: FS_HeadSimulator
   m_TagString: Untagged
@@ -343,10 +343,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 372634432}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d521f3771d60347aa8ab5aaab7076b, type: 3}
+  m_Script: {fileID: 11500000, guid: 36baa6aa529fb3344a5a2084194c3299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GRC_script: {fileID: 0}
+  UseForWorldCanvas: 1
+  RayCastDistance: 100
+  RayLayerMask:
+    serializedVersion: 2
+    m_Bits: 12288
 --- !u!4 &372634435
 Transform:
   m_ObjectHideFlags: 0
@@ -5778,7 +5782,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6622c17cfa8cc6d40b4b91f676f823f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FSF_script: {fileID: 1828043354}
   FirstHalf_TRANS: {fileID: 1211984608}
   SecondHalf_TRANS: {fileID: 443569519}
   STime: 1
@@ -6508,7 +6511,7 @@ PrefabInstance:
         type: 3}
       propertyPath: GRC_script
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 372634433}
     - target: {fileID: 114653810565416800, guid: d632b584e8075bc4fb4ba3dbb65426e6,
         type: 3}
       propertyPath: CI_script
@@ -6527,6 +6530,7 @@ GameObject:
   - component: {fileID: 1828043356}
   - component: {fileID: 1828043354}
   - component: {fileID: 1828043357}
+  - component: {fileID: 1828043353}
   m_Layer: 0
   m_Name: FS_Fruit
   m_TagString: Untagged
@@ -6534,6 +6538,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1828043353
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1828043352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4fa83053d0c7c2a40ad5eacb386247cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  F_script: {fileID: 1828043354}
+  StopIndicator_Prefab: {fileID: 1958577988463012, guid: 7cefd11f2da38d1479ca5c83d2947808,
+    type: 3}
+  FSFI_script: {fileID: 2084920502}
 --- !u!114 &1828043354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6547,6 +6567,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FSRC: {fileID: 1989348006}
+  FSC2_script: {fileID: 1828043357}
+  FR_script: {fileID: 1117886331}
+  SI_script: {fileID: 1828043353}
 --- !u!4 &1828043356
 Transform:
   m_ObjectHideFlags: 0
@@ -6577,7 +6600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8eea731e031b5341966a6a29bd57db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FSF_script: {fileID: 1828043354}
+  F_script: {fileID: 1828043354}
 --- !u!1 &1897828987
 GameObject:
   m_ObjectHideFlags: 0
@@ -6689,7 +6712,8 @@ MonoBehaviour:
   GC_script: {fileID: 1897828990}
   ScoreText_TRANS: {fileID: 570143978}
   CI_script: {fileID: 230187261}
-  RC_script: {fileID: 0}
+  RC_script: {fileID: 372634433}
+  Fruit_TRANS: {fileID: 1828043356}
   Fruit_Prefab: {fileID: 1961178720339674, guid: d87bc7e0925fe84469fb2b48328e1fad,
     type: 3}
   DC_script: {fileID: 0}
@@ -6703,7 +6727,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2084920500}
   - component: {fileID: 2084920502}
-  - component: {fileID: 2084920501}
   m_Layer: 0
   m_Name: Indicators
   m_TagString: Untagged
@@ -6719,7 +6742,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2084920499}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 441136309}
@@ -6727,22 +6750,6 @@ Transform:
   m_Father: {fileID: 1828043356}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2084920501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2084920499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fa83053d0c7c2a40ad5eacb386247cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FSF_script: {fileID: 1828043354}
-  StopIndicator_Prefab: {fileID: 1958577988463012, guid: 7cefd11f2da38d1479ca5c83d2947808,
-    type: 3}
-  FSFI_script: {fileID: 2084920502}
 --- !u!114 &2084920502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6755,7 +6762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67dfd600a94c73d4599c13bbd884f047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FSF_script: {fileID: 1828043354}
+  F_script: {fileID: 1828043354}
   ActivateColor: {r: 0, g: 1, b: 0, a: 0.39215687}
   FocusColor: {r: 1, g: 0, b: 0, a: 0.39215687}
   DeActivatedColor: {r: 1, g: 1, b: 1, a: 0.39215687}

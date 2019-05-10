@@ -23,12 +23,13 @@ TagManager:
   - BO_Wall
   - BO_BrickRayCasts
   - BO_Ball
-  - FS_FruitStartI
   - FS_FruitPlane
   - WorldCanvasCollider
   - MD_ReloadCollider
   - HeadIndicatorDetector
   - MD_Enemy
+  - FS_FruitAimI
+  - FS_FruitIndicator
   layers:
   - Default
   - TransparentFX

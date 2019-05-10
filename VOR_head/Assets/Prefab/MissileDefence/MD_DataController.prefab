@@ -43,6 +43,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a55dba22bdb4cf44b28ef9c6bee4c18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  setting_file_name: MD_Setting.json
+  setting_path: .
   ReadDataFromFile: 1
   MissileSpeed: 0.2
   OneMissilePreTime: 1

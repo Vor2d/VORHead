@@ -11,7 +11,7 @@ public class FS_StartGame : StateMachineBehaviour {
     {
         if(FSGC_script == null)
         {
-            animator.GetComponent<FS_GameController>();
+            FSGC_script = animator.GetComponent<FS_GameController>();
         }
         FSGC_script.ToStartGame();
     }

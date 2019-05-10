@@ -9,7 +9,7 @@ public class FS_Indicator : MonoBehaviour
     public bool Is_aimed_flag { get; set; }
     private bool Last_is_aimed_flag;
 
-    private FS_FruitIndicator FSFI_script;
+    private FS_FruitIndicator FI_script;
     private FS_RayCast RC_cache;
 
     private void Awake()
@@ -17,20 +17,20 @@ public class FS_Indicator : MonoBehaviour
         this.Activated = false;
         this.Is_aimed_flag = false;
         this.Last_is_aimed_flag = false;
-        this.FSFI_script = null;
+        this.FI_script = null;
         this.RC_cache = null;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        RC_cache = FSFI_script.FSF_script.FSRC.RC_script;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Activated && FSFI_script.FSF_script.Start_flag)
+        if(Activated && FI_script.F_script.Start_flag)
         {
             check_aim();
         }
@@ -38,8 +38,9 @@ public class FS_Indicator : MonoBehaviour
 
     public void init_indicator(FS_FruitIndicator _FSFI_script, bool on_off)
     {
-        FSFI_script = _FSFI_script;
+        FI_script = _FSFI_script;
         set_act_state(on_off);
+        RC_cache = FI_script.F_script.FSRC.RC_script;
     }
 
     public void set_act_state(bool on_off)
@@ -52,17 +53,18 @@ public class FS_Indicator : MonoBehaviour
     {
         if(Activated)
         {
-            set_color(FSFI_script.ActivateColor);
+            set_color(FI_script.ActivateColor);
         }
         else
         {
-            set_color(FSFI_script.DeActivatedColor);
+            set_color(FI_script.DeActivatedColor);
         }
     }
 
     private void check_aim()
     {
-        Is_aimed_flag = RC_cache.check_object(FS_SD.FruitStartI_Tag,transform);
+        Is_aimed_flag = RC_cache.check_object(FS_SD.FruitIndicator_tag,transform);
+        Debug.Log("Is_aimed_flag " + Is_aimed_flag);
         if (Is_aimed_flag != Last_is_aimed_flag)
         {
             aim_changed(Is_aimed_flag);
@@ -74,16 +76,22 @@ public class FS_Indicator : MonoBehaviour
     {
         if (aimmed)
         {
-            set_color(FSFI_script.FocusColor);
+            set_color(FI_script.FocusColor);
         }
         else
         {
-            set_color(FSFI_script.ActivateColor);
+            leaving_indi();
+            set_color(FI_script.ActivateColor);
         }
     }
 
     private void set_color(Color color)
     {
         GetComponent<MeshRenderer>().material.color = color;
+    }
+
+    private void leaving_indi()
+    {
+        FI_script.F_script.FSC2_script.start_speed_cal();
     }
 }

@@ -518,6 +518,7 @@ public static class GeneralMethods {
                 Directory.CreateDirectory(setting_path);
             }
             string from_class = JsonUtility.ToJson(setting_class);
+            Debug.Log("Writing file " + setting_file_name + "!!!");
             File.WriteAllText(setting_path + setting_file_name, from_class);
         }
         catch (Exception e) { Debug.Log("Generating settings error " + e); }

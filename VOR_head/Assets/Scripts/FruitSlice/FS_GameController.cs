@@ -38,6 +38,7 @@ public class FS_GameController : GeneralGameController {
     public void ToStartGame()
     {
         FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
+        FSRC.Fruit_TRANS.GetComponent<FS_Fruit>().start_fruit();
     }
 
     public void ToInGame()

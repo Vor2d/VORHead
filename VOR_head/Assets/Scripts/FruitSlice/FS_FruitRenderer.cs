@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FS_FruitRenderer : MonoBehaviour {
 
-    [SerializeField] private FS_Fruit FSF_script;
     [SerializeField] private Transform FirstHalf_TRANS;
     [SerializeField] private Transform SecondHalf_TRANS;
     [SerializeField] private float STime = 1.0f;
@@ -20,21 +19,17 @@ public class FS_FruitRenderer : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(FSF_script.Sliced_flag && !cut_triggered)
-        {
-            cut_triggered = true;
-            cut();
-        }
 	}
 
-    private void cut()
+    public void cut()
     {
         StartCoroutine(seperate());
     }
 
     IEnumerator seperate()
     {
-        while(Stimer > 0.0f)
+        cut_triggered = true;
+        while (Stimer > 0.0f)
         {
             Stimer -= Time.deltaTime;
             FirstHalf_TRANS.Translate(Vector3.down*Time.deltaTime);
