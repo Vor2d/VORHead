@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 372634434}
   - component: {fileID: 372634433}
   m_Layer: 0
-  m_Name: Bp_HeadSimulator
+  m_Name: BP_HeadSimulator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -461,7 +461,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec7118e1b841f30408ee6efcad64b0bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GGC_script: {fileID: 1897828990}
   UseForWorldCanvas: 1
   RayCastDistance: 100
   RayLayerMask:

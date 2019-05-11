@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   setting_file_name: BP_Setting.json
-  setting_path: .
+  setting_path: ./
   GameMode: 1
