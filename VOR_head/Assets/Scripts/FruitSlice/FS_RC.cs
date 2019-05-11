@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 
-//Reference Controller;
+/// <summary>
+/// Reference Controller Object;
+/// </summary>
 public class FS_RC : MonoBehaviour
 {
     //Objects;

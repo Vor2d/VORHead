@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Ray Cast script; Can be used for most of the VR ray cast situations.
+/// </summary>
 public class GeneralRayCast : MonoBehaviour {
 
     [SerializeField] protected bool UseForWorldCanvas = false;

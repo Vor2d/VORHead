@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System;
 
+[RequireComponent(typeof(Animator))]
 public class FS_GameController : GeneralGameController {
 
     [SerializeField] private FS_RC FSRC;    //Reference Controller;
@@ -14,12 +13,20 @@ public class FS_GameController : GeneralGameController {
     private int score;
     private int score_increase;
 
-    // Use this for initialization
-    void Start () {
-        this.FSGCAnimator = GetComponent<Animator>();
+    private void Awake()
+    {
+        this.FSGCAnimator = null;
         this.score = 0;
-        this.score_increase = FSRC.DC_script.GameSetting.ScoreIncrPerCut;
         this.Start_flag = false;
+        this.score_increase = 0;
+    }
+
+    // Use this for initialization
+    void Start ()
+    {
+        FSGCAnimator = GetComponent<Animator>();
+        score_increase = FSRC.DC_script.GameSetting.ScoreIncrPerCut;
+        register_controller();
     }
 	
 	// Update is called once per frame
@@ -28,24 +35,21 @@ public class FS_GameController : GeneralGameController {
 
     }
 
-    #region Animator
-    //Init State;
-    public void ToInit()
+    private void OnDestroy()
     {
-        
+        deregister_controller();
     }
 
-    public void ToStartGame()
+    private void register_controller()
     {
-        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
-        FSRC.Fruit_TRANS.GetComponent<FS_Fruit>().start_fruit();
+        FSRC.CI_script.Button_B += recenter_VR;
     }
 
-    public void ToInGame()
+    private void deregister_controller()
     {
-
+        FSRC.CI_script.Button_B -= recenter_VR;
     }
-    #endregion
+
 
     public void fruit_destroyed()
     {
@@ -57,7 +61,6 @@ public class FS_GameController : GeneralGameController {
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-
 
     public void quit_game()
     {
@@ -75,6 +78,23 @@ public class FS_GameController : GeneralGameController {
         FSGCAnimator.SetTrigger(FS_SD.AniStart_str);
     }
 
+    #region Animator
+    //Init State;
+    public void ToInit()
+    {
+        
+    }
 
+    public void ToStartGame()
+    {
+        FSRC.Fruit_TRANS.GetComponent<FS_Fruit>().start_fruit();
+        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
+    }
+
+    public void ToInGame()
+    {
+
+    }
+    #endregion
 
 }

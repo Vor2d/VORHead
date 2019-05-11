@@ -1,16 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System;
 
+/// <summary>
+/// Must be used if using VR world canvs; Use the prefab default settings and link up objects to make things
+/// happen;
+/// </summary>
 public class WorldCanvasController : MonoBehaviour {
 
     public enum ControllerButton { IndexTrigger};
 
-    //[SerializeField] private GeneralGameController GGC_script;
     [SerializeField] private Camera RayCastCamera;
-    //[SerializeField] private RightController RC_script;
     [SerializeField] private GeneralRayCast GRC_script;
     [SerializeField] private Controller_Input CI_script;
 
@@ -20,7 +21,6 @@ public class WorldCanvasController : MonoBehaviour {
     private PointerEventData point_data;
     private Vector3 hit_to_screen;
     private bool entered_flag;
-    private bool Rcontroller_trigger_flag;
 
     private void Awake()
     {
@@ -35,7 +35,6 @@ public class WorldCanvasController : MonoBehaviour {
         this.hit_to_screen = new Vector3();
         this.hit_OBJ = null;
         this.entered_flag = false;
-        this.Rcontroller_trigger_flag = false;
     }
 	
 	// Update is called once per frame
@@ -93,24 +92,6 @@ public class WorldCanvasController : MonoBehaviour {
                 break;
         }
     }
-
-    //private void right_controller()
-    //{
-    //    if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") > 0.5f &&
-    //                                                            !Rcontroller_trigger_flag)
-    //    {
-    //        if (hit_OBJ != null)
-    //        {
-    //            ExecuteEvents.Execute(hit_OBJ, point_data,
-    //                                                ExecuteEvents.pointerClickHandler);
-    //        }
-    //        Rcontroller_trigger_flag = true;
-    //    }
-    //    else if (Input.GetAxis("Oculus_CrossPlatform_SecondaryIndexTrigger") < 0.1f)
-    //    {
-    //        Rcontroller_trigger_flag = false;
-    //    }
-    //}
 
     private void execute_event()
     {

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FS_FruitRenderer : MonoBehaviour {
@@ -26,7 +25,7 @@ public class FS_FruitRenderer : MonoBehaviour {
         StartCoroutine(seperate());
     }
 
-    IEnumerator seperate()
+    private IEnumerator seperate()
     {
         cut_triggered = true;
         while (Stimer > 0.0f)

@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Self implemented controller input script;
+/// </summary>
 public class Controller_Input : MonoBehaviour {
 
-    //public enum ControllerType { LeftController,RightController}
     public const string LeftIndexTrigger_str = "Oculus_CrossPlatform_PrimaryIndexTrigger";
     public const string RightIndexTrigger_str = "Oculus_CrossPlatform_SecondaryIndexTrigger";
     public const string RightVertical_str = 

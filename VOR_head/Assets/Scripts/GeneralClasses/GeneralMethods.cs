@@ -4,12 +4,16 @@ using UnityEngine;
 using System;
 using System.IO;
 
+/// <summary>
+/// A static class that contains a lot of common methods that will be reused;
+/// </summary>
 public static class GeneralMethods {
 
     private static char[] file_spliter = new char[] { ' ', '\t' };
     private const char line_separator = '_';
     private enum Direction { left, right };
 
+    #region HMTS
     //y is horizontal, rotate by y axis; x is vertical, rotate by x axis;
     //Convert the real world angles to virtual world angles;
     public static float RealToVirtualy(float player_screen_cm,float screen_width_cm,
@@ -114,41 +118,6 @@ public static class GeneralMethods {
         return new Vector3(virtual_rotex, virtual_rotey, 0.0f);
     }
 
-    public static float normalize_degree(float degree)
-    {
-        return (degree >= 180) ? -(360 - degree) : degree;
-    }
-
-    public static Vector3 normalize_degree(Vector3 degree)
-    {
-        return new Vector3(normalize_degree(degree.x),
-                            normalize_degree(degree.y),
-                            normalize_degree(degree.z));
-    }
-
-    //Method to get headset speed;
-    public static Vector3 getVRspeed()
-    {
-        Vector3 angularVelocityRead =
-                (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
-                FromFlippedZVector3f()) * Mathf.Rad2Deg;
-
-        return angularVelocityRead;
-    }
-
-    //Method to get headset rotation;
-    public static Quaternion getVRrotation()
-    {
-        //Quaternion VRrotation = InputTracking.GetLocalRotation(XRNode.CenterEye);
-        Quaternion quatf_orientation =
-                        OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
-                        ToOVRPose().orientation;
-        Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y, 
-                                                quatf_orientation.z, quatf_orientation.w);
-
-        return VRrotation;
-    }
-
     //Load trials data with TrialInfo class
     public static List<Section> load_game_data_general(string path)
     {
@@ -170,7 +139,7 @@ public static class GeneralMethods {
                 if (section_state_GM)
                 {
                     string[] splitstr = reader.ReadLine().Split(file_spliter);
-                    if(splitstr[0][0] == line_separator)
+                    if (splitstr[0][0] == line_separator)
                     {
                         section_state_GM = false;
                         in_line_counter = 0;
@@ -179,9 +148,9 @@ public static class GeneralMethods {
                     }
                     else
                     {
-                        if(in_line_counter == 1)
+                        if (in_line_counter == 1)
                         {
-                            switch(splitstr[1])
+                            switch (splitstr[1])
                             {
                                 case "GazeTest":
                                     {
@@ -242,9 +211,9 @@ public static class GeneralMethods {
                 else
                 {
                     string[] splitstr = reader.ReadLine().Split(file_spliter);
-                    if(splitstr[0][0] == line_separator)
+                    if (splitstr[0][0] == line_separator)
                     {
-                        Section temp_section = new Section(temp_gameMode,temp_trialInfo);
+                        Section temp_section = new Section(temp_gameMode, temp_trialInfo);
                         sections.Add(temp_section);
 
                         section_state_GM = true;
@@ -257,24 +226,24 @@ public static class GeneralMethods {
                     }
                     else
                     {
-                        if(in_line_counter == 1)
+                        if (in_line_counter == 1)
                         {
                             try { temp_trialInfo.Loop_number = Int32.Parse(splitstr[0]); }
-                            catch(Exception e) { Debug.Log(e); }
+                            catch (Exception e) { Debug.Log(e); }
                         }
                         else
                         {
                             temp_trialInfo.Turn_data.
-                                    Add(new Vector2(float.Parse(splitstr[0]),0.0f));
+                                    Add(new Vector2(float.Parse(splitstr[0]), 0.0f));
                             temp_trialInfo.Jump_data.
-                                    Add(new Vector2(float.Parse(splitstr[1]),0.0f));
+                                    Add(new Vector2(float.Parse(splitstr[1]), 0.0f));
                         }
                     }
                 }
             }
             reader.Close();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.Log("Reading file error! " + e);
         }
@@ -299,9 +268,9 @@ public static class GeneralMethods {
             }
             reader.Close();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
-            Debug.Log("Reading file error! "+e);
+            Debug.Log("Reading file error! " + e);
         }
         Debug.Log("Loading game settings complete.");
 
@@ -312,9 +281,9 @@ public static class GeneralMethods {
     }
 
     //Monitor Change Position General Method;
-    private static float DestinationCal(float init_dist,float ang_deg, int direc)
+    private static float DestinationCal(float init_dist, float ang_deg, int direc)
     {
-        if((ang_deg+90)%180 == 0)
+        if ((ang_deg + 90) % 180 == 0)
         {
             Debug.Log("Angle can not be 0 or 180");
             return float.MaxValue;
@@ -349,8 +318,8 @@ public static class GeneralMethods {
     public static Vector3 PositionCal(float init_dist, float ang_degX, float ang_degY,
                                                                     int direcX, int direcY)
     {
-        return new Vector3(DestinationCal(init_dist,ang_degX,direcX),
-                            DestinationCal(init_dist,ang_degY,direcY),
+        return new Vector3(DestinationCal(init_dist, ang_degX, direcX),
+                            DestinationCal(init_dist, ang_degY, direcY),
                             init_dist);
     }
 
@@ -367,6 +336,72 @@ public static class GeneralMethods {
         return new Vector3(DestinationCal(init_dist, n_degrees.y),
                             -DestinationCal(init_dist, n_degrees.x),
                             init_dist);
+    }
+
+    //Loading trials for both vertical and horizontal. Vertical first, horizontal second.
+    public static List<Vector2> read_trial_file_VNH(string path)
+    {
+
+        List<Vector2> trial_data = new List<Vector2>();
+        Debug.Log("Loading trials from file " + path);
+        try
+        {
+            StreamReader reader = new StreamReader(path);
+            while (!reader.EndOfStream)
+            {
+                string[] splitstr = reader.ReadLine().Split(file_spliter);
+                trial_data.Add(new Vector2(float.Parse(splitstr[0]), float.Parse(splitstr[1])));
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log("Loading Failed! " + e);
+        }
+        Debug.Log("Loading Successful!");
+
+        return trial_data;
+
+    }
+
+
+    #endregion
+
+    /// <summary>
+    /// Put degree to -180 to 180;
+    /// </summary>
+    public static float normalize_degree(float degree)
+    {
+        return (degree >= 180) ? -(360 - degree) : degree;
+    }
+
+    public static Vector3 normalize_degree(Vector3 degree)
+    {
+        return new Vector3(normalize_degree(degree.x),
+                            normalize_degree(degree.y),
+                            normalize_degree(degree.z));
+    }
+
+    //Method to get headset speed;
+    public static Vector3 getVRspeed()
+    {
+        Vector3 angularVelocityRead =
+                (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
+                FromFlippedZVector3f()) * Mathf.Rad2Deg;
+
+        return angularVelocityRead;
+    }
+
+    //Method to get headset rotation;
+    public static Quaternion getVRrotation()
+    {
+        //Quaternion VRrotation = InputTracking.GetLocalRotation(XRNode.CenterEye);
+        Quaternion quatf_orientation =
+                        OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
+                        ToOVRPose().orientation;
+        Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y, 
+                                                quatf_orientation.z, quatf_orientation.w);
+
+        return VRrotation;
     }
 
     public static float get_median(List<float> data_list)
@@ -400,36 +435,10 @@ public static class GeneralMethods {
         UnityEngine.XR.InputTracking.Recenter();
     }
 
-    //Loading trials for both vertical and horizontal. Vertical first, horizontal second.
-    public static List<Vector2> read_trial_file_VNH(string path)
-    {
-        
-        List<Vector2> trial_data = new List<Vector2>();
-        Debug.Log("Loading trials from file " + path);
-        try
-        {
-            StreamReader reader = new StreamReader(path);
-            while (!reader.EndOfStream)
-            {
-                string[] splitstr = reader.ReadLine().Split(file_spliter);
-                trial_data.Add(new Vector2(float.Parse(splitstr[0]), float.Parse(splitstr[1])));
-            }
-        }
-        catch(Exception e)
-        {
-            Debug.Log("Loading Failed! " + e);
-        }
-        Debug.Log("Loading Successful!");
-
-        return trial_data;
-
-    }
-
     //Have to stop from outside;
     public static IEnumerator blink_object(GameObject target_OBJ, float inter_time, 
                                             Color target_color)
     {
-        
         Material target_material_REF = target_OBJ.GetComponent<MeshRenderer>().material;
         Color init_color = target_material_REF.color;
         bool orin_color_flag = true;

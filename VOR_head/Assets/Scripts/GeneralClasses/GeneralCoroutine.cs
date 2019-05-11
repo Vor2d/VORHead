@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
 
+/// <summary>
+/// Coroutine with easy lock;
+/// </summary>
 public class GeneralCoroutine : MonoBehaviour
 {
     protected bool coroutine_flag;
