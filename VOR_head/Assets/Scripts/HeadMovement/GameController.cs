@@ -160,8 +160,6 @@ public class GameController : GeneralGameController {
         if (Display.displays.Length > 1)
             Display.displays[1].Activate();
 
-
-
     }
 
     //private void instant_DataController()
@@ -579,7 +577,7 @@ public class GameController : GeneralGameController {
 
     private IEnumerator show_acuity(float time_dure)
     {
-        AG_script.turn_on_acuity();
+        AG_script.turn_on_acuity(true);
         yield return new WaitForSeconds(time_dure);
         AG_script.turn_off_acuity();
     }
@@ -906,6 +904,11 @@ public class GameController : GeneralGameController {
         //IndiText1.GetComponent<MeshRenderer>().enabled = true;
 
         GCS_script.change_indicate_text(DC_script.Current_GM.GameModeName.ToString());
+
+        if(DC_script.Current_GM.UsingAcuity)
+        {
+            AG_script.init_acuity(DC_script.Current_GM.AcuitySize);
+        }
     }
 
     public void SectionPause ()

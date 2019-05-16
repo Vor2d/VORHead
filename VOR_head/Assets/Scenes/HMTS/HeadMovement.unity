@@ -5233,7 +5233,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208a4611d84f7d149ad100516af6e98f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GGC_script: {fileID: 913016690}
   UseForWorldCanvas: 0
   RayCastDistance: 100
   RayLayerMask:
@@ -6247,6 +6246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ccb5c69510b4d8418e1d66a258f499b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AcuitySprite_TRANS: {fileID: 1274102992}
 --- !u!1 &913016689
 GameObject:
   m_ObjectHideFlags: 0
@@ -9127,7 +9127,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e68a9613bdc61be4a8595582848efadf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GGC_script: {fileID: 0}
   UseForWorldCanvas: 0
   RayCastDistance: 100
   RayLayerMask:
@@ -13079,7 +13078,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e68a9613bdc61be4a8595582848efadf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GGC_script: {fileID: 0}
   UseForWorldCanvas: 0
   RayCastDistance: 100
   RayLayerMask:

@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   setting_file_name: HMTS_Setting.json
-  setting_path: .
+  setting_path: ./
   FitMode: 1
   FitFunction: 1

@@ -8,7 +8,6 @@ using HMTS_enum;
 public class DataController : ParentDataController {
 
     private const string trial_path = "Default.txt";
-    private const string setting_path = "SettingDefault.txt";
     private const string ECTrial_path = "ECTrial.txt";
     private readonly char[] line_spliter = new char[] { ' ', '\t' };
 

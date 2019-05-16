@@ -18,6 +18,7 @@ public class GameMode
     //Variables;
     public float Gain { get; set; }
     public bool UsingAcuity { get; set; }
+    public int AcuitySize { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -40,6 +41,7 @@ public class GameMode
 
         this.Gain = other_GM.Gain;
         this.UsingAcuity = other_GM.UsingAcuity;
+        this.AcuitySize = other_GM.AcuitySize;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -116,6 +118,8 @@ public class GameMode
         catch { Gain = 1.0f; }
         try { UsingAcuity = para_dict["UsingAcuity"] == "True"; }
         catch { UsingAcuity = false; }
+        try { AcuitySize = int.Parse(para_dict["AcuitySize"]); }
+        catch { AcuitySize = 4; }
     }
 
     public string VarToString()
@@ -165,6 +169,7 @@ public class GameMode
 
         result_str += "Gain" + " " + Gain.ToString() + " ";
         result_str += "UsingAcuity" + " " + UsingAcuity.ToString() + " ";
+        result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
 
         return result_str;
     }

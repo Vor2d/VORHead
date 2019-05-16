@@ -1,5 +1,6 @@
 GameMode	HC_FB_Learning
 UsingAcuity	True
+AcuitySize	8
 ________________________________
 -1
 15	15
