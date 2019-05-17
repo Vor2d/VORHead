@@ -26,11 +26,9 @@ public class DataController : ParentDataController {
 
     private Dictionary<string, string> init_data;
 
-    void Awake()
+    protected override void Awake()
     {
-        DontDestroyOnLoad(this);
-
-        init_DC();
+        base.Awake();
 
         this.init_data = new Dictionary<string, string>();
         this.Head_origin = new Quaternion(0.0f,0.0f,0.0f,1.0f);
@@ -42,7 +40,7 @@ public class DataController : ParentDataController {
         this.Eye_TI = new TrialInfo();
 
         Sections = GeneralMethods.load_game_data_general(trial_path);
-        SystemSetting = GeneralMethods.read_game_setting_general(setting_path);
+        SystemSetting = GeneralMethods.read_game_setting_general(setting_path+setting_file_name);
         read_eye_trials();
     }
 

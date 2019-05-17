@@ -11,3 +11,5 @@ StopWindow	0.1
 TargetChangeTime	2.0
 TargetChangeTimeRRange	2.0
 UsingCurvedScreen	True
+UseAcuityIndicator	True
+AcuityMode	1

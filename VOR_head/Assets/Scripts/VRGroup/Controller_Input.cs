@@ -5,6 +5,9 @@
 /// </summary>
 public class Controller_Input : MonoBehaviour {
 
+    public enum FourDirInput { up,right,down,left,empty};
+    public enum EightDirInput { up,right,down,left,upri,dori,dole,uple,empty};
+
     public const string LeftIndexTrigger_str = "Oculus_CrossPlatform_PrimaryIndexTrigger";
     public const string RightIndexTrigger_str = "Oculus_CrossPlatform_SecondaryIndexTrigger";
     public const string RightVertical_str = 
@@ -102,55 +105,7 @@ public class Controller_Input : MonoBehaviour {
                 }
             case OVRInput.Controller.RTouch:
                 {
-                    //R vertical thumb stick;
-                    if (Input.GetAxis(RightVertical_str)> Sensitivity)
-                    {
-                        if(!Forward_flag && ForwardAction != null)
-                        {
-                            ForwardAction();
-                        }
-                        Forward_flag = true;
-                    }
-                    else
-                    {
-                        Forward_flag = false;
-                    }
-                    if(Input.GetAxis(RightVertical_str) < -Sensitivity)
-                    {
-                        if (!Back_flag && BackAction != null)
-                        {
-                            BackAction();
-                        }
-                        Back_flag = true;
-                    }
-                    else
-                    {
-                        Back_flag = false;
-                    }
-                    if (Input.GetAxis(RightHorizontal_str) > Sensitivity)
-                    {
-                        if (!Right_flag && RightAction != null)
-                        {
-                            RightAction();
-                        }
-                        Right_flag = true;
-                    }
-                    else
-                    {
-                        Right_flag = false;
-                    }
-                    if (Input.GetAxis(RightHorizontal_str) < -Sensitivity)
-                    {
-                        if (!Left_flag && LeftAction != null)
-                        {
-                            LeftAction();
-                        }
-                        Left_flag = true;
-                    }
-                    else
-                    {
-                        Left_flag = false;
-                    }
+                    rightC_dir();
 
                     //R index trigger;
                     if (Input.GetAxis(RightIndexTrigger_str) > 0.5f)
@@ -182,5 +137,85 @@ public class Controller_Input : MonoBehaviour {
                 }
         }
 
+    }
+
+    private void rightC_dir()
+    {
+        //R vertical thumb stick;
+        if (Input.GetAxis(RightVertical_str) > Sensitivity)
+        {
+            if (!Forward_flag && ForwardAction != null)
+            {
+                ForwardAction();
+            }
+            Forward_flag = true;
+        }
+        else
+        {
+            Forward_flag = false;
+        }
+        if (Input.GetAxis(RightVertical_str) < -Sensitivity)
+        {
+            if (!Back_flag && BackAction != null)
+            {
+                BackAction();
+            }
+            Back_flag = true;
+        }
+        else
+        {
+            Back_flag = false;
+        }
+        if (Input.GetAxis(RightHorizontal_str) > Sensitivity)
+        {
+            if (!Right_flag && RightAction != null)
+            {
+                RightAction();
+            }
+            Right_flag = true;
+        }
+        else
+        {
+            Right_flag = false;
+        }
+        if (Input.GetAxis(RightHorizontal_str) < -Sensitivity)
+        {
+            if (!Left_flag && LeftAction != null)
+            {
+                LeftAction();
+            }
+            Left_flag = true;
+        }
+        else
+        {
+            Left_flag = false;
+        }
+    }
+
+    public FourDirInput Four_dir_input
+    {
+        get
+        {
+            if (Forward_flag) { return FourDirInput.up; }
+            if (Right_flag) { return FourDirInput.right; }
+            if (Back_flag) { return FourDirInput.down; }
+            if (Left_flag) { return FourDirInput.left; }
+            return FourDirInput.empty;
+        }
+    }
+    public EightDirInput Eight_dir_input
+    {
+        get
+        {
+            if (Forward_flag && Right_flag) { return EightDirInput.upri; }
+            if (Back_flag && Right_flag) { return EightDirInput.dori; }
+            if (Back_flag && Left_flag) { return EightDirInput.dole; }
+            if (Forward_flag && Left_flag) { return EightDirInput.uple; }
+            if (Forward_flag) { return EightDirInput.up; }
+            if (Right_flag) { return EightDirInput.right; }
+            if (Back_flag) { return EightDirInput.down; }
+            if (Left_flag) { return EightDirInput.left; }
+            return EightDirInput.empty;
+        }
     }
 }

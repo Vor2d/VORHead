@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c82b66e56050424696bf2e5cf8e9292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  setting_file_name: HMTS_Setting.json
+  setting_file_name: SettingDefault.txt
   setting_path: ./
   FitMode: 1
   FitFunction: 1

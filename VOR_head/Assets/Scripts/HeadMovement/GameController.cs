@@ -34,6 +34,8 @@ public class GameController : GeneralGameController {
     [HideInInspector]
     public GameObject ResultTarget = null;
 
+    public enum AcuityMode { four_dir,eight_dir};
+
     [Header("Game Object")]
     //Game Object;
     public GameObject Target;
@@ -49,6 +51,7 @@ public class GameController : GeneralGameController {
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
     public AcuityGroup AG_script;
+    [SerializeField] private Controller_Input CI_script;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -101,6 +104,9 @@ public class GameController : GeneralGameController {
     private bool stopped_flag;
     private bool centered_flag;
     private bool collaberating_flag;
+    private bool controller_flag;
+    private AcuityGroup.AcuityDirections acuity_dir;
+    private AcuityMode acuity_mode;
 
     private void Awake()
     {
@@ -153,6 +159,9 @@ public class GameController : GeneralGameController {
         this.section_number = 0;
         this.TargetTimerFlag = false;
         this.target_change_timer = DC_script.SystemSetting.TargetChangeTime;
+        this.controller_flag = false;
+        this.acuity_dir = AcuityGroup.AcuityDirections.up;
+        this.acuity_mode = (AcuityMode)DC_script.SystemSetting.AcuityMode;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -160,16 +169,12 @@ public class GameController : GeneralGameController {
         if (Display.displays.Length > 1)
             Display.displays[1].Activate();
 
-    }
+        if(DC_script.MSM_script.using_VR)
+        {
+            CI_script.IndexTrigger += check_controller;
+        }
 
-    //private void instant_DataController()
-    //{
-    //    if (GameObject.Find("DataController") == null)
-    //    {
-    //        GameObject DC_instant = Instantiate(DataController) as GameObject;
-    //        DC_instant.name = "DataController";
-    //    }
-    //}
+    }
 
     // Update is called once per frame
     protected override void Update() {
@@ -267,6 +272,14 @@ public class GameController : GeneralGameController {
         if(TargetTimerFlag)
         {
             target_change_timer -= Time.deltaTime;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if(DC_script.MSM_script.using_VR)
+        {
+            CI_script.IndexTrigger -= check_controller;
         }
     }
 
@@ -564,7 +577,6 @@ public class GameController : GeneralGameController {
     {
         if (stop_window_timer < 0.0f)
         {
-            GCAnimator.SetTrigger("NextStep");
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
             stop_window_timer = DC_script.SystemSetting.StopWinodow;
             //stopped_flag = false;
@@ -572,14 +584,19 @@ public class GameController : GeneralGameController {
             {
                 StartCoroutine(show_acuity(0.1f));
             }
+            else
+            {
+                GCAnimator.SetTrigger("NextStep");
+            }
         }
     }
 
     private IEnumerator show_acuity(float time_dure)
     {
-        AG_script.turn_on_acuity(true);
+        acuity_dir = AG_script.turn_on_acuity(true);
         yield return new WaitForSeconds(time_dure);
-        AG_script.turn_off_acuity();
+        AG_script.turn_off_AG();
+        GCAnimator.SetTrigger("NextStep");
     }
 
     //Obsoleted;
@@ -907,7 +924,7 @@ public class GameController : GeneralGameController {
 
         if(DC_script.Current_GM.UsingAcuity)
         {
-            AG_script.init_acuity(DC_script.Current_GM.AcuitySize);
+            AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode);
         }
     }
 
@@ -929,6 +946,79 @@ public class GameController : GeneralGameController {
     public void back_to_main_menu()
     {
         MSM_script.to_start_scene();
+    }
+
+    public void ToCheckController()
+    {
+        if(DC_script.Current_GM.UsingAcuity)
+        {
+            controller_flag = true;
+            if(DC_script.SystemSetting.UseAcuityIndicator)
+            {
+                //Debug.Log("DC_script.SystemSetting.UseAcuityIndicator " + DC_script.SystemSetting.UseAcuityIndicator);
+                AG_script.turn_on_AG();
+                AG_script.start_AI();
+            }
+        }
+        else
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    private void check_controller()
+    {
+        if(controller_flag)
+        {
+            if (DC_script.MSM_script.using_VR)
+            {
+                //check_oculusC();
+                check_oculusC2();
+            }
+        }
+    }
+
+    private void check_oculusC()
+    {
+        Debug.Log("acuity " + acuity_dir);
+        if(acuity_dir == AcuityGroup.AcuityDirections.up && CI_script.Forward_flag || 
+            acuity_dir == AcuityGroup.AcuityDirections.right && CI_script.Right_flag ||
+            acuity_dir == AcuityGroup.AcuityDirections.down && CI_script.Back_flag ||
+            acuity_dir == AcuityGroup.AcuityDirections.left && CI_script.Left_flag)
+        {
+            Debug.Log("Right!!!");
+            GCAnimator.SetTrigger("NextStep");
+        }
+        else
+        {
+            Debug.Log("Wrong!!!!!");
+        }
+    }
+
+    private void check_oculusC2()
+    {
+        //Debug.Log("acuity_dir " + acuity_dir);
+        switch(acuity_mode)
+        {
+            case AcuityMode.four_dir:
+                if ((int)acuity_dir == (int)CI_script.Four_dir_input)
+                {
+                    GCAnimator.SetTrigger("NextStep");
+                }
+                break;
+            case AcuityMode.eight_dir:
+                if((int)acuity_dir == (int)CI_script.Eight_dir_input)
+                {
+                    GCAnimator.SetTrigger("NextStep");
+                }
+                break;
+        }
+    }
+
+    public void LeaveCheckController()
+    {
+        controller_flag = false;
+        AG_script.turn_off_AG();
     }
 }
 

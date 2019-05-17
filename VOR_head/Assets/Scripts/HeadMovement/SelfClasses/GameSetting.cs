@@ -19,6 +19,8 @@ public class GameSetting
     public float StopWinodow { get; set; }
     public float TargetChangeTime { get; set; }
     public float TargetChangeTimeRRange { get; set; }
+    public bool UseAcuityIndicator { get; set; }
+    public int AcuityMode { get; set; } //enum {four_dir,eight_dir};
 
     public GameSetting()
     {
@@ -60,6 +62,10 @@ public class GameSetting
         catch { TargetChangeTime = 2.0f; }
         try { TargetChangeTimeRRange = float.Parse(setting_dict["TargetChangeTimeRRange"]); }
         catch { TargetChangeTimeRRange = 0.5f; }
+        try { UseAcuityIndicator = (setting_dict["UseAcuityIndicator"] == "True"); }
+        catch { UseAcuityIndicator = true; }
+        try { AcuityMode = int.Parse(setting_dict["AcuityMode"]); }
+        catch { AcuityMode = 0; }
     }
 
     public string VarToString()
@@ -79,6 +85,8 @@ public class GameSetting
         result_str += "StopWinodow" + " " + StopWinodow.ToString() + " ";
         result_str += "TargetChangeTime" + " " + TargetChangeTime.ToString() + " ";
         result_str += "TargetChangeTimeRRange" + " " + TargetChangeTimeRRange.ToString() + " ";
+        result_str += "UseAcuityIndicator" + " " + UseAcuityIndicator.ToString() + " ";
+        result_str += "AcuityMode" + " " + AcuityMode.ToString() + " ";
 
 
         return result_str;

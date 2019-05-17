@@ -1,0 +1,3 @@
+Settings: Using_curved_screen False Player_screen_cm 100 Screen_width_cm 100 Camera1_display 0 Camera2_display 1 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 0 
+
+
