@@ -5,7 +5,7 @@ using System;
 
 public class AcuityGroup : MonoBehaviour
 {
-    private const string path = "Sprites/Acuity/optotype bitmap/";
+    private const string path = "Sprites/Acuity/Transparant Cs/";
     private readonly Quaternion default_quat = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
 
     public enum AcuityDirections { up,right,down,left,upri,dori,dole,uple };
