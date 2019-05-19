@@ -85,7 +85,6 @@ public class MD_GameController : GeneralGameController {
     private bool missile_number_checked;
     private bool city_destroyed_this_wave;
     private bool audio_source_flag;
-    private System.Diagnostics.Stopwatch session_timer;
     #endregion
 
     private void Awake()
@@ -128,14 +127,11 @@ public class MD_GameController : GeneralGameController {
         this.difficulty_ratio = 0;
         this.missile_speed_this_wave = 0.0f;
         this.audio_source_flag = false;
-        this.session_timer = new System.Diagnostics.Stopwatch();
 
         
         wave_info.set_data(MD_WaveDefiner.WaveInfo_list);
         set_random();
         register_controller();
-        session_timer.Reset();
-        session_timer.Start();
     }
 	
 	// Update is called once per frame
@@ -176,9 +172,19 @@ public class MD_GameController : GeneralGameController {
         de_register_controller();
     }
 
+    private void start_session_timer()
+    {
+        MDDC_script.session_timer.Start();
+    }
+
+    private void pause_session_timer()
+    {
+        MDDC_script.session_timer.Stop();
+    }
+
     private void update_session_timer()
     {
-        Timer_TextM.text = session_timer.Elapsed.ToString("hh\\:mm\\:ss");
+        Timer_TextM.text = MDDC_script.session_timer.Elapsed.ToString("hh\\:mm\\:ss");
     }
 
     private void update_Acounter_text()
@@ -448,6 +454,7 @@ public class MD_GameController : GeneralGameController {
         //WorldCanvas_GO.SetActive(false);
         MD_GC_Animator.SetTrigger(MD_StrDefiner.AnimatorNextStepTrigger_str);
         //TutorialTest_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        start_session_timer();
     }
 
     public void ToStartWave()
@@ -669,11 +676,13 @@ public class MD_GameController : GeneralGameController {
     {
         //GeneralGameController.GameTimeScale = 0.0f;
         Time.timeScale = 0.0f;
+        pause_session_timer();
     }
 
     public void resume_game()
     {
         Time.timeScale = 1.0f;
+        start_session_timer();
     }
 
     private void set_random()

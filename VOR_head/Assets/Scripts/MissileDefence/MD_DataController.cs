@@ -40,15 +40,15 @@ public class MD_DataController : ParentDataController
     public int ReloadAmmoOffset = 0;
     public int ReloadAmmoNumber = 0;
 
-    private void Awake()
+    public System.Diagnostics.Stopwatch session_timer { get; set; }
+
+    protected override void Awake()
     {
-        DontDestroyOnLoad(this);
+        base.Awake();
     }
 
     // Use this for initialization
     void Start () {
-        init_DC();
-
         this.Wave_info = new MD_WaveInfo();
         this.GameData_Dict = new Dictionary<MD_GameData, string>();
 
@@ -57,7 +57,10 @@ public class MD_DataController : ParentDataController
             load_game_data_file(game_data_path);
             parse_variables();
         }
-	}
+
+        session_timer = new System.Diagnostics.Stopwatch();
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
