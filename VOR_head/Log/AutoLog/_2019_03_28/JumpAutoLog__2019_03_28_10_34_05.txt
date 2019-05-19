@@ -1,3 +1,0 @@
-Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 0 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 2 
-
-

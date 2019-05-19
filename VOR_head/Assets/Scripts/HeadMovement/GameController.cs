@@ -41,7 +41,7 @@ public class GameController : GeneralGameController {
     public GameObject Target;
     public GameObject IndiText1;
     public GameObject HeadIndicator;
-    public GameObject CameraParent;
+    //public GameObject CameraParent;
     public GameObject LastPosIndocator;
     public GameObject HeadSimulator;
     public TextMesh TestText;
@@ -107,6 +107,17 @@ public class GameController : GeneralGameController {
     private bool controller_flag;
     private AcuityGroup.AcuityDirections acuity_dir;
     private AcuityMode acuity_mode;
+    private bool show_acuity_flag;
+    private bool speed_passed_flag;
+
+    public bool UsingAcuity
+    {
+        get
+        {
+            return DC_script.Current_GM.UsingAcuityAfter ||
+                    DC_script.Current_GM.UsingAcuityBefore;
+        }
+    }
 
     private void Awake()
     {
@@ -162,6 +173,8 @@ public class GameController : GeneralGameController {
         this.controller_flag = false;
         this.acuity_dir = AcuityGroup.AcuityDirections.up;
         this.acuity_mode = (AcuityMode)DC_script.SystemSetting.AcuityMode;
+        this.show_acuity_flag = false;
+        this.speed_passed_flag = false;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -551,15 +564,29 @@ public class GameController : GeneralGameController {
         }
         if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
         {
-            GCAnimator.SetTrigger("NextStep");
+            speed_passed();
             return;
         }
-        if (ray_cast_scrip.hit_border_flag)
+        if (ray_cast_scrip.hit_border_flag && !speed_passed_flag)
         {
             Debug.Log("hit_border_flag");
             GCAnimator.SetTrigger("Reset");
         }
 
+    }
+
+    private void speed_passed()
+    {
+        speed_passed_flag = true;
+        //Debug.Log("speed_passed !!!!!!");
+        if(DC_script.Current_GM.UsingAcuityBefore)
+        {
+            StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime));
+        }
+        else
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
     }
 
     private void record_target()
@@ -573,6 +600,12 @@ public class GameController : GeneralGameController {
         GCAnimator.SetTrigger("NextStep");
     }
 
+    public void ToCheckStop()
+    {
+        Check_stop_flag = true;
+        speed_passed_flag = false;
+    }
+
     public void CheckStop()
     {
         if (stop_window_timer < 0.0f)
@@ -580,9 +613,9 @@ public class GameController : GeneralGameController {
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
             stop_window_timer = DC_script.SystemSetting.StopWinodow;
             //stopped_flag = false;
-            if(DC_script.Current_GM.UsingAcuity)
+            if(DC_script.Current_GM.UsingAcuityAfter)
             {
-                StartCoroutine(show_acuity(0.1f));
+                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime));
             }
             else
             {
@@ -593,10 +626,15 @@ public class GameController : GeneralGameController {
 
     private IEnumerator show_acuity(float time_dure)
     {
-        acuity_dir = AG_script.turn_on_acuity(true);
-        yield return new WaitForSeconds(time_dure);
-        AG_script.turn_off_AG();
-        GCAnimator.SetTrigger("NextStep");
+        if(!show_acuity_flag)
+        {
+            show_acuity_flag = true;
+            acuity_dir = AG_script.turn_on_acuity(true);
+            yield return new WaitForSeconds(time_dure);
+            AG_script.turn_off_AG();
+            GCAnimator.SetTrigger("NextStep");
+            show_acuity_flag = false;
+        }
     }
 
     //Obsoleted;
@@ -922,7 +960,7 @@ public class GameController : GeneralGameController {
 
         GCS_script.change_indicate_text(DC_script.Current_GM.GameModeName.ToString());
 
-        if(DC_script.Current_GM.UsingAcuity)
+        if(UsingAcuity)
         {
             AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode);
         }
@@ -950,7 +988,7 @@ public class GameController : GeneralGameController {
 
     public void ToCheckController()
     {
-        if(DC_script.Current_GM.UsingAcuity)
+        if(UsingAcuity)
         {
             controller_flag = true;
             if(DC_script.SystemSetting.UseAcuityIndicator)

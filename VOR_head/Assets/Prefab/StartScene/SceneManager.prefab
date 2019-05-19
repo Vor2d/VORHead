@@ -43,5 +43,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64c0d90f48ec1a249b20df8f5194c2eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  using_VR: 1
-  using_coil: 0
+  using_VR: 0
+  using_coil: 1

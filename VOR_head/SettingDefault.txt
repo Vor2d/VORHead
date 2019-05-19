@@ -12,4 +12,5 @@ TargetChangeTime	2.0
 TargetChangeTimeRRange	2.0
 UsingCurvedScreen	True
 UseAcuityIndicator	True
+AcuityFlashTime	0.1
 AcuityMode	1

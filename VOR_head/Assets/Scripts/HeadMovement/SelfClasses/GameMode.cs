@@ -17,7 +17,8 @@ public class GameMode
     public bool ChangeTargetByTime { get; set; }
     //Variables;
     public float Gain { get; set; }
-    public bool UsingAcuity { get; set; }
+    public bool UsingAcuityAfter { get; set; }
+    public bool UsingAcuityBefore { get; set; }
     public int AcuitySize { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
@@ -40,7 +41,8 @@ public class GameMode
         this.ChangeTargetByTime = other_GM.ChangeTargetByTime;
 
         this.Gain = other_GM.Gain;
-        this.UsingAcuity = other_GM.UsingAcuity;
+        this.UsingAcuityAfter = other_GM.UsingAcuityAfter;
+        this.UsingAcuityBefore = other_GM.UsingAcuityBefore;
         this.AcuitySize = other_GM.AcuitySize;
 
         this.GameModeName = other_GM.GameModeName;
@@ -116,8 +118,10 @@ public class GameMode
     {
         try { Gain = float.Parse(para_dict["Gain"]); }
         catch { Gain = 1.0f; }
-        try { UsingAcuity = para_dict["UsingAcuity"] == "True"; }
-        catch { UsingAcuity = false; }
+        try { UsingAcuityAfter = para_dict["UsingAcuityAfter"] == "True"; }
+        catch { UsingAcuityAfter = false; }
+        try { UsingAcuityBefore = para_dict["UsingAcuityBefore"] == "True"; }
+        catch { UsingAcuityBefore = false; }
         try { AcuitySize = int.Parse(para_dict["AcuitySize"]); }
         catch { AcuitySize = 4; }
     }
@@ -127,36 +131,6 @@ public class GameMode
         
 
         string result_str = "";
-
-        //string game_mode_str = "";
-        //switch (game_mode)
-        //{
-        //    case GameModeEnum.Default:
-        //        {
-        //            game_mode_str = "Default";
-        //            break;
-        //        }
-        //    case GameModeEnum.GazeTest:
-        //        {
-        //            game_mode_str = "GazeTest";
-        //            break;
-        //        }
-        //    case GameModeEnum.Feedback_Learning:
-        //        {
-        //            game_mode_str = "Feedback_Learning";
-        //            break;
-        //        }
-        //    case GameModeEnum.Jump_Learning:
-        //        {
-        //            game_mode_str = "Jump_Learning";
-        //            break;
-        //        }
-        //    case GameModeEnum.HC_FB_Learning:
-        //        {
-        //            game_mode_str = "HC_FB_Learning";
-        //            break;
-        //        }
-        //}
 
         result_str += "GameMode" + " " + GameModeName.ToString() + " ";
 
@@ -168,7 +142,8 @@ public class GameMode
         result_str += "HideHeadIndicator" + " " + HideHeadIndicator.ToString() + " ";
 
         result_str += "Gain" + " " + Gain.ToString() + " ";
-        result_str += "UsingAcuity" + " " + UsingAcuity.ToString() + " ";
+        result_str += "UsingAcuityAfter" + " " + UsingAcuityAfter.ToString() + " ";
+        result_str += "UsingAcuityBefore" + " " + UsingAcuityBefore.ToString() + " ";
         result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
 
         return result_str;

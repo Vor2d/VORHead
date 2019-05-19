@@ -21,6 +21,7 @@ public class GameSetting
     public float TargetChangeTimeRRange { get; set; }
     public bool UseAcuityIndicator { get; set; }
     public int AcuityMode { get; set; } //enum {four_dir,eight_dir};
+    public float AcuityFlashTime { get; set; }
 
     public GameSetting()
     {
@@ -66,6 +67,8 @@ public class GameSetting
         catch { UseAcuityIndicator = true; }
         try { AcuityMode = int.Parse(setting_dict["AcuityMode"]); }
         catch { AcuityMode = 0; }
+        try { AcuityFlashTime = float.Parse(setting_dict["AcuityFlashTime"]); }
+        catch { AcuityFlashTime = 0.1f; }
     }
 
     public string VarToString()
@@ -87,6 +90,7 @@ public class GameSetting
         result_str += "TargetChangeTimeRRange" + " " + TargetChangeTimeRRange.ToString() + " ";
         result_str += "UseAcuityIndicator" + " " + UseAcuityIndicator.ToString() + " ";
         result_str += "AcuityMode" + " " + AcuityMode.ToString() + " ";
+        result_str += "AcuityFlashTime" + " " + AcuityFlashTime.ToString() + " ";
 
 
         return result_str;
