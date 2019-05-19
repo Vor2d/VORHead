@@ -109,6 +109,7 @@ public class GameController : GeneralGameController {
     private AcuityMode acuity_mode;
     private bool show_acuity_flag;
     private bool speed_passed_flag;
+    private bool show_text_flag;
 
     public bool UsingAcuity
     {
@@ -175,6 +176,7 @@ public class GameController : GeneralGameController {
         this.acuity_mode = (AcuityMode)DC_script.SystemSetting.AcuityMode;
         this.show_acuity_flag = false;
         this.speed_passed_flag = false;
+        this.show_text_flag = false;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -530,6 +532,12 @@ public class GameController : GeneralGameController {
         //check_border();
     }
 
+    public void LeaveWaitForTurn()
+    {
+        Check_speed_flag = false;
+        speed_passed_flag = false;
+    }
+
     private void check_speed_with_window()
     {
         //if (!HSC_script.check_from_center(center_rotatey))
@@ -603,7 +611,6 @@ public class GameController : GeneralGameController {
     public void ToCheckStop()
     {
         Check_stop_flag = true;
-        speed_passed_flag = false;
     }
 
     public void CheckStop()
@@ -1002,6 +1009,21 @@ public class GameController : GeneralGameController {
         {
             GCAnimator.SetTrigger("NextStep");
         }
+        
+    }
+
+    private IEnumerator show_text(float time,string text)
+    {
+        if(!show_text_flag)
+        {
+            show_text_flag = true;
+            IndiText1.GetComponent<MeshRenderer>().enabled = true;
+            IndiText1.GetComponent<TextMesh>().text = text;
+            yield return new WaitForSeconds(time);
+            IndiText1.GetComponent<MeshRenderer>().enabled = false;
+            show_text_flag = false;
+        }
+        
     }
 
     private void check_controller()
@@ -1041,16 +1063,25 @@ public class GameController : GeneralGameController {
             case AcuityMode.four_dir:
                 if ((int)acuity_dir == (int)CI_script.Four_dir_input)
                 {
-                    GCAnimator.SetTrigger("NextStep");
+                    StartCoroutine(show_text(1.0f, "Right"));
+                }
+                else
+                {
+                    StartCoroutine(show_text(1.0f, "Wrong"));
                 }
                 break;
             case AcuityMode.eight_dir:
                 if((int)acuity_dir == (int)CI_script.Eight_dir_input)
                 {
-                    GCAnimator.SetTrigger("NextStep");
+                    StartCoroutine(show_text(1.0f, "Right"));
+                }
+                else
+                {
+                    StartCoroutine(show_text(1.0f, "Wrong"));
                 }
                 break;
         }
+        GCAnimator.SetTrigger("NextStep");
     }
 
     public void LeaveCheckController()

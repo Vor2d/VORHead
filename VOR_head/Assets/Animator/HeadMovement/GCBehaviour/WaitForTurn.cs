@@ -10,9 +10,10 @@ public class WaitForTurn : StateMachineBehaviour {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
-        //this.HSC_script = 
-        //                GameObject.Find("GameController").GetComponent<HeadStateController>();
+        if(GC_script == null)
+        {
+            GC_script = animator.GetComponent<GameController>();
+        }
         GC_script.Current_state = "WaitForTurn";
 
         GC_script.ToWaitForTurn();
@@ -27,8 +28,7 @@ public class WaitForTurn : StateMachineBehaviour {
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //HSC_script.Check_speed_flag = false;
-        GC_script.Check_speed_flag = false;
+        GC_script.LeaveWaitForTurn();
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove(). Code that processes and affects root motion should be implemented here
