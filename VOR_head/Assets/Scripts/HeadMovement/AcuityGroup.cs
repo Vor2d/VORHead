@@ -10,6 +10,10 @@ public class AcuityGroup : MonoBehaviour
 
     public enum AcuityDirections { up,right,down,left,upri,dori,dole,uple };
 
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private Camera acu_camera;
+    [SerializeField] private Transform Target_TRANS;
+    [SerializeField] private Transform Background_TRANS;
     [SerializeField] private Transform AcuitySprite_TRANS;
     [SerializeField] private Transform AcuityIndi_TRANS;
     [SerializeField] private Controller_Input CI_script;
@@ -33,10 +37,21 @@ public class AcuityGroup : MonoBehaviour
     void Update()
     {
         //Debug.Log("default_quat " + default_quat.eulerAngles);
+
+        update_acuity_pos();
+
         if(AI_start_flag)
         {
             acuity_indicator();
         }
+    }
+
+    private void update_acuity_pos()
+    {
+        //Debug.Log("WorldToScreenPoint " + acu_camera.WorldToScreenPoint(Target_TRANS.position));
+        Vector3 pos =
+                GeneralMethods.world_to_canvas(Target_TRANS.position, acu_camera, canvas);
+        GetComponent<RectTransform>().localPosition = pos;
     }
 
     public void init_acuity(int acuity_size,GameController.AcuityMode _acuity_mode)
@@ -50,12 +65,25 @@ public class AcuityGroup : MonoBehaviour
     {
         turn_off_AI();
         turn_off_AS();
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        turn_off_BG();
+
     }
 
     public void turn_on_AG()
     {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        turn_on_BG();
+    }
+
+    private void turn_off_BG()
+    {
+        Background_TRANS.gameObject.SetActive(false);
+    }
+
+    private void turn_on_BG()
+    {
+        Background_TRANS.gameObject.SetActive(true);
     }
 
     public AcuityDirections turn_on_acuity(bool random_rotate)
@@ -65,7 +93,8 @@ public class AcuityGroup : MonoBehaviour
         {
             dir = rotate();
         }
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        turn_on_BG();
         AcuitySprite_TRANS.gameObject.SetActive(true);
         return dir;
     }
@@ -130,7 +159,8 @@ public class AcuityGroup : MonoBehaviour
 
     public void start_AI()
     {
-        gameObject.SetActive(true);
+        //gameObject.SetActive(true);
+        turn_on_BG();
         //AcuityIndi_TRANS.gameObject.SetActive(true);
         AI_start_flag = true;
     }

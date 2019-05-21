@@ -546,6 +546,18 @@ public static class GeneralMethods {
                 page.gameObject.SetActive(false);
             }
         }
+    }
+
+    public static Vector3 world_to_canvas(Vector3 target_pos,Camera camera,Canvas canvas)
+    {
+        Vector3 screenPos = camera.WorldToViewportPoint(target_pos);
+        screenPos.x *= canvas.GetComponent<RectTransform>().rect.width;
+        screenPos.x -= canvas.GetComponent<RectTransform>().rect.width / 2.0f;
+        screenPos.y *= canvas.GetComponent<RectTransform>().rect.height;
+        screenPos.y -= canvas.GetComponent<RectTransform>().rect.height / 2.0f;
+        screenPos.z = 0.0f;
+
+        return screenPos;
 
     }
 }

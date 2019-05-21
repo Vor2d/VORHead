@@ -47,4 +47,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FruitSlice/FruitSlice.unity
     guid: 5a2550da8e7f7ec4e8d20f4faf2bb696
+  - enabled: 0
+    path: Assets/Scenes/TestScene.unity
+    guid: 2c2c991de9501b541ae5add842a58d7d
   m_configObjects: {}
