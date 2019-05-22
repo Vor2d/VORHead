@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
@@ -7,6 +6,7 @@ using HMTS_enum;
 
 public class DataController : ParentDataController {
 
+    private const string acuity_path = "Sprites/Acuity/Transparant Cs/LandC/";
     private const string trial_path = "Default.txt";
     private const string ECTrial_path = "ECTrial.txt";
     private readonly char[] line_spliter = new char[] { ' ', '\t' };
@@ -17,6 +17,7 @@ public class DataController : ParentDataController {
     public GameSetting SystemSetting { get; set; }
     public EyeInfo Eye_info { get; set; }
     public TrialInfo Eye_TI { get; set; }
+    public Sprite[] Acuity_sprites { get; set; }
 
     //System data;
     public EyeFitMode FitMode;
@@ -39,13 +40,18 @@ public class DataController : ParentDataController {
         Eye_info.set_model(FitFunction);
         this.Eye_TI = new TrialInfo();
 
-        Sections = GeneralMethods.load_game_data_general(trial_path);
-        SystemSetting = GeneralMethods.read_game_setting_general(setting_path+setting_file_name);
-        read_eye_trials();
     }
 
     private void Start()
     {
+        load_acuity_sprites();
+
+        SystemSetting = load_setting<GameSetting>();
+        Debug.Log("GameSetting loaded " + SystemSetting.GetType());
+
+        Sections = GeneralMethods.load_game_data_general(trial_path);
+        read_eye_trials();
+
         Debug.Log("SystemSetting " + SystemSetting.VarToString());
 
         foreach (Section section in Sections)
@@ -59,6 +65,23 @@ public class DataController : ParentDataController {
             Debug.Log(section.SectionTrialInfo.VarToString());
             Debug.Log("-------------------");
         }
+    }
+
+    public override void generate_setting()
+    {
+        generate_setting<GameSetting>(SystemSetting);
+    }
+
+    private void load_acuity_sprites()
+    {
+        Debug.Log("Loading acuity sprites " + acuity_path);
+        try
+        {
+            Acuity_sprites = Resources.LoadAll<Sprite>(acuity_path);
+            Debug.Log("Acuity sprites loaded!");
+        }
+        catch { Debug.Log("Acuity sprite failed"); }
+        
     }
 
     public void read_eye_trials()

@@ -1,7 +1,8 @@
 GameMode	HC_FB_Learning
-UsingAcuityAfter	False
-UsingAcuityBefore	True
-AcuitySize	11
+UsingAcuityAfter	True
+UsingAcuityBefore	False
+AcuitySize	5
+UsingAcuityChange	True
 ________________________________
 -1
 15	15

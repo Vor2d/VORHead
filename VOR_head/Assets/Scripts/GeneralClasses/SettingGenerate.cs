@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 
 public class SettingGenerate : MonoBehaviour
 {
@@ -20,7 +21,13 @@ public class SettingGenerate : MonoBehaviour
             ParentDataController DC_script = 
                                 Instantiate(DC_Prefab, Vector3.zero, Quaternion.identity).
                                 GetComponent<ParentDataController>();
-            DC_script.generate_setting();
+            StartCoroutine(wait_generate_setting(DC_script));
         }
+    }
+
+    private IEnumerator wait_generate_setting(ParentDataController DC_script)
+    {
+        yield return new WaitForSeconds(0.5f);
+        DC_script.generate_setting();
     }
 }

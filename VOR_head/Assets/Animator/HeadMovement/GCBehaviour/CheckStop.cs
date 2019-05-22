@@ -9,7 +9,10 @@ public class CheckStop : StateMachineBehaviour {
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        this.GC_script = GameObject.Find("GameController").GetComponent<GameController>();
+        if(GC_script == null)
+        {
+            GC_script = animator.GetComponent<GameController>();
+        }
         GC_script.Current_state = "CheckStop";
 
         GC_script.ToCheckStop();

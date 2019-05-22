@@ -13,6 +13,7 @@ public class DebugController : MonoBehaviour {
     const string VRLST_init_text = "VR Logging: ";    //VRLoggingState init text;
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
+    const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size): ";
 
     public GameController GC_script;
     public HeadSimulator HS_script;
@@ -30,6 +31,7 @@ public class DebugController : MonoBehaviour {
     public Text JumpLoggingState_Text;
     public Text LoopTrialNumber_Text;
     public bool UsingEyeSimulator;
+    public Text AcuityState_Text;
 
     private DataController DC_script;
 
@@ -62,6 +64,11 @@ public class DebugController : MonoBehaviour {
                                             + "\t & \t" + GC_script.trial_iter.ToString()
                                             + "\t & \t" + GC_script.section_number
                                             + "\t" + DC_script.Current_GM.GameModeName;
+        AcuityState_Text.text = Acuity_init_text + (GC_script.AcuityState.x).ToString("F0") +
+                                        " / " + (GC_script.AcuityState.y).ToString("F0") +
+                                        " / " + (GC_script.AcuityState.z).ToString("F0") +
+                                        " / " + (GC_script.AcuityState.w).ToString("F0");
+
     }
 
     private void eye_test()

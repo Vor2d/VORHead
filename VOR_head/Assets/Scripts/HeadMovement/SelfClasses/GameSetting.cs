@@ -3,36 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+[Serializable]
 public class GameSetting
 {
-    public string Camera1_display { get; set; }
-    public string Camera2_display { get; set; }
-    public bool Using_curved_screen { get; set; }
-    public float Player_screen_cm { get; set; }
-    public float Screen_width_cm { get; set; }
+    public string Camera1_display;
+    public string Camera2_display;
+    public bool Using_curved_screen;
+    public float Player_screen_cm;
+    public float Screen_width_cm;
 
-    public float GazeTime { get; set; }
-    public float RandomGazeTime { get; set; }
-    public float HideTime { get; set; }
-    public float ErrorTime { get; set; }
-    public float SpeedThreshold { get; set; }
-    public float StopWinodow { get; set; }
-    public float TargetChangeTime { get; set; }
-    public float TargetChangeTimeRRange { get; set; }
-    public bool UseAcuityIndicator { get; set; }
-    public int AcuityMode { get; set; } //enum {four_dir,eight_dir};
-    public float AcuityFlashTime { get; set; }
+    public float GazeTime;
+    public float RandomGazeTime;
+    public float HideTime;
+    public float ErrorTime;
+    public float SpeedThreshold;
+    public float StopWinodow;
+    public float TargetChangeTime;
+    public float TargetChangeTimeRRange;
+    public bool UseAcuityIndicator;
+    public int AcuityMode;  //enum {four_dir,eight_dir};
+    public float AcuityFlashTime;
+    public int AcuityChangeNumber;
+    public float AcuityChangeUpPerc;
+    public float AcuityChangeDownPerc;
 
     public GameSetting()
     {
-        set_preset_setting(new Dictionary<string, string>());
+        this.Camera1_display = "0";
+        this.Camera2_display = "1";
+        this.Using_curved_screen = true;
+        this.Player_screen_cm = 100.0f;
+        this.Screen_width_cm = 100.0f;
+
+        this.GazeTime = 2.0f;
+        this.RandomGazeTime = 0.5f;
+        this.HideTime = 0.1f;
+        this.ErrorTime = 2.0f;
+        this.SpeedThreshold = 10.0f;
+        this.StopWinodow = 0.1f;
+        this.TargetChangeTime = 2.0f;
+        this.TargetChangeTimeRRange = 0.5f;
+        this.UseAcuityIndicator = false;
+        this.AcuityMode = 0;  //enum {four_dir,eight_dir};
+        this.AcuityFlashTime = 0.1f;
+        this.AcuityChangeNumber = 10;
+        this.AcuityChangeUpPerc = 0.8f;
+        this.AcuityChangeDownPerc = 0.5f;
     }
 
+    [Obsolete("Not using txt file anymore")]
     public GameSetting(Dictionary<string,string> setting_dict)
     {
         set_preset_setting(setting_dict);
     }
 
+    [Obsolete("Not using txt file anymore")]
     public void set_preset_setting(Dictionary<string, string> setting_dict)
     {
         try { Using_curved_screen = setting_dict["UsingCurvedScreen"] == "True"; }
@@ -91,6 +116,9 @@ public class GameSetting
         result_str += "UseAcuityIndicator" + " " + UseAcuityIndicator.ToString() + " ";
         result_str += "AcuityMode" + " " + AcuityMode.ToString() + " ";
         result_str += "AcuityFlashTime" + " " + AcuityFlashTime.ToString() + " ";
+        result_str += "AcuityChangeNumber" + " " + AcuityChangeNumber.ToString() + " ";
+        result_str += "AcuityChangeUpPerc" + " " + AcuityChangeUpPerc.ToString() + " ";
+        result_str += "AcuityChangeDownPerc" + " " + AcuityChangeDownPerc.ToString() + " ";
 
 
         return result_str;

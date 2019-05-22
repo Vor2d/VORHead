@@ -20,6 +20,7 @@ public class GameMode
     public bool UsingAcuityAfter { get; set; }
     public bool UsingAcuityBefore { get; set; }
     public int AcuitySize { get; set; }
+    public bool UsingAcuityChange { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -44,6 +45,7 @@ public class GameMode
         this.UsingAcuityAfter = other_GM.UsingAcuityAfter;
         this.UsingAcuityBefore = other_GM.UsingAcuityBefore;
         this.AcuitySize = other_GM.AcuitySize;
+        this.UsingAcuityChange = other_GM.UsingAcuityChange;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -124,6 +126,8 @@ public class GameMode
         catch { UsingAcuityBefore = false; }
         try { AcuitySize = int.Parse(para_dict["AcuitySize"]); }
         catch { AcuitySize = 4; }
+        try { UsingAcuityChange = (para_dict["UsingAcuityChange"] == "True"); }
+        catch { UsingAcuityChange = false; }
     }
 
     public string VarToString()
@@ -145,6 +149,7 @@ public class GameMode
         result_str += "UsingAcuityAfter" + " " + UsingAcuityAfter.ToString() + " ";
         result_str += "UsingAcuityBefore" + " " + UsingAcuityBefore.ToString() + " ";
         result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
+        result_str += "UsingAcuityChange" + " " + UsingAcuityChange.ToString() + " ";
 
         return result_str;
     }

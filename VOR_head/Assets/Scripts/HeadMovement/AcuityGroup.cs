@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
+using System.Linq;
 
 public class AcuityGroup : MonoBehaviour
 {
-    private const string path = "Sprites/Acuity/Transparant Cs/";
+    
     private readonly Quaternion default_quat = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
 
     public enum AcuityDirections { up,right,down,left,upri,dori,dole,uple };
@@ -20,11 +18,13 @@ public class AcuityGroup : MonoBehaviour
 
     private bool AI_start_flag;
     private GameController.AcuityMode acuity_mode;
+    private DataController DC_script;
 
     private void Awake()
     {
         this.AI_start_flag = false;
         this.acuity_mode = default(GameController.AcuityMode);
+        this.DC_script = null;
     }
 
     // Start is called before the first frame update
@@ -54,11 +54,19 @@ public class AcuityGroup : MonoBehaviour
         GetComponent<RectTransform>().localPosition = pos;
     }
 
-    public void init_acuity(int acuity_size,GameController.AcuityMode _acuity_mode)
+    public void init_acuity(int acuity_size,GameController.AcuityMode _acuity_mode,
+                            DataController _DC_script)
     {
-        AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = 
-            Resources.Load<Sprite>(path + acuity_size.ToString());
+        DC_script = _DC_script;
         acuity_mode = _acuity_mode;
+
+        change_acuity_size(acuity_size);
+    }
+
+    public void change_acuity_size(int size)
+    {
+        AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite =
+                DC_script.Acuity_sprites.Single(s => s.name == size.ToString());
     }
 
     public void turn_off_AG()

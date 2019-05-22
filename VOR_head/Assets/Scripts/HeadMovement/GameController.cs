@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.XR;
-using System.IO;
 using UnityEngine.SceneManagement;
 using HMTS_enum;
 
@@ -84,7 +83,6 @@ public class GameController : GeneralGameController {
     private CoilData CD_script;
     private VRLogSystem VRLS_script;
     private JumpLogSystem JLS_script;
-    private MySceneManager MSM_script;
     //Objects;
     private Animator GCAnimator;
     //Variables;
@@ -110,6 +108,10 @@ public class GameController : GeneralGameController {
     private bool show_acuity_flag;
     private bool speed_passed_flag;
     private bool show_text_flag;
+    private int acuity_change_index;
+    private int acuity_wrong_num;
+    private int acuity_right_num;
+    private int curr_acuity_size;
 
     public bool UsingAcuity
     {
@@ -120,10 +122,17 @@ public class GameController : GeneralGameController {
         }
     }
 
+    public Vector4 AcuityState
+    {
+        get
+        {
+            return new Vector4(acuity_change_index, acuity_right_num, acuity_wrong_num,
+                                curr_acuity_size);
+        }
+    }
+
     private void Awake()
     {
-        this.MSM_script = GameObject.Find(GeneralStrDefiner.SceneManagerGO_name).
-                                                    GetComponent<MySceneManager>();
     }
 
     // Use this for initialization
@@ -177,6 +186,10 @@ public class GameController : GeneralGameController {
         this.show_acuity_flag = false;
         this.speed_passed_flag = false;
         this.show_text_flag = false;
+        this.acuity_change_index = 0;
+        this.acuity_wrong_num = 0;
+        this.acuity_right_num = 0;
+        this.curr_acuity_size = 0;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -745,6 +758,29 @@ public class GameController : GeneralGameController {
 
     public void ToStartTrial()
     {
+        if(DC_script.Current_GM.UsingAcuityChange)
+        {
+            Debug.Log("acuity_change_index " + acuity_change_index);
+            if(acuity_change_index >= DC_script.SystemSetting.AcuityChangeNumber)
+            {
+                if(acuity_right_num > (int)(DC_script.SystemSetting.AcuityChangeNumber *
+                                            DC_script.SystemSetting.AcuityChangeUpPerc))
+                {
+                    decrease_acuity_size();
+                }
+                else if(acuity_wrong_num > (DC_script.SystemSetting.AcuityChangeNumber -
+                                            (int)(DC_script.SystemSetting.AcuityChangeNumber *
+                                                DC_script.SystemSetting.AcuityChangeDownPerc)))
+                {
+                    increase_acuity_size();
+                }
+                acuity_change_index = 0;
+                acuity_right_num = 0;
+                acuity_wrong_num = 0;
+            }
+            acuity_change_index++;
+        }
+
         if(ShowResultFlag)
         {
             restar_script.turn_off_mesh();
@@ -803,6 +839,32 @@ public class GameController : GeneralGameController {
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
         Debug.Log("Section " + section_number);
+    }
+
+    private void increase_acuity_size()
+    {
+        curr_acuity_size++;
+        if(curr_acuity_size >= DC_script.Acuity_sprites.Length)
+        {
+            Debug.Log("Max acuity size reached");
+        }
+        else
+        {
+            AG_script.change_acuity_size(curr_acuity_size);
+        }
+    }
+
+    private void decrease_acuity_size()
+    {
+        curr_acuity_size--;
+        if(curr_acuity_size < 0)
+        {
+            Debug.Log("Min acuity size reached");
+        }
+        else
+        {
+            AG_script.change_acuity_size(curr_acuity_size);
+        }
     }
 
     public void ToUpdateDC()
@@ -969,7 +1031,8 @@ public class GameController : GeneralGameController {
 
         if(UsingAcuity)
         {
-            AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode);
+            AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode,DC_script);
+            curr_acuity_size = DC_script.Current_GM.AcuitySize;
         }
     }
 
@@ -990,7 +1053,7 @@ public class GameController : GeneralGameController {
 
     public void back_to_main_menu()
     {
-        MSM_script.to_start_scene();
+        DC_script.MSM_script.to_start_scene();
     }
 
     public void ToCheckController()
@@ -1063,20 +1126,24 @@ public class GameController : GeneralGameController {
             case AcuityMode.four_dir:
                 if ((int)acuity_dir == (int)CI_script.Four_dir_input)
                 {
+                    acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
                 }
                 else
                 {
+                    acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
                 }
                 break;
             case AcuityMode.eight_dir:
                 if((int)acuity_dir == (int)CI_script.Eight_dir_input)
                 {
+                    acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
                 }
                 else
                 {
+                    acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
                 }
                 break;
