@@ -51,6 +51,7 @@ public class GameController : GeneralGameController {
     public GameController_Setting GCS_script;
     public AcuityGroup AG_script;
     [SerializeField] private Controller_Input CI_script;
+    [SerializeField] private GeneralControllerInput GCI_script;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -200,6 +201,10 @@ public class GameController : GeneralGameController {
         if(DC_script.MSM_script.using_VR)
         {
             CI_script.IndexTrigger += check_controller;
+        }
+        if(DC_script.MSM_script.using_coil)
+        {
+            GCI_script.Button5_act += check_controller;
         }
 
     }
@@ -1098,6 +1103,10 @@ public class GameController : GeneralGameController {
                 //check_oculusC();
                 check_oculusC2();
             }
+            if(DC_script.MSM_script.using_coil)
+            {
+                check_common_controller();
+            }
         }
     }
 
@@ -1137,6 +1146,38 @@ public class GameController : GeneralGameController {
                 break;
             case AcuityMode.eight_dir:
                 if((int)acuity_dir == (int)CI_script.Eight_dir_input)
+                {
+                    acuity_right_num++;
+                    StartCoroutine(show_text(1.0f, "Right"));
+                }
+                else
+                {
+                    acuity_wrong_num++;
+                    StartCoroutine(show_text(1.0f, "Wrong"));
+                }
+                break;
+        }
+        GCAnimator.SetTrigger("NextStep");
+    }
+
+    private void check_common_controller()
+    {
+        switch (acuity_mode)
+        {
+            case AcuityMode.four_dir:
+                if ((int)acuity_dir == (int)GCI_script.Four_dir_input)
+                {
+                    acuity_right_num++;
+                    StartCoroutine(show_text(1.0f, "Right"));
+                }
+                else
+                {
+                    acuity_wrong_num++;
+                    StartCoroutine(show_text(1.0f, "Wrong"));
+                }
+                break;
+            case AcuityMode.eight_dir:
+                if ((int)acuity_dir == (int)GCI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));

@@ -15,6 +15,7 @@ public class AcuityGroup : MonoBehaviour
     [SerializeField] private Transform AcuitySprite_TRANS;
     [SerializeField] private Transform AcuityIndi_TRANS;
     [SerializeField] private Controller_Input CI_script;
+    [SerializeField] private GeneralControllerInput GCI_script;
 
     private bool AI_start_flag;
     private GameController.AcuityMode acuity_mode;
@@ -42,7 +43,14 @@ public class AcuityGroup : MonoBehaviour
 
         if(AI_start_flag)
         {
-            acuity_indicator();
+            if(DC_script.MSM_script.using_VR)
+            {
+                acuity_indicator_VR();
+            }
+            if(DC_script.MSM_script.using_coil)
+            {
+                acuity_indicator();
+            }
         }
     }
 
@@ -173,7 +181,7 @@ public class AcuityGroup : MonoBehaviour
         AI_start_flag = true;
     }
 
-    private void acuity_indicator()
+    private void acuity_indicator_VR()
     {
         Quaternion rotate_caled = new Quaternion();
         switch(acuity_mode)
@@ -195,5 +203,29 @@ public class AcuityGroup : MonoBehaviour
             AcuityIndi_TRANS.rotation = rotate_caled;
         }
         
+    }
+
+    private void acuity_indicator()
+    {
+        Quaternion rotate_caled = new Quaternion();
+        switch (acuity_mode)
+        {
+            case GameController.AcuityMode.four_dir:
+                rotate_caled = rotate_cal((int)GCI_script.Four_dir_input);
+                break;
+            case GameController.AcuityMode.eight_dir:
+                rotate_caled = rotate_cal((int)GCI_script.Eight_dir_input);
+                break;
+        }
+        if (rotate_caled.eulerAngles == default_quat.eulerAngles)
+        {
+            AcuityIndi_TRANS.gameObject.SetActive(false);
+        }
+        else
+        {
+            AcuityIndi_TRANS.gameObject.SetActive(true);
+            AcuityIndi_TRANS.rotation = rotate_caled;
+        }
+
     }
 }
