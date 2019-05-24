@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.IO;
 
+using HMTS_enum;
+
 /// <summary>
 /// A static class that contains a lot of common methods that will be reused;
 /// </summary>
@@ -155,49 +157,49 @@ public static class GeneralMethods {
                                 case "GazeTest":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.GazeTest);
+                                    set_preset_mode(GameModeEnum.GazeTest);
                                         break;
                                     }
                                 case "EyeTest":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.EyeTest);
+                                    set_preset_mode(GameModeEnum.EyeTest);
                                         break;
                                     }
                                 case "Feedback_Learning":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.Feedback_Learning);
+                                    set_preset_mode(GameModeEnum.Feedback_Learning);
                                         break;
                                     }
                                 case "Jump_Learning":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.Jump_Learning);
+                                    set_preset_mode(GameModeEnum.Jump_Learning);
                                         break;
                                     }
                                 case "HC_FB_Learning":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.HC_FB_Learning);
+                                    set_preset_mode(GameModeEnum.HC_FB_Learning);
                                         break;
                                     }
                                 case "Training":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.Training);
+                                    set_preset_mode(GameModeEnum.Training);
                                         break;
                                     }
                                 case "NoReddot":
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.NoReddot);
+                                    set_preset_mode(GameModeEnum.NoReddot);
                                         break;
                                     }
                                 default:
                                     {
                                         temp_gameMode.
-                                    set_preset_mode(GameMode.GameModeEnum.Default);
+                                    set_preset_mode(GameModeEnum.Default);
                                         break;
                                     }
                             }

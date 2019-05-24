@@ -3,6 +3,7 @@ UsingAcuityAfter	True
 UsingAcuityBefore	False
 AcuitySize	5
 UsingAcuityChange	True
+AcuityChangeMode	acuity_list
 ________________________________
 -1
 15	15

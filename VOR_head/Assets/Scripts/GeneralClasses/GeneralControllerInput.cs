@@ -46,8 +46,6 @@ public class GeneralControllerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("DIR " + Eight_dir_input.ToString());
-
         switch(CurrContollerType)
         {
             case ControllerType.Xbox:
@@ -59,7 +57,6 @@ public class GeneralControllerInput : MonoBehaviour
                 }
 
                 break;
-
         }
     }
 

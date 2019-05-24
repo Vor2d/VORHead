@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System;
 using UnityEngine;
+
+using HMTS_enum;
 
 public class GameMode
 {
-    public enum GameModeEnum { Default, GazeTest, EyeTest, Feedback_Learning,HC_FB_Learning,
-                                Jump_Learning,Training,NoReddot}
-
     //Game Flag
     public bool HideFlag { get; set; }
     public bool JumpFlag { get; set; }
@@ -21,6 +20,7 @@ public class GameMode
     public bool UsingAcuityBefore { get; set; }
     public int AcuitySize { get; set; }
     public bool UsingAcuityChange { get; set; }
+    public AcuityChangeMode CurrAcuityChangeMode { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -46,6 +46,7 @@ public class GameMode
         this.UsingAcuityBefore = other_GM.UsingAcuityBefore;
         this.AcuitySize = other_GM.AcuitySize;
         this.UsingAcuityChange = other_GM.UsingAcuityChange;
+        this.CurrAcuityChangeMode = other_GM.CurrAcuityChangeMode;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -128,6 +129,20 @@ public class GameMode
         catch { AcuitySize = 4; }
         try { UsingAcuityChange = (para_dict["UsingAcuityChange"] == "True"); }
         catch { UsingAcuityChange = false; }
+        try
+        {
+            string[] temp_enums = Enum.GetNames(typeof(AcuityChangeMode));
+            for (int i = 0;i< temp_enums.Length;i++)
+            {
+                if (para_dict["AcuityChangeMode"] == temp_enums[i])
+                {
+                    CurrAcuityChangeMode = (AcuityChangeMode)i;
+                    break;
+                }
+            }
+
+        }
+        catch { CurrAcuityChangeMode = AcuityChangeMode.acuity_list; }
     }
 
     public string VarToString()
@@ -150,6 +165,7 @@ public class GameMode
         result_str += "UsingAcuityBefore" + " " + UsingAcuityBefore.ToString() + " ";
         result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
         result_str += "UsingAcuityChange" + " " + UsingAcuityChange.ToString() + " ";
+        result_str += "CurrAcuityChangeMode" + " " + CurrAcuityChangeMode.ToString() + " ";
 
         return result_str;
     }

@@ -6,11 +6,6 @@ using UnityEngine.XR;
 using UnityEngine.SceneManagement;
 using HMTS_enum;
 
-namespace HMTS_enum
-{
-    public enum GazeTarget { DefaultTarget, HideDetector };
-}
-
 public class GameController : GeneralGameController {
 
     //Direction: 0 is left, 1 is right;
@@ -765,25 +760,7 @@ public class GameController : GeneralGameController {
     {
         if(DC_script.Current_GM.UsingAcuityChange)
         {
-            Debug.Log("acuity_change_index " + acuity_change_index);
-            if(acuity_change_index >= DC_script.SystemSetting.AcuityChangeNumber)
-            {
-                if(acuity_right_num > (int)(DC_script.SystemSetting.AcuityChangeNumber *
-                                            DC_script.SystemSetting.AcuityChangeUpPerc))
-                {
-                    decrease_acuity_size();
-                }
-                else if(acuity_wrong_num > (DC_script.SystemSetting.AcuityChangeNumber -
-                                            (int)(DC_script.SystemSetting.AcuityChangeNumber *
-                                                DC_script.SystemSetting.AcuityChangeDownPerc)))
-                {
-                    increase_acuity_size();
-                }
-                acuity_change_index = 0;
-                acuity_right_num = 0;
-                acuity_wrong_num = 0;
-            }
-            acuity_change_index++;
+            change_acuity();
         }
 
         if(ShowResultFlag)
@@ -846,29 +823,72 @@ public class GameController : GeneralGameController {
         Debug.Log("Section " + section_number);
     }
 
+    private void change_acuity()
+    {
+        switch(DC_script.Current_GM.CurrAcuityChangeMode)
+        {
+            case AcuityChangeMode.percent:
+                if (acuity_change_index >= DC_script.SystemSetting.AcuityChangeNumber)
+                {
+                    if (acuity_right_num > (int)(DC_script.SystemSetting.AcuityChangeNumber *
+                                                DC_script.SystemSetting.AcuityChangeUpPerc))
+                    {
+                        decrease_acuity_size();
+                    }
+                    else if (acuity_wrong_num > (DC_script.SystemSetting.AcuityChangeNumber -
+                                                (int)(DC_script.SystemSetting.AcuityChangeNumber *
+                                                    DC_script.SystemSetting.AcuityChangeDownPerc)))
+                    {
+                        increase_acuity_size();
+                    }
+                    acuity_change_index = 0;
+                    acuity_right_num = 0;
+                    acuity_wrong_num = 0;
+                }
+                acuity_change_index++;
+                break;
+
+            case AcuityChangeMode.acuity_list:
+                if(acuity_change_index < DC_script.SystemSetting.AcuityList.Count)
+                {
+                    curr_acuity_size = DC_script.SystemSetting.AcuityList[acuity_change_index];
+                    set_acuity_size(curr_acuity_size);
+                }
+                else
+                {
+                    Debug.Log("List over");
+                }
+                acuity_change_index++;
+                break;
+        }
+
+    }
+
     private void increase_acuity_size()
     {
         curr_acuity_size++;
-        if(curr_acuity_size >= DC_script.Acuity_sprites.Length)
-        {
-            Debug.Log("Max acuity size reached");
-        }
-        else
-        {
-            AG_script.change_acuity_size(curr_acuity_size);
-        }
+        set_acuity_size(curr_acuity_size);
     }
 
     private void decrease_acuity_size()
     {
         curr_acuity_size--;
-        if(curr_acuity_size < 0)
+        set_acuity_size(curr_acuity_size);
+    }
+
+    private void set_acuity_size(int size)
+    {
+        if(size >= DC_script.Acuity_sprites.Length)
+        {
+            Debug.Log("Max acuity size reached");
+        }
+        else if(size < 0)
         {
             Debug.Log("Min acuity size reached");
         }
         else
         {
-            AG_script.change_acuity_size(curr_acuity_size);
+            AG_script.change_acuity_size(size);
         }
     }
 

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
 using System;
 
 [Serializable]
@@ -26,6 +24,7 @@ public class GameSetting
     public int AcuityChangeNumber;
     public float AcuityChangeUpPerc;
     public float AcuityChangeDownPerc;
+    public List<int> AcuityList;
 
     public GameSetting()
     {
@@ -49,6 +48,7 @@ public class GameSetting
         this.AcuityChangeNumber = 10;
         this.AcuityChangeUpPerc = 0.8f;
         this.AcuityChangeDownPerc = 0.5f;
+        this.AcuityList = new List<int>();
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -119,6 +119,7 @@ public class GameSetting
         result_str += "AcuityChangeNumber" + " " + AcuityChangeNumber.ToString() + " ";
         result_str += "AcuityChangeUpPerc" + " " + AcuityChangeUpPerc.ToString() + " ";
         result_str += "AcuityChangeDownPerc" + " " + AcuityChangeDownPerc.ToString() + " ";
+        result_str += "ACuityList" + " " + AcuityList.Count.ToString() + " ";
 
 
         return result_str;
