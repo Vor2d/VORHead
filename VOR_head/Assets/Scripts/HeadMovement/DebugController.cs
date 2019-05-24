@@ -32,6 +32,11 @@ public class DebugController : MonoBehaviour {
     public Text LoopTrialNumber_Text;
     public bool UsingEyeSimulator;
     public Text AcuityState_Text;
+    public Camera camera1;
+    public Camera camera2;
+    [SerializeField] private TextMesh DebugText1;
+    [SerializeField] private TextMesh DebugText2;
+
 
     private DataController DC_script;
 
@@ -43,6 +48,8 @@ public class DebugController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         show_info();
+
+        debug_group();
     }
 
     private void LateUpdate()
@@ -51,6 +58,12 @@ public class DebugController : MonoBehaviour {
         {
             eye_test();
         }
+    }
+
+    private void debug_group()
+    {
+        DebugText1.text = camera1.fieldOfView.ToString("F2");
+        DebugText2.text = camera2.fieldOfView.ToString("F2");
     }
 
     private void show_info()
