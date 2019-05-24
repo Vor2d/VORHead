@@ -603,7 +603,7 @@ public class GameController : GeneralGameController {
         //Debug.Log("speed_passed !!!!!!");
         if(DC_script.Current_GM.UsingAcuityBefore)
         {
-            StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime));
+            StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime,true));
         }
         else
         {
@@ -636,7 +636,7 @@ public class GameController : GeneralGameController {
             //stopped_flag = false;
             if(DC_script.Current_GM.UsingAcuityAfter)
             {
-                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime));
+                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime,true));
             }
             else
             {
@@ -645,7 +645,7 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private IEnumerator show_acuity(float time_dure)
+    private IEnumerator show_acuity(float time_dure,bool jump_next)
     {
         if(!show_acuity_flag)
         {
@@ -653,7 +653,10 @@ public class GameController : GeneralGameController {
             acuity_dir = AG_script.turn_on_acuity(true);
             yield return new WaitForSeconds(time_dure);
             AG_script.turn_off_AG();
-            GCAnimator.SetTrigger("NextStep");
+            if(jump_next)
+            {
+                GCAnimator.SetTrigger("NextStep");
+            }
             show_acuity_flag = false;
         }
     }
@@ -759,11 +762,6 @@ public class GameController : GeneralGameController {
 
     public void ToStartTrial()
     {
-        if(DC_script.Current_GM.UsingAcuityChange)
-        {
-            change_acuity();
-        }
-
         if(ShowResultFlag)
         {
             restar_script.turn_off_mesh();
@@ -775,6 +773,11 @@ public class GameController : GeneralGameController {
         else
         {
             HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+        }
+
+        if (DC_script.Current_GM.UsingAcuityChange)
+        {
+            change_acuity();
         }
 
         if (trial_iter < 0)
@@ -800,17 +803,7 @@ public class GameController : GeneralGameController {
                 }
                 else 
                 {
-                    loop_iter = -1;
-                    trial_iter = -1;
-                    section_number++;
-                    if (section_number < DC_script.Sections.Count)
-                    {
-                        GCAnimator.SetTrigger("UpdateDC");
-                    }
-                    else
-                    {
-                        GCAnimator.SetTrigger("Finished");
-                    }
+                    to_next_section();
                 }
             }
             else
@@ -822,6 +815,21 @@ public class GameController : GeneralGameController {
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
         Debug.Log("Section " + section_number);
+    }
+
+    private void to_next_section()
+    {
+        loop_iter = -1;
+        trial_iter = -1;
+        section_number++;
+        if (section_number < DC_script.Sections.Count)
+        {
+            GCAnimator.SetTrigger("UpdateDC");
+        }
+        else
+        {
+            GCAnimator.SetTrigger("Finished");
+        }
     }
 
     private void change_acuity()
@@ -1033,6 +1041,10 @@ public class GameController : GeneralGameController {
                     UnityEngine.Random.Range(-DC_script.SystemSetting.TargetChangeTimeRRange,
                                             DC_script.SystemSetting.TargetChangeTimeRRange);
         TargetTimerFlag = true;
+        if(DC_script.Current_GM.UsingAcuityWaitTime)
+        {
+            StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime,false));
+        }
     }
 
     public void ChangeTargetWaitTime()
@@ -1042,7 +1054,15 @@ public class GameController : GeneralGameController {
             target_change_timer = DC_script.SystemSetting.TargetChangeTime;
             TargetTimerFlag = false;
 
-            GCAnimator.SetTrigger("NextStep");
+            if(DC_script.Current_GM.UsingAcuityWaitTime && 
+                DC_script.SystemSetting.UseAcuityIndicator)
+            {
+                GCAnimator.SetTrigger("CheckController");
+            }
+            else
+            {
+                GCAnimator.SetTrigger("NextStep");
+            }
         }
     }
 

@@ -18,6 +18,7 @@ public class GameMode
     public float Gain { get; set; }
     public bool UsingAcuityAfter { get; set; }
     public bool UsingAcuityBefore { get; set; }
+    public bool UsingAcuityWaitTime { get; set; }
     public int AcuitySize { get; set; }
     public bool UsingAcuityChange { get; set; }
     public AcuityChangeMode CurrAcuityChangeMode { get; set; }
@@ -44,6 +45,7 @@ public class GameMode
         this.Gain = other_GM.Gain;
         this.UsingAcuityAfter = other_GM.UsingAcuityAfter;
         this.UsingAcuityBefore = other_GM.UsingAcuityBefore;
+        this.UsingAcuityWaitTime = other_GM.UsingAcuityWaitTime;
         this.AcuitySize = other_GM.AcuitySize;
         this.UsingAcuityChange = other_GM.UsingAcuityChange;
         this.CurrAcuityChangeMode = other_GM.CurrAcuityChangeMode;
@@ -125,6 +127,8 @@ public class GameMode
         catch { UsingAcuityAfter = false; }
         try { UsingAcuityBefore = para_dict["UsingAcuityBefore"] == "True"; }
         catch { UsingAcuityBefore = false; }
+        try { UsingAcuityWaitTime = para_dict["UsingAcuityWaitTime"] == "True"; }
+        catch { UsingAcuityWaitTime = false; }
         try { AcuitySize = int.Parse(para_dict["AcuitySize"]); }
         catch { AcuitySize = 4; }
         try { UsingAcuityChange = (para_dict["UsingAcuityChange"] == "True"); }
@@ -163,6 +167,7 @@ public class GameMode
         result_str += "Gain" + " " + Gain.ToString() + " ";
         result_str += "UsingAcuityAfter" + " " + UsingAcuityAfter.ToString() + " ";
         result_str += "UsingAcuityBefore" + " " + UsingAcuityBefore.ToString() + " ";
+        result_str += "UsingAcuityWaitTime" + " " + UsingAcuityWaitTime.ToString() + " ";
         result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
         result_str += "UsingAcuityChange" + " " + UsingAcuityChange.ToString() + " ";
         result_str += "CurrAcuityChangeMode" + " " + CurrAcuityChangeMode.ToString() + " ";
