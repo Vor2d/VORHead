@@ -1,0 +1,45 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 12 
+10	0	-1	GameMode HC_FB_Learning HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter True UsingAcuityBefore False AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+3	153	0	0	ReSet	0.00	0
+4	164	0	0	ShowTarget	0.00	0
+5	1691	0	0	MoveTarget	15.00	1
+6	1710	0	0	ShowTarget	15.00	1
+7	4678	0	1	MoveTarget	15.00	0
+8	4703	0	1	ShowTarget	15.00	0
+9	7868	0	0	MoveTarget	15.00	1
+10	7890	0	0	ShowTarget	15.00	1
+11	11256	0	1	MoveTarget	15.00	0
+12	11277	0	1	ShowTarget	15.00	0
+13	14857	0	0	MoveTarget	15.00	1
+14	14879	0	0	ShowTarget	15.00	1
+15	18324	0	1	MoveTarget	15.00	0
+16	18346	0	1	ShowTarget	15.00	0
+17	21613	0	0	MoveTarget	15.00	1
+18	21635	0	0	ShowTarget	15.00	1
+19	25247	0	1	MoveTarget	15.00	0
+20	25269	0	1	ShowTarget	15.00	0
+21	29347	0	0	MoveTarget	15.00	1
+22	29369	0	0	ShowTarget	15.00	1
+23	32181	0	1	MoveTarget	15.00	0
+24	32204	0	1	ShowTarget	15.00	0
+25	36004	0	0	MoveTarget	15.00	1
+26	36025	0	0	ShowTarget	15.00	1
+27	39270	0	1	MoveTarget	15.00	0
+28	39292	0	1	ShowTarget	15.00	0
+29	42548	0	0	MoveTarget	15.00	1
+30	42569	0	0	ShowTarget	15.00	1
+31	46427	0	1	MoveTarget	15.00	0
+32	46448	0	1	ShowTarget	15.00	0
+33	50338	0	0	MoveTarget	15.00	1
+34	50360	0	0	ShowTarget	15.00	1
+35	54083	0	1	MoveTarget	15.00	0
+36	54104	0	1	ShowTarget	15.00	0
+37	57372	0	0	MoveTarget	15.00	1
+38	57394	0	0	ShowTarget	15.00	1
+39	61027	0	1	MoveTarget	15.00	0
+40	61050	0	1	ShowTarget	15.00	0
+
+41	65795	0	0	MoveTarget	15.00	1
+42	65816	0	0	ShowTarget	15.00	1
+
+

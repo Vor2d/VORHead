@@ -9,6 +9,7 @@ public class GameSetting
     public bool Using_curved_screen;
     public float Player_screen_cm;
     public float Screen_width_cm;
+    public float CameraFOVFactor;
 
     public float GazeTime;
     public float RandomGazeTime;
@@ -33,6 +34,7 @@ public class GameSetting
         this.Using_curved_screen = true;
         this.Player_screen_cm = 100.0f;
         this.Screen_width_cm = 100.0f;
+        this.CameraFOVFactor = 1.0f;
 
         this.GazeTime = 2.0f;
         this.RandomGazeTime = 0.5f;
@@ -105,6 +107,7 @@ public class GameSetting
         result_str += "Screen_width_cm" + " " + Screen_width_cm.ToString() + " ";
         result_str += "Camera1_display" + " " + Camera1_display.ToString() + " ";
         result_str += "Camera2_display" + " " + Camera2_display.ToString() + " ";
+        result_str += "CameraFOVFactor" + " " + CameraFOVFactor.ToString() + " ";
 
         result_str += "GazeTime" + " " + GazeTime.ToString() + " ";
         result_str += "RandomGazeTime" + " " + RandomGazeTime.ToString() + " ";

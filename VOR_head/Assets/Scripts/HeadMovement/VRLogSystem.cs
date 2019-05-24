@@ -36,8 +36,6 @@ public class VRLogSystem : GeneralLogSystem
 
     protected override void logging()
     {
-        base.logging();
-
         log_headset();
     }
 

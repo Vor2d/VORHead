@@ -95,7 +95,7 @@ public class GameController_Setting : MonoBehaviour {
     private void set_cam_fov(Camera Mcamera,Camera Scamera)
     {
         float fov = Mcamera.fieldOfView;
-        Scamera.fieldOfView = fov;
+        Scamera.fieldOfView = fov * DC_script.SystemSetting.CameraFOVFactor;
     }
 
     public void ToFinish()

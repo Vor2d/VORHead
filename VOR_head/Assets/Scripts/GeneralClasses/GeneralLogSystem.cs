@@ -15,8 +15,8 @@ public class GeneralLogSystem : MonoBehaviour
     [SerializeField] private bool UsingSharedTime;
     [SerializeField] LogSystem LS_script;
 
-    private Thread LOG_Thread;
-    protected StringBuilder Log_SB;
+    
+    public StringBuilder Log_SB { get; protected set; }
     protected string file_name;
     protected string first_line;
     protected System.Diagnostics.Stopwatch stop_watch;
@@ -24,6 +24,7 @@ public class GeneralLogSystem : MonoBehaviour
     protected double total_time;
     protected int line_counter;
     protected string head_line;
+    private Thread LOG_Thread;
 
     protected virtual void Start()
     {
@@ -43,6 +44,7 @@ public class GeneralLogSystem : MonoBehaviour
         this.total_time = 0;
         this.line_counter = 0;
         this.head_line = "";
+        this.first_line = "";
 
         //Create Log folder;
         if (!Directory.Exists(path))

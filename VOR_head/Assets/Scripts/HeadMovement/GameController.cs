@@ -47,6 +47,7 @@ public class GameController : GeneralGameController {
     public AcuityGroup AG_script;
     [SerializeField] private Controller_Input CI_script;
     [SerializeField] private GeneralControllerInput GCI_script;
+    [SerializeField] private AcuityLogSystem ALS_script;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -1058,6 +1059,8 @@ public class GameController : GeneralGameController {
         {
             AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode,DC_script);
             curr_acuity_size = DC_script.Current_GM.AcuitySize;
+            update_SS();
+            ALS_script.log_time("start", simulink_sample);
         }
     }
 
@@ -1118,15 +1121,18 @@ public class GameController : GeneralGameController {
     {
         if(controller_flag)
         {
+            bool result = false;
             if (DC_script.MSM_script.using_VR)
             {
                 //check_oculusC();
-                check_oculusC2();
+                result = check_oculusC2();
             }
             if(DC_script.MSM_script.using_coil)
             {
-                check_common_controller();
+                result = check_common_controller();
             }
+            update_SS();
+            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
         }
     }
 
@@ -1147,9 +1153,10 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private void check_oculusC2()
+    private bool check_oculusC2()
     {
         //Debug.Log("acuity_dir " + acuity_dir);
+        bool result = false;
         switch(acuity_mode)
         {
             case AcuityMode.four_dir:
@@ -1157,11 +1164,13 @@ public class GameController : GeneralGameController {
                 {
                     acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
+                    result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
+                    result = false;
                 }
                 break;
             case AcuityMode.eight_dir:
@@ -1169,19 +1178,23 @@ public class GameController : GeneralGameController {
                 {
                     acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
+                    result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
+                    result = false;
                 }
                 break;
         }
         GCAnimator.SetTrigger("NextStep");
+        return result;
     }
 
-    private void check_common_controller()
+    private bool check_common_controller()
     {
+        bool result = false;
         switch (acuity_mode)
         {
             case AcuityMode.four_dir:
@@ -1189,11 +1202,13 @@ public class GameController : GeneralGameController {
                 {
                     acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
+                    result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
+                    result = false;
                 }
                 break;
             case AcuityMode.eight_dir:
@@ -1201,15 +1216,18 @@ public class GameController : GeneralGameController {
                 {
                     acuity_right_num++;
                     StartCoroutine(show_text(1.0f, "Right"));
+                    result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
                     StartCoroutine(show_text(1.0f, "Wrong"));
+                    result = false;
                 }
                 break;
         }
         GCAnimator.SetTrigger("NextStep");
+        return result;
     }
 
     public void LeaveCheckController()

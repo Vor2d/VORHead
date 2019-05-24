@@ -7,6 +7,7 @@ public class StartJumpLog : StateMachineBehaviour {
     private JumpLogSystem JLS_script;
     private VRLogSystem VRLS_script;
     private LogSystem LS_script;
+    private AcuityLogSystem ALS_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -17,6 +18,7 @@ public class StartJumpLog : StateMachineBehaviour {
             JLS_script = logsystem_OBJ.GetComponent<JumpLogSystem>();
             VRLS_script = logsystem_OBJ.GetComponent<VRLogSystem>();
             LS_script = logsystem_OBJ.GetComponent<LogSystem>();
+            ALS_script = logsystem_OBJ.GetComponent<AcuityLogSystem>();
         }
 
         LS_script.start_stopwatch();
@@ -28,6 +30,11 @@ public class StartJumpLog : StateMachineBehaviour {
         if(!VRLS_script.thread_state_flag)
         {
             VRLS_script.toggle_Thread();
+        }
+
+        if(!ALS_script.thread_state_flag)
+        {
+            ALS_script.toggle_Thread();
         }
 
         animator.SetTrigger("NextStep");

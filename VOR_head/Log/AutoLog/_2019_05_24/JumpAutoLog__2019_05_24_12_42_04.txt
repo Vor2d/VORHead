@@ -1,0 +1,51 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 12 
+8	0	-1	GameMode HC_FB_Learning HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter True UsingAcuityBefore False AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+3	1575	0	0	ReSet	0.00	0
+4	1586	0	0	ShowTarget	0.00	0
+5	1702	0	0	MoveTarget	15.00	1
+6	1720	0	0	ShowTarget	15.00	1
+7	5368	0	1	MoveTarget	15.00	0
+8	5390	0	1	ShowTarget	15.00	0
+9	9112	0	0	MoveTarget	15.00	1
+10	9135	0	0	ShowTarget	15.00	1
+11	12746	0	1	MoveTarget	15.00	0
+12	12767	0	1	ShowTarget	15.00	0
+13	15568	0	0	MoveTarget	15.00	1
+14	15590	0	0	ShowTarget	15.00	1
+15	18546	0	1	MoveTarget	15.00	0
+16	18568	0	1	ShowTarget	15.00	0
+17	22534	0	0	MoveTarget	15.00	1
+18	22559	0	0	ShowTarget	15.00	1
+19	26326	0	1	MoveTarget	15.00	0
+20	26346	0	1	ShowTarget	15.00	0
+21	29447	0	0	MoveTarget	15.00	1
+22	29470	0	0	ShowTarget	15.00	1
+23	33081	0	1	MoveTarget	15.00	0
+24	33103	0	1	ShowTarget	15.00	0
+25	36983	0	0	MoveTarget	15.00	1
+26	37003	0	0	ShowTarget	15.00	1
+27	41082	0	1	MoveTarget	15.00	0
+28	41104	0	1	ShowTarget	15.00	0
+29	44425	0	0	MoveTarget	15.00	1
+30	44448	0	0	ShowTarget	15.00	1
+31	47382	0	1	MoveTarget	15.00	0
+32	47404	0	1	ShowTarget	15.00	0
+33	50905	0	0	MoveTarget	15.00	1
+34	50927	0	0	ShowTarget	15.00	1
+35	54527	0	1	MoveTarget	15.00	0
+36	54547	0	1	ShowTarget	15.00	0
+37	58538	0	0	MoveTarget	15.00	1
+38	58561	0	0	ShowTarget	15.00	1
+39	62327	0	1	MoveTarget	15.00	0
+40	62349	0	1	ShowTarget	15.00	0
+41	65650	0	0	MoveTarget	15.00	1
+42	65672	0	0	ShowTarget	15.00	1
+
+43	68915	0	1	MoveTarget	15.00	0
+44	68935	0	1	ShowTarget	15.00	0
+45	72028	0	0	MoveTarget	15.00	1
+46	72050	0	0	ShowTarget	15.00	1
+47	75152	0	1	MoveTarget	15.00	0
+48	75174	0	1	ShowTarget	15.00	0
+
+

@@ -2747,6 +2747,7 @@ GameObject:
   - component: {fileID: 370484277}
   - component: {fileID: 370484278}
   - component: {fileID: 370484279}
+  - component: {fileID: 370484280}
   m_Layer: 0
   m_Name: LogSystem
   m_TagString: Untagged
@@ -2811,11 +2812,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VRLog_script: {fileID: 370484276}
+  ALS_script: {fileID: 370484280}
   VRAutoLog_On: 1
   JumpAutoLog_On: 1
+  AcuityAutoLog_ON: 1
   JAL_Time: 60
   JAL_Changefile_Time: 300
   VRAL_Time: 300
+  AAL_Time: 5
 --- !u!114 &370484279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2828,6 +2832,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ebe41179c0d03943a50e4295511f349, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &370484280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370484274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62fef4d7bb7308947a31dec3db3eed0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Log/Acuity_Log/
+  LogTypeName: AcuityLog
+  UsingSharedTime: 1
+  LS_script: {fileID: 370484279}
 --- !u!1 &376125429
 GameObject:
   m_ObjectHideFlags: 0
@@ -6529,6 +6549,7 @@ MonoBehaviour:
   AG_script: {fileID: 904713021}
   CI_script: {fileID: 1373143160}
   GCI_script: {fileID: 825349163}
+  ALS_script: {fileID: 370484280}
 --- !u!4 &913016691
 Transform:
   m_ObjectHideFlags: 0
