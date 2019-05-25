@@ -1,11 +1,11 @@
-GameMode	HC_FB_Learning
-UsingAcuityAfter	True
+GameMode	EyeTest
+UsingAcuityAfter	False
 UsingAcuityBefore	False
+UsingAcuityWaitTime	True
 AcuitySize	5
 UsingAcuityChange	True
 AcuityChangeMode	acuity_list
 ________________________________
 -1
-15	15
--15	-15
+0	0
 ________________________________

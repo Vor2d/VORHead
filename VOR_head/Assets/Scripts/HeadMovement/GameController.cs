@@ -115,7 +115,8 @@ public class GameController : GeneralGameController {
         get
         {
             return DC_script.Current_GM.UsingAcuityAfter ||
-                    DC_script.Current_GM.UsingAcuityBefore;
+                    DC_script.Current_GM.UsingAcuityBefore ||
+                    DC_script.Current_GM.UsingAcuityWaitTime;
         }
     }
 

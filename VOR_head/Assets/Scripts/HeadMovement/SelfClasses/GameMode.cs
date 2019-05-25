@@ -28,8 +28,8 @@ public class GameMode
 
     public GameMode()
     {
-        set_preset_mode(GameModeEnum.Default);
         set_preset_para(new Dictionary<string, string>());
+        set_preset_mode(GameModeEnum.Default);
     }
 
     public GameMode(GameMode other_GM)
@@ -114,6 +114,36 @@ public class GameMode
                 {
                     SkipCenterFlag = true;
                     HideHeadIndicator = true;
+                    break;
+                }
+            case GameModeEnum.StaticAcuity:
+                {
+                    ChangeTargetByTime = true;
+                    HideHeadIndicator = true;
+                    SkipCenterFlag = true;
+                    HideFlag = true;
+                    ShowTargetFlag = false;
+                    UsingAcuityAfter = false;
+                    UsingAcuityBefore = false;
+                    UsingAcuityWaitTime = true;
+                    break;
+                }
+            case GameModeEnum.DynamicAcuity:
+                {
+                    SkipCenterFlag = true;
+                    HeadIndicatorChange = true;
+                    UsingAcuityAfter = false;
+                    UsingAcuityBefore = true;
+                    UsingAcuityWaitTime = false;
+                    break;
+                }
+            case GameModeEnum.PostDynamicAcuity:
+                {
+                    SkipCenterFlag = true;
+                    HeadIndicatorChange = true;
+                    UsingAcuityAfter = true;
+                    UsingAcuityBefore = false;
+                    UsingAcuityWaitTime = false;
                     break;
                 }
         }

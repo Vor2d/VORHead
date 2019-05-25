@@ -196,6 +196,24 @@ public static class GeneralMethods {
                                     set_preset_mode(GameModeEnum.NoReddot);
                                         break;
                                     }
+                                case "StaticAcuity":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameModeEnum.StaticAcuity);
+                                        break;
+                                    }
+                                case "DynamicAcuity":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameModeEnum.DynamicAcuity);
+                                        break;
+                                    }
+                                case "PostDynamicAcuity":
+                                    {
+                                        temp_gameMode.
+                                    set_preset_mode(GameModeEnum.PostDynamicAcuity);
+                                        break;
+                                    }
                                 default:
                                     {
                                         temp_gameMode.
