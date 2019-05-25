@@ -154,11 +154,11 @@ public class GameMode
         try { Gain = float.Parse(para_dict["Gain"]); }
         catch { Gain = 1.0f; }
         try { UsingAcuityAfter = para_dict["UsingAcuityAfter"] == "True"; }
-        catch { UsingAcuityAfter = false; }
+        catch { }
         try { UsingAcuityBefore = para_dict["UsingAcuityBefore"] == "True"; }
-        catch { UsingAcuityBefore = false; }
+        catch { }
         try { UsingAcuityWaitTime = para_dict["UsingAcuityWaitTime"] == "True"; }
-        catch { UsingAcuityWaitTime = false; }
+        catch { }
         try { AcuitySize = int.Parse(para_dict["AcuitySize"]); }
         catch { AcuitySize = 4; }
         try { UsingAcuityChange = (para_dict["UsingAcuityChange"] == "True"); }

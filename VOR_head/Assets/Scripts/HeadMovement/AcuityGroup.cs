@@ -20,12 +20,16 @@ public class AcuityGroup : MonoBehaviour
     private bool AI_start_flag;
     private GameController.AcuityMode acuity_mode;
     private DataController DC_script;
+    private Sprite right_sprite;
+    private Sprite upri_sprite;
 
     private void Awake()
     {
         this.AI_start_flag = false;
         this.acuity_mode = default(GameController.AcuityMode);
         this.DC_script = null;
+        this.right_sprite = null;
+        this.upri_sprite = null;
     }
 
     // Start is called before the first frame update
@@ -37,8 +41,6 @@ public class AcuityGroup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log("default_quat " + default_quat.eulerAngles);
-
         update_acuity_pos();
 
         if(AI_start_flag)
@@ -56,7 +58,6 @@ public class AcuityGroup : MonoBehaviour
 
     private void update_acuity_pos()
     {
-        //Debug.Log("WorldToScreenPoint " + acu_camera.WorldToScreenPoint(Target_TRANS.position));
         Vector3 pos =
                 GeneralMethods.world_to_canvas(Target_TRANS.position, acu_camera, canvas);
         GetComponent<RectTransform>().localPosition = pos;
@@ -73,22 +74,20 @@ public class AcuityGroup : MonoBehaviour
 
     public void change_acuity_size(int size)
     {
-        AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite =
-                DC_script.Acuity_sprites.Single(s => s.name == size.ToString());
+        right_sprite = DC_script.Acuity_sprites.Single(s => s.name == size.ToString());
+        upri_sprite = DC_script.Acuity_sprites.Single(s => s.name == (size+100).ToString());
     }
 
     public void turn_off_AG()
     {
         turn_off_AI();
         turn_off_AS();
-        //gameObject.SetActive(false);
         turn_off_BG();
 
     }
 
     public void turn_on_AG()
     {
-        //gameObject.SetActive(true);
         turn_on_BG();
     }
 
@@ -109,7 +108,10 @@ public class AcuityGroup : MonoBehaviour
         {
             dir = rotate();
         }
-        //gameObject.SetActive(true);
+        else
+        {
+            AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+        }
         turn_on_BG();
         AcuitySprite_TRANS.gameObject.SetActive(true);
         return dir;
@@ -149,6 +151,41 @@ public class AcuityGroup : MonoBehaviour
             case GameController.AcuityMode.four_dir:
                 if (ADir < 4)
                 {
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+                    return Quaternion.Euler(new Vector3(0.0f, 0.0f, -(ADir * 90.0f) + 90.0f));
+                }
+                else
+                {
+                    return default_quat;
+                }
+            case GameController.AcuityMode.eight_dir:
+                if (ADir < 4)
+                {
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+                    return Quaternion.Euler(new Vector3(0.0f, 0.0f, -(ADir * 90.0f) + 90.0f));
+                }
+                else if (ADir < 8)
+                {
+                    Debug.Log("dir " + ADir);
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = upri_sprite;
+                    return Quaternion.Euler(new Vector3(0.0f, 0.0f, -((ADir - 4) * 90.0f)));
+                }
+                else
+                {
+                    return default_quat;
+                }
+        }
+
+        return Quaternion.identity;
+    }
+
+    private Quaternion indicator_rotate_cal(int ADir)
+    {
+        switch (acuity_mode)
+        {
+            case GameController.AcuityMode.four_dir:
+                if (ADir < 4)
+                {
                     return Quaternion.Euler(new Vector3(0.0f, 0.0f, -(ADir * 90.0f) + 90.0f));
                 }
                 else
@@ -175,9 +212,7 @@ public class AcuityGroup : MonoBehaviour
 
     public void start_AI()
     {
-        //gameObject.SetActive(true);
         turn_on_BG();
-        //AcuityIndi_TRANS.gameObject.SetActive(true);
         AI_start_flag = true;
     }
 
@@ -187,10 +222,10 @@ public class AcuityGroup : MonoBehaviour
         switch(acuity_mode)
         {
             case GameController.AcuityMode.four_dir:
-                rotate_caled = rotate_cal((int)CI_script.Four_dir_input);
+                rotate_caled = indicator_rotate_cal((int)CI_script.Four_dir_input);
                 break;
             case GameController.AcuityMode.eight_dir:
-                rotate_caled = rotate_cal((int)CI_script.Eight_dir_input);
+                rotate_caled = indicator_rotate_cal((int)CI_script.Eight_dir_input);
                 break;
         }
         if(rotate_caled.eulerAngles == default_quat.eulerAngles)
@@ -211,10 +246,10 @@ public class AcuityGroup : MonoBehaviour
         switch (acuity_mode)
         {
             case GameController.AcuityMode.four_dir:
-                rotate_caled = rotate_cal((int)GCI_script.Four_dir_input);
+                rotate_caled = indicator_rotate_cal((int)GCI_script.Four_dir_input);
                 break;
             case GameController.AcuityMode.eight_dir:
-                rotate_caled = rotate_cal((int)GCI_script.Eight_dir_input);
+                rotate_caled = indicator_rotate_cal((int)GCI_script.Eight_dir_input);
                 break;
         }
         if (rotate_caled.eulerAngles == default_quat.eulerAngles)

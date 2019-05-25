@@ -778,7 +778,11 @@ public class GameController : GeneralGameController {
 
         if (DC_script.Current_GM.UsingAcuityChange)
         {
-            change_acuity();
+            if (change_acuity())
+            {
+                to_next_section();
+                return;
+            }
         }
 
         if (trial_iter < 0)
@@ -833,7 +837,7 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private void change_acuity()
+    private bool change_acuity()
     {
         switch(DC_script.Current_GM.CurrAcuityChangeMode)
         {
@@ -866,11 +870,13 @@ public class GameController : GeneralGameController {
                 }
                 else
                 {
-                    Debug.Log("List over");
+                    acuity_change_index = 0;
+                    return true;
                 }
                 acuity_change_index++;
                 break;
         }
+        return false;
 
     }
 

@@ -1,0 +1,27 @@
+Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 CameraFOVFactor 2 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 3 
+Line_#	Time_Stamp	Simulink_Sample	Trail_#	Action	Degree	Direction
+12	0	-1	GameMode DynamicAcuity HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter False UsingAcuityBefore True UsingAcuityWaitTime False AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+3	154	0	0	ReSet	0.00	0
+4	167	0	0	ShowTarget	0.00	0
+5	1721	0	0	MoveTarget	0.00	1
+6	1745	0	0	ShowTarget	0.00	1
+7	5362	0	0	MoveTarget	0.00	1
+8	5405	0	0	ShowTarget	0.00	1
+9	8222	0	0	MoveTarget	0.00	1
+10	8243	0	0	ShowTarget	0.00	1
+12456	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+11	17002	0	0	ReSet	0.00	0
+12	17013	0	0	ShowTarget	0.00	1
+13	18978	0	0	MoveTarget	0.00	1
+14	19002	0	0	ShowTarget	0.00	1
+15	19145	0	0	TargetHided	0.00	1
+16	19146	0	0	ChangeTargetWaitTime	0.00	1
+17	26068	0	0	MoveTarget	0.00	1
+18	26088	0	0	ShowTarget	0.00	1
+19	26246	0	0	TargetHided	0.00	1
+20	26246	0	0	ChangeTargetWaitTime	0.00	1
+21	31546	0	0	MoveTarget	0.00	1
+22	31566	0	0	ShowTarget	0.00	1
+23	31700	0	0	TargetHided	0.00	1
+24	31701	0	0	ChangeTargetWaitTime	0.00	1
+

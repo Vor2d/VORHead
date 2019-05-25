@@ -57,7 +57,7 @@ public class Controller_Input : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        
         switch(Controller_type)
         {
             case OVRInput.Controller.LTouch:

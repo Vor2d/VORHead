@@ -1,7 +1,12 @@
-GameMode	EyeTest
-UsingAcuityAfter	False
-UsingAcuityBefore	False
-UsingAcuityWaitTime	True
+GameMode	DynamicAcuity
+AcuitySize	5
+UsingAcuityChange	True
+AcuityChangeMode	acuity_list
+________________________________
+-1
+0	0
+________________________________
+GameMode	StaticAcuity
 AcuitySize	5
 UsingAcuityChange	True
 AcuityChangeMode	acuity_list
