@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.IO;
 using System;
 using UnityEngine.UI;
 using SFB;
+using System.Net.Sockets;
+using System.Net;
+using System.Text;
 
 public class GameController_Setting : MonoBehaviour {
 
-    //private const int total_page = 3;
+    private static readonly byte[] SIM_RZ_byte = new byte[] { 123};
+    private static readonly IPAddress SIM_RZ_IP = 
+                                    new IPAddress(new byte[] { 192, 168, 2, 50 });
+    private const int SIM_RZ_port = 8001;
     private List<string> camera_list_str = new List<string>() { "0", "1", "2", "3", "4" };
 
     public GameObject Game_Controller;
@@ -393,5 +398,10 @@ public class GameController_Setting : MonoBehaviour {
             EyeIndi_TRNAS2.GetComponent<MeshRenderer>().enabled = true;
             eye_enabled_flag = true;
         }
+    }
+
+    public void rezero_simulink()
+    {
+        GeneralMethods.send_udp(SIM_RZ_IP, SIM_RZ_port, SIM_RZ_byte);
     }
 }

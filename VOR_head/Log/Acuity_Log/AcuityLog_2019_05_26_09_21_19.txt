@@ -1,0 +1,11 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Worng
+0	start	0	21.06
+1	0	5679	4	False
+2	0	8756	5	True
+3	0	11711	6	True
+4	start	0	13810.68
+5	0	21844	4	True
+6	0	27022	5	False
+7	0	31155	6	True
+

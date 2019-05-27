@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 
 using HMTS_enum;
 
@@ -579,5 +581,14 @@ public static class GeneralMethods {
 
         return screenPos;
 
+    }
+
+    public static void send_udp(IPAddress iPAddress, int port, byte[] package)
+    {
+        Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram,
+                                    ProtocolType.Udp);
+        IPEndPoint endPoint = new IPEndPoint(iPAddress, port);
+        socket.SendTo(package, endPoint);
+        socket.Close();
     }
 }
