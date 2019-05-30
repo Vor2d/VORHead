@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: d870fcfa1434e94408b4ff98ff17de30
+guid: 3b8c43261bfc97741831b36c2e61f430
 folderAsset: yes
 PluginImporter:
   externalObjects: {}
@@ -47,9 +47,7 @@ PluginImporter:
     second:
       enabled: 1
       settings:
-        CPU: AnyCPU
         DefaultValueInitialized: true
-        OS: OSX
   - first:
       Facebook: Win
     second:
@@ -90,8 +88,7 @@ PluginImporter:
       Standalone: OSXUniversal
     second:
       enabled: 1
-      settings:
-        CPU: AnyCPU
+      settings: {}
   - first:
       Standalone: Win
     second:
