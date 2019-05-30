@@ -5768,8 +5768,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59045ffe0750de7438b8becd1388017c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CurrContollerType: 0
-  Sensitivity: 0.5
+  CurrContollerType: 1
+  Sensitivity: 0.4
 --- !u!4 &825349164
 Transform:
   m_ObjectHideFlags: 0

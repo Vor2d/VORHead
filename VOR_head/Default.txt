@@ -1,4 +1,4 @@
-GameMode	DynamicAcuity
+GameMode	StaticAcuity
 AcuitySize	5
 UsingAcuityChange	True
 AcuityChangeMode	acuity_list

@@ -9,8 +9,9 @@ public class GeneralControllerInput : MonoBehaviour
 
     private const string Hori_axes1 = "Horizontal";
     private const string Vert_axes1 = "Vertical";
+    private const string Vert_axes2 = "PS_Vertical";
 
-    public enum ControllerType { Xbox};
+    public enum ControllerType { Xbox,PS4};
 
     [SerializeField] ControllerType CurrContollerType;
     [SerializeField] float Sensitivity;
@@ -49,18 +50,73 @@ public class GeneralControllerInput : MonoBehaviour
         switch(CurrContollerType)
         {
             case ControllerType.Xbox:
-                XboxController_dir();
+                XboxController();
+                break;
 
-                if (Input.GetKeyDown(KeyCode.JoystickButton5) && Button5_act != null)
-                {
-                    Button5_act();
-                }
-
+            case ControllerType.PS4:
+                PS4Controller();
                 break;
         }
     }
 
-    private void XboxController_dir()
+    private void PS4Controller()
+    {
+        if (Input.GetAxisRaw(Vert_axes2) < -Sensitivity)
+        {
+            if (!Forward_flag && Forward_act != null)
+            {
+                Forward_act();
+            }
+            Forward_flag = true;
+        }
+        else
+        {
+            Forward_flag = false;
+        }
+        if (Input.GetAxisRaw(Vert_axes2) > Sensitivity)
+        {
+            if (!Back_flag && Back_act != null)
+            {
+                Back_act();
+            }
+            Back_flag = true;
+        }
+        else
+        {
+            Back_flag = false;
+        }
+        if (Input.GetAxis(Hori_axes1) > Sensitivity)
+        {
+            if (!Right_flag && Right_act != null)
+            {
+                Right_act();
+            }
+            Right_flag = true;
+        }
+        else
+        {
+            Right_flag = false;
+        }
+        if (Input.GetAxis(Hori_axes1) < -Sensitivity)
+        {
+            if (!Left_flag && Left_act != null)
+            {
+                Left_act();
+            }
+            Left_flag = true;
+        }
+        else
+        {
+            Left_flag = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton5) && Button5_act != null)
+        {
+            Button5_act();
+        }
+    }
+
+    private void XboxController()
     {
         if (Input.GetAxis(Vert_axes1) > Sensitivity)
         {
@@ -111,6 +167,10 @@ public class GeneralControllerInput : MonoBehaviour
             Left_flag = false;
         }
 
+        if (Input.GetKeyDown(KeyCode.JoystickButton5) && Button5_act != null)
+        {
+            Button5_act();
+        }
     }
 
     public FourDirInput Four_dir_input

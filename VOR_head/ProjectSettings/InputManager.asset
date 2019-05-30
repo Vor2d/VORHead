@@ -613,3 +613,19 @@ InputManager:
     type: 2
     axis: 4
     joyNum: 0
+  - serializedVersion: 3
+    m_Name: PS_Vertical
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 3
+    dead: 0.1
+    sensitivity: 1
+    snap: 1
+    invert: 0
+    type: 2
+    axis: 2
+    joyNum: 0
