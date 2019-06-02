@@ -5,4 +5,5 @@
 namespace WAMEC
 {
     public enum MoleGenerShape { circle};
+    public enum MoleGenerType { random};
 }

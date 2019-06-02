@@ -30,6 +30,7 @@ TagManager:
   - MD_Enemy
   - FS_FruitAimI
   - FS_FruitIndicator
+  - WAM_Mole
   layers:
   - Default
   - TransparentFX
