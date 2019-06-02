@@ -62,4 +62,9 @@ public class SC_GameController : GeneralGameController {
     {
         SceneManager.LoadScene("LoadFruitSlice");
     }
+
+    public void to_WAMVR_scene()
+    {
+        SceneManager.LoadScene("LoadWAMVR");
+    }
 }

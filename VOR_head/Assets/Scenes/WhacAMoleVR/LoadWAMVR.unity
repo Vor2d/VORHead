@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -75,18 +75,18 @@ LightmapSettings:
     m_BakeBackend: 1
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
-    m_PVRSampleCount: 500
+    m_PVRSampleCount: 512
     m_PVRBounces: 2
-    m_PVREnvironmentSampleCount: 500
+    m_PVREnvironmentSampleCount: 256
     m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 2
-    m_PVRDenoiserTypeDirect: 0
-    m_PVRDenoiserTypeIndirect: 0
-    m_PVRDenoiserTypeAO: 0
+    m_PVRFilteringMode: 1
+    m_PVRDenoiserTypeDirect: 1
+    m_PVRDenoiserTypeIndirect: 1
+    m_PVRDenoiserTypeAO: 1
     m_PVRFilterTypeDirect: 0
     m_PVRFilterTypeIndirect: 0
     m_PVRFilterTypeAO: 0
-    m_PVREnvironmentMIS: 0
+    m_PVREnvironmentMIS: 1
     m_PVRCulling: 1
     m_PVRFilteringGaussRadiusDirect: 1
     m_PVRFilteringGaussRadiusIndirect: 5
@@ -120,7 +120,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &1336650244
+--- !u!1 &1051896964
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -128,47 +128,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1336650245}
-  - component: {fileID: 1336650246}
+  - component: {fileID: 1051896965}
+  - component: {fileID: 1051896966}
   m_Layer: 0
-  m_Name: SettingGenerate
+  m_Name: InitGameController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1336650245
+--- !u!4 &1051896965
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336650244}
+  m_GameObject: {fileID: 1051896964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 9.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1336650246
+--- !u!114 &1051896966
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1336650244}
+  m_GameObject: {fileID: 1051896964}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 841ee9838f2724042a40be3e441154c7, type: 3}
+  m_Script: {fileID: 11500000, guid: d2371f0ef1c05044dacfacdfd3b0b2d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DC_Prefabs:
-  - {fileID: 1363355338332810, guid: 9e48a7117771ffc408965699700047cd, type: 3}
-  - {fileID: 1572458738935014, guid: 1549395d0bd576f4d8fcb3ffd4d1622e, type: 3}
-  - {fileID: 1572458738935014, guid: 96351ede44df41e4cb11787b561b1fe1, type: 3}
-  - {fileID: 1721279422415928, guid: e3a44595e64f2f9458454011c4c63b36, type: 3}
-  - {fileID: 1691009374897746, guid: 4c92b3901b504b549ba7106e468d7db9, type: 3}
-  - {fileID: 1841033993767960, guid: 84d067b26fe7e2340865f39bffe6fa4e, type: 3}
-  - {fileID: 2981515003867498764, guid: 368530aaa69e0fd41b2db2059fd4c030, type: 3}
-  Key: 115
+  DC_Prefab: {fileID: 2981515003867498764, guid: 368530aaa69e0fd41b2db2059fd4c030,
+    type: 3}
