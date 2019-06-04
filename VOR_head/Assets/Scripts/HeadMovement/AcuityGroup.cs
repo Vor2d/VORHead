@@ -175,7 +175,6 @@ public class AcuityGroup : MonoBehaviour
                     return default_quat;
                 }
         }
-
         return Quaternion.identity;
     }
 
