@@ -1,0 +1,68 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 CameraFOVFactor 2 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 12 
+16	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag True HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+3	115	0	0	ReSet	0.00	0
+4	132	0	0	ShowTarget	0.00	0
+5	1673	0	0	MoveTarget	0.00	1
+6	1705	0	0	ShowTarget	0.00	1
+7	1838	0	0	TargetHided	0.00	1
+8	1840	0	0	ChangeTargetWaitTime	0.00	1
+9	8631	0	0	ShowTarget	0.00	1
+10	10022	0	0	MoveTarget	0.00	1
+11	10055	0	0	ShowTarget	0.00	1
+12	10187	0	0	TargetHided	0.00	1
+13	10188	0	0	ChangeTargetWaitTime	0.00	1
+14	13103	0	0	ShowTarget	0.00	1
+15	14860	0	0	MoveTarget	0.00	1
+16	14892	0	0	ShowTarget	0.00	1
+17	15025	0	0	TargetHided	0.00	1
+18	15025	0	0	ChangeTargetWaitTime	0.00	1
+19	18570	0	0	ShowTarget	0.00	1
+20	20277	0	0	MoveTarget	0.00	1
+21	20310	0	0	ShowTarget	0.00	1
+22	20442	0	0	TargetHided	0.00	1
+23	20442	0	0	ChangeTargetWaitTime	0.00	1
+24	23739	0	0	ShowTarget	0.00	1
+25	24965	0	0	MoveTarget	0.00	1
+26	24998	0	0	ShowTarget	0.00	1
+27	25130	0	0	TargetHided	0.00	1
+28	25131	0	0	ChangeTargetWaitTime	0.00	1
+29	27930	0	0	ShowTarget	0.00	1
+30	29571	0	0	MoveTarget	0.00	1
+31	29604	0	0	ShowTarget	0.00	1
+32	29720	0	0	TargetHided	0.00	1
+33	29720	0	0	ChangeTargetWaitTime	0.00	1
+34	33762	0	0	ShowTarget	0.00	1
+35	35270	0	0	MoveTarget	0.00	1
+36	35302	0	0	ShowTarget	0.00	1
+37	35435	0	0	TargetHided	0.00	1
+38	35436	0	0	ChangeTargetWaitTime	0.00	1
+39	38716	0	0	ShowTarget	0.00	1
+40	40373	0	0	MoveTarget	0.00	1
+41	40405	0	0	ShowTarget	0.00	1
+42	40538	0	0	TargetHided	0.00	1
+43	40540	0	0	ChangeTargetWaitTime	0.00	1
+44	44067	0	0	ShowTarget	0.00	1
+45	45872	0	0	MoveTarget	0.00	1
+46	45905	0	0	ShowTarget	0.00	1
+47	46038	0	0	TargetHided	0.00	1
+48	46038	0	0	ChangeTargetWaitTime	0.00	1
+49	49070	0	0	ShowTarget	0.00	1
+50	50743	0	0	MoveTarget	0.00	1
+51	50776	0	0	ShowTarget	0.00	1
+52	50908	0	0	TargetHided	0.00	1
+53	50909	0	0	ChangeTargetWaitTime	0.00	1
+54	54835	0	0	ShowTarget	0.00	1
+55	56874	0	0	MoveTarget	0.00	1
+56	56905	0	0	ShowTarget	0.00	1
+57	57038	0	0	TargetHided	0.00	1
+58	57038	0	0	ChangeTargetWaitTime	0.00	1
+
+59	59954	0	0	ShowTarget	0.00	1
+60	62025	0	0	MoveTarget	0.00	1
+61	62058	0	0	ShowTarget	0.00	1
+62	62191	0	0	TargetHided	0.00	1
+63	62191	0	0	ChangeTargetWaitTime	0.00	1
+64	65106	0	0	ShowTarget	0.00	1
+66547	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag True HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+
+

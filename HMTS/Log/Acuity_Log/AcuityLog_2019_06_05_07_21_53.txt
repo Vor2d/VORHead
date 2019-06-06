@@ -1,0 +1,5 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Worng
+0	start	0	34.18	StaticAcuity
+1	0	1906	-1	Show Acuity
+

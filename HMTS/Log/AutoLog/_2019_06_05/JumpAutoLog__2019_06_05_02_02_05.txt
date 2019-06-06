@@ -1,0 +1,20 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 CameraFOVFactor 2 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 3 
+8	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+3	2324	0	0	ReSet	0.00	0
+4	2331	0	0	ShowTarget	0.00	0
+5	3849	0	0	MoveTarget	0.00	1
+6	3864	0	0	ShowTarget	0.00	1
+7	3981	0	0	TargetHided	0.00	1
+8	3983	0	0	ChangeTargetWaitTime	0.00	1
+9	12298	0	0	MoveTarget	0.00	1
+10	12311	0	0	ShowTarget	0.00	1
+11	12420	0	0	TargetHided	0.00	1
+12	12421	0	0	ChangeTargetWaitTime	0.00	1
+13	24484	0	0	MoveTarget	0.00	1
+14	24498	0	0	ShowTarget	0.00	1
+15	24607	0	0	TargetHided	0.00	1
+16	24607	0	0	ChangeTargetWaitTime	0.00	1
+36756	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag False HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
+
+
+

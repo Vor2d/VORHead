@@ -1,0 +1,11 @@
+0	start	0	34.17	StaticAcuity
+
+1	0	1922	-1	Show Acuity
+2	0	4970	0	True
+
+3	0	6891	-1	Show Acuity
+4	0	9823	1	True
+5	0	11414	-1	Show Acuity
+
+
+
