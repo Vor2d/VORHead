@@ -1192,13 +1192,13 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)CI_script.Four_dir_input)
                 {
                     acuity_right_num++;
-                    StartCoroutine(show_text(1.0f, "Right"));
+                    //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
-                    StartCoroutine(show_text(1.0f, "Wrong"));
+                    //StartCoroutine(show_text(1.0f, "Wrong"));
                     result = false;
                 }
                 break;
@@ -1206,13 +1206,13 @@ public class GameController : GeneralGameController {
                 if((int)acuity_dir == (int)CI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
-                    StartCoroutine(show_text(1.0f, "Right"));
+                    //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
-                    StartCoroutine(show_text(1.0f, "Wrong"));
+                    //StartCoroutine(show_text(1.0f, "Wrong"));
                     result = false;
                 }
                 break;
@@ -1230,13 +1230,13 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)GCI_script.Four_dir_input)
                 {
                     acuity_right_num++;
-                    StartCoroutine(show_text(1.0f, "Right"));
+                    //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
-                    StartCoroutine(show_text(1.0f, "Wrong"));
+                    //StartCoroutine(show_text(1.0f, "Wrong"));
                     result = false;
                 }
                 break;
@@ -1244,13 +1244,13 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)GCI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
-                    StartCoroutine(show_text(1.0f, "Right"));
+                    //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
                 else
                 {
                     acuity_wrong_num++;
-                    StartCoroutine(show_text(1.0f, "Wrong"));
+                    //StartCoroutine(show_text(1.0f, "Wrong"));
                     result = false;
                 }
                 break;

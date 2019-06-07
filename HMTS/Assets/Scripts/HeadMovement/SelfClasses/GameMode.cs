@@ -131,7 +131,7 @@ public class GameMode
             case GameModeEnum.DynamicAcuity:
                 {
                     HideFlag = true;
-                    ShowTargetFlag = false;
+                    ShowTargetFlag = true;
                     SkipCenterFlag = true;
                     HeadIndicatorChange = true;
                     UsingAcuityAfter = false;
@@ -142,7 +142,7 @@ public class GameMode
             case GameModeEnum.PostDynamicAcuity:
                 {
                     HideFlag = true;
-                    ShowTargetFlag = false;
+                    ShowTargetFlag = true;
                     SkipCenterFlag = true;
                     HeadIndicatorChange = true;
                     UsingAcuityAfter = true;
