@@ -90,7 +90,7 @@ public class WAM_GameController : GeneralGameController
                                         setting_cache.Mole_frame_dist2,setting_cache.Mole_frame_num2,
                                         setting_cache.Gener_list,setting_cache.Using_acuity,
                                         setting_cache.Acuity_rela_size,setting_cache.Acuity_type,
-                                        setting_cache.Acuity_flash_time);
+                                        setting_cache.Acuity_flash_time,setting_cache.Min_distance);
         mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame();
         RC.MoleCenter_TRANS = mole_center_OBJ.transform;
         MC_cache = mole_center_OBJ.GetComponent<WAM_MoleCenter>();

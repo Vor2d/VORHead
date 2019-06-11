@@ -23,6 +23,8 @@ public class WAM_MoleCenter : MonoBehaviour
     private float acuity_size;
     private AcuityType acuity_type;
     private float acuity_flash_time;
+    private float min_dist;
+    private Vector3 last_pos;
 
     private void Awake()
     {
@@ -43,6 +45,8 @@ public class WAM_MoleCenter : MonoBehaviour
         this.acuity_size = 1.0f;
         this.acuity_type = AcuityType.fourdir;
         this.acuity_flash_time = 0.1f;
+        this.min_dist = 0.0f;
+        this.last_pos = new Vector3();
     }
 
 
@@ -50,7 +54,7 @@ public class WAM_MoleCenter : MonoBehaviour
                                     float _mole_size,float _mole_des_time,float _mole_frame_size,
                                     float _distant2,int _mole_frame_num2,List<int> _gener_list,
                                     bool _using_acuity,float _acuity_size,AcuityType _acuity_type,
-                                    float _acuity_flash_time)
+                                    float _acuity_flash_time,float _min_dist)
     {
         RC = _RC;
         gener_shape = _gener_shape;
@@ -66,6 +70,7 @@ public class WAM_MoleCenter : MonoBehaviour
         acuity_size = _acuity_size;
         acuity_type = _acuity_type;
         acuity_flash_time = _acuity_flash_time;
+        min_dist = _min_dist;
 
         list_index = -1;
     }
@@ -179,18 +184,37 @@ public class WAM_MoleCenter : MonoBehaviour
 
     private void random_mole_gener()
     {
+        bool good_gener = false;
         int index = 0;
-        switch (gener_shape)
+        Vector3 pos = new Vector3();
+        int counter = 0;
+        while (!good_gener)
         {
-            case MoleGenerShape.circle:
-                index = Random.Range(0, mole_frame_num);
+            index = 0;
+            switch (gener_shape)
+            {
+                case MoleGenerShape.circle:
+                    index = Random.Range(0, mole_frame_num);
+                    break;
+                case MoleGenerShape.gird:
+                    index = Random.Range(0, mole_frame_num * mole_frame_num2);
+                    break;
+            }
+            pos = frame_TRANSs[index].position;
+            if(Vector3.Distance(pos,last_pos) > min_dist)
+            {
+                good_gener = true;
                 break;
-            case MoleGenerShape.gird:
-                index = Random.Range(0, mole_frame_num*mole_frame_num2);
+            }
+            counter += 1;
+            if(counter > 5)
+            {
                 break;
+            }
         }
-        Vector3 pos = frame_TRANSs[index].position;
+
         spawn_mole(pos);
+        last_pos = pos;
     }
 
     private void spawn_mole(Vector3 pos)

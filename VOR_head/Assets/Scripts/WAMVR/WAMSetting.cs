@@ -28,6 +28,7 @@ public class WAMSetting
     public float Head_speed;
     public float Head_stop_time;
     public float Head_stop_speed;
+    public float Min_distance;
 
     public WAMSetting()
     {
@@ -50,6 +51,7 @@ public class WAMSetting
         this.Head_speed = 50.0f;
         this.Head_stop_time = 0.1f;
         this.Head_stop_speed = 10.0f;
+        this.Min_distance = 0.0f;
 
         Instance = this;
     }
