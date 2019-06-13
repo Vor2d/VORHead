@@ -26,6 +26,7 @@ public class GameSetting
     public float AcuityChangeUpPerc;
     public float AcuityChangeDownPerc;
     public List<int> AcuityList;
+    public float StopSpeed;
 
     public GameSetting()
     {
@@ -51,6 +52,7 @@ public class GameSetting
         this.AcuityChangeUpPerc = 0.8f;
         this.AcuityChangeDownPerc = 0.5f;
         this.AcuityList = new List<int>();
+        this.StopSpeed = 10.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -123,6 +125,7 @@ public class GameSetting
         result_str += "AcuityChangeUpPerc" + " " + AcuityChangeUpPerc.ToString() + " ";
         result_str += "AcuityChangeDownPerc" + " " + AcuityChangeDownPerc.ToString() + " ";
         result_str += "ACuityList" + " " + AcuityList.Count.ToString() + " ";
+        result_str += "StopSpeed" + " " + StopSpeed.ToString("F2") + " ";
 
 
         return result_str;

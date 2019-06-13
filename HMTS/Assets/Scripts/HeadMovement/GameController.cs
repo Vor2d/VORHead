@@ -255,7 +255,7 @@ public class GameController : GeneralGameController {
                 head_speed_y = GeneralMethods.getVRspeed().y;
             }
             
-            if (Mathf.Abs(head_speed_y) < 5.0f)
+            if (Mathf.Abs(head_speed_y) < DC_script.SystemSetting.StopSpeed)
             {
                 //record_target();
                 //stopped_flag = true;
