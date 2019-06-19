@@ -1224,9 +1224,15 @@ public class GameController : GeneralGameController {
     private bool check_common_controller()
     {
         bool result = false;
+        bool empty_flag = false;
         switch (acuity_mode)
         {
             case AcuityMode.four_dir:
+                if(GCI_script.Four_dir_input == GeneralControllerInput.FourDirInput.empty)
+                {
+                    empty_flag = true;
+                    break;
+                }
                 if ((int)acuity_dir == (int)GCI_script.Four_dir_input)
                 {
                     acuity_right_num++;
@@ -1241,6 +1247,11 @@ public class GameController : GeneralGameController {
                 }
                 break;
             case AcuityMode.eight_dir:
+                if(GCI_script.Eight_dir_input == GeneralControllerInput.EightDirInput.empty)
+                {
+                    empty_flag = true;
+                    break;
+                }
                 if ((int)acuity_dir == (int)GCI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
@@ -1255,7 +1266,10 @@ public class GameController : GeneralGameController {
                 }
                 break;
         }
-        GCAnimator.SetTrigger("NextStep");
+        if(!empty_flag)
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
         return result;
     }
 
