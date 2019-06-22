@@ -94,6 +94,13 @@ public class GameController : GeneralGameController {
     private float hide_gaze_timer;
     private float gaze_timer_rand;
     private float target_change_timer;
+    private int acuity_change_index;
+    private int acuity_wrong_num;
+    private int acuity_right_num;
+    private int curr_acuity_size;
+    private int A_delay_index;
+    private float curr_A_delay;
+    private int A_delay_right;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -105,10 +112,7 @@ public class GameController : GeneralGameController {
     private bool show_acuity_flag;
     private bool speed_passed_flag;
     private bool show_text_flag;
-    private int acuity_change_index;
-    private int acuity_wrong_num;
-    private int acuity_right_num;
-    private int curr_acuity_size;
+
 
     public bool UsingAcuity
     {
@@ -188,6 +192,9 @@ public class GameController : GeneralGameController {
         this.acuity_wrong_num = 0;
         this.acuity_right_num = 0;
         this.curr_acuity_size = 0;
+        this.A_delay_index = 0;
+        this.curr_A_delay = 0.0f;
+        this.A_delay_right = 0;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -637,7 +644,14 @@ public class GameController : GeneralGameController {
             //stopped_flag = false;
             if(DC_script.Current_GM.UsingAcuityAfter)
             {
-                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime,true));
+                if(DC_script.Current_GM.UsingPostDelay)
+                {
+                    StartCoroutine(show_acuity(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, true));
+                }
+                else
+                {
+                    StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime, true));
+                }
             }
             else
             {
@@ -657,6 +671,25 @@ public class GameController : GeneralGameController {
             yield return new WaitForSeconds(time_dure);
             AG_script.turn_off_AG();
             if(jump_next)
+            {
+                GCAnimator.SetTrigger("NextStep");
+            }
+            show_acuity_flag = false;
+        }
+    }
+
+    private IEnumerator show_acuity(float delay_time,float time_dure, bool jump_next)
+    {
+        yield return new WaitForSeconds(delay_time);
+        if (!show_acuity_flag)
+        {
+            show_acuity_flag = true;
+            update_SS();
+            ALS_script.log_acuity_delay(simulink_sample, delay_time);
+            acuity_dir = AG_script.turn_on_acuity(true);
+            yield return new WaitForSeconds(time_dure);
+            AG_script.turn_off_AG();
+            if (jump_next)
             {
                 GCAnimator.SetTrigger("NextStep");
             }
@@ -787,6 +820,15 @@ public class GameController : GeneralGameController {
             }
         }
 
+        if (DC_script.Current_GM.UsingPostDelay)
+        {
+            if (change_delay())
+            {
+                to_next_section();
+                return;
+            }
+        }
+
         if (trial_iter < 0)
         {
             last_rot_ang_dir = new Vector2(0.0f, 0.0f);
@@ -839,31 +881,52 @@ public class GameController : GeneralGameController {
         }
     }
 
+    private bool change_delay()
+    {
+        switch(DC_script.Current_GM.PostDelayMode)
+        {
+            case PostDelayModes.random:
+                curr_A_delay = UnityEngine.Random.Range(0.0f, 3.0f);
+                return false;
+                //break;
+            case PostDelayModes.delay_list:
+                if(A_delay_index < DC_script.SystemSetting.PostDelayList.Count)
+                {
+                    curr_A_delay = DC_script.SystemSetting.PostDelayList[A_delay_index];
+                    A_delay_index++;
+                    return false;
+                }
+                else
+                {
+                    A_delay_index = 0;
+                    return true;
+                }
+                //break;
+        }
+        return false;
+    }
+
     private bool change_acuity()
     {
         switch(DC_script.Current_GM.CurrAcuityChangeMode)
         {
             case AcuityChangeMode.percent:
-                if (acuity_change_index >= DC_script.SystemSetting.AcuityChangeNumber)
+                switch(GeneralMethods.change_by_percent(ref acuity_change_index,DC_script.SystemSetting.AcuityChangeNumber,
+                                        ref acuity_right_num,DC_script.SystemSetting.AcuityChangeUpPerc,
+                                        DC_script.SystemSetting.AcuityChangeDownPerc))
                 {
-                    if (acuity_right_num > (int)(DC_script.SystemSetting.AcuityChangeNumber *
-                                                DC_script.SystemSetting.AcuityChangeUpPerc))
-                    {
+                    case 1:
                         decrease_acuity_size();
-                    }
-                    else if (acuity_wrong_num > (DC_script.SystemSetting.AcuityChangeNumber -
-                                                (int)(DC_script.SystemSetting.AcuityChangeNumber *
-                                                    DC_script.SystemSetting.AcuityChangeDownPerc)))
-                    {
+                        break;
+                    case -1:
                         increase_acuity_size();
-                    }
-                    acuity_change_index = 0;
-                    acuity_right_num = 0;
-                    acuity_wrong_num = 0;
+                        break;
+                    default:
+                        break;
                 }
-                acuity_change_index++;
+                acuity_wrong_num = 0;
                 break;
-
+                
             case AcuityChangeMode.acuity_list:
                 if(acuity_change_index < DC_script.SystemSetting.AcuityList.Count)
                 {
@@ -1155,13 +1218,13 @@ public class GameController : GeneralGameController {
             {
                 //check_oculusC();
                 result = check_oculusC2();
+                update_SS();
+                ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
             }
             if(DC_script.MSM_script.using_coil)
             {
                 result = check_common_controller();
             }
-            update_SS();
-            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
         }
     }
 
@@ -1268,6 +1331,8 @@ public class GameController : GeneralGameController {
         }
         if(!empty_flag)
         {
+            update_SS();
+            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
             GCAnimator.SetTrigger("NextStep");
         }
         return result;

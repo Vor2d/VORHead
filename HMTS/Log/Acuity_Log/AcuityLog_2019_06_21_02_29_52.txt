@@ -1,0 +1,11 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	17.70	StaticAcuity
+1	0	1894	-1	Show Acuity
+2	0	3811	5	True
+3	0	5581	-1	Show Acuity
+4	0	7936	5	True
+5	0	9237	-1	Show Acuity
+6	0	11575	5	False
+7	start	0	13049.35	StaticAcuity
+

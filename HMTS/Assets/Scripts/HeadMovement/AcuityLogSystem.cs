@@ -73,7 +73,7 @@ public class AcuityLogSystem : GeneralLogSystem
         line_counter++;
     }
 
-    public void log_acuity(uint simulink_sample, int acuity_size,string right_wrong)
+    public void log_acuity(uint simulink_sample, int acuity_size, string right_wrong)
     {
         total_time = stop_watch.Elapsed.TotalMilliseconds;
 
@@ -94,6 +94,11 @@ public class AcuityLogSystem : GeneralLogSystem
     public void log_acuity_state(uint simulink_sample,string action)
     {
         log_acuity(simulink_sample, -1, action);
+    }
+
+    public void log_acuity_delay(uint simulink_sample, float delay)
+    {
+        log_acuity(simulink_sample, -2, delay.ToString("F2"));
     }
 
 }

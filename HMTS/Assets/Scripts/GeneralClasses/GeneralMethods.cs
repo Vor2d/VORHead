@@ -385,6 +385,30 @@ public static class GeneralMethods {
 
     }
 
+    public static int change_by_percent(ref int index,int number, ref int right_num, float up_cent,float down_cent)
+    {
+        int result = -10;
+        if (index >= number)
+        {
+            if (right_num > (int)(number * up_cent))
+            {
+                result = 1;
+            }
+            else if ((number - right_num) > (number - (int)(number * down_cent)))
+            {
+                result = -1;
+            }
+            index = 0;
+            right_num = 0;
+        }
+        else
+        {
+            index++;
+            result = 0;
+        }
+
+        return result;
+    }
 
     #endregion
 

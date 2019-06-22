@@ -22,6 +22,8 @@ public class GameMode
     public int AcuitySize { get; set; }
     public bool UsingAcuityChange { get; set; }
     public AcuityChangeMode CurrAcuityChangeMode { get; set; }
+    public bool UsingPostDelay { get; set; }
+    public PostDelayModes PostDelayMode { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -49,6 +51,8 @@ public class GameMode
         this.AcuitySize = other_GM.AcuitySize;
         this.UsingAcuityChange = other_GM.UsingAcuityChange;
         this.CurrAcuityChangeMode = other_GM.CurrAcuityChangeMode;
+        this.UsingPostDelay = other_GM.UsingPostDelay;
+        this.PostDelayMode = other_GM.PostDelayMode;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -141,7 +145,7 @@ public class GameMode
                 }
             case GameModeEnum.PostDynamicAcuity:
                 {
-                    HideFlag = true;
+                    HideFlag = false;
                     ShowTargetFlag = true;
                     SkipCenterFlag = true;
                     HeadIndicatorChange = true;
@@ -178,9 +182,23 @@ public class GameMode
                     break;
                 }
             }
-
         }
         catch { CurrAcuityChangeMode = AcuityChangeMode.acuity_list; }
+        try { UsingPostDelay = (para_dict["UsingPostDelay"] == "True"); }
+        catch { UsingPostDelay = false; }
+        try
+        {
+            string[] temp_enums = Enum.GetNames(typeof(PostDelayModes));
+            for (int i = 0; i < temp_enums.Length; i++)
+            {
+                if (para_dict["PostDelayMode"] == temp_enums[i])
+                {
+                    PostDelayMode = (PostDelayModes)i;
+                    break;
+                }
+            }
+        }
+        catch { PostDelayMode = PostDelayModes.random; }
     }
 
     public string VarToString()
@@ -205,6 +223,8 @@ public class GameMode
         result_str += "AcuitySize" + " " + AcuitySize.ToString() + " ";
         result_str += "UsingAcuityChange" + " " + UsingAcuityChange.ToString() + " ";
         result_str += "CurrAcuityChangeMode" + " " + CurrAcuityChangeMode.ToString() + " ";
+        result_str += "UsingPostDelay" + " " + UsingPostDelay.ToString() + " ";
+        result_str += "PostDelayMode" + " " + PostDelayMode.ToString() + " ";
 
         return result_str;
     }

@@ -6,10 +6,12 @@ ________________________________
 -1
 0	0
 ________________________________
-GameMode	StaticAcuity
+GameMode	DynamicAcuity
 AcuitySize	5
-UsingAcuityChange	True
+UsingAcuityChange	False
 AcuityChangeMode	acuity_list
+UsingPostDelay	True
+PostDelayMode	delay_list
 ________________________________
 -1
 0	0
