@@ -24,6 +24,7 @@ public class GameMode
     public AcuityChangeMode CurrAcuityChangeMode { get; set; }
     public bool UsingPostDelay { get; set; }
     public PostDelayModes PostDelayMode { get; set; }
+    public float PostDelayInit { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -53,6 +54,7 @@ public class GameMode
         this.CurrAcuityChangeMode = other_GM.CurrAcuityChangeMode;
         this.UsingPostDelay = other_GM.UsingPostDelay;
         this.PostDelayMode = other_GM.PostDelayMode;
+        this.PostDelayInit = other_GM.PostDelayInit;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -199,6 +201,8 @@ public class GameMode
             }
         }
         catch { PostDelayMode = PostDelayModes.random; }
+        try { PostDelayInit = float.Parse(para_dict["PostDelayInit"]); }
+        catch { PostDelayInit = 0.0f; }
     }
 
     public string VarToString()
@@ -225,6 +229,7 @@ public class GameMode
         result_str += "CurrAcuityChangeMode" + " " + CurrAcuityChangeMode.ToString() + " ";
         result_str += "UsingPostDelay" + " " + UsingPostDelay.ToString() + " ";
         result_str += "PostDelayMode" + " " + PostDelayMode.ToString() + " ";
+        result_str += "PostDelayInit" + " " + PostDelayInit.ToString("F2") + " ";
 
         return result_str;
     }

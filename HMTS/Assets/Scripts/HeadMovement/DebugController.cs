@@ -14,11 +14,13 @@ public class DebugController : MonoBehaviour {
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size): ";
+    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight): ";
 
     public GameController GC_script;
     public HeadSimulator HS_script;
     public VRLogSystem VRLS_script;
     public JumpLogSystem JLS_script;
+    public AcuityLogSystem ALS_script;
     public CoilData CD_script;
     public Transform DebugTarget_TRANS;
     public Vector3 DebugTargetDegree;
@@ -32,6 +34,7 @@ public class DebugController : MonoBehaviour {
     public Text LoopTrialNumber_Text;
     public bool UsingEyeSimulator;
     public Text AcuityState_Text;
+    public Text AcuityDelay_Text;
     public Camera camera1;
     public Camera camera2;
     [SerializeField] private TextMesh DebugText1;
@@ -72,16 +75,19 @@ public class DebugController : MonoBehaviour {
                     + "\t" + GC_script.turn_degree_x.ToString("F2");
         State_Text.text = ST_init_text + GC_script.Current_state;
         VRLoggingState_Text.text = VRLST_init_text + VRLS_script.thread_state_flag;
-        JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag;
+        JumpLoggingState_Text.text = JLS_init_text + JLS_script.log_state_flag
+            + " / AcuityLog: " + ALS_script.thread_state_flag;
         LoopTrialNumber_Text.text = LTN_init_text + GC_script.loop_iter.ToString()
                                             + "\t & \t" + GC_script.trial_iter.ToString()
                                             + "\t & \t" + GC_script.section_number
                                             + "\t" + DC_script.Current_GM.GameModeName;
-        AcuityState_Text.text = Acuity_init_text + (GC_script.AcuityState.x).ToString("F0") +
-                                        " / " + (GC_script.AcuityState.y).ToString("F0") +
-                                        " / " + (GC_script.AcuityState.z).ToString("F0") +
-                                        " / " + (GC_script.AcuityState.w).ToString("F0");
-
+        AcuityState_Text.text = Acuity_init_text + (GC_script.AcuityState[0]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[1]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[2]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[3]).ToString("F0");
+        AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[5]).ToString("F3") +
+                                " / " + (GC_script.AcuityState[6]).ToString("F0");
     }
 
     private void eye_test()

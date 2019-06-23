@@ -101,6 +101,8 @@ public class GameController : GeneralGameController {
     private int A_delay_index;
     private float curr_A_delay;
     private int A_delay_right;
+    private bool AD_last_inc;
+    private int AD_converge_counter;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -124,12 +126,12 @@ public class GameController : GeneralGameController {
         }
     }
 
-    public Vector4 AcuityState
+    public List<float> AcuityState
     {
         get
         {
-            return new Vector4(acuity_change_index, acuity_right_num, acuity_wrong_num,
-                                curr_acuity_size);
+            return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
+                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right};
         }
     }
 
@@ -193,8 +195,10 @@ public class GameController : GeneralGameController {
         this.acuity_right_num = 0;
         this.curr_acuity_size = 0;
         this.A_delay_index = 0;
-        this.curr_A_delay = 0.0f;
+        this.curr_A_delay = DC_script.Current_GM.PostDelayInit;
         this.A_delay_right = 0;
+        this.AD_last_inc = false;
+        this.AD_converge_counter = 0;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -901,9 +905,70 @@ public class GameController : GeneralGameController {
                     A_delay_index = 0;
                     return true;
                 }
-                //break;
+            //break;
+            case PostDelayModes.percent:
+                int result = -10;
+                result = GeneralMethods.change_by_percent(ref A_delay_index, DC_script.SystemSetting.PostDelayNumber,
+                    ref A_delay_right, DC_script.SystemSetting.PostDelayUpPC, DC_script.SystemSetting.PostDelayLoPC);
+                switch(result)
+                {
+                    case 1:
+                        return decrease_delay();
+                    case -1:
+                        return increase_delay();
+                    default:
+                        break;
+                }
+                break;
         }
         return false;
+    }
+
+    private bool decrease_delay()
+    {
+        if(AD_last_inc || min_delay())
+        {
+            AD_converge_counter++;
+            if(AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            AD_converge_counter = 0;
+        }
+        curr_A_delay -= curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        AD_last_inc = false;
+        return false;
+    }
+
+    private bool increase_delay()
+    {
+        if (!AD_last_inc || max_delay())
+        {
+            AD_converge_counter++;
+            if (AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            AD_converge_counter = 0;
+        }
+        curr_A_delay += curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        return false;
+    }
+
+    private bool max_delay()
+    {
+        return curr_A_delay > 1.0f;
+    }
+
+    private bool min_delay()
+    {
+        return curr_A_delay < 0.05f;
     }
 
     private bool change_acuity()
@@ -979,6 +1044,8 @@ public class GameController : GeneralGameController {
         DC_script.Current_TI = DC_script.Sections[section_number].SectionTrialInfo;
         turn_data = DC_script.Current_TI.Turn_data;
         jump_data = DC_script.Current_TI.Jump_data;
+        curr_acuity_size = DC_script.Current_GM.AcuitySize;
+        curr_A_delay = DC_script.Current_GM.PostDelayInit;
         update_Animator();
 
         GCAnimator.SetTrigger("NextStep");

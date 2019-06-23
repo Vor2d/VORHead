@@ -28,6 +28,11 @@ public class GameSetting
     public List<int> AcuityList;
     public float StopSpeed;
     public List<float> PostDelayList;
+    public int PostDelayNumber;
+    public float PostDelayUpPC;
+    public float PostDelayLoPC;
+    public float PostDelayIncPC;
+    public int PostDelayConvNum;
 
     public GameSetting()
     {
@@ -55,6 +60,11 @@ public class GameSetting
         this.AcuityList = new List<int>();
         this.StopSpeed = 10.0f;
         this.PostDelayList = new List<float>();
+        this.PostDelayNumber = 3;
+        this.PostDelayUpPC = 0.6f;
+        this.PostDelayLoPC = 0.6f;
+        this.PostDelayIncPC = 0.5f;
+        this.PostDelayConvNum = 3;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -129,6 +139,10 @@ public class GameSetting
         result_str += "ACuityList" + " " + AcuityList.Count.ToString() + " ";
         result_str += "StopSpeed" + " " + StopSpeed.ToString("F2") + " ";
         result_str += "PostDelayList" + " " + PostDelayList.Count.ToString() + " ";
+        result_str += "PostDelayNumber" + " " + PostDelayNumber.ToString() + " ";
+        result_str += "PostDelayUpC" + " " + PostDelayUpPC.ToString("F2") + " ";
+        result_str += "PostDelayLoC" + " " + PostDelayLoPC.ToString("F2") + " ";
+        result_str += "PostDelayConvNum" + " " + PostDelayConvNum.ToString() + " ";
 
 
         return result_str;
