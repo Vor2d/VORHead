@@ -1295,8 +1295,8 @@ public class GameController : GeneralGameController {
             {
                 //check_oculusC();
                 result = check_oculusC2();
-                update_SS();
-                ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
+                //update_SS();
+                //ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
             }
             if(DC_script.MSM_script.using_coil)
             {
@@ -1325,6 +1325,7 @@ public class GameController : GeneralGameController {
     private bool check_oculusC2()
     {
         //Debug.Log("acuity_dir " + acuity_dir);
+        bool empty_flag = CI_script.Eight_dir_input == Controller_Input.EightDirInput.empty;
         bool result = false;
         switch(acuity_mode)
         {
@@ -1358,6 +1359,12 @@ public class GameController : GeneralGameController {
                     result = false;
                 }
                 break;
+        }
+        if(empty_flag)
+        {
+            update_SS();
+            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString(),
+                acuity_dir.ToString(),CI_script.Eight_dir_input.ToString());
         }
         GCAnimator.SetTrigger("NextStep");
         return result;
@@ -1413,7 +1420,8 @@ public class GameController : GeneralGameController {
         if(!empty_flag)
         {
             update_SS();
-            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString());
+            ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString(),
+                acuity_dir.ToString(),GCI_script.Eight_dir_input.ToString());
             GCAnimator.SetTrigger("NextStep");
         }
         return result;

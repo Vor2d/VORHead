@@ -73,7 +73,7 @@ public class AcuityLogSystem : GeneralLogSystem
         line_counter++;
     }
 
-    public void log_acuity(uint simulink_sample, int acuity_size, string right_wrong)
+    public void log_acuity(uint simulink_sample, int acuity_size, string right_wrong,string dir,string cho_dir)
     {
         total_time = stop_watch.Elapsed.TotalMilliseconds;
 
@@ -86,6 +86,10 @@ public class AcuityLogSystem : GeneralLogSystem
         Log_SB.Append(acuity_size.ToString());
         Log_SB.Append("\t");
         Log_SB.Append(right_wrong);
+        Log_SB.Append("\t");
+        Log_SB.Append(dir);
+        Log_SB.Append("\t");
+        Log_SB.Append(cho_dir);
         Log_SB.AppendLine();
 
         line_counter++;
@@ -93,12 +97,12 @@ public class AcuityLogSystem : GeneralLogSystem
 
     public void log_acuity_state(uint simulink_sample,string action)
     {
-        log_acuity(simulink_sample, -1, action);
+        log_acuity(simulink_sample, -1, action,"-1","-1");
     }
 
     public void log_acuity_delay(uint simulink_sample, float delay)
     {
-        log_acuity(simulink_sample, -2, delay.ToString("F2"));
+        log_acuity(simulink_sample, -2, delay.ToString("F2"),"-1","-1");
     }
 
 }
