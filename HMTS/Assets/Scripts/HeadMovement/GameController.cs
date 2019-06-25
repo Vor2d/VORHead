@@ -131,7 +131,7 @@ public class GameController : GeneralGameController {
         get
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
-                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right};
+                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_counter};
         }
     }
 
@@ -926,7 +926,8 @@ public class GameController : GeneralGameController {
 
     private bool decrease_delay()
     {
-        if(AD_last_inc || min_delay())
+        bool min_de = min_delay();
+        if(AD_last_inc || min_de)
         {
             AD_converge_counter++;
             if(AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
@@ -938,14 +939,18 @@ public class GameController : GeneralGameController {
         {
             AD_converge_counter = 0;
         }
-        curr_A_delay -= curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        if(!min_de)
+        {
+            curr_A_delay -= curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        }
         AD_last_inc = false;
         return false;
     }
 
     private bool increase_delay()
     {
-        if (!AD_last_inc || max_delay())
+        bool max_de = max_delay();
+        if (!AD_last_inc || max_de)
         {
             AD_converge_counter++;
             if (AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
@@ -957,18 +962,22 @@ public class GameController : GeneralGameController {
         {
             AD_converge_counter = 0;
         }
-        curr_A_delay += curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        if(!max_de)
+        {
+            curr_A_delay += curr_A_delay * DC_script.SystemSetting.PostDelayIncPC;
+        }
+        AD_last_inc = true;
         return false;
     }
 
     private bool max_delay()
     {
-        return curr_A_delay > 1.0f;
+        return curr_A_delay >= 1.0f;
     }
 
     private bool min_delay()
     {
-        return curr_A_delay < 0.05f;
+        return curr_A_delay <= 0.001f;
     }
 
     private bool change_acuity()
@@ -1071,6 +1080,7 @@ public class GameController : GeneralGameController {
         
     }
 
+    [Obsolete("Not using setting scene!")]
     public void load_setting_scene()
     {
         SceneManager.LoadScene("HeadMSetting");
@@ -1322,6 +1332,7 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)CI_script.Four_dir_input)
                 {
                     acuity_right_num++;
+                    A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
@@ -1336,6 +1347,7 @@ public class GameController : GeneralGameController {
                 if((int)acuity_dir == (int)CI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
+                    A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
@@ -1366,6 +1378,7 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)GCI_script.Four_dir_input)
                 {
                     acuity_right_num++;
+                    A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
@@ -1385,6 +1398,7 @@ public class GameController : GeneralGameController {
                 if ((int)acuity_dir == (int)GCI_script.Eight_dir_input)
                 {
                     acuity_right_num++;
+                    A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
                     result = true;
                 }
@@ -1410,5 +1424,7 @@ public class GameController : GeneralGameController {
         controller_flag = false;
         AG_script.turn_off_AG();
     }
+
+    public List<string> Debug_str { get; set; }
 }
 

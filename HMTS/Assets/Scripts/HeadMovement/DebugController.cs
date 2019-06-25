@@ -14,7 +14,7 @@ public class DebugController : MonoBehaviour {
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size): ";
-    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight): ";
+    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge): ";
 
     public GameController GC_script;
     public HeadSimulator HS_script;
@@ -87,7 +87,8 @@ public class DebugController : MonoBehaviour {
                                         " / " + (GC_script.AcuityState[3]).ToString("F0");
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[5]).ToString("F3") +
-                                " / " + (GC_script.AcuityState[6]).ToString("F0");
+                                " / " + (GC_script.AcuityState[6]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[7]).ToString("F0");
     }
 
     private void eye_test()
