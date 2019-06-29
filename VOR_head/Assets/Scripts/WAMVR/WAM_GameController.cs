@@ -12,6 +12,11 @@ public class WAM_GameController : GeneralGameController
     private bool acuity_ready_flag;
     private float head_stop_timer;
     private bool check_stop_flag;
+    private bool check_CD_flag;
+    private float up_timer;
+    private float right_timer;
+    private float down_timer;
+    private float left_timer;
     //Cache;
     private WAM_DataController DC_cahce;
     private WAMSetting setting_cache;
@@ -28,8 +33,21 @@ public class WAM_GameController : GeneralGameController
         this.acuity_ready_flag = false;
         this.head_stop_timer = setting_cache.Head_stop_time;
         this.check_stop_flag = false;
+        this.check_CD_flag = false;
+        this.up_timer = 0.0f;
+        this.right_timer = 0.0f;
+        this.down_timer = 0.0f;
+        this.left_timer = 0.0f;
 
         register_controller();
+        if(setting_cache.Controller_mode == ControllerModes.time_delay)
+        {
+            check_CD_flag = true;
+            up_timer = setting_cache.Controller_Dtime;
+            right_timer = setting_cache.Controller_Dtime;
+            down_timer = setting_cache.Controller_Dtime;
+            left_timer = setting_cache.Controller_Dtime;
+        }
     }
 
     protected override void Update()
@@ -41,6 +59,10 @@ public class WAM_GameController : GeneralGameController
         if(check_stop_flag)
         {
             check_stop();
+        }
+        if(check_CD_flag)
+        {
+            check_cont_delay();
         }
     }
 
@@ -124,7 +146,7 @@ public class WAM_GameController : GeneralGameController
         {
             RC.CI_script.IndexTrigger += whac;
         }
-        else
+        else if(setting_cache.Controller_mode == ControllerModes.instant)
         {
             RC.CI_script.ForwardAction += whac_up;
             RC.CI_script.RightAction += whac_right;
@@ -140,7 +162,7 @@ public class WAM_GameController : GeneralGameController
         {
             RC.CI_script.IndexTrigger -= whac;
         }
-        else
+        else if (setting_cache.Controller_mode == ControllerModes.instant)
         {
             RC.CI_script.ForwardAction -= whac_up;
             RC.CI_script.RightAction -= whac_right;
@@ -197,5 +219,31 @@ public class WAM_GameController : GeneralGameController
     private void whac_left ()
     {
         MC_cache.whac_acuity((int)Controller_Input.FourDirInput.left);
+    }
+
+    private void check_cont_delay()
+    {
+        if (check_CDdir(RC.CI_script.Forward_flag, ref up_timer)) { whac_up(); }
+        if (check_CDdir(RC.CI_script.Right_flag, ref right_timer)) { whac_right(); }
+        if (check_CDdir(RC.CI_script.Back_flag, ref down_timer)) { whac_down(); }
+        if (check_CDdir(RC.CI_script.Left_flag, ref left_timer)) { whac_left(); }
+    }
+
+    private bool check_CDdir(bool flag,ref float timer)
+    {
+        if (flag)
+        {
+            timer -= Time.deltaTime;
+            if (timer < 0)
+            {
+                timer = setting_cache.Controller_Dtime;
+                return true;
+            }
+        }
+        else
+        {
+            timer = setting_cache.Controller_Dtime;
+        }
+        return false;
     }
 }

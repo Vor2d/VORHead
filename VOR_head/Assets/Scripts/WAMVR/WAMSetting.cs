@@ -29,6 +29,8 @@ public class WAMSetting
     public float Head_stop_time;
     public float Head_stop_speed;
     public float Min_distance;
+    public ControllerModes Controller_mode;
+    public float Controller_Dtime;
 
     public WAMSetting()
     {
@@ -52,6 +54,8 @@ public class WAMSetting
         this.Head_stop_time = 0.1f;
         this.Head_stop_speed = 10.0f;
         this.Min_distance = 0.0f;
+        this.Controller_mode = ControllerModes.instant;
+        this.Controller_Dtime = 0.0f;
 
         Instance = this;
     }
