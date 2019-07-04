@@ -6,9 +6,9 @@ public class WAMRC : MonoBehaviour
     public Transform MoleCenterInidcator_TRANS;
     public Transform WhacPartical_TRANS;
     //Object;
-    public WAM_GameController GC_script;
+    //public WAM_GameController GC_script;
     [HideInInspector]
-    public WAM_DataController DC_script;
+    //public WAM_DataController DC_script;
     public WAM_RayCast RCT_script;
     public Controller_Input CI_script;
     //Prefab;
@@ -20,7 +20,9 @@ public class WAMRC : MonoBehaviour
 
     private void Awake()
     {
-        GeneralMethods.check_ref<WAM_DataController>(ref DC_script,WAMSD.DC_name);
+        IS = this;
+
+        //GeneralMethods.check_ref<WAM_DataController>(ref DC_script,WAMSD.DC_name);
     }
 
     // Start is called before the first frame update
@@ -34,4 +36,6 @@ public class WAMRC : MonoBehaviour
     {
         
     }
+
+    public static WAMRC IS { get; private set; }
 }

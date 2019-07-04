@@ -12,6 +12,8 @@ public class WAM_SettingController : MonoBehaviour
 
     private void Awake()
     {
+        IS = this;
+
         Page_TRANSs = new List<Transform>();
     }
 
@@ -26,7 +28,7 @@ public class WAM_SettingController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void init_pages()
@@ -41,11 +43,13 @@ public class WAM_SettingController : MonoBehaviour
 
     public void start_button()
     {
-        RC.GC_script.start_game();
+        WAM_GameController.IS.start_game();
     }
 
     public void quit_button()
     {
-        RC.GC_script.quit_game();
+        WAM_GameController.IS.quit_game();
     }
+
+    public static WAM_SettingController IS { get; private set; }
 }

@@ -5,7 +5,7 @@ using WAMEC;
 
 public class WAM_GameController : GeneralGameController
 {
-    [SerializeField] private WAMRC RC;
+    public static WAM_GameController IS { get; private set; }
 
     private Animator GCAnimator;
     private bool check_mole_flag;
@@ -17,36 +17,43 @@ public class WAM_GameController : GeneralGameController
     private float right_timer;
     private float down_timer;
     private float left_timer;
+    private bool choose_acuity_flag;
     //Cache;
-    private WAM_DataController DC_cahce;
-    private WAMSetting setting_cache;
     private WAM_MoleCenter MC_cache;
+
+    private void Awake()
+    {
+        IS = this;
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        this.DC_cahce = RC.DC_script;
-        this.setting_cache = WAMSetting.Instance;
         this.GCAnimator = GetComponent<Animator>();
         this.MC_cache = null;
         this.check_mole_flag = false;
         this.acuity_ready_flag = false;
-        this.head_stop_timer = setting_cache.Head_stop_time;
+        this.head_stop_timer = WAMSetting.IS.Head_stop_time;
         this.check_stop_flag = false;
         this.check_CD_flag = false;
         this.up_timer = 0.0f;
         this.right_timer = 0.0f;
         this.down_timer = 0.0f;
         this.left_timer = 0.0f;
+        this.choose_acuity_flag = false;
 
         register_controller();
-        if(setting_cache.Controller_mode == ControllerModes.time_delay)
+        if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay)
         {
             check_CD_flag = true;
-            up_timer = setting_cache.Controller_Dtime;
-            right_timer = setting_cache.Controller_Dtime;
-            down_timer = setting_cache.Controller_Dtime;
-            left_timer = setting_cache.Controller_Dtime;
+            up_timer = WAMSetting.IS.Controller_Dtime;
+            right_timer = WAMSetting.IS.Controller_Dtime;
+            down_timer = WAMSetting.IS.Controller_Dtime;
+            left_timer = WAMSetting.IS.Controller_Dtime;
+        }
+        else if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        {
+            choose_acuity_flag = true;
         }
     }
 
@@ -73,14 +80,14 @@ public class WAM_GameController : GeneralGameController
 
     private void check_stop()
     {
-        if(GeneralMethods.getVRspeed().magnitude < setting_cache.Head_stop_speed)
+        if(GeneralMethods.getVRspeed().magnitude < WAMSetting.IS.Head_stop_speed)
         {
             head_stop_timer -= Time.deltaTime;
             if(head_stop_timer < 0)
             {
                 check_stop_flag = false;
-                head_stop_timer = setting_cache.Head_stop_time;
-                if(setting_cache.Acuity_process == ACuityProcess.post)
+                head_stop_timer = WAMSetting.IS.Head_stop_time;
+                if(WAMSetting.IS.Acuity_process == AcuityProcess.post)
                 {
                     MC_cache.generate_acuity();
                 }
@@ -88,13 +95,13 @@ public class WAM_GameController : GeneralGameController
         }
         else
         {
-            head_stop_timer = setting_cache.Head_stop_time;
+            head_stop_timer = WAMSetting.IS.Head_stop_time;
         }
     }
 
     private void check_head()
     {
-        if(GeneralMethods.getVRspeed().magnitude > setting_cache.Head_speed)
+        if(GeneralMethods.getVRspeed().magnitude > WAMSetting.IS.Head_speed)
         {
             acuity_ready_flag = false;
             check_stop_flag = true;
@@ -103,18 +110,12 @@ public class WAM_GameController : GeneralGameController
 
     private void generate_mole_center()
     {
-        GameObject mole_center_OBJ = 
-                Instantiate(RC.MoleCenter_Prefab, RC.MoleCenterInidcator_TRANS.position, Quaternion.identity);
-        mole_center_OBJ.GetComponent<WAM_MoleCenter>().init_mole_center(RC,
-                                        setting_cache.Mole_gener_shape, setting_cache.Mole_frame_dist,
-                                        setting_cache.Mole_frame_num, setting_cache.Mole_size,
-                                        setting_cache.Mole_des_time,setting_cache.Mole_frame_size,
-                                        setting_cache.Mole_frame_dist2,setting_cache.Mole_frame_num2,
-                                        setting_cache.Gener_list,setting_cache.Using_acuity,
-                                        setting_cache.Acuity_rela_size,setting_cache.Acuity_type,
-                                        setting_cache.Acuity_flash_time,setting_cache.Min_distance);
+        GameObject mole_center_OBJ = Instantiate(WAMRC.IS.MoleCenter_Prefab, 
+                                        WAMRC.IS.MoleCenterInidcator_TRANS.position, 
+                                        Quaternion.identity);
+        mole_center_OBJ.GetComponent<WAM_MoleCenter>().init_mole_center();
         mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame();
-        RC.MoleCenter_TRANS = mole_center_OBJ.transform;
+        WAMRC.IS.MoleCenter_TRANS = mole_center_OBJ.transform;
         MC_cache = mole_center_OBJ.GetComponent<WAM_MoleCenter>();
     }
 
@@ -131,8 +132,8 @@ public class WAM_GameController : GeneralGameController
 
     public void ToSpawnMole()
     {
-        MC_cache.generate_mole(setting_cache.Mole_gener_type);
-        if(setting_cache.Using_acuity)
+        MC_cache.generate_mole(WAMSetting.IS.Mole_gener_type);
+        if(WAMSetting.IS.Using_acuity)
         {
             acuity_ready_flag = true;
             check_stop_flag = false;
@@ -142,34 +143,58 @@ public class WAM_GameController : GeneralGameController
     
     private void register_controller()
     {
-        if(!setting_cache.Using_acuity)
+        if(!WAMSetting.IS.Using_acuity)
         {
-            RC.CI_script.IndexTrigger += whac;
+            WAMRC.IS.CI_script.IndexTrigger += whac;
         }
-        else if(setting_cache.Controller_mode == ControllerModes.instant)
+        else
         {
-            RC.CI_script.ForwardAction += whac_up;
-            RC.CI_script.RightAction += whac_right;
-            RC.CI_script.BackAction += whac_down;
-            RC.CI_script.LeftAction += whac_left;
+            switch(WAMSetting.IS.Controller_mode)
+            {
+                case ControllerModes.instant:
+                    WAMRC.IS.CI_script.ForwardAction += whac_up;
+                    WAMRC.IS.CI_script.RightAction += whac_right;
+                    WAMRC.IS.CI_script.BackAction += whac_down;
+                    WAMRC.IS.CI_script.LeftAction += whac_left;
+                    break;
+                case ControllerModes.post_judge:
+                    WAMRC.IS.CI_script.ForwardAction += choose_Aup;
+                    WAMRC.IS.CI_script.RightAction += choose_Aright;
+                    WAMRC.IS.CI_script.BackAction += choose_Adown;
+                    WAMRC.IS.CI_script.LeftAction += choose_Aleft;
+                    break;
+            }
+
         }
-        RC.CI_script.Button_B += recenter_VR;
+        WAMRC.IS.CI_script.Button_B += recenter_VR;
     }
 
     private void deregister_controller()
     {
-        if (!setting_cache.Using_acuity)
+        if (!WAMSetting.IS.Using_acuity)
         {
-            RC.CI_script.IndexTrigger -= whac;
+            WAMRC.IS.CI_script.IndexTrigger -= whac;
         }
-        else if (setting_cache.Controller_mode == ControllerModes.instant)
+        else
         {
-            RC.CI_script.ForwardAction -= whac_up;
-            RC.CI_script.RightAction -= whac_right;
-            RC.CI_script.BackAction -= whac_down;
-            RC.CI_script.LeftAction -= whac_left;
+            switch (WAMSetting.IS.Controller_mode)
+            {
+                case ControllerModes.instant:
+                    WAMRC.IS.CI_script.ForwardAction -= whac_up;
+                    WAMRC.IS.CI_script.RightAction -= whac_right;
+                    WAMRC.IS.CI_script.BackAction -= whac_down;
+                    WAMRC.IS.CI_script.LeftAction -= whac_left;
+                    break;
+                case ControllerModes.post_judge:
+                    WAMRC.IS.CI_script.ForwardAction -= choose_Aup;
+                    WAMRC.IS.CI_script.RightAction -= choose_Aright;
+                    WAMRC.IS.CI_script.BackAction -= choose_Adown;
+                    WAMRC.IS.CI_script.LeftAction -= choose_Aleft;
+                    break;
+            }
+
         }
-        RC.CI_script.Button_B -= recenter_VR;
+        WAMRC.IS.CI_script.Button_B -= recenter_VR;
     }
     
     private void whac()
@@ -187,7 +212,7 @@ public class WAM_GameController : GeneralGameController
 
     public void quit_game()
     {
-        RC.DC_script.MSM_script.to_start_scene();
+        WAM_DataController.IS.MSM_script.to_start_scene();
     }
 
     public void ToCheckMole()
@@ -223,10 +248,10 @@ public class WAM_GameController : GeneralGameController
 
     private void check_cont_delay()
     {
-        if (check_CDdir(RC.CI_script.Forward_flag, ref up_timer)) { whac_up(); }
-        if (check_CDdir(RC.CI_script.Right_flag, ref right_timer)) { whac_right(); }
-        if (check_CDdir(RC.CI_script.Back_flag, ref down_timer)) { whac_down(); }
-        if (check_CDdir(RC.CI_script.Left_flag, ref left_timer)) { whac_left(); }
+        if (check_CDdir(WAMRC.IS.CI_script.Forward_flag, ref up_timer)) { whac_up(); }
+        if (check_CDdir(WAMRC.IS.CI_script.Right_flag, ref right_timer)) { whac_right(); }
+        if (check_CDdir(WAMRC.IS.CI_script.Back_flag, ref down_timer)) { whac_down(); }
+        if (check_CDdir(WAMRC.IS.CI_script.Left_flag, ref left_timer)) { whac_left(); }
     }
 
     private bool check_CDdir(bool flag,ref float timer)
@@ -236,14 +261,41 @@ public class WAM_GameController : GeneralGameController
             timer -= Time.deltaTime;
             if (timer < 0)
             {
-                timer = setting_cache.Controller_Dtime;
+                timer = WAMSetting.IS.Controller_Dtime;
                 return true;
             }
         }
         else
         {
-            timer = setting_cache.Controller_Dtime;
+            timer = WAMSetting.IS.Controller_Dtime;
         }
         return false;
     }
+
+    private void choose_Aup()
+    {
+        choose_acuity((int)Controller_Input.EightDirInput.up);
+    }
+
+    private void choose_Aright()
+    {
+        choose_acuity((int)Controller_Input.EightDirInput.right);
+    }
+
+    private void choose_Adown()
+    {
+        choose_acuity((int)Controller_Input.EightDirInput.down);
+    }
+
+    private void choose_Aleft()
+    {
+        choose_acuity((int)Controller_Input.EightDirInput.left);
+    }
+
+    private void choose_acuity(int direction)
+    {
+        MC_cache.choose_acuity(direction);
+    }
+
+    
 }

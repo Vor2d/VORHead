@@ -8,10 +8,11 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private Transform Collider_TRANS;
     [SerializeField] private Transform Mesh_TRANS;
     [SerializeField] private Transform AcuityMesh_TRANS;
+    [SerializeField] private Transform ControllerMesh_TRANS;
 
     [SerializeField] private float AcuityOffSet;
+    [SerializeField] private float ControllerMOffSet;
 
-    private WAMRC RC;
     private WAM_MoleCenter MC_script;
 
     public bool aimming_flag { get; private set; }
@@ -20,10 +21,10 @@ public class WAM_Mole : MonoBehaviour
     private Color init_color;
     private float timer;
     private int direction;
+    private int last_Cdirection;
 
     private void Awake()
     {
-        this.RC = null;
         this.MC_script = null;
         this.RCT_cache = null;
         this.start_flag = false;
@@ -31,6 +32,7 @@ public class WAM_Mole : MonoBehaviour
         this.init_color = Mesh_TRANS.GetComponent<MeshRenderer>().material.color;
         this.timer = 0.0f;
         this.direction = 0;
+        this.last_Cdirection = 0;
     }
 
 
@@ -44,13 +46,12 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    public void init_mole(WAMRC _RC,WAM_MoleCenter _MC_script,float _timer)
+    public void init_mole(WAM_MoleCenter _MC_script)
     {
-        RC = _RC;
         MC_script = _MC_script;
-        timer = _timer;
-
-        RCT_cache = RC.RCT_script;
+        timer = WAMSetting.IS.Mole_des_time;
+        RCT_cache = WAMRC.IS.RCT_script;
+        last_Cdirection = -1;
     }
 
     public void start_mole()
@@ -64,7 +65,7 @@ public class WAM_Mole : MonoBehaviour
         if(timer < 0)
         {
             timer = float.MaxValue;
-            clean_destroy();
+            self_destroy();
         }
     }
 
@@ -102,17 +103,30 @@ public class WAM_Mole : MonoBehaviour
 
     public void whaced()
     {
-        RC.WhacPartical_TRANS.position = transform.position;
-        RC.WhacPartical_TRANS.GetComponent<ParticleSystem>().Play();
-        clean_destroy();
+        StartCoroutine(whac_anim(1.0f));
     }
 
     public void acuity_whac(int dir)
     {
-        if(aimming_flag && dir == direction)
+        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
         {
-            whaced();
+            if(dir == direction)
+            {
+                whaced();
+            }
+            else
+            {
+                wrong_whac();
+            }
         }
+        else
+        {
+            if (aimming_flag && dir == direction)
+            {
+                whaced();
+            }
+        }
+
     }
 
     private void clean_destroy()
@@ -167,5 +181,90 @@ public class WAM_Mole : MonoBehaviour
                 }
                 break;
         }
-    }    
+    }
+
+    public void choose_acuity(int C_direction)
+    {
+        if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        {
+            change_Cmesh(C_direction);
+            last_Cdirection = C_direction;
+        }
+    }
+    
+    public void change_Cmesh(int C_direction)
+    {
+        if (!ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled)
+        {
+            ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        }
+        if (last_Cdirection != C_direction)
+        {
+            rotate_Cmesh(WAMSetting.IS.Acuity_type, C_direction);
+        }
+    }
+
+    private void rotate_Cmesh(AcuityType A_type,int dir)
+    {
+        switch (A_type)
+        {
+            case AcuityType.fourdir:
+                ControllerMesh_TRANS.rotation =
+                    Quaternion.Euler(new Vector3(0.0f, 0.0f, dir * -90.0f + ControllerMOffSet));
+                break;
+            case AcuityType.eightdir:
+                if (dir < 4)
+                {
+                    ControllerMesh_TRANS.rotation =
+                        Quaternion.Euler(new Vector3(0.0f, 0.0f, dir * -90.0f + ControllerMOffSet));
+                }
+                else
+                {
+                    ControllerMesh_TRANS.rotation =
+                        Quaternion.Euler(new Vector3(0.0f, 0.0f, (dir - 4) * -90.0f + ControllerMOffSet - 45.0f));
+                }
+                break;
+        }
+    }
+
+    private IEnumerator whac_anim(float time)
+    {
+        turn_off_mesh();
+        WAMRC.IS.WhacPartical_TRANS.position = transform.position;
+        WAMRC.IS.WhacPartical_TRANS.GetComponent<ParticleSystem>().Play();
+        yield return new WaitForSeconds(time);
+        clean_destroy();
+    }
+
+    private void self_destroy()
+    {
+        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        {
+            acuity_whac(last_Cdirection);
+        }
+        else
+        {
+            wrong_whac();
+        }
+    }
+
+    private void wrong_whac()
+    {
+        StartCoroutine(wrong_whac_anim(1.0f));
+    }
+
+    private IEnumerator wrong_whac_anim(float time)
+    {
+        turn_off_mesh();
+        Debug.Log("Wrong whac");
+        yield return null;
+        clean_destroy();
+    }
+
+    private void turn_off_mesh()
+    {
+        Mesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
 }

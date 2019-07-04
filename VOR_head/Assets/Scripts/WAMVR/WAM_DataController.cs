@@ -8,6 +8,8 @@ public class WAM_DataController : ParentDataController
 
     protected override void Awake()
     {
+        IS = this;
+
         base.Awake();
 
         this.Setting = new WAMSetting();
@@ -23,5 +25,7 @@ public class WAM_DataController : ParentDataController
     {
         generate_setting<WAMSetting>(Setting);
     }
+
+    public static WAM_DataController IS { get; private set; }
 
 }

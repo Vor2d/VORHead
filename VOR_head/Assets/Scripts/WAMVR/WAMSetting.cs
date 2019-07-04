@@ -23,7 +23,7 @@ public class WAMSetting
     public bool Using_acuity;
     public AcuityType Acuity_type;
     public float Acuity_rela_size;
-    public ACuityProcess Acuity_process;
+    public AcuityProcess Acuity_process;
     public float Acuity_flash_time;
     public float Head_speed;
     public float Head_stop_time;
@@ -48,7 +48,7 @@ public class WAMSetting
         this.Using_acuity = false;
         this.Acuity_type = AcuityType.fourdir;
         this.Acuity_rela_size = 1.0f;
-        this.Acuity_process = ACuityProcess.post;
+        this.Acuity_process = AcuityProcess.post;
         this.Acuity_flash_time = 0.1f;
         this.Head_speed = 50.0f;
         this.Head_stop_time = 0.1f;
@@ -57,7 +57,7 @@ public class WAMSetting
         this.Controller_mode = ControllerModes.instant;
         this.Controller_Dtime = 0.0f;
 
-        Instance = this;
+        IS = this;
     }
 
     //public WAMSetting(WAMSetting other_setting)
@@ -77,5 +77,5 @@ public class WAMSetting
     //    this.Acuity_type = other_setting.Acuity_type;
     //}
 
-    public static WAMSetting Instance { get; private set; }
+    public static WAMSetting IS { get; private set; }
 }

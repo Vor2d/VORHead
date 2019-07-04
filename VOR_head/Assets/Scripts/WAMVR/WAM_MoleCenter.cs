@@ -5,79 +5,28 @@ using WAMEC;
 
 public class WAM_MoleCenter : MonoBehaviour
 {
-    private WAMRC RC;
-
     public List<Transform> mole_TRANSs { get; set; }
-    private MoleGenerShape gener_shape;
-    private int mole_frame_num;
-    private float distant;
     private List<Transform> frame_TRANSs;
-    private float mole_frame_size;
-    private float mole_size;
-    private float mole_des_time;
-    private float distant2;
-    private int mole_frame_num2;
-    private List<int> gener_list;
     private int list_index;
-    private bool using_acuity;
-    private float acuity_size;
-    private AcuityType acuity_type;
-    private float acuity_flash_time;
-    private float min_dist;
     private Vector3 last_pos;
 
     private void Awake()
     {
-        this.RC = null;
-        this.gener_shape = MoleGenerShape.circle;
-        this.mole_frame_num = 1;
-        this.distant = 1.0f;
         this.frame_TRANSs = new List<Transform>();
-        this.mole_frame_size = 1.0f;
-        this.mole_size = 1.0f;
         this.mole_TRANSs = new List<Transform>();
-        this.mole_des_time = 1.0f;
-        this.distant2 = 0.0f;
-        this.mole_frame_num2 = 0;
-        this.gener_list = new List<int>();
         this.list_index = 0;
-        this.using_acuity = false;
-        this.acuity_size = 1.0f;
-        this.acuity_type = AcuityType.fourdir;
-        this.acuity_flash_time = 0.1f;
-        this.min_dist = 0.0f;
         this.last_pos = new Vector3();
     }
 
 
-    public void init_mole_center(WAMRC _RC,MoleGenerShape _gener_shape, float _distant,int _mole_frame_num,
-                                    float _mole_size,float _mole_des_time,float _mole_frame_size,
-                                    float _distant2,int _mole_frame_num2,List<int> _gener_list,
-                                    bool _using_acuity,float _acuity_size,AcuityType _acuity_type,
-                                    float _acuity_flash_time,float _min_dist)
+    public void init_mole_center()
     {
-        RC = _RC;
-        gener_shape = _gener_shape;
-        mole_frame_num = _mole_frame_num;
-        distant = _distant;
-        mole_size = _mole_size;
-        mole_des_time = _mole_des_time;
-        mole_frame_size = _mole_frame_size;
-        distant2 = _distant2;
-        mole_frame_num2 = _mole_frame_num2;
-        gener_list = _gener_list;
-        using_acuity = _using_acuity;
-        acuity_size = _acuity_size;
-        acuity_type = _acuity_type;
-        acuity_flash_time = _acuity_flash_time;
-        min_dist = _min_dist;
-
         list_index = -1;
     }
 
     public void generate_mole_frame()
     {
-        switch(gener_shape)
+        switch(WAMSetting.IS.Mole_gener_shape)
         {
             case MoleGenerShape.circle:
                 generate_circle();
@@ -90,6 +39,10 @@ public class WAM_MoleCenter : MonoBehaviour
 
     private void generate_grid()
     {
+        float distant2 = WAMSetting.IS.Mole_frame_dist2;
+        float distant = WAMSetting.IS.Mole_frame_dist;
+        int mole_frame_num = WAMSetting.IS.Mole_frame_num;
+        int mole_frame_num2 = WAMSetting.IS.Mole_frame_num2;
         float right_board = distant2 / 2.0f;
         float up_board = distant / 2.0f;
         float x = 0.0f;
@@ -136,13 +89,13 @@ public class WAM_MoleCenter : MonoBehaviour
     private void generate_circle()
     {
         float degree = 0.0f;
-        float degree_incr = 360.0f / mole_frame_num;
+        float degree_incr = 360.0f / WAMSetting.IS.Mole_frame_num;
         float x = 0.0f;
         float y = 0.0f;
         while(degree < 360.0f)
         {
-            x = distant * Mathf.Cos(Mathf.PI * degree / 180.0f);
-            y = distant * Mathf.Sin(Mathf.PI * degree / 180.0f);
+            x = WAMSetting.IS.Mole_frame_dist * Mathf.Cos(Mathf.PI * degree / 180.0f);
+            y = WAMSetting.IS.Mole_frame_dist * Mathf.Sin(Mathf.PI * degree / 180.0f);
             spawn_mole_frame(new Vector3(x, y, transform.position.z));
             degree += degree_incr;
         }
@@ -150,7 +103,8 @@ public class WAM_MoleCenter : MonoBehaviour
 
     private void spawn_mole_frame(Vector3 pos)
     {
-        Transform frame_TRANS = Instantiate(RC.MoleFrame_Prefab, pos, Quaternion.identity).transform;
+        Transform frame_TRANS = Instantiate(WAMRC.IS.MoleFrame_Prefab, pos, Quaternion.identity).transform;
+        float mole_frame_size = WAMSetting.IS.Mole_frame_size;
         frame_TRANS.localScale = new Vector3(mole_frame_size, mole_frame_size, mole_frame_size);
         frame_TRANS.parent = transform;
         frame_to_pool(frame_TRANS);
@@ -177,8 +131,8 @@ public class WAM_MoleCenter : MonoBehaviour
     private void list_mole_gener()
     {
         list_index++;
-        list_index %= gener_list.Count;
-        Vector3 pos = frame_TRANSs[gener_list[list_index]].position;
+        list_index %= WAMSetting.IS.Gener_list.Count;
+        Vector3 pos = frame_TRANSs[WAMSetting.IS.Gener_list[list_index]].position;
         spawn_mole(pos);
     }
 
@@ -191,17 +145,17 @@ public class WAM_MoleCenter : MonoBehaviour
         while (!good_gener)
         {
             index = 0;
-            switch (gener_shape)
+            switch (WAMSetting.IS.Mole_gener_shape)
             {
                 case MoleGenerShape.circle:
-                    index = Random.Range(0, mole_frame_num);
+                    index = Random.Range(0, WAMSetting.IS.Mole_frame_num);
                     break;
                 case MoleGenerShape.gird:
-                    index = Random.Range(0, mole_frame_num * mole_frame_num2);
+                    index = Random.Range(0, WAMSetting.IS.Mole_frame_num * WAMSetting.IS.Mole_frame_num2);
                     break;
             }
             pos = frame_TRANSs[index].position;
-            if(Vector3.Distance(pos,last_pos) > min_dist)
+            if(Vector3.Distance(pos,last_pos) > WAMSetting.IS.Min_distance)
             {
                 good_gener = true;
                 break;
@@ -219,10 +173,11 @@ public class WAM_MoleCenter : MonoBehaviour
 
     private void spawn_mole(Vector3 pos)
     {
-        Transform mole_TRANS = Instantiate(RC.Mole_Prefab, pos, Quaternion.identity).transform;
+        Transform mole_TRANS = Instantiate(WAMRC.IS.Mole_Prefab, pos, Quaternion.identity).transform;
+        float mole_size = WAMSetting.IS.Mole_size;
         mole_TRANS.localScale = new Vector3(mole_size, mole_size, mole_size);
         mole_TRANS.parent = transform;
-        mole_TRANS.GetComponent<WAM_Mole>().init_mole(RC, this, mole_des_time);
+        mole_TRANS.GetComponent<WAM_Mole>().init_mole(this);
         mole_TRANS.GetComponent<WAM_Mole>().start_mole();
         mole_to_pool(mole_TRANS);
     }
@@ -249,7 +204,8 @@ public class WAM_MoleCenter : MonoBehaviour
     {
         foreach(Transform mole_TRANS in mole_TRANSs)
         {
-            mole_TRANS.GetComponent<WAM_Mole>().generate_acuity(acuity_type,acuity_size,acuity_flash_time);
+            mole_TRANS.GetComponent<WAM_Mole>().generate_acuity(WAMSetting.IS.Acuity_type,
+                WAMSetting.IS.Acuity_rela_size,WAMSetting.IS.Acuity_flash_time);
         }
     }
 
@@ -258,6 +214,14 @@ public class WAM_MoleCenter : MonoBehaviour
         foreach (Transform mole_TRANS in mole_TRANSs.ToArray())
         {
             mole_TRANS.GetComponent<WAM_Mole>().acuity_whac(dir);
+        }
+    }
+
+    public void choose_acuity(int dir)
+    {
+        foreach (Transform mole_TRANS in mole_TRANSs.ToArray())
+        {
+            mole_TRANS.GetComponent<WAM_Mole>().choose_acuity(dir);
         }
     }
 
