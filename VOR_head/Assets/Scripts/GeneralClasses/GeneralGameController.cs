@@ -22,5 +22,10 @@ public class GeneralGameController : MonoBehaviour
         GeneralMethods.recenter_VR();
     }
 
+    public virtual void restart()
+    {
+        GeneralMethods.restart_scene();
+    }
+
 
 }

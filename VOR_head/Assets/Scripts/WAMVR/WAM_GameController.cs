@@ -5,7 +5,8 @@ using WAMEC;
 
 public class WAM_GameController : GeneralGameController
 {
-    public static WAM_GameController IS { get; private set; }
+    [SerializeField] private bool ShowTooSlow;
+    [SerializeField] private float ShowTooSlowTime;
 
     private Animator GCAnimator;
     private bool check_mole_flag;
@@ -18,8 +19,11 @@ public class WAM_GameController : GeneralGameController
     private float down_timer;
     private float left_timer;
     private bool choose_acuity_flag;
+    private int score;
     //Cache;
     private WAM_MoleCenter MC_cache;
+
+    public static WAM_GameController IS { get; private set; }
 
     private void Awake()
     {
@@ -41,6 +45,7 @@ public class WAM_GameController : GeneralGameController
         this.down_timer = 0.0f;
         this.left_timer = 0.0f;
         this.choose_acuity_flag = false;
+        this.score = 0;
 
         register_controller();
         if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay)
@@ -87,15 +92,20 @@ public class WAM_GameController : GeneralGameController
             {
                 check_stop_flag = false;
                 head_stop_timer = WAMSetting.IS.Head_stop_time;
-                if(WAMSetting.IS.Acuity_process == AcuityProcess.post)
-                {
-                    MC_cache.generate_acuity();
-                }
+                head_stopped();
             }
         }
         else
         {
             head_stop_timer = WAMSetting.IS.Head_stop_time;
+        }
+    }
+
+    private void head_stopped()
+    {
+        if (WAMSetting.IS.Acuity_process == AcuityProcess.post)
+        {
+            MC_cache.generate_acuity();
         }
     }
 
@@ -123,6 +133,7 @@ public class WAM_GameController : GeneralGameController
     {
         generate_mole_center();
         GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+        update_score_text();
     }
 
     public void ToStartGame()
@@ -297,5 +308,38 @@ public class WAM_GameController : GeneralGameController
         MC_cache.choose_acuity(direction);
     }
 
+    public void wrong_whac()
+    {
+
+    }
+
+    public void success_whac()
+    {
+        score += 10;
+        update_score_text();
+    }
+
+    public void mole_reached()
+    {
+        if(WAMSetting.IS.Check_too_slow && !check_stop_flag)
+        {
+            too_slow();
+        }
+    }
+
+    private void too_slow()
+    {
+        if(ShowTooSlow)
+        {
+            WAMRC.IS.Text1_TRANS.GetComponent<TextMesh>().text = "Too Slow!";
+            GeneralMethods.show_obj(WAMRC.IS.Text1_TRANS, ShowTooSlowTime);
+        }
+        MC_cache.too_slow();
+    }
+
+    private void update_score_text()
+    {
+        WAMRC.IS.ScoreText_TRANS.GetComponent<TextMesh>().text = "Score: " + score;
+    }
     
 }

@@ -9,9 +9,13 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private Transform Mesh_TRANS;
     [SerializeField] private Transform AcuityMesh_TRANS;
     [SerializeField] private Transform ControllerMesh_TRANS;
+    [SerializeField] private Transform RedXMesh_TRANS;
+    [SerializeField] private GeneralSoundCoroutine ErrorSFX_script;
+    [SerializeField] private GeneralSoundCoroutine CorrectSFX_script;
 
     [SerializeField] private float AcuityOffSet;
     [SerializeField] private float ControllerMOffSet;
+    [SerializeField] private float AfterWhacTime;
 
     private WAM_MoleCenter MC_script;
 
@@ -22,6 +26,7 @@ public class WAM_Mole : MonoBehaviour
     private float timer;
     private int direction;
     private int last_Cdirection;
+    private bool collider_checked_flag;
 
     private void Awake()
     {
@@ -33,6 +38,7 @@ public class WAM_Mole : MonoBehaviour
         this.timer = 0.0f;
         this.direction = 0;
         this.last_Cdirection = 0;
+        this.collider_checked_flag = false;
     }
 
 
@@ -89,6 +95,7 @@ public class WAM_Mole : MonoBehaviour
             aimming_flag = true;
             Mesh_TRANS.GetComponent<MeshRenderer>().material.color = Color.red;
         }
+        collider_reached();
     }
 
     private void to_unaim_state()
@@ -103,30 +110,39 @@ public class WAM_Mole : MonoBehaviour
 
     public void whaced()
     {
-        StartCoroutine(whac_anim(1.0f));
+        if(start_flag)
+        {
+            WAM_GameController.IS.success_whac();
+            play_correct_sound();
+            StartCoroutine(whac_anim(AfterWhacTime));
+            start_flag = false;
+        }
     }
 
     public void acuity_whac(int dir)
     {
-        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        if (start_flag)
         {
-            if(dir == direction)
+            if (WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
             {
-                whaced();
+                if (dir == direction)
+                {
+                    whaced();
+                }
+                else
+                {
+                    wrong_whac();
+                }
             }
             else
             {
-                wrong_whac();
+                if (aimming_flag && dir == direction)
+                {
+                    whaced();
+                }
             }
         }
-        else
-        {
-            if (aimming_flag && dir == direction)
-            {
-                whaced();
-            }
-        }
-
+        start_flag = false;
     }
 
     private void clean_destroy()
@@ -138,18 +154,22 @@ public class WAM_Mole : MonoBehaviour
 
     public void generate_acuity(AcuityType A_type,float A_size, float A_time)
     {
-        switch(A_type)
+        if(start_flag)
         {
-            case AcuityType.fourdir:
-                direction = Random.Range(0, 4);
-                break;
-            case AcuityType.eightdir:
-                direction = Random.Range(0, 8);
-                break;
+            switch (A_type)
+            {
+                case AcuityType.fourdir:
+                    direction = Random.Range(0, 4);
+                    break;
+                case AcuityType.eightdir:
+                    direction = Random.Range(0, 8);
+                    break;
+            }
+            rotate_acuity(A_type, direction);
+            AcuityMesh_TRANS.localScale = new Vector3(A_size, A_size, A_size);
+            StartCoroutine(flash_acuity(A_time));
         }
-        rotate_acuity(A_type, direction);
-        AcuityMesh_TRANS.localScale = new Vector3(A_size, A_size, A_size);
-        StartCoroutine(flash_acuity(A_time));
+
     }
 
     private IEnumerator flash_acuity(float time)
@@ -185,23 +205,30 @@ public class WAM_Mole : MonoBehaviour
 
     public void choose_acuity(int C_direction)
     {
-        if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        if(start_flag)
         {
-            change_Cmesh(C_direction);
-            last_Cdirection = C_direction;
+            if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+            {
+                change_Cmesh(C_direction);
+                last_Cdirection = C_direction;
+            }
         }
     }
     
     public void change_Cmesh(int C_direction)
     {
-        if (!ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled)
+        if(start_flag)
         {
-            ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
+            if (!ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled)
+            {
+                ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
+            }
+            if (last_Cdirection != C_direction)
+            {
+                rotate_Cmesh(WAMSetting.IS.Acuity_type, C_direction);
+            }
         }
-        if (last_Cdirection != C_direction)
-        {
-            rotate_Cmesh(WAMSetting.IS.Acuity_type, C_direction);
-        }
+
     }
 
     private void rotate_Cmesh(AcuityType A_type,int dir)
@@ -248,23 +275,51 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    private void wrong_whac()
+    public void wrong_whac()
     {
-        StartCoroutine(wrong_whac_anim(1.0f));
+        if(start_flag)
+        {
+            play_error_sound();
+            StartCoroutine(wrong_whac_anim(AfterWhacTime));
+            start_flag = false;
+        }
+        
     }
 
     private IEnumerator wrong_whac_anim(float time)
     {
         turn_off_mesh();
+        RedXMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
         Debug.Log("Wrong whac");
-        yield return null;
+        yield return new WaitForSeconds(time);
+        RedXMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
         clean_destroy();
     }
 
     private void turn_off_mesh()
     {
         Mesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        Collider_TRANS.GetComponent<Collider>().enabled = false;
         AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
         ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    private void collider_reached()
+    {
+        if(!collider_checked_flag)
+        {
+            WAM_GameController.IS.mole_reached();
+            collider_checked_flag = true;
+        }
+    }
+
+    private void play_error_sound()
+    {
+        ErrorSFX_script.start_coroutine();
+    }
+
+    private void play_correct_sound()
+    {
+        CorrectSFX_script.start_coroutine();
     }
 }

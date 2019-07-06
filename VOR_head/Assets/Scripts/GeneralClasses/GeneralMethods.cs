@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using UnityEngine.SceneManagement;
 
 using HMTS_enum;
 
@@ -590,5 +591,17 @@ public static class GeneralMethods {
         IPEndPoint endPoint = new IPEndPoint(iPAddress, port);
         socket.SendTo(package, endPoint);
         socket.Close();
+    }
+
+    public static IEnumerator show_obj(Transform target_TRANS,float time)
+    {
+        target_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        yield return new WaitForSeconds(time);
+        target_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    public static void restart_scene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

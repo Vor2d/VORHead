@@ -5,6 +5,8 @@ public class WAMRC : MonoBehaviour
     //Transform;
     public Transform MoleCenterInidcator_TRANS;
     public Transform WhacPartical_TRANS;
+    public Transform Text1_TRANS;
+    public Transform ScoreText_TRANS;
     //Object;
     //public WAM_GameController GC_script;
     [HideInInspector]

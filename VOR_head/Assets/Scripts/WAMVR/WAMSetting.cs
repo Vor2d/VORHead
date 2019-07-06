@@ -31,6 +31,7 @@ public class WAMSetting
     public float Min_distance;
     public ControllerModes Controller_mode;
     public float Controller_Dtime;
+    public bool Check_too_slow;
 
     public WAMSetting()
     {
@@ -56,6 +57,7 @@ public class WAMSetting
         this.Min_distance = 0.0f;
         this.Controller_mode = ControllerModes.instant;
         this.Controller_Dtime = 0.0f;
+        this.Check_too_slow = false;
 
         IS = this;
     }

@@ -225,4 +225,12 @@ public class WAM_MoleCenter : MonoBehaviour
         }
     }
 
+    public void too_slow()
+    {
+        foreach (Transform mole_TRANS in mole_TRANSs.ToArray())
+        {
+            mole_TRANS.GetComponent<WAM_Mole>().wrong_whac();
+        }
+    }
+
 }
