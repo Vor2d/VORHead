@@ -20,6 +20,8 @@ public class WAM_GameController : GeneralGameController
     private float left_timer;
     private bool choose_acuity_flag;
     private int score;
+    public int Check_stop_instance { get; set; }
+    private bool accept_check_stop { get { return Check_stop_instance == 0; } }
     //Cache;
     private WAM_MoleCenter MC_cache;
 
@@ -46,9 +48,11 @@ public class WAM_GameController : GeneralGameController
         this.left_timer = 0.0f;
         this.choose_acuity_flag = false;
         this.score = 0;
+        this.Check_stop_instance = 0;
 
         register_controller();
-        if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay)
+        if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay
+            || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
         {
             check_CD_flag = true;
             up_timer = WAMSetting.IS.Controller_Dtime;
@@ -56,7 +60,8 @@ public class WAM_GameController : GeneralGameController
             down_timer = WAMSetting.IS.Controller_Dtime;
             left_timer = WAMSetting.IS.Controller_Dtime;
         }
-        else if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge
+            || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
         {
             choose_acuity_flag = true;
         }
@@ -64,6 +69,7 @@ public class WAM_GameController : GeneralGameController
 
     protected override void Update()
     {
+        update_check_stop();
         if(acuity_ready_flag)
         {
             check_head();
@@ -83,6 +89,15 @@ public class WAM_GameController : GeneralGameController
         deregister_controller();
     }
 
+    private void update_check_stop()
+    {
+        if(WAMSetting.IS.Stop_on_bubble)
+        {
+            Check_stop_instance = Check_stop_instance < 0 ? 0 : Check_stop_instance;
+            check_stop_flag = Check_stop_instance > 0;
+        }
+    }
+
     private void check_stop()
     {
         if(GeneralMethods.getVRspeed().magnitude < WAMSetting.IS.Head_stop_speed)
@@ -90,6 +105,7 @@ public class WAM_GameController : GeneralGameController
             head_stop_timer -= Time.deltaTime;
             if(head_stop_timer < 0)
             {
+                Check_stop_instance = 0;
                 check_stop_flag = false;
                 head_stop_timer = WAMSetting.IS.Head_stop_time;
                 head_stopped();
@@ -174,6 +190,12 @@ public class WAM_GameController : GeneralGameController
                     WAMRC.IS.CI_script.BackAction += choose_Adown;
                     WAMRC.IS.CI_script.LeftAction += choose_Aleft;
                     break;
+                case ControllerModes.TD_PJ:
+                    WAMRC.IS.CI_script.ForwardAction += choose_Aup;
+                    WAMRC.IS.CI_script.RightAction += choose_Aright;
+                    WAMRC.IS.CI_script.BackAction += choose_Adown;
+                    WAMRC.IS.CI_script.LeftAction += choose_Aleft;
+                    break;
             }
 
         }
@@ -197,6 +219,12 @@ public class WAM_GameController : GeneralGameController
                     WAMRC.IS.CI_script.LeftAction -= whac_left;
                     break;
                 case ControllerModes.post_judge:
+                    WAMRC.IS.CI_script.ForwardAction -= choose_Aup;
+                    WAMRC.IS.CI_script.RightAction -= choose_Aright;
+                    WAMRC.IS.CI_script.BackAction -= choose_Adown;
+                    WAMRC.IS.CI_script.LeftAction -= choose_Aleft;
+                    break;
+                case ControllerModes.TD_PJ:
                     WAMRC.IS.CI_script.ForwardAction -= choose_Aup;
                     WAMRC.IS.CI_script.RightAction -= choose_Aright;
                     WAMRC.IS.CI_script.BackAction -= choose_Adown;

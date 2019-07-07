@@ -304,7 +304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46c31aa145873ab479301c6eecc318eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Debuging: 0
+  Debuging: 1
   RC: {fileID: 587748418}
   TM1: {fileID: 1230179578}
 --- !u!1001 &430457567
@@ -614,6 +614,11 @@ PrefabInstance:
     - target: {fileID: 1027557726181890, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_Name
       value: BodyRightOnly
+      objectReference: {fileID: 0}
+    - target: {fileID: 114699048615588128, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: Sensitivity
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 4358196630222928, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5813,7 +5818,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1230179577
 Transform:
   m_ObjectHideFlags: 0

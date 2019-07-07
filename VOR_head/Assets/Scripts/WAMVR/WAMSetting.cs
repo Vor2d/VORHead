@@ -32,6 +32,7 @@ public class WAMSetting
     public ControllerModes Controller_mode;
     public float Controller_Dtime;
     public bool Check_too_slow;
+    public bool Stop_on_bubble;
 
     public WAMSetting()
     {
@@ -58,6 +59,7 @@ public class WAMSetting
         this.Controller_mode = ControllerModes.instant;
         this.Controller_Dtime = 0.0f;
         this.Check_too_slow = false;
+        this.Stop_on_bubble = false;
 
         IS = this;
     }

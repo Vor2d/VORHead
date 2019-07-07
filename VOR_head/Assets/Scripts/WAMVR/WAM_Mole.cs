@@ -93,7 +93,12 @@ public class WAM_Mole : MonoBehaviour
         if(!aimming_flag)
         {
             aimming_flag = true;
+            if(WAMSetting.IS.Stop_on_bubble)
+            {
+                WAM_GameController.IS.Check_stop_instance++;
+            }
             Mesh_TRANS.GetComponent<MeshRenderer>().material.color = Color.red;
+
         }
         collider_reached();
     }
@@ -103,6 +108,10 @@ public class WAM_Mole : MonoBehaviour
         if(aimming_flag)
         {
             aimming_flag = false;
+            if (WAMSetting.IS.Stop_on_bubble)
+            {
+                WAM_GameController.IS.Check_stop_instance--;
+            }
             Mesh_TRANS.GetComponent<MeshRenderer>().material.color = init_color;
         }
         
@@ -123,7 +132,8 @@ public class WAM_Mole : MonoBehaviour
     {
         if (start_flag)
         {
-            if (WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+            if (WAMSetting.IS.Controller_mode == ControllerModes.post_judge
+                || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
             {
                 if (dir == direction)
                 {
@@ -148,6 +158,10 @@ public class WAM_Mole : MonoBehaviour
     private void clean_destroy()
     {
         start_flag = false;
+        if (WAMSetting.IS.Stop_on_bubble && aimming_flag)
+        {
+            WAM_GameController.IS.Check_stop_instance--;
+        }
         MC_script.mole_TRANSs.Remove(transform);
         Destroy(gameObject);
     }
@@ -207,7 +221,8 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+            if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge
+                || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
             {
                 change_Cmesh(C_direction);
                 last_Cdirection = C_direction;
@@ -265,7 +280,8 @@ public class WAM_Mole : MonoBehaviour
 
     private void self_destroy()
     {
-        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge)
+        if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge
+            || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
         {
             acuity_whac(last_Cdirection);
         }

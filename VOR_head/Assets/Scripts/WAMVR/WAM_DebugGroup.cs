@@ -19,7 +19,7 @@ public class WAM_DebugGroup : MonoBehaviour
     {
         if(Debuging)
         {
-            TM1.text = RC.MoleCenter_TRANS.GetComponent<WAM_MoleCenter>().mole_TRANSs.Count.ToString();
+            TM1.text = WAM_GameController.IS.Check_stop_instance.ToString();
         }
     }
 }
