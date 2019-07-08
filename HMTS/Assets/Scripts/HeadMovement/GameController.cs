@@ -5,6 +5,7 @@ using System;
 using UnityEngine.XR;
 using UnityEngine.SceneManagement;
 using HMTS_enum;
+using System.Linq;
 
 public class GameController : GeneralGameController {
 
@@ -102,15 +103,19 @@ public class GameController : GeneralGameController {
     private float curr_A_delay;
     private int A_delay_right;
     private bool AD_last_inc;
-    private int AD_converge_counter;
+    private int AD_converge_index;
+    private AcuityGroup.AcuityDirections acuity_dir;
+    private AcuityMode acuity_mode;
+    private int AD_repeat_index;
+    private float AD_incr_amount;
+    private Dictionary<float,int> AD_results;
+    private CurveFit curve_fit;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
     private bool centered_flag;
     private bool collaberating_flag;
     private bool controller_flag;
-    private AcuityGroup.AcuityDirections acuity_dir;
-    private AcuityMode acuity_mode;
     private bool show_acuity_flag;
     private bool speed_passed_flag;
     private bool show_text_flag;
@@ -131,7 +136,7 @@ public class GameController : GeneralGameController {
         get
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
-                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_counter};
+                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index};
         }
     }
 
@@ -198,7 +203,11 @@ public class GameController : GeneralGameController {
         this.curr_A_delay = DC_script.Current_GM.PostDelayInit;
         this.A_delay_right = 0;
         this.AD_last_inc = false;
-        this.AD_converge_counter = 0;
+        this.AD_converge_index = 0;
+        this.AD_repeat_index = 0;
+        this.AD_incr_amount = 0.0f;
+        this.AD_results = new Dictionary<float, int>();
+        this.curve_fit = new CurveFit();
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -214,7 +223,6 @@ public class GameController : GeneralGameController {
         {
             GCI_script.Button5_act += check_controller;
         }
-
     }
 
     // Update is called once per frame
@@ -920,8 +928,74 @@ public class GameController : GeneralGameController {
                         break;
                 }
                 break;
+            case PostDelayModes.converge:
+                AD_repeat_index++;
+                if(AD_repeat_index < DC_script.SystemSetting.PostDelayRepeatNum)
+                {
+
+                }
+                else
+                {
+                    if(conv_next_delay())
+                    {
+
+                    }
+                }
         }
         return false;
+    }
+
+    private void record_AD()
+    {
+        if(AD_results.ContainsKey(curr_A_delay))
+        {
+            AD_results[curr_A_delay]++;
+        }
+        else
+        {
+            AD_results.Add(curr_A_delay, 1);
+        }
+    }
+
+    private bool conv_next_delay()
+    {
+        AD_repeat_index = -1;
+        A_delay_index++;
+        if (A_delay_index < DC_script.SystemSetting.PostDelayNumber)
+        {
+            curr_A_delay += AD_incr_amount;
+            return false;
+        }
+        else
+        {
+            return conv_next_converge();
+        }
+    }
+
+    private bool conv_next_converge()
+    {
+        A_delay_index = -1;
+        AD_converge_index++;
+        if(AD_converge_index < DC_script.SystemSetting.PostDelayConvNum)
+        {
+
+        }
+    }
+
+    private next_conv_cal()
+    {
+        curve_fit = new CurveFit();
+        double[][] x_arr = new double[AD_results.Keys.Count][];
+        int iter = 0;
+        foreach(float x in AD_results.Keys)
+        {
+            x_arr[iter] = new double[] { x };
+            iter++;
+        }
+        double[] y_arr = Array.ConvertAll<int,double>(AD_results.Values.ToArray(), 
+                                x => ((double)x/DC_script.SystemSetting.PostDelayRepeatNum));
+        curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
+        curve_fit.learning();
     }
 
     private bool decrease_delay()
@@ -929,15 +1003,15 @@ public class GameController : GeneralGameController {
         bool min_de = min_delay();
         if(AD_last_inc || min_de)
         {
-            AD_converge_counter++;
-            if(AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
+            AD_converge_index++;
+            if(AD_converge_index >= DC_script.SystemSetting.PostDelayConvNum)
             {
                 return true;
             }
         }
         else
         {
-            AD_converge_counter = 0;
+            AD_converge_index = 0;
         }
         if(!min_de)
         {
@@ -952,15 +1026,15 @@ public class GameController : GeneralGameController {
         bool max_de = max_delay();
         if (!AD_last_inc || max_de)
         {
-            AD_converge_counter++;
-            if (AD_converge_counter >= DC_script.SystemSetting.PostDelayConvNum)
+            AD_converge_index++;
+            if (AD_converge_index >= DC_script.SystemSetting.PostDelayConvNum)
             {
                 return true;
             }
         }
         else
         {
-            AD_converge_counter = 0;
+            AD_converge_index = 0;
         }
         if(!max_de)
         {
@@ -1055,6 +1129,17 @@ public class GameController : GeneralGameController {
         jump_data = DC_script.Current_TI.Jump_data;
         curr_acuity_size = DC_script.Current_GM.AcuitySize;
         curr_A_delay = DC_script.Current_GM.PostDelayInit;
+        if(DC_script.Current_GM.UsingPostDelay && 
+            DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
+        {
+            AD_incr_amount = (DC_script.Current_GM.PostDelayIMax - DC_script.Current_GM.PostDelayInit) /
+                                DC_script.SystemSetting.PostDelayNumber;
+            A_delay_index = -1;
+            AD_repeat_index = -1;
+            AD_converge_index = -1;
+            AD_results = new Dictionary<float, int>();
+            curve_fit = new CurveFit();
+        }
         update_Animator();
 
         GCAnimator.SetTrigger("NextStep");

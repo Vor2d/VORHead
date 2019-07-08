@@ -62,6 +62,7 @@ public class CurveFit
                 iter_num = 2000;
                 break;
         }
+        init_func();
     }
 
     public void set_iter_num(int _iter_num)
@@ -103,7 +104,7 @@ public class CurveFit
         };
     }
 
-    private double[] learning()
+    public double[] learning()
     {
         Success = cobyla.Minimize(); // should be true
 
@@ -129,6 +130,11 @@ public class CurveFit
             Debug.Log(counter.ToString() + " " + val);
             counter++;
         }
+
+    }
+
+    public void apply(float y_val)
+    {
 
     }
 }
