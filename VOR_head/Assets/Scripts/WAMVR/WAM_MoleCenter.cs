@@ -213,7 +213,7 @@ public class WAM_MoleCenter : MonoBehaviour
     {
         foreach (Transform mole_TRANS in mole_TRANSs.ToArray())
         {
-            mole_TRANS.GetComponent<WAM_Mole>().acuity_whac(dir);
+            mole_TRANS.GetComponent<WAM_Mole>().aimmed_acuity_whac(dir);
         }
     }
 

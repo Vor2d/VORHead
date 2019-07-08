@@ -128,12 +128,11 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    public void acuity_whac(int dir)
+    public void aimmed_acuity_whac(int dir)
     {
         if (start_flag)
         {
-            if (WAMSetting.IS.Controller_mode == ControllerModes.post_judge
-                || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
+            if (aimming_flag)
             {
                 if (dir == direction)
                 {
@@ -144,15 +143,22 @@ public class WAM_Mole : MonoBehaviour
                     wrong_whac();
                 }
             }
+        }
+    }
+
+    public void unaim_acuity_whac(int dir)
+    {
+        if (start_flag)
+        {
+            if (dir == direction)
+            {
+                whaced();
+            }
             else
             {
-                if (aimming_flag && dir == direction)
-                {
-                    whaced();
-                }
+                wrong_whac();
             }
         }
-        start_flag = false;
     }
 
     private void clean_destroy()
@@ -221,8 +227,8 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            if (aimming_flag && WAMSetting.IS.Controller_mode == ControllerModes.post_judge
-                || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
+            if (aimming_flag && (WAMSetting.IS.Controller_mode == ControllerModes.post_judge
+                || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ))
             {
                 change_Cmesh(C_direction);
                 last_Cdirection = C_direction;
@@ -243,7 +249,6 @@ public class WAM_Mole : MonoBehaviour
                 rotate_Cmesh(WAMSetting.IS.Acuity_type, C_direction);
             }
         }
-
     }
 
     private void rotate_Cmesh(AcuityType A_type,int dir)
@@ -283,7 +288,7 @@ public class WAM_Mole : MonoBehaviour
         if(WAMSetting.IS.Controller_mode == ControllerModes.post_judge
             || WAMSetting.IS.Controller_mode == ControllerModes.TD_PJ)
         {
-            acuity_whac(last_Cdirection);
+            unaim_acuity_whac(last_Cdirection);
         }
         else
         {
