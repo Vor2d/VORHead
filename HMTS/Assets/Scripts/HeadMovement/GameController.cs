@@ -978,11 +978,11 @@ public class GameController : GeneralGameController {
         AD_converge_index++;
         if(AD_converge_index < DC_script.SystemSetting.PostDelayConvNum)
         {
-
+            next_conv_cal();
         }
     }
 
-    private next_conv_cal()
+    private void next_conv_cal()
     {
         curve_fit = new CurveFit();
         double[][] x_arr = new double[AD_results.Keys.Count][];
@@ -995,7 +995,16 @@ public class GameController : GeneralGameController {
         double[] y_arr = Array.ConvertAll<int,double>(AD_results.Values.ToArray(), 
                                 x => ((double)x/DC_script.SystemSetting.PostDelayRepeatNum));
         curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
-        curve_fit.learning();
+        iter = 0;
+        while (!curve_fit.learning() && iter < 5)
+        {
+            iter++;
+        }
+    }
+
+    private void next_conv_BC()
+    {
+
     }
 
     private bool decrease_delay()

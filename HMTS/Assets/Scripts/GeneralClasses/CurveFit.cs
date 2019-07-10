@@ -11,6 +11,9 @@ public class CurveFit
     private static Func<double[], double[], double> logistic = 
         (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + 0.125);
 
+    private static Func<double,double[],double[]> logistic_BC = 
+
+
     public enum FitModes { Logistic,Default};
 
     public bool Success { get; private set; }
@@ -104,7 +107,7 @@ public class CurveFit
         };
     }
 
-    public double[] learning()
+    public bool learning()
     {
         Success = cobyla.Minimize(); // should be true
 
@@ -118,7 +121,7 @@ public class CurveFit
         Error = new SquareLoss(outputs).Loss(Prediction);
         display_array("error", new double[] { Error });
 
-        return Prediction;
+        return Success;
     }
 
     private void display_array(string str, double[] values)
