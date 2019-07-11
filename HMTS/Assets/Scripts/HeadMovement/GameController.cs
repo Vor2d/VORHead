@@ -107,9 +107,12 @@ public class GameController : GeneralGameController {
     private AcuityGroup.AcuityDirections acuity_dir;
     private AcuityMode acuity_mode;
     private int AD_repeat_index;
-    private float AD_incr_amount;
+    public float AD_incr_amount;
     private Dictionary<float,int> AD_results;
     private CurveFit curve_fit;
+    private float target_AD;
+    private float AD_max;
+    private float AD_min;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -136,7 +139,8 @@ public class GameController : GeneralGameController {
         get
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
-                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index};
+                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
+                                AD_repeat_index,target_AD};
         }
     }
 
@@ -146,6 +150,10 @@ public class GameController : GeneralGameController {
 
     // Use this for initialization
     void Start() {
+        Debug_str = new List<string>();
+        Debug_str.Add("");
+        Debug_str.Add("");
+
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
         //this.ray_cast_scrip = Camera.main.GetComponent<RayCast>();
@@ -208,6 +216,9 @@ public class GameController : GeneralGameController {
         this.AD_incr_amount = 0.0f;
         this.AD_results = new Dictionary<float, int>();
         this.curve_fit = new CurveFit();
+        this.target_AD = 0.0f;
+        this.AD_max = 0.0f;
+        this.AD_min = 0.0f;
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -227,12 +238,6 @@ public class GameController : GeneralGameController {
 
     // Update is called once per frame
     protected override void Update() {
-
-        //CD_script.Left_eye_voltage = 
-        //        new Vector2(turn_direct_x == 0 ? -turn_degree_x : turn_degree_x,0.0f);
-        //CD_script.Right_eye_voltage =
-        //        new Vector2(turn_direct_x == 0 ? -turn_degree_x : turn_degree_x, 0.0f);
-        //Debug.Log("CD_script.Left_eye_voltage " + CD_script.Left_eye_voltage);
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
@@ -938,28 +943,32 @@ public class GameController : GeneralGameController {
                 {
                     if(conv_next_delay())
                     {
-
+                        to_next_section();
                     }
                 }
+                break;
         }
         return false;
     }
 
-    private void record_AD()
+    private void record_AD(bool result)
     {
-        if(AD_results.ContainsKey(curr_A_delay))
+        if(result)
         {
-            AD_results[curr_A_delay]++;
-        }
-        else
-        {
-            AD_results.Add(curr_A_delay, 1);
+            if (AD_results.ContainsKey(curr_A_delay))
+            {
+                AD_results[curr_A_delay]++;
+            }
+            else
+            {
+                AD_results.Add(curr_A_delay, 1);
+            }
         }
     }
 
     private bool conv_next_delay()
     {
-        AD_repeat_index = -1;
+        AD_repeat_index = 0;
         A_delay_index++;
         if (A_delay_index < DC_script.SystemSetting.PostDelayNumber)
         {
@@ -979,6 +988,12 @@ public class GameController : GeneralGameController {
         if(AD_converge_index < DC_script.SystemSetting.PostDelayConvNum)
         {
             next_conv_cal();
+            next_conv_BC();
+            return false;
+        }
+        else
+        {
+            return true;
         }
     }
 
@@ -994,17 +1009,40 @@ public class GameController : GeneralGameController {
         }
         double[] y_arr = Array.ConvertAll<int,double>(AD_results.Values.ToArray(), 
                                 x => ((double)x/DC_script.SystemSetting.PostDelayRepeatNum));
+
+
+
         curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
-        iter = 0;
-        while (!curve_fit.learning() && iter < 5)
+
+        foreach (double x in y_arr)
         {
-            iter++;
+            Debug_str[1] += x.ToString("F3");
         }
+
+        curve_fit.learning();
+
+        //iter = 0;
+        //while (!curve_fit.learning() && iter < 5)
+        //{
+        //    iter++;
+        //}
+
+        foreach (double x in curve_fit.Prediction)
+        {
+            Debug_str[0] += x.ToString("F3");
+        }
+        
+
     }
 
     private void next_conv_BC()
     {
-
+        target_AD = (float)(curve_fit.back_cal((double)DC_script.SystemSetting.PostDelayIncPC)[0]);
+        float range = (AD_max - AD_min) * DC_script.SystemSetting.PostDelayUpPC;
+        curr_A_delay = target_AD - range / 2.0f;
+        AD_incr_amount = range / DC_script.SystemSetting.PostDelayNumber;
+        update_SS();
+        ALS_script.log_acuity(simulink_sample, -3, target_AD.ToString(), "-1", "-1");
     }
 
     private bool decrease_delay()
@@ -1141,8 +1179,9 @@ public class GameController : GeneralGameController {
         if(DC_script.Current_GM.UsingPostDelay && 
             DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
         {
-            AD_incr_amount = (DC_script.Current_GM.PostDelayIMax - DC_script.Current_GM.PostDelayInit) /
-                                DC_script.SystemSetting.PostDelayNumber;
+            AD_max = DC_script.Current_GM.PostDelayIMax;
+            AD_min = DC_script.Current_GM.PostDelayInit;
+            AD_incr_amount = (AD_max - AD_min) / DC_script.SystemSetting.PostDelayNumber;
             A_delay_index = -1;
             AD_repeat_index = -1;
             AD_converge_index = -1;
@@ -1516,6 +1555,11 @@ public class GameController : GeneralGameController {
             update_SS();
             ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString(),
                 acuity_dir.ToString(),GCI_script.Eight_dir_input.ToString());
+            if(DC_script.Current_GM.UsingPostDelay && 
+                DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
+            {
+                record_AD(result);
+            }
             GCAnimator.SetTrigger("NextStep");
         }
         return result;
@@ -1527,6 +1571,6 @@ public class GameController : GeneralGameController {
         AG_script.turn_off_AG();
     }
 
-    public List<string> Debug_str { get; set; }
+    public static List<string> Debug_str { get; set; }
 }
 

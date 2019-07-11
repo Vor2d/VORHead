@@ -14,7 +14,7 @@ public class DebugController : MonoBehaviour {
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size): ";
-    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge): ";
+    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex/TargetAD): ";
 
     public GameController GC_script;
     public HeadSimulator HS_script;
@@ -65,8 +65,8 @@ public class DebugController : MonoBehaviour {
 
     private void debug_group()
     {
-        DebugText1.text = camera1.fieldOfView.ToString("F2");
-        DebugText2.text = camera2.fieldOfView.ToString("F2");
+        DebugText1.text = GC_script.AD_incr_amount.ToString("F3");
+        DebugText2.text = GameController.Debug_str[0] + "//////" + GameController.Debug_str[1];
     }
 
     private void show_info()
@@ -88,7 +88,9 @@ public class DebugController : MonoBehaviour {
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[5]).ToString("F3") +
                                 " / " + (GC_script.AcuityState[6]).ToString("F0") +
-                                " / " + (GC_script.AcuityState[7]).ToString("F0");
+                                " / " + (GC_script.AcuityState[7]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[8]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[9]).ToString("F3");
     }
 
     private void eye_test()

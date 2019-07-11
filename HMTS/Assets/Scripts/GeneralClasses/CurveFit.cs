@@ -8,11 +8,14 @@ using Accord.Math.Optimization.Losses;
 
 public class CurveFit
 {
+    /// <summary>
+    /// w[]{L,k,x0,B};
+    /// </summary>
     private static Func<double[], double[], double> logistic = 
-        (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + 0.125);
+        (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + w[4]);
 
-    private static Func<double,double[],double[]> logistic_BC = 
-
+    private static Func<double, double[], double[]> logistic_BC =
+        (double y, double[] w) => new double[] { (Math.Log(w[0] / (y - w[4]) - 1)) / w[1] + w[2]};
 
     public enum FitModes { Logistic,Default};
 
@@ -29,6 +32,7 @@ public class CurveFit
     private Cobyla cobyla;
     private int para_num;
     private int iter_num;
+    private Func<double, double[], double[]> model_BC;
 
     public CurveFit()
     {
@@ -39,10 +43,12 @@ public class CurveFit
         this.Success = false;
         this.para_num = 0;
         this.iter_num = 0;
+        this.model_BC = null;
     }
 
     public void init_curve_fit(double[][] ip,double[] op, FitModes _fit_mode = FitModes.Default, 
-                                Func<double[], double[], double> _model = null,int _para_num = 0)
+                                Func<double[], double[], double> _model = null,int _para_num = 0,
+                                Func<double,double[],double[]> _model_BC = null)
     {
         inputs = ip;
         outputs = op;
@@ -57,15 +63,34 @@ public class CurveFit
                 {
                     model = _model;
                     para_num = _para_num;
+                    model_BC = _model_BC;
                 }
                 break;
             case FitModes.Logistic:
                 model = logistic;
-                para_num = 3;
+                para_num = 4;
                 iter_num = 2000;
+                model_BC = logistic_BC;
                 break;
         }
         init_func();
+    }
+
+    public double[] back_cal(double y)
+    {
+        if(model_BC == null)
+        {
+            throw new Exception("No back calculation model!!");
+        }
+        else
+        {
+            return model_BC(y, Solution);
+        }
+    }
+
+    public void set_bc_model(Func<double,double[],double[]> _model_BC)
+    {
+        model_BC = _model_BC;
     }
 
     public void set_iter_num(int _iter_num)
@@ -133,11 +158,6 @@ public class CurveFit
             Debug.Log(counter.ToString() + " " + val);
             counter++;
         }
-
-    }
-
-    public void apply(float y_val)
-    {
 
     }
 }
