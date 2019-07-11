@@ -49,6 +49,7 @@ public class GameController : GeneralGameController {
     [SerializeField] private Controller_Input CI_script;
     [SerializeField] private GeneralControllerInput GCI_script;
     [SerializeField] private AcuityLogSystem ALS_script;
+    [SerializeField] private int AD_Liter;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -107,7 +108,7 @@ public class GameController : GeneralGameController {
     private AcuityGroup.AcuityDirections acuity_dir;
     private AcuityMode acuity_mode;
     private int AD_repeat_index;
-    public float AD_incr_amount;
+    private float AD_incr_amount;
     private Dictionary<float,int> AD_results;
     private CurveFit curve_fit;
     private float target_AD;
@@ -150,10 +151,6 @@ public class GameController : GeneralGameController {
 
     // Use this for initialization
     void Start() {
-        Debug_str = new List<string>();
-        Debug_str.Add("");
-        Debug_str.Add("");
-
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
         //this.ray_cast_scrip = Camera.main.GetComponent<RayCast>();
@@ -219,6 +216,8 @@ public class GameController : GeneralGameController {
         this.target_AD = 0.0f;
         this.AD_max = 0.0f;
         this.AD_min = 0.0f;
+
+        Debug_str = new List<string>();
 
         IndiText1.GetComponent<TextMesh>().text = "";
 
@@ -1010,27 +1009,22 @@ public class GameController : GeneralGameController {
         double[] y_arr = Array.ConvertAll<int,double>(AD_results.Values.ToArray(), 
                                 x => ((double)x/DC_script.SystemSetting.PostDelayRepeatNum));
 
-
+        double[] x_arr1 = Array.ConvertAll<double[], double>(x_arr, x => x[0]);
+        add_DS(x_arr1);
+        
 
         curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
 
-        foreach (double x in y_arr)
+        add_DS(y_arr);
+
+        iter = 0;
+        while (!curve_fit.learning() && iter < AD_Liter)
         {
-            Debug_str[1] += x.ToString("F3");
+            iter++;
         }
 
-        curve_fit.learning();
-
-        //iter = 0;
-        //while (!curve_fit.learning() && iter < 5)
-        //{
-        //    iter++;
-        //}
-
-        foreach (double x in curve_fit.Prediction)
-        {
-            Debug_str[0] += x.ToString("F3");
-        }
+        add_DS(curve_fit.Prediction);
+        add_DS(curve_fit.Solution);
         
 
     }
@@ -1572,5 +1566,34 @@ public class GameController : GeneralGameController {
     }
 
     public static List<string> Debug_str { get; set; }
+
+    private void add_DS(string str)
+    {
+        Debug_str.Add(str);
+    }
+
+    private void add_DS(double[] items)
+    {
+        string str = "";
+        foreach(double item in items)
+        {
+            str += item.ToString("F3");
+        }
+        Debug_str.Add(str);
+    }
+
+    public void test1()
+    {
+        AD_results.Add(0.0f, 2);
+        AD_results.Add(0.3f, 2);
+        AD_results.Add(0.6f, 2);
+        AD_results.Add(0.9f, 2);
+        next_conv_cal();
+    }
+
+    public float back_cal()
+    {
+        return (float)(curve_fit.back_cal(0.5f)[0]);
+    }
 }
 

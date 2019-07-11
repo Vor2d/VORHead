@@ -11,11 +11,11 @@ public class CurveFit
     /// <summary>
     /// w[]{L,k,x0,B};
     /// </summary>
-    private static Func<double[], double[], double> logistic = 
-        (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + w[4]);
+    private static Func<double[], double[], double> logistic =
+        (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + w[3]);
 
     private static Func<double, double[], double[]> logistic_BC =
-        (double y, double[] w) => new double[] { (Math.Log(w[0] / (y - w[4]) - 1)) / w[1] + w[2]};
+        (double y, double[] w) => new double[] { (Math.Log((w[0] / (y - w[3])) - 1)) / (-w[1]) + w[2]};
 
     public enum FitModes { Logistic,Default};
 
@@ -128,7 +128,7 @@ public class CurveFit
         {
             Function = objective,
             MaxIterations = iter_num,
-            Solution = new double[outputs.Length] // start with some random values
+            Solution = new double[para_num] // start with some random values
         };
     }
 

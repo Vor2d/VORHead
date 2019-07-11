@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DebugController : MonoBehaviour {
 
@@ -16,6 +17,7 @@ public class DebugController : MonoBehaviour {
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size): ";
     const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex/TargetAD): ";
 
+    public bool UsingDebug;
     public GameController GC_script;
     public HeadSimulator HS_script;
     public VRLogSystem VRLS_script;
@@ -39,6 +41,8 @@ public class DebugController : MonoBehaviour {
     public Camera camera2;
     [SerializeField] private TextMesh DebugText1;
     [SerializeField] private TextMesh DebugText2;
+    [SerializeField] private TextMeshPro DebugTMP1;
+    [SerializeField] private TextMeshPro DebugTMP2;
 
 
     private DataController DC_script;
@@ -46,6 +50,8 @@ public class DebugController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         DC_script = GameObject.Find("DataController").GetComponent<DataController>();
+
+        init_debug();
 	}
 	
 	// Update is called once per frame
@@ -63,10 +69,26 @@ public class DebugController : MonoBehaviour {
         }
     }
 
+    private void init_debug()
+    {
+        if(UsingDebug)
+        {
+            GC_script.test1();
+        }
+    }
+
     private void debug_group()
     {
-        DebugText1.text = GC_script.AD_incr_amount.ToString("F3");
-        DebugText2.text = GameController.Debug_str[0] + "//////" + GameController.Debug_str[1];
+        if(UsingDebug)
+        {
+            string text2 = "";
+            foreach (string ds in GameController.Debug_str)
+            {
+                text2 += ds + "////";
+            }
+            DebugTMP2.text = text2;
+            DebugTMP1.text = GC_script.back_cal().ToString("F3");
+        }
     }
 
     private void show_info()
