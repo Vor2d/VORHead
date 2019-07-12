@@ -34,6 +34,7 @@ public class GameSetting
     public float PostDelayIncPC;
     public int PostDelayConvNum;
     public int PostDelayRepeatNum;
+    public int PostDelayASOffset;
 
     public GameSetting()
     {
@@ -67,6 +68,7 @@ public class GameSetting
         this.PostDelayIncPC = 0.5f;
         this.PostDelayConvNum = 3;
         this.PostDelayRepeatNum = 0;
+        this.PostDelayASOffset = 0;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -146,6 +148,7 @@ public class GameSetting
         result_str += "PostDelayLoC" + " " + PostDelayLoPC.ToString("F2") + " ";
         result_str += "PostDelayConvNum" + " " + PostDelayConvNum.ToString() + " ";
         result_str += "PostDelayRepeatNum" + " " + PostDelayRepeatNum.ToString() + " ";
+        result_str += "PostDelayASOffset" + " " + PostDelayASOffset.ToString() + " ";
 
 
         return result_str;

@@ -917,7 +917,8 @@ public class GameController : GeneralGameController {
 
         float max_LH = (float)(AC_curve_fit.apply(new double[] { AC_repeat_number.x }));
         float median = (max_LH + 0.125f) / 2.0f;
-        AC_size_result = (int)(Math.Ceiling(AC_curve_fit.back_cal(median)[0]));
+        AC_size_result = (int)(Math.Ceiling(AC_curve_fit.back_cal(median)[0])) + 
+            DC_script.SystemSetting.PostDelayASOffset;
         AC_LH = (float)(AC_curve_fit.apply(new double[] { AC_size_result }));
 
         add_DS(AC_size_result.ToString());
