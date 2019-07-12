@@ -146,7 +146,7 @@ public class GameController : GeneralGameController {
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
                                 curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
-                                AD_repeat_index,target_AD};
+                                AD_repeat_index,target_AD,AC_size_result,AC_LH};
         }
     }
 

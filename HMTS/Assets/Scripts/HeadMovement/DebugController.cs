@@ -106,7 +106,9 @@ public class DebugController : MonoBehaviour {
         AcuityState_Text.text = Acuity_init_text + (GC_script.AcuityState[0]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[1]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[2]).ToString("F0") +
-                                        " / " + (GC_script.AcuityState[3]).ToString("F0");
+                                        " / " + (GC_script.AcuityState[3]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[10]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[11]).ToString("F3");
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[5]).ToString("F3") +
                                 " / " + (GC_script.AcuityState[6]).ToString("F0") +
