@@ -902,7 +902,7 @@ public class GameController : GeneralGameController {
             x_arr[iter] = new double[] { (double)x };
             iter++;
         }
-        double[] y_arr = Array.ConvertAll<int, double>(AD_results.Values.ToArray(),
+        double[] y_arr = Array.ConvertAll<int, double>(AC_results.Values.ToArray(),
                         x => ((double)x / AC_repeat_number.y));
         AC_curve_fit.init_curve_fit(x_arr, y_arr,_fit_mode: CurveFit.FitModes.AC_Logistic);
 
@@ -912,10 +912,16 @@ public class GameController : GeneralGameController {
             iter++;
         }
 
+        add_DS(y_arr);
+        add_DS(AC_curve_fit.Prediction);
+
         float max_LH = (float)(AC_curve_fit.apply(new double[] { AC_repeat_number.x }));
         float median = (max_LH + 0.125f) / 2.0f;
-        AC_size_result = (int)(AC_curve_fit.back_cal(median)[0]);
+        AC_size_result = (int)(Math.Ceiling(AC_curve_fit.back_cal(median)[0]));
         AC_LH = (float)(AC_curve_fit.apply(new double[] { AC_size_result }));
+
+        add_DS(AC_size_result.ToString());
+        add_DS(AC_LH.ToString("F3"));
     }
 
     private void to_next_section()
@@ -1045,9 +1051,15 @@ public class GameController : GeneralGameController {
         double[] x_arr1 = Array.ConvertAll<double[], double>(x_arr, x => x[0]);
         add_DS(x_arr1);
         
-
-        curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
-
+        if(DC_script.Current_GM.PDUsingStaticData)
+        {
+            curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic_Max, max: AC_LH);
+        }
+        else
+        {
+            curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic);
+        }
+        
         add_DS(y_arr);
 
         iter = 0;
@@ -1066,8 +1078,11 @@ public class GameController : GeneralGameController {
     {
         target_AD = (float)(curve_fit.back_cal((double)DC_script.SystemSetting.PostDelayIncPC)[0]);
         float range = (AD_max - AD_min) * DC_script.SystemSetting.PostDelayUpPC;
+        range = (target_AD - range / 2.0f) < 0 ? (target_AD * 2.0f) : range;
         curr_A_delay = target_AD - range / 2.0f;
         AD_incr_amount = range / DC_script.SystemSetting.PostDelayNumber;
+        AD_max = target_AD + range / 2.0f;
+        AD_min = target_AD - range / 2.0f;
         AD_results = new Dictionary<float, int>();
         curve_fit = new CurveFit();
         update_SS();
@@ -1658,11 +1673,23 @@ public class GameController : GeneralGameController {
 
     public void test1()
     {
-        AD_results.Add(0.0f, 2);
-        AD_results.Add(0.3f, 2);
-        AD_results.Add(0.6f, 2);
-        AD_results.Add(0.9f, 2);
+        AC_results.Add(0, 0);
+        AC_results.Add(1, 2);
+        AC_results.Add(2, 4);
+        AC_results.Add(3, 6);
+        AC_results.Add(4, 8);
+        AC_results.Add(5, 10);
+        AC_repeat_number = new Vector2Int(5, 10);
+        AC_converge_cal();
+        DC_script.Current_GM.PDUsingStaticData = true;
+        AD_results.Add(0.0f, 0);
+        AD_results.Add(0.1f, 1);
+        AD_results.Add(0.2f, 2);
+        AD_results.Add(0.3f, 3);
+        AD_results.Add(0.4f, 4);
+        DC_script.SystemSetting.PostDelayRepeatNum = 8;
         next_conv_cal();
+        add_DS(curve_fit.back_cal((AC_LH + 0.125) / 2.0f));
     }
 
     public float back_cal()

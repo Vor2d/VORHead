@@ -73,7 +73,7 @@ public class DebugController : MonoBehaviour {
     {
         if(UsingDebug)
         {
-            //GC_script.test1();
+            GC_script.test1();
         }
     }
 
@@ -87,7 +87,7 @@ public class DebugController : MonoBehaviour {
                 text2 += ds + "////";
             }
             DebugTMP2.text = text2;
-            DebugTMP1.text = GC_script.back_cal().ToString("F3");
+            //DebugTMP1.text = GC_script.back_cal().ToString("F3");
         }
     }
 

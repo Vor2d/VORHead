@@ -7527,7 +7527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateDegree: 0
-  UsingDebug: 0
+  UsingDebug: 1
   GC_script: {fileID: 913016690}
   HS_script: {fileID: 773851915}
   VRLS_script: {fileID: 370484276}
