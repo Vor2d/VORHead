@@ -26,7 +26,18 @@ public class CurveFit
     private static Func<double, double[], double[]> AC_logistic_BC =
         (double y, double[] w) => new double[] { (Math.Log((w[0] / (y - 0.125)) - 1)) / (-w[1]) + w[2] };
 
-    public enum FitModes { Logistic,AC_Logistic,Default};
+    /// <summary>
+    /// w[]{k,x0}
+    /// </summary>
+    private static Func<double[], double[], double, double> logistic_max =
+        (double[] x, double[] w, double max) => 
+        ((max - 0.125) / (1.0 + Math.Pow(Math.E, (-w[0] * (x[0] - w[1])))) + 0.125);
+
+    private static Func<double, double[], double, double[]> logistic_max_BC =
+        (double y, double[] w, double max) => 
+        new double[] { (Math.Log(((max-0.125) / (y - 0.125)) - 1)) / (-w[0]) + w[1] };
+
+    public enum FitModes { Logistic,AC_Logistic,Logistic_Max,Default};
 
     public bool Success { get; private set; }
     public double[] Prediction { get; private set; }
@@ -42,6 +53,7 @@ public class CurveFit
     private int para_num;
     private int iter_num;
     private Func<double, double[], double[]> model_BC;
+    private double max_LH;
 
     public CurveFit()
     {
@@ -53,6 +65,7 @@ public class CurveFit
         this.para_num = 0;
         this.iter_num = 0;
         this.model_BC = null;
+        this.max_LH = 0.0d;
     }
 
     public void init_curve_fit(double[][] ip,double[] op, FitModes _fit_mode = FitModes.Default, 
@@ -86,6 +99,12 @@ public class CurveFit
                 para_num = 3;
                 iter_num = 2000;
                 model_BC = AC_logistic_BC;
+                break;
+            case FitModes.Logistic_Max:
+                model = new Func<double[], double[], double>(logistic_max());
+                para_num = 3;
+                iter_num = 2000;
+                model_BC = logistic_max_BC;
                 break;
         }
         init_func();

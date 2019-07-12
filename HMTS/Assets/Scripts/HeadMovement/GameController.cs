@@ -1215,6 +1215,10 @@ public class GameController : GeneralGameController {
         if (DC_script.Current_GM.UsingPostDelay && 
             DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
         {
+            if(DC_script.Current_GM.PDUsingStaticData)
+            {
+                curr_acuity_size = AC_size_result;
+            }
             AD_max = DC_script.Current_GM.PostDelayIMax;
             AD_min = DC_script.Current_GM.PostDelayInit;
             AD_incr_amount = (AD_max - AD_min) / DC_script.SystemSetting.PostDelayNumber;
