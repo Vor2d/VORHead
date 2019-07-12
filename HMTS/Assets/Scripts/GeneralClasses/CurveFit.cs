@@ -17,7 +17,16 @@ public class CurveFit
     private static Func<double, double[], double[]> logistic_BC =
         (double y, double[] w) => new double[] { (Math.Log((w[0] / (y - w[3])) - 1)) / (-w[1]) + w[2]};
 
-    public enum FitModes { Logistic,Default};
+    /// <summary>
+    /// w[]{L,k,x0}
+    /// </summary>
+    private static Func<double[], double[], double> AC_logistic =
+        (double[] x, double[] w) => (w[0] / (1.0 + Math.Pow(Math.E, (-w[1] * (x[0] - w[2])))) + 0.125);
+
+    private static Func<double, double[], double[]> AC_logistic_BC =
+        (double y, double[] w) => new double[] { (Math.Log((w[0] / (y - 0.125)) - 1)) / (-w[1]) + w[2] };
+
+    public enum FitModes { Logistic,AC_Logistic,Default};
 
     public bool Success { get; private set; }
     public double[] Prediction { get; private set; }
@@ -71,6 +80,12 @@ public class CurveFit
                 para_num = 4;
                 iter_num = 2000;
                 model_BC = logistic_BC;
+                break;
+            case FitModes.AC_Logistic:
+                model = AC_logistic;
+                para_num = 3;
+                iter_num = 2000;
+                model_BC = AC_logistic_BC;
                 break;
         }
         init_func();
@@ -158,6 +173,10 @@ public class CurveFit
             Debug.Log(counter.ToString() + " " + val);
             counter++;
         }
+    }
 
+    public double apply(double[] _inputs)
+    {
+        return model(_inputs, Solution);
     }
 }

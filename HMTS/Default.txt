@@ -1,11 +1,11 @@
-GameMode	DynamicAcuity
-AcuitySize	5
+GameMode	PostDynamicAcuity
+AcuitySize	8
 UsingAcuityChange	False
 AcuityChangeMode	acuity_list
 UsingPostDelay	True
-PostDelayMode	percent
+PostDelayMode	converge
 PostDelayInit	0.0
-PostDelayMax	1.0
+PostDelayIMax	1.0
 ________________________________
 -1
 0	0

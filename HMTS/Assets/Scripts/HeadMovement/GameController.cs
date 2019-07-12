@@ -114,6 +114,11 @@ public class GameController : GeneralGameController {
     private float target_AD;
     private float AD_max;
     private float AD_min;
+    private Dictionary<int, int> AC_results;
+    private Vector2Int AC_repeat_number;
+    private CurveFit AC_curve_fit;
+    private int AC_size_result;
+    private float AC_LH;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -216,6 +221,11 @@ public class GameController : GeneralGameController {
         this.target_AD = 0.0f;
         this.AD_max = 0.0f;
         this.AD_min = 0.0f;
+        this.AC_results = new Dictionary<int, int>();
+        this.AC_repeat_number = new Vector2Int(-1,-1);
+        this.AC_curve_fit = new CurveFit();
+        this.AC_size_result = 0;
+        this.AC_LH = 0.0f;
 
         Debug_str = new List<string>();
 
@@ -831,6 +841,7 @@ public class GameController : GeneralGameController {
         {
             if (change_acuity())
             {
+                AC_converge_cal();
                 to_next_section();
                 return;
             }
@@ -880,6 +891,31 @@ public class GameController : GeneralGameController {
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
         Debug.Log("Section " + section_number);
+    }
+
+    private void AC_converge_cal()
+    {
+        double[][] x_arr = new double[AC_results.Count][];
+        int iter = 0;
+        foreach (int x in AC_results.Keys)
+        {
+            x_arr[iter] = new double[] { (double)x };
+            iter++;
+        }
+        double[] y_arr = Array.ConvertAll<int, double>(AD_results.Values.ToArray(),
+                        x => ((double)x / AC_repeat_number.y));
+        AC_curve_fit.init_curve_fit(x_arr, y_arr,_fit_mode: CurveFit.FitModes.AC_Logistic);
+
+        iter = 0;
+        while(!AC_curve_fit.learning() && iter < 5)
+        {
+            iter++;
+        }
+
+        float max_LH = (float)(AC_curve_fit.apply(new double[] { AC_repeat_number.x }));
+        float median = (max_LH + 0.125f) / 2.0f;
+        AC_size_result = (int)(AC_curve_fit.back_cal(median)[0]);
+        AC_LH = (float)(AC_curve_fit.apply(new double[] { AC_size_result }));
     }
 
     private void to_next_section()
@@ -940,10 +976,7 @@ public class GameController : GeneralGameController {
                 }
                 else
                 {
-                    if(conv_next_delay())
-                    {
-                        to_next_section();
-                    }
+                    return conv_next_delay();
                 }
                 break;
         }
@@ -952,16 +985,13 @@ public class GameController : GeneralGameController {
 
     private void record_AD(bool result)
     {
+        if(!AD_results.ContainsKey(curr_A_delay))
+        {
+            AD_results.Add(curr_A_delay, 0);
+        }
         if(result)
         {
-            if (AD_results.ContainsKey(curr_A_delay))
-            {
-                AD_results[curr_A_delay]++;
-            }
-            else
-            {
-                AD_results.Add(curr_A_delay, 1);
-            }
+            AD_results[curr_A_delay]++;
         }
     }
 
@@ -992,12 +1022,15 @@ public class GameController : GeneralGameController {
         }
         else
         {
+            next_conv_cal();
+            next_conv_BC();
             return true;
         }
     }
 
     private void next_conv_cal()
     {
+        add_DS(AD_results.Keys.Count.ToString());
         curve_fit = new CurveFit();
         double[][] x_arr = new double[AD_results.Keys.Count][];
         int iter = 0;
@@ -1035,6 +1068,8 @@ public class GameController : GeneralGameController {
         float range = (AD_max - AD_min) * DC_script.SystemSetting.PostDelayUpPC;
         curr_A_delay = target_AD - range / 2.0f;
         AD_incr_amount = range / DC_script.SystemSetting.PostDelayNumber;
+        AD_results = new Dictionary<float, int>();
+        curve_fit = new CurveFit();
         update_SS();
         ALS_script.log_acuity(simulink_sample, -3, target_AD.ToString(), "-1", "-1");
     }
@@ -1170,7 +1205,14 @@ public class GameController : GeneralGameController {
         jump_data = DC_script.Current_TI.Jump_data;
         curr_acuity_size = DC_script.Current_GM.AcuitySize;
         curr_A_delay = DC_script.Current_GM.PostDelayInit;
-        if(DC_script.Current_GM.UsingPostDelay && 
+
+        if (DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
+        {
+            AC_curve_fit = new CurveFit();
+            AC_results = new Dictionary<int, int>();
+        }
+        
+        if (DC_script.Current_GM.UsingPostDelay && 
             DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
         {
             AD_max = DC_script.Current_GM.PostDelayIMax;
@@ -1182,6 +1224,7 @@ public class GameController : GeneralGameController {
             AD_results = new Dictionary<float, int>();
             curve_fit = new CurveFit();
         }
+
         update_Animator();
 
         GCAnimator.SetTrigger("NextStep");
@@ -1410,7 +1453,6 @@ public class GameController : GeneralGameController {
             IndiText1.GetComponent<MeshRenderer>().enabled = false;
             show_text_flag = false;
         }
-        
     }
 
     private void check_controller()
@@ -1549,6 +1591,10 @@ public class GameController : GeneralGameController {
             update_SS();
             ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString(),
                 acuity_dir.ToString(),GCI_script.Eight_dir_input.ToString());
+            if(DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
+            {
+                record_AC(result);
+            }
             if(DC_script.Current_GM.UsingPostDelay && 
                 DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
             {
@@ -1557,6 +1603,30 @@ public class GameController : GeneralGameController {
             GCAnimator.SetTrigger("NextStep");
         }
         return result;
+    }
+
+    private void record_AC(bool result)
+    {
+        if(result)
+        {
+            if(AC_results.ContainsKey(curr_acuity_size))
+            {
+                AC_results[curr_acuity_size]++;
+            }
+            else
+            {
+                AC_results.Add(curr_acuity_size, 1);
+            }
+        }
+        if(AC_repeat_number.x < curr_acuity_size)
+        {
+            AC_repeat_number.x = curr_acuity_size;
+            AC_repeat_number.y = 1;
+        }
+        else if(AC_repeat_number.x == curr_acuity_size)
+        {
+            AC_repeat_number.y++;
+        }
     }
 
     public void LeaveCheckController()
@@ -1577,7 +1647,7 @@ public class GameController : GeneralGameController {
         string str = "";
         foreach(double item in items)
         {
-            str += item.ToString("F3");
+            str += item.ToString("F3")+"/";
         }
         Debug_str.Add(str);
     }

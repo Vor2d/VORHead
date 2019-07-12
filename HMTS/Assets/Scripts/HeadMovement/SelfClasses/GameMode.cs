@@ -26,6 +26,7 @@ public class GameMode
     public PostDelayModes PostDelayMode { get; set; }
     public float PostDelayInit { get; set; }
     public float PostDelayIMax { get; set; }
+    public bool PDUsingStaticData { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -57,6 +58,7 @@ public class GameMode
         this.PostDelayMode = other_GM.PostDelayMode;
         this.PostDelayInit = other_GM.PostDelayInit;
         this.PostDelayIMax = other_GM.PostDelayIMax;
+        this.PDUsingStaticData = other_GM.PDUsingStaticData;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -207,6 +209,8 @@ public class GameMode
         catch { PostDelayInit = 0.0f; }
         try { PostDelayIMax = float.Parse(para_dict["PostDelayIMax"]); }
         catch { PostDelayIMax = 0.0f; }
+        try { PDUsingStaticData = (para_dict["PDUsingStaticData"] == "True"); }
+        catch { PDUsingStaticData = false; }
     }
 
     public string VarToString()

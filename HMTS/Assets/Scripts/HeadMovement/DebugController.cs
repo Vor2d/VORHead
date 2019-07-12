@@ -73,7 +73,7 @@ public class DebugController : MonoBehaviour {
     {
         if(UsingDebug)
         {
-            GC_script.test1();
+            //GC_script.test1();
         }
     }
 
