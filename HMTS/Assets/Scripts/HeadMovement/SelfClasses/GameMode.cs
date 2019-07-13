@@ -239,6 +239,7 @@ public class GameMode
         result_str += "PostDelayMode" + " " + PostDelayMode.ToString() + " ";
         result_str += "PostDelayInit" + " " + PostDelayInit.ToString("F2") + " ";
         result_str += "PostDelayIMax" + " " + PostDelayIMax.ToString("F2") + " ";
+        result_str += "PDUsingStaticData" + " " + PDUsingStaticData.ToString() + " ";
 
         return result_str;
     }

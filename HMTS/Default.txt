@@ -6,6 +6,7 @@ UsingPostDelay	True
 PostDelayMode	converge
 PostDelayInit	0.0
 PostDelayIMax	1.0
+PDUsingStaticData	True
 ________________________________
 -1
 0	0

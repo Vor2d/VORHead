@@ -1077,7 +1077,15 @@ public class GameController : GeneralGameController {
 
     private void next_conv_BC()
     {
-        target_AD = (float)(curve_fit.back_cal((double)DC_script.SystemSetting.PostDelayIncPC)[0]);
+        if(DC_script.Current_GM.PDUsingStaticData)
+        {
+            target_AD = (float)(curve_fit.back_cal((double)((AC_LH + 0.125f) / 2.0f))[0]);
+        }
+        else
+        {
+            target_AD = (float)(curve_fit.back_cal((double)(DC_script.SystemSetting.PostDelayIncPC))[0]);
+        }
+        
         float range = (AD_max - AD_min) * DC_script.SystemSetting.PostDelayUpPC;
         range = (target_AD - range / 2.0f) < 0 ? (target_AD * 2.0f) : range;
         curr_A_delay = target_AD - range / 2.0f;
@@ -1219,8 +1227,15 @@ public class GameController : GeneralGameController {
         DC_script.Current_TI = DC_script.Sections[section_number].SectionTrialInfo;
         turn_data = DC_script.Current_TI.Turn_data;
         jump_data = DC_script.Current_TI.Jump_data;
-        curr_acuity_size = DC_script.Current_GM.AcuitySize;
-        curr_A_delay = DC_script.Current_GM.PostDelayInit;
+
+        if (UsingAcuity)
+        {
+            curr_acuity_size = DC_script.Current_GM.AcuitySize;
+            AG_script.init_acuity(DC_script.Current_GM.AcuitySize, acuity_mode, DC_script);
+            curr_A_delay = DC_script.Current_GM.PostDelayInit;
+            update_SS();
+            ALS_script.log_time("start", simulink_sample, DC_script.Current_GM.GameModeName.ToString());
+        }
 
         if (DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
         {
@@ -1234,6 +1249,7 @@ public class GameController : GeneralGameController {
             if(DC_script.Current_GM.PDUsingStaticData)
             {
                 curr_acuity_size = AC_size_result;
+                set_acuity_size(curr_acuity_size);
             }
             AD_max = DC_script.Current_GM.PostDelayIMax;
             AD_min = DC_script.Current_GM.PostDelayInit;
@@ -1413,14 +1429,6 @@ public class GameController : GeneralGameController {
         //IndiText1.GetComponent<MeshRenderer>().enabled = true;
 
         GCS_script.change_indicate_text(DC_script.Current_GM.GameModeName.ToString());
-
-        if(UsingAcuity)
-        {
-            AG_script.init_acuity(DC_script.Current_GM.AcuitySize,acuity_mode,DC_script);
-            curr_acuity_size = DC_script.Current_GM.AcuitySize;
-            update_SS();
-            ALS_script.log_time("start", simulink_sample,DC_script.Current_GM.GameModeName.ToString());
-        }
     }
 
     public void SectionPause ()
@@ -1627,16 +1635,13 @@ public class GameController : GeneralGameController {
 
     private void record_AC(bool result)
     {
+        if (!AC_results.ContainsKey(curr_acuity_size))
+        {
+            AC_results.Add(curr_acuity_size, 0);
+        }
         if(result)
         {
-            if(AC_results.ContainsKey(curr_acuity_size))
-            {
-                AC_results[curr_acuity_size]++;
-            }
-            else
-            {
-                AC_results.Add(curr_acuity_size, 1);
-            }
+            AC_results[curr_acuity_size]++;
         }
         if(AC_repeat_number.x < curr_acuity_size)
         {
