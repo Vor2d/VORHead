@@ -4,26 +4,28 @@ using UnityEngine;
 
 public class Target : MonoBehaviour {
 
-    private enum ChildName { TPlane,TCrossBar }
+    //private enum ChildName { TPlane,TCrossBar,TSphere }
     //private enum direction { left, right };
 
     //private float init_dist;
-    private TargetIndicator tar_ind_script;
-    private TargetOBJ tar_obj_script;
+    [SerializeField] private TargetIndicator tar_ind_script;
+    [SerializeField] private TargetOBJ tar_obj_script;
     private bool tar_mesh_flag = false;
     private bool tar_obj_mesh_flag = true;
 
     // Use this for initialization
     void Start () {
         //this.init_dist = transform.position.z;
-        this.tar_ind_script = transform.GetChild((int)ChildName.TPlane)
-                                        .gameObject.GetComponent<TargetIndicator>();
-        this.tar_obj_script = transform.GetChild((int)ChildName.TCrossBar)
-                                        .gameObject.GetComponent<TargetOBJ>();
+        //this.tar_ind_script = transform.GetChild((int)ChildName.TPlane)
+        //                                .gameObject.GetComponent<TargetIndicator>();
+        //this.tar_obj_script = transform.GetChild((int)ChildName.TCrossBar)
+        //                                .gameObject.GetComponent<TargetOBJ>();
+        //this.tar_obj_script = transform.GetChild((int)ChildName.TSphere)
+        //                                .gameObject.GetComponent<TargetOBJ>();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
