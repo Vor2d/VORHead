@@ -1509,7 +1509,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &144918656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7605,7 +7605,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateDegree: 0
-  UsingDebug: 1
+  UsingDebug: 0
   GC_script: {fileID: 913016690}
   HS_script: {fileID: 773851915}
   VRLS_script: {fileID: 370484276}
@@ -8012,7 +8012,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1207203973
 MonoBehaviour:
   m_ObjectHideFlags: 0
