@@ -1,12 +1,12 @@
-GameMode	PostDynamicAcuity
+GameMode	DynamicAcuity
 AcuitySize	8
 UsingAcuityChange	False
 AcuityChangeMode	acuity_list
-UsingPostDelay	True
-PostDelayMode	converge
-PostDelayInit	0.0
-PostDelayIMax	1.0
-PDUsingStaticData	True
+UsingDynamicDelay	True
+DynamicDelayMode	fix_amount
+DynaDelayInit	0.0
+DynaDelayMax	1.0
+DynaDelayInter	0.1
 ________________________________
 -1
 0	0

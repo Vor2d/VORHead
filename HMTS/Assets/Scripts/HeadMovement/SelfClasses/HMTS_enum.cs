@@ -6,4 +6,5 @@ namespace HMTS_enum
         Jump_Learning, Training, NoReddot,StaticAcuity,DynamicAcuity,PostDynamicAcuity};
     public enum AcuityChangeMode { percent,acuity_list};
     public enum PostDelayModes { random,delay_list,percent,converge};
+    public enum DynamicDelayModes { fix_amount};
 }

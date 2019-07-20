@@ -128,6 +128,7 @@ public class GameController : GeneralGameController {
     private bool show_acuity_flag;
     private bool speed_passed_flag;
     private bool show_text_flag;
+    private bool ready_for_controller_flag;
 
 
     public bool UsingAcuity
@@ -226,6 +227,7 @@ public class GameController : GeneralGameController {
         this.AC_curve_fit = new CurveFit();
         this.AC_size_result = 0;
         this.AC_LH = 0.0f;
+        this.ready_for_controller_flag = false;
 
         Debug_str = new List<string>();
 
@@ -610,19 +612,23 @@ public class GameController : GeneralGameController {
 
     private void check_speed_no_window()
     {
-        if(DC_script.using_coil)
+        if(Check_speed_flag)
         {
-            head_speed_y = CD_script.currentHeadVelocity.z;
+            if (DC_script.using_coil)
+            {
+                head_speed_y = CD_script.currentHeadVelocity.z;
+            }
+            if (DC_script.using_VR)
+            {
+                head_speed_y = GeneralMethods.getVRspeed().y;
+            }
+            if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
+            {
+                speed_passed();
+                return;
+            }
         }
-        if(DC_script.using_VR)
-        {
-            head_speed_y = GeneralMethods.getVRspeed().y;
-        }
-        if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
-        {
-            speed_passed();
-            return;
-        }
+
         if (ray_cast_scrip.hit_border_flag && !speed_passed_flag)
         {
             Debug.Log("hit_border_flag");
@@ -634,10 +640,22 @@ public class GameController : GeneralGameController {
     private void speed_passed()
     {
         speed_passed_flag = true;
+        Check_speed_flag = false;
         //Debug.Log("speed_passed !!!!!!");
+        update_SS();
+        JLS_script.log_action(simulink_sample, trial_iter, "head_turned", 0.0f, 0);
         if(DC_script.Current_GM.UsingAcuityBefore)
         {
-            StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime,true));
+            tar_script.turn_off_all_tmesh();
+            if(DC_script.Current_GM.UsingDynamicDelay)
+            {
+                StartCoroutine(show_acuity(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
+            }
+            else
+            {
+                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime, false));
+            }
+            GCAnimator.SetTrigger("NextStep");
         }
         else
         {
@@ -665,6 +683,8 @@ public class GameController : GeneralGameController {
     {
         if (stop_window_timer < 0.0f)
         {
+            update_SS();
+            JLS_script.log_action(simulink_sample, trial_iter, "head_stop", 0.0f, 0);
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
             stop_window_timer = DC_script.SystemSetting.StopWinodow;
             //stopped_flag = false;
@@ -701,6 +721,7 @@ public class GameController : GeneralGameController {
                 GCAnimator.SetTrigger("NextStep");
             }
             show_acuity_flag = false;
+            ready_for_controller_flag = true;
         }
     }
 
@@ -720,6 +741,7 @@ public class GameController : GeneralGameController {
                 GCAnimator.SetTrigger("NextStep");
             }
             show_acuity_flag = false;
+            ready_for_controller_flag = true;
         }
     }
 
@@ -847,9 +869,18 @@ public class GameController : GeneralGameController {
             }
         }
 
+        if(DC_script.Current_GM.UsingDynamicDelay)
+        {
+            if(dyna_change_delay())
+            {
+                to_next_section();
+                return;
+            }
+        }
+
         if (DC_script.Current_GM.UsingPostDelay)
         {
-            if (change_delay())
+            if (post_change_delay())
             {
                 to_next_section();
                 return;
@@ -891,6 +922,43 @@ public class GameController : GeneralGameController {
         Debug.Log("Trial " + trial_iter);
         Debug.Log("Loop " + loop_iter);
         Debug.Log("Section " + section_number);
+    }
+
+    private bool dyna_change_delay()
+    {
+        switch(DC_script.Current_GM.DynamicDelayMode)
+        {
+            case DynamicDelayModes.fix_amount:
+                return DD_next_repeat();
+                //break;
+        }
+        return false;
+    }
+
+    private bool DD_next_repeat()
+    {
+        AD_repeat_index++;
+        if(AD_repeat_index < DC_script.SystemSetting.DynaDelayRepeatNum)
+        {
+
+        }
+        else
+        {
+            return DD_next_delay();
+        }
+        return false;
+    }
+
+    private bool DD_next_delay()
+    {
+        AD_repeat_index = 0;
+        A_delay_index++;
+        curr_A_delay += AD_incr_amount;
+        if(curr_A_delay > AD_max)
+        {
+            return true;
+        }
+        return false;
     }
 
     private void AC_converge_cal()
@@ -940,7 +1008,7 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private bool change_delay()
+    private bool post_change_delay()
     {
         switch(DC_script.Current_GM.PostDelayMode)
         {
@@ -1052,7 +1120,7 @@ public class GameController : GeneralGameController {
         double[] x_arr1 = Array.ConvertAll<double[], double>(x_arr, x => x[0]);
         add_DS(x_arr1);
         
-        if(DC_script.Current_GM.PDUsingStaticData)
+        if(DC_script.Current_GM.ADUsingStaticData)
         {
             curve_fit.init_curve_fit(x_arr, y_arr, _fit_mode: CurveFit.FitModes.Logistic_Max, max: AC_LH);
         }
@@ -1077,7 +1145,7 @@ public class GameController : GeneralGameController {
 
     private void next_conv_BC()
     {
-        if(DC_script.Current_GM.PDUsingStaticData)
+        if(DC_script.Current_GM.ADUsingStaticData)
         {
             target_AD = (float)(curve_fit.back_cal((double)((AC_LH + 0.125f) / 2.0f))[0]);
         }
@@ -1087,11 +1155,11 @@ public class GameController : GeneralGameController {
         }
         
         float range = (AD_max - AD_min) * DC_script.SystemSetting.PostDelayUpPC;
-        range = (target_AD - range / 2.0f) < 0 ? (target_AD * 2.0f) : range;
-        curr_A_delay = target_AD - range / 2.0f;
+        //range = (target_AD - range / 2.0f) < 0 ? (target_AD * 2.0f) : range;
+        curr_A_delay = (target_AD - range / 2.0f) < 0 ? 0.0f : (target_AD - range / 2.0f);
         AD_incr_amount = range / DC_script.SystemSetting.PostDelayNumber;
-        AD_max = target_AD + range / 2.0f;
-        AD_min = target_AD - range / 2.0f;
+        AD_max = curr_A_delay + range;
+        AD_min = curr_A_delay;
         AD_results = new Dictionary<float, int>();
         curve_fit = new CurveFit();
         update_SS();
@@ -1246,11 +1314,6 @@ public class GameController : GeneralGameController {
         if (DC_script.Current_GM.UsingPostDelay && 
             DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
         {
-            if(DC_script.Current_GM.PDUsingStaticData)
-            {
-                curr_acuity_size = AC_size_result;
-                set_acuity_size(curr_acuity_size);
-            }
             AD_max = DC_script.Current_GM.PostDelayIMax;
             AD_min = DC_script.Current_GM.PostDelayInit;
             AD_incr_amount = (AD_max - AD_min) / DC_script.SystemSetting.PostDelayNumber;
@@ -1259,6 +1322,30 @@ public class GameController : GeneralGameController {
             AD_converge_index = -1;
             AD_results = new Dictionary<float, int>();
             curve_fit = new CurveFit();
+        }
+        else if(DC_script.Current_GM.UsingDynamicDelay)
+        {
+            AD_max = DC_script.Current_GM.DynaDelayMax;
+            AD_min = DC_script.Current_GM.DynaDelayInit;
+            AD_incr_amount = DC_script.Current_GM.DynaDelayInter;
+            curr_A_delay = AD_min;
+            A_delay_index = 0;
+            AD_repeat_index = -1;
+        }
+
+        if (DC_script.Current_GM.ADUsingStaticData)
+        {
+            if(DC_script.Current_GM.UsingPresetSD)
+            {
+                curr_acuity_size = DC_script.Current_GM.StaticDataSize;
+                set_acuity_size(curr_acuity_size);
+                AC_LH = DC_script.Current_GM.StaticDataMLH;
+            }
+            else
+            {
+                curr_acuity_size = AC_size_result;
+                set_acuity_size(curr_acuity_size);
+            }
         }
 
         update_Animator();
@@ -1453,21 +1540,29 @@ public class GameController : GeneralGameController {
 
     public void ToCheckController()
     {
-        if(UsingAcuity)
+
+    }
+
+    public void CheckController()
+    {
+        if (UsingAcuity)
         {
-            controller_flag = true;
-            if(DC_script.SystemSetting.UseAcuityIndicator)
+            if(ready_for_controller_flag)
             {
-                //Debug.Log("DC_script.SystemSetting.UseAcuityIndicator " + DC_script.SystemSetting.UseAcuityIndicator);
-                AG_script.turn_on_AG();
-                AG_script.start_AI();
+                ready_for_controller_flag = false;
+                controller_flag = true;
+                if (DC_script.SystemSetting.UseAcuityIndicator)
+                {
+                    //Debug.Log("DC_script.SystemSetting.UseAcuityIndicator " + DC_script.SystemSetting.UseAcuityIndicator);
+                    AG_script.turn_on_AG();
+                    AG_script.start_AI();
+                }
             }
         }
         else
         {
             GCAnimator.SetTrigger("NextStep");
         }
-        
     }
 
     private IEnumerator show_text(float time,string text)
@@ -1623,8 +1718,9 @@ public class GameController : GeneralGameController {
             {
                 record_AC(result);
             }
-            if(DC_script.Current_GM.UsingPostDelay && 
-                DC_script.Current_GM.PostDelayMode == PostDelayModes.converge)
+            if((DC_script.Current_GM.UsingPostDelay && 
+                DC_script.Current_GM.PostDelayMode == PostDelayModes.converge) ||
+                DC_script.Current_GM.UsingDynamicDelay)
             {
                 record_AD(result);
             }
@@ -1687,7 +1783,7 @@ public class GameController : GeneralGameController {
         AC_results.Add(5, 10);
         AC_repeat_number = new Vector2Int(5, 10);
         AC_converge_cal();
-        DC_script.Current_GM.PDUsingStaticData = true;
+        DC_script.Current_GM.ADUsingStaticData = true;
         AD_results.Add(0.0f, 0);
         AD_results.Add(0.1f, 1);
         AD_results.Add(0.2f, 2);

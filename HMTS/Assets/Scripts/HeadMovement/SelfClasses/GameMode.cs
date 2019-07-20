@@ -26,7 +26,15 @@ public class GameMode
     public PostDelayModes PostDelayMode { get; set; }
     public float PostDelayInit { get; set; }
     public float PostDelayIMax { get; set; }
-    public bool PDUsingStaticData { get; set; }
+    public bool ADUsingStaticData { get; set; }
+    public bool UsingPresetSD { get; set; }
+    public int StaticDataSize { get; set; }
+    public float StaticDataMLH { get; set; }
+    public bool UsingDynamicDelay { get; set; }
+    public DynamicDelayModes DynamicDelayMode { get; set; }
+    public float DynaDelayInit { get; set; }
+    public float DynaDelayMax { get; set; }
+    public float DynaDelayInter { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -58,7 +66,15 @@ public class GameMode
         this.PostDelayMode = other_GM.PostDelayMode;
         this.PostDelayInit = other_GM.PostDelayInit;
         this.PostDelayIMax = other_GM.PostDelayIMax;
-        this.PDUsingStaticData = other_GM.PDUsingStaticData;
+        this.ADUsingStaticData = other_GM.ADUsingStaticData;
+        this.UsingPresetSD = other_GM.UsingPresetSD;
+        this.StaticDataSize = other_GM.StaticDataSize;
+        this.StaticDataMLH = other_GM.StaticDataMLH;
+        this.UsingDynamicDelay = other_GM.UsingDynamicDelay;
+        this.DynamicDelayMode = other_GM.DynamicDelayMode;
+        this.DynaDelayInit = other_GM.DynaDelayInit;
+        this.DynaDelayMax = other_GM.DynaDelayMax;
+        this.DynaDelayInter = other_GM.DynaDelayInter;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -140,7 +156,7 @@ public class GameMode
                 }
             case GameModeEnum.DynamicAcuity:
                 {
-                    HideFlag = true;
+                    HideFlag = false;
                     ShowTargetFlag = true;
                     SkipCenterFlag = true;
                     HeadIndicatorChange = true;
@@ -209,8 +225,35 @@ public class GameMode
         catch { PostDelayInit = 0.0f; }
         try { PostDelayIMax = float.Parse(para_dict["PostDelayIMax"]); }
         catch { PostDelayIMax = 0.0f; }
-        try { PDUsingStaticData = (para_dict["PDUsingStaticData"] == "True"); }
-        catch { PDUsingStaticData = false; }
+        try { ADUsingStaticData = (para_dict["ADUsingStaticData"] == "True"); }
+        catch { ADUsingStaticData = false; }
+        try { UsingPresetSD = (para_dict["UsingPresetSD"] == "True"); }
+        catch { UsingPresetSD = false; }
+        try { StaticDataSize = int.Parse(para_dict["StaticDataSize"]); }
+        catch { StaticDataSize = 0; }
+        try { StaticDataMLH = float.Parse(para_dict["StaticDataMLH"]); }
+        catch { StaticDataMLH = 0.0f; }
+        try { UsingDynamicDelay = (para_dict["UsingDynamicDelay"] == "True"); }
+        catch { UsingDynamicDelay = false; }
+        try
+        {
+            string[] temp_enums = Enum.GetNames(typeof(DynamicDelayModes));
+            for (int i = 0; i < temp_enums.Length; i++)
+            {
+                if (para_dict["DynamicDelayModes"] == temp_enums[i])
+                {
+                    DynamicDelayMode = (DynamicDelayModes)i;
+                    break;
+                }
+            }
+        }
+        catch { DynamicDelayMode = DynamicDelayModes.fix_amount; }
+        try { DynaDelayInit = float.Parse(para_dict["DynaDelayInit"]); }
+        catch { DynaDelayInit = 0.0f; }
+        try { DynaDelayMax = float.Parse(para_dict["DynaDelayMax"]); }
+        catch { DynaDelayMax = 0.0f; }
+        try { DynaDelayInter = float.Parse(para_dict["DynaDelayInter"]); }
+        catch { DynaDelayInter = 0.0f; }
     }
 
     public string VarToString()
@@ -239,7 +282,14 @@ public class GameMode
         result_str += "PostDelayMode" + " " + PostDelayMode.ToString() + " ";
         result_str += "PostDelayInit" + " " + PostDelayInit.ToString("F2") + " ";
         result_str += "PostDelayIMax" + " " + PostDelayIMax.ToString("F2") + " ";
-        result_str += "PDUsingStaticData" + " " + PDUsingStaticData.ToString() + " ";
+        result_str += "ADUsingStaticData" + " " + ADUsingStaticData.ToString() + " ";
+        result_str += "UsingPresetSD" + " " + UsingPresetSD.ToString() + " ";
+        result_str += "StaticDataSize" + " " + StaticDataSize.ToString() + " ";
+        result_str += "StaticDataMLH" + " " + StaticDataMLH.ToString("F3") + " ";
+        result_str += "DynamicDelayMode" + " " + DynamicDelayMode.ToString() + " ";
+        result_str += "DynaDelayInit" + " " + DynaDelayInit.ToString("F3") + " ";
+        result_str += "DynaDelayMax" + " " + DynaDelayMax.ToString("F3") + " ";
+        result_str += "DynaDelayInter" + " " + DynaDelayInter.ToString("F3") + " ";
 
         return result_str;
     }

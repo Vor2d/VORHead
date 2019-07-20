@@ -1,0 +1,184 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	78450	7.61	StaticAcuity
+1	80915	2576	-1	Show Acuity	-1	-1
+2	82248	3965	3	False	dori	down
+3	84022	5811	-1	Show Acuity	-1	-1
+4	85462	7311	4	True	uple	uple
+5	87042	8958	-1	Show Acuity	-1	-1
+6	88288	10256	2	True	right	right
+7	89915	11951	-1	Show Acuity	-1	-1
+8	91155	13242	3	True	up	up
+9	92962	15124	-1	Show Acuity	-1	-1
+10	94448	16673	3	True	dole	dole
+11	96202	18500	-1	Show Acuity	-1	-1
+12	99656	22098	0	False	down	right
+13	101702	24229	-1	Show Acuity	-1	-1
+14	103035	25618	6	False	left	uple
+15	105102	27771	-1	Show Acuity	-1	-1
+16	107182	29938	0	False	dori	down
+17	108428	31237	-1	Show Acuity	-1	-1
+18	110308	33195	7	True	dori	dori
+19	111768	34716	-1	Show Acuity	-1	-1
+20	113021	36021	1	True	right	right
+21	114815	37890	-1	Show Acuity	-1	-1
+22	116121	39251	7	True	uple	uple
+23	117608	40800	-1	Show Acuity	-1	-1
+24	119009	42259	1	False	dole	left
+25	120695	44015	-1	Show Acuity	-1	-1
+26	122055	45432	5	True	dole	dole
+27	123335	46765	-1	Show Acuity	-1	-1
+28	124622	48106	3	False	down	uple
+29	126149	49696	-1	Show Acuity	-1	-1
+30	127415	51016	4	True	uple	uple
+31	129314	52995	-1	Show Acuity	-1	-1
+32	130695	54433	8	False	up	left
+33	131928	55718	-1	Show Acuity	-1	-1
+34	133181	57023	6	True	up	up
+35	134482	58378	-1	Show Acuity	-1	-1
+36	135908	59863	8	False	down	dole
+37	137274	61287	-1	Show Acuity	-1	-1
+38	138595	62662	8	True	dori	dori
+39	139901	64023	-1	Show Acuity	-1	-1
+40	141188	65363	7	True	uple	uple
+41	142941	67190	-1	Show Acuity	-1	-1
+42	144261	68565	6	True	upri	upri
+43	146101	70482	-1	Show Acuity	-1	-1
+44	147314	71746	7	True	right	right
+45	149121	73628	-1	Show Acuity	-1	-1
+46	150528	75093	5	True	dole	dole
+47	152488	77135	-1	Show Acuity	-1	-1
+48	153521	78211	3	True	left	left
+49	155048	79802	-1	Show Acuity	-1	-1
+50	157088	81927	0	False	down	dole
+51	159775	84726	-1	Show Acuity	-1	-1
+52	160814	85809	9	True	left	left
+53	162987	88073	-1	Show Acuity	-1	-1
+54	164021	89150	4	True	left	left
+55	168881	94213	-1	Show Acuity	-1	-1
+56	173268	98782	6	True	upri	upri
+57	183001	108921	-1	Show Acuity	-1	-1
+58	184414	110394	8	True	dori	dori
+59	205047	131888	-1	Show Acuity	-1	-1
+60	206327	133222	8	False	upri	right
+61	207607	134555	-1	Show Acuity	-1	-1
+62	209201	136215	9	True	dori	dori
+63	210560	137632	-1	Show Acuity	-1	-1
+64	211801	138923	4	False	uple	left
+65	213953	141167	-1	Show Acuity	-1	-1
+66	214974	142229	3	True	left	left
+67	216434	143750	-1	Show Acuity	-1	-1
+68	217813	145188	1	True	upri	upri
+69	219054	146480	-1	Show Acuity	-1	-1
+70	220740	148237	4	False	left	uple
+71	222127	149681	-1	Show Acuity	-1	-1
+72	223387	150994	5	True	right	right
+73	225234	152918	-1	Show Acuity	-1	-1
+74	226494	154230	8	True	left	left
+75	227760	155549	-1	Show Acuity	-1	-1
+76	228987	156827	1	False	uple	up
+77	230580	158487	-1	Show Acuity	-1	-1
+78	232027	159994	5	False	dole	dori
+79	233974	162022	-1	Show Acuity	-1	-1
+80	235254	163356	6	False	up	uple
+81	237133	165314	-1	Show Acuity	-1	-1
+82	238347	166578	6	True	up	up
+83	239787	168078	-1	Show Acuity	-1	-1
+84	241061	169405	0	False	down	uple
+85	243113	171543	-1	Show Acuity	-1	-1
+86	244386	172870	7	True	down	down
+87	245767	174307	-1	Show Acuity	-1	-1
+88	247040	175634	9	True	dori	dori
+89	248760	177426	-1	Show Acuity	-1	-1
+90	250133	178856	9	True	upri	upri
+91	251394	180169	-1	Show Acuity	-1	-1
+92	252700	181530	9	True	dole	dole
+93	254813	183732	-1	Show Acuity	-1	-1
+94	256175	185150	6	True	dole	dole
+95	257647	186683	-1	Show Acuity	-1	-1
+96	258874	187962	8	True	up	up
+97	261006	190183	-1	Show Acuity	-1	-1
+98	262640	191885	0	False	dole	right
+99	264841	194177	-1	Show Acuity	-1	-1
+100	266100	195490	5	False	dori	left
+101	268087	197559	-1	Show Acuity	-1	-1
+102	269268	198789	5	True	up	up
+103	271254	200858	-1	Show Acuity	-1	-1
+104	272513	202170	3	False	dori	up
+105	274426	204163	-1	Show Acuity	-1	-1
+106	275953	205754	2	False	dori	dole
+107	277553	207421	-1	Show Acuity	-1	-1
+108	278913	208837	2	True	upri	upri
+109	280553	210546	-1	Show Acuity	-1	-1
+110	281853	211900	5	False	down	dole
+111	284473	214629	-1	Show Acuity	-1	-1
+112	285453	215650	4	True	up	up
+113	287886	218185	-1	Show Acuity	-1	-1
+114	289406	219768	7	True	dole	dole
+115	293013	223526	-1	Show Acuity	-1	-1
+116	294392	224963	3	False	up	uple
+117	296806	227477	-1	Show Acuity	-1	-1
+118	298046	228769	5	True	right	right
+119	299959	230762	-1	Show Acuity	-1	-1
+120	301186	232040	2	False	right	upri
+121	309932	241152	-1	Show Acuity	-1	-1
+122	311140	242409	6	True	down	down
+123	313099	244450	-1	Show Acuity	-1	-1
+124	314379	245784	9	True	right	right
+125	316279	247763	-1	Show Acuity	-1	-1
+126	317506	249041	5	True	uple	uple
+127	319066	250666	-1	Show Acuity	-1	-1
+128	320266	251916	9	True	uple	uple
+129	321719	253430	-1	Show Acuity	-1	-1
+130	322885	254645	2	True	right	right
+131	324685	256521	-1	Show Acuity	-1	-1
+132	326092	257986	4	True	down	down
+133	327612	259569	-1	Show Acuity	-1	-1
+134	328833	260841	2	False	dole	uple
+135	330093	262154	-1	Show Acuity	-1	-1
+136	331332	263445	4	False	dori	upri
+137	332859	265035	-1	Show Acuity	-1	-1
+138	334066	266292	1	False	down	up
+139	335699	267994	-1	Show Acuity	-1	-1
+140	337032	269382	8	True	upri	upri
+141	338672	271091	-1	Show Acuity	-1	-1
+142	340952	273466	0	False	dori	down
+143	342433	275008	-1	Show Acuity	-1	-1
+144	343740	276370	3	False	up	uple
+145	345865	278584	-1	Show Acuity	-1	-1
+146	347126	279898	9	False	down	dole
+147	349079	281932	-1	Show Acuity	-1	-1
+148	350392	283300	7	True	upri	upri
+149	352012	284988	-1	Show Acuity	-1	-1
+150	353105	286126	2	False	dori	up
+151	354712	287800	-1	Show Acuity	-1	-1
+152	355879	289016	7	True	uple	uple
+153	357965	291189	-1	Show Acuity	-1	-1
+154	360685	294023	0	False	left	up
+155	362492	295905	-1	Show Acuity	-1	-1
+156	364199	297683	0	True	upri	upri
+157	366305	299877	-1	Show Acuity	-1	-1
+158	368005	301648	1	False	down	up
+159	370179	303913	-1	Show Acuity	-1	-1
+160	372312	306135	9	False	dori	down
+161	373905	307794	-1	Show Acuity	-1	-1
+162	375185	309128	8	False	left	dori
+163	376599	310600	-1	Show Acuity	-1	-1
+164	377752	311802	2	True	uple	uple
+165	379685	313816	-1	Show Acuity	-1	-1
+166	380932	315114	4	True	down	down
+167	382812	317073	-1	Show Acuity	-1	-1
+168	384192	318511	1	True	upri	upri
+169	386058	320455	-1	Show Acuity	-1	-1
+170	387905	322379	0	False	dori	upri
+171	389898	324455	-1	Show Acuity	-1	-1
+172	391325	325942	7	False	down	right
+173	392698	327372	-1	Show Acuity	-1	-1
+174	393998	328726	2	True	left	left
+175	395518	330310	-1	Show Acuity	-1	-1
+176	396711	331553	6	True	right	right
+177	398271	333178	-1	Show Acuity	-1	-1
+178	399611	334574	1	True	left	left
+179	401118	336144	-1	Show Acuity	-1	-1
+180	402518	337602	1	True	uple	uple
+

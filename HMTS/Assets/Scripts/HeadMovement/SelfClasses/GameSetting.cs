@@ -35,6 +35,7 @@ public class GameSetting
     public int PostDelayConvNum;
     public int PostDelayRepeatNum;
     public int PostDelayASOffset;
+    public int DynaDelayRepeatNum;
 
     public GameSetting()
     {
@@ -69,6 +70,7 @@ public class GameSetting
         this.PostDelayConvNum = 3;
         this.PostDelayRepeatNum = 0;
         this.PostDelayASOffset = 0;
+        this.DynaDelayRepeatNum = 0;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -149,6 +151,7 @@ public class GameSetting
         result_str += "PostDelayConvNum" + " " + PostDelayConvNum.ToString() + " ";
         result_str += "PostDelayRepeatNum" + " " + PostDelayRepeatNum.ToString() + " ";
         result_str += "PostDelayASOffset" + " " + PostDelayASOffset.ToString() + " ";
+        result_str += "DynaDelayRepeatNum" + " " + DynaDelayRepeatNum.ToString() + " ";
 
 
         return result_str;
