@@ -1,6 +1,6 @@
-GameMode	DynamicAcuity
+GameMode	StaticAcuity
 AcuitySize	8
-UsingAcuityChange	False
+UsingAcuityChange	True
 AcuityChangeMode	acuity_list
 UsingDynamicDelay	True
 DynamicDelayMode	fix_amount

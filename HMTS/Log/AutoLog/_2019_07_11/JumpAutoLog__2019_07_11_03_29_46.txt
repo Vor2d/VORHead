@@ -1,9 +1,0 @@
-Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 CameraFOVFactor 2 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.2 SpeedThreshold 180 StopWinodow 0.03 TargetChangeTime 1 TargetChangeTimeRRange 0 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.08 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 90 StopSpeed 10.00 PostDelayList 0 PostDelayNumber 5 PostDelayUpC 0.50 PostDelayLoC 0.60 PostDelayConvNum 1 PostDelayRepeatNum 2 
-12	0	-1	GameMode DynamicAcuity HideFlag True JumpFlag False ShowTargetFlag True HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter False UsingAcuityBefore True UsingAcuityWaitTime False AcuitySize 5 UsingAcuityChange False CurrAcuityChangeMode acuity_list UsingPostDelay True PostDelayMode percent PostDelayInit 0.00 PostDelayIMax 0.00 	
-3	178	0	0	ReSet	0.00	0
-4	186	0	0	ShowTarget	0.00	0
-5	1514	0	0	MoveTarget	0.00	1
-6	1526	0	0	ShowTarget	0.00	1
-7	1742	0	0	TargetHided	0.00	1
-
-

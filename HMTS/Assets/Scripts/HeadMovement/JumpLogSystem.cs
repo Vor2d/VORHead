@@ -89,6 +89,13 @@ public class JumpLogSystem : MonoBehaviour
         }
     }
 
+    public void end_log()
+    {
+        log_state_flag = false;
+        JumpLog_Thread = new Thread(write_file);
+        JumpLog_Thread.Start();
+    }
+
     public void log_action(uint stimulink_sample, int trail_number, string action,float degree,
                                                                                 int direction)
     {

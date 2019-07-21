@@ -16,7 +16,7 @@ public class StopJumpLog : StateMachineBehaviour {
 
         if (JLS_script.log_state_flag)
         {
-            JLS_script.toggle_Log();
+            JLS_script.end_log();
         }
 
         animator.SetTrigger("NextStep");

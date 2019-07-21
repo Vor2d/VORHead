@@ -1,7 +1,0 @@
-Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.1 SpeedThreshold 10 StopWinodow 0.1 TargetChangeTime 2 TargetChangeTimeRRange 0.5 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.1 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 12 
-7	0	-1	GameMode HC_FB_Learning HideFlag False JumpFlag False ShowTargetFlag False HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter True UsingAcuityBefore False AcuitySize 5 UsingAcuityChange True CurrAcuityChangeMode acuity_list 	
-3	155	0	0	ReSet	0.00	0
-4	162	0	0	ShowTarget	0.00	0
-5	1510	0	0	MoveTarget	15.00	1
-6	1522	0	0	ShowTarget	15.00	1
-

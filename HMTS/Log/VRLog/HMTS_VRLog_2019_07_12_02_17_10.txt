@@ -1,3 +1,0 @@
-Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 CameraFOVFactor 2 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.2 SpeedThreshold 180 StopWinodow 0.03 TargetChangeTime 1 TargetChangeTimeRRange 0 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.08 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 90 StopSpeed 10.00 PostDelayList 0 PostDelayNumber 5 PostDelayUpC 0.50 PostDelayLoC 0.60 PostDelayConvNum 1 PostDelayRepeatNum 2 PostDelayASOffset 0 
-Line_#	VR_Velocity	VR_Orientation	DeltaTime	TotalTime
-

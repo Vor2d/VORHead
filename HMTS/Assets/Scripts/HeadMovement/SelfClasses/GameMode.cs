@@ -286,6 +286,7 @@ public class GameMode
         result_str += "UsingPresetSD" + " " + UsingPresetSD.ToString() + " ";
         result_str += "StaticDataSize" + " " + StaticDataSize.ToString() + " ";
         result_str += "StaticDataMLH" + " " + StaticDataMLH.ToString("F3") + " ";
+        result_str += "UsingDynamicDelay" + " " + UsingDynamicDelay.ToString() + " ";
         result_str += "DynamicDelayMode" + " " + DynamicDelayMode.ToString() + " ";
         result_str += "DynaDelayInit" + " " + DynaDelayInit.ToString("F3") + " ";
         result_str += "DynaDelayMax" + " " + DynaDelayMax.ToString("F3") + " ";

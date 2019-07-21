@@ -1,4 +1,0 @@
-
-Line_#	Simulink_#	Time	AcuitySize	Right_Worng
-0	start	0	9.84
-

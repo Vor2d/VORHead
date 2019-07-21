@@ -1,0 +1,104 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	9.17	StaticAcuity
+1	0	1886	-1	Show Acuity	-1	-1
+2	0	3375	3	True	right	right
+3	0	5516	-1	Show Acuity	-1	-1
+4	0	7138	4	True	left	left
+5	0	9032	-1	Show Acuity	-1	-1
+6	0	10587	2	True	left	left
+7	0	12588	-1	Show Acuity	-1	-1
+8	0	13922	3	True	dole	dole
+9	0	15799	-1	Show Acuity	-1	-1
+10	0	17306	3	True	dori	dori
+11	0	19151	-1	Show Acuity	-1	-1
+12	0	20657	0	True	right	right
+13	0	22214	-1	Show Acuity	-1	-1
+14	0	23622	6	True	down	down
+15	0	25549	-1	Show Acuity	-1	-1
+16	0	26973	0	False	dole	left
+17	0	28637	-1	Show Acuity	-1	-1
+18	0	30456	7	True	dole	dole
+19	0	32597	-1	Show Acuity	-1	-1
+20	0	33905	1	True	left	left
+21	0	35223	-1	Show Acuity	-1	-1
+22	0	36524	7	True	left	left
+23	0	38327	-1	Show Acuity	-1	-1
+24	0	39759	1	True	dole	dole
+25	0	41827	-1	Show Acuity	-1	-1
+26	0	43136	5	True	dole	dole
+27	0	44527	-1	Show Acuity	-1	-1
+28	0	45902	3	True	dole	dole
+29	0	47311	-1	Show Acuity	-1	-1
+30	0	48561	4	True	dori	dori
+31	0	50580	-1	Show Acuity	-1	-1
+32	0	51806	8	True	up	up
+33	0	53807	-1	Show Acuity	-1	-1
+34	0	55058	6	True	right	right
+35	0	56557	-1	Show Acuity	-1	-1
+36	0	57800	8	True	upri	upri
+37	0	59974	-1	Show Acuity	-1	-1
+38	0	61193	8	True	down	down
+39	0	62634	-1	Show Acuity	-1	-1
+40	0	64617	7	False	down	left
+41	0	66354	-1	Show Acuity	-1	-1
+42	0	67508	6	True	up	up
+43	0	68776	-1	Show Acuity	-1	-1
+44	0	70142	7	True	up	up
+45	0	71609	-1	Show Acuity	-1	-1
+46	0	72942	5	True	left	left
+47	0	75017	-1	Show Acuity	-1	-1
+48	0	76276	3	True	down	down
+49	0	78541	-1	Show Acuity	-1	-1
+50	0	79776	0	False	up	left
+51	0	81373	-1	Show Acuity	-1	-1
+52	0	82674	9	True	dole	dole
+53	0	84329	-1	Show Acuity	-1	-1
+54	0	85630	4	True	upri	upri
+55	0	86906	-1	Show Acuity	-1	-1
+56	0	88099	6	True	dole	dole
+57	0	89549	-1	Show Acuity	-1	-1
+58	0	90808	8	True	down	down
+59	0	92167	-1	Show Acuity	-1	-1
+60	0	93238	8	True	down	down
+61	0	94546	-1	Show Acuity	-1	-1
+62	0	95748	9	True	dole	dole
+63	0	97091	-1	Show Acuity	-1	-1
+64	0	98145	4	True	down	down
+65	0	100277	-1	Show Acuity	-1	-1
+66	0	101471	3	True	dole	dole
+67	0	103274	-1	Show Acuity	-1	-1
+68	0	104732	1	False	upri	right
+69	0	106395	-1	Show Acuity	-1	-1
+70	0	107564	4	True	dole	dole
+71	0	109450	-1	Show Acuity	-1	-1
+72	0	110866	5	True	right	right
+73	0	113130	-1	Show Acuity	-1	-1
+74	0	114448	8	True	uple	uple
+75	0	116053	-1	Show Acuity	-1	-1
+76	0	117437	1	False	uple	left
+77	0	119083	-1	Show Acuity	-1	-1
+78	0	120368	5	True	upri	upri
+79	0	122393	-1	Show Acuity	-1	-1
+80	0	123661	6	True	upri	upri
+81	0	125085	-1	Show Acuity	-1	-1
+82	0	126345	6	True	left	left
+83	0	127671	-1	Show Acuity	-1	-1
+84	0	128964	0	False	upri	left
+85	0	130446	-1	Show Acuity	-1	-1
+86	0	131788	7	True	up	up
+87	0	134003	-1	Show Acuity	-1	-1
+88	0	135262	9	True	up	up
+89	0	137156	-1	Show Acuity	-1	-1
+90	0	138440	9	True	up	up
+91	0	140400	-1	Show Acuity	-1	-1
+92	0	141726	9	True	up	up
+93	0	143619	-1	Show Acuity	-1	-1
+94	0	144846	6	True	left	left
+95	0	146263	-1	Show Acuity	-1	-1
+96	0	147481	8	True	dori	dori
+97	0	149161	-1	Show Acuity	-1	-1
+98	0	150354	0	False	right	left
+99	0	151853	-1	Show Acuity	-1	-1
+100	0	152923	5	True	upri	upri
+

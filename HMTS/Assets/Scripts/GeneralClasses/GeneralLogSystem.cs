@@ -115,7 +115,7 @@ public class GeneralLogSystem : MonoBehaviour
 
     public virtual void write_file()
     {
-        set_filename(DateTime.Now);
+        //set_filename(DateTime.Now);
     }
 
     private void quit_LOG_Thread()

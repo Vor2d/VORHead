@@ -1,4 +1,0 @@
-
-Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
-0	start	0	17.20	PostDynamicAcuity
-
