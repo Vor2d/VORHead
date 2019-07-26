@@ -16,6 +16,8 @@ public class SSPlotSetting
     public float HeadSpeedMax;
     public float EyeRotationMax;
     public float InitZ;
+    public float PlotSpeed;
+    public List<Color> ColorList;
 
     public SSPlotSetting()
     {
@@ -29,6 +31,8 @@ public class SSPlotSetting
         this.HeadSpeedMax = 0.0f;
         this.EyeRotationMax = 0.0f;
         this.InitZ = 0.0f;
+        this.PlotSpeed = 0.0f;
+        this.ColorList = new List<Color>();
 
         IS = this;
     }

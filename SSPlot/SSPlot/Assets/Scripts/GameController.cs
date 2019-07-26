@@ -22,7 +22,10 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            recenter_VR();
+        }
     }
 
     private void load_setting()
@@ -50,6 +53,7 @@ public class GameController : MonoBehaviour
             Chart temp_chart = temp_TRANS.GetComponent<Chart>();
             temp_chart.init_chart(SSPlotSetting.IS.ChartModesList[index]);
             index++;
+            temp_chart.start_chart();
         }
     }
 
@@ -74,5 +78,10 @@ public class GameController : MonoBehaviour
         Vector3 pos = new Vector3(x, y, (z1 + z2) / 2.0f);
         Vector3 dir = new Vector3(-curr_degree_y, curr_degree, 0.0f);
         return new Vector3[] { pos, dir };
+    }
+
+    private void recenter_VR()
+    {
+        UnityEngine.XR.InputTracking.Recenter();
     }
 }

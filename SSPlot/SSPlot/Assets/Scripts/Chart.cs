@@ -2,6 +2,8 @@
 using EC;
 using System.Collections.Generic;
 using System;
+using TMPro;
+using UnityEngine.Rendering;
 
 public class Chart : MonoBehaviour
 {
@@ -13,7 +15,9 @@ public class Chart : MonoBehaviour
     [SerializeField] private Transform RightCenter_TRANS;
     [SerializeField] private Transform UpCenter_TRANS;
     [SerializeField] private Transform DownCenter_TRANS;
+    [SerializeField] private Transform UpLeft_TRANS;
     [SerializeField] private Transform BG_TRANS;
+    [SerializeField] private Transform HeadText_TMP;
 
     private ChartModes chart_mode;
     private bool start_flag;
@@ -41,8 +45,8 @@ public class Chart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        test_run();
-        move_dots();
+        //test_run();
+        //move_dots();
         if(start_flag)
         {
             plot();
@@ -104,6 +108,8 @@ public class Chart : MonoBehaviour
 
         init_extra_lines();
         init_dots();
+        HeadText_TMP.position = UpLeft_TRANS.position;
+        HeadText_TMP.GetComponent<TextMeshPro>().text = chart_mode.ToString();
     }
 
     private void prop_cal()
@@ -177,9 +183,19 @@ public class Chart : MonoBehaviour
             temp_TRANS.localPosition = new Vector3(temp_TRANS.localPosition.x, 
                                         temp_TRANS.localPosition.y, temp_TRANS.localPosition.z - 0.1f);
             ParticleSystem temp_PS = temp_TRANS.GetComponent<ParticleSystem>();
+            ParticleSystem.MainModule temp_MM = temp_PS.main;
+            temp_MM.startSpeed = SSPlotSetting.IS.PlotSpeed;
+            temp_MM.startLifetime = SSPlotSetting.IS.ChartSize.x / SSPlotSetting.IS.PlotSpeed;
+            Material[] mat_arr = temp_TRANS.GetComponent<Renderer>().materials;
+            foreach(Material mat in mat_arr)
+            {
+                mat.color = SSPlotSetting.IS.ColorList[RC.DotReference];
+            }
             temp_PS.Play();
             dots_TRANSs.Add(temp_TRANS);
             ys.Add(0.0f);
+            RC.DotReference++;
+            RC.DotReference %= SSPlotSetting.IS.ColorList.Count;
         }
     }
 

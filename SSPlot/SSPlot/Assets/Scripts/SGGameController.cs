@@ -10,7 +10,7 @@ public class SGGameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        load_setting();
     }
 
     // Update is called once per frame
@@ -30,11 +30,23 @@ public class SGGameController : MonoBehaviour
             {
                 Directory.CreateDirectory(setting_path);
             }
-            SSPlotSetting setting_class = new SSPlotSetting();
-            string from_class = JsonUtility.ToJson(setting_class);
+            string from_class = JsonUtility.ToJson(SSPlotSetting.IS);
             Debug.Log("Writing file " + setting_file_name + "!!!");
             File.WriteAllText(setting_path + setting_file_name, from_class);
         }
         catch (Exception e) { Debug.Log("Generating settings error " + e); }
+    }
+
+    private void load_setting()
+    {
+        SSPlotSetting SSPS;
+        try
+        {
+            SSPS = new SSPlotSetting();
+            string from_json = File.ReadAllText(setting_path + setting_file_name);
+            SSPS = JsonUtility.FromJson<SSPlotSetting>(from_json);
+            Debug.Log("Loading settings succeed!!");
+        }
+        catch (Exception e) { Debug.Log("Reading settings error " + e); SSPS = new SSPlotSetting(); }
     }
 }

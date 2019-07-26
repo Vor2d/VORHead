@@ -9,10 +9,14 @@ public class RC : MonoBehaviour
     public GameObject DotsPS_Prefab;
     public GameObject Chart_Prefab;
 
+    public static int DotReference;
+
     public static RC IS;
 
     private void Awake()
     {
+        DotReference = 0;
+
         IS = this;
     }
 
