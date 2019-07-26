@@ -6,7 +6,6 @@ using UnityEngine;
 [Serializable]
 public class SSPlotSetting
 {
-    public int ChartNum;
     public List<ChartModes> ChartModesList;
     public Vector2 ChartSize;
     public int HorizontalNum;
@@ -16,10 +15,10 @@ public class SSPlotSetting
     public float HeadRotationMax;
     public float HeadSpeedMax;
     public float EyeRotationMax;
+    public float InitZ;
 
     public SSPlotSetting()
     {
-        this.ChartNum = 0;
         this.ChartModesList = new List<ChartModes>();
         this.ChartSize = new Vector2();
         this.HorizontalNum = 0;
@@ -29,6 +28,7 @@ public class SSPlotSetting
         this.HeadRotationMax = 0.0f;
         this.HeadSpeedMax = 0.0f;
         this.EyeRotationMax = 0.0f;
+        this.InitZ = 0.0f;
 
         IS = this;
     }

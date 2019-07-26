@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using EC;
+using System.Collections.Generic;
+using System;
 
 public class Chart : MonoBehaviour
 {
@@ -12,21 +14,22 @@ public class Chart : MonoBehaviour
     [SerializeField] private Transform UpCenter_TRANS;
     [SerializeField] private Transform DownCenter_TRANS;
     [SerializeField] private Transform BG_TRANS;
-    [SerializeField] private Transform DotsPS_TRANS;
 
     private ChartModes chart_mode;
     private bool start_flag;
     private float proportion;
-    private float y;
-    private int plot_num;
+    private List<float> ys;
+    private int dots_num;
+    private List<Transform> dots_TRANSs;
 
     private void Awake()
     {
         this.chart_mode = ChartModes.HeadRotation;
         this.start_flag = false;
         this.proportion = 0.0f;
-        this.y = 0.0f;
-        this.plot_num = 0;
+        this.ys = new List<float>();
+        this.dots_num = 0;
+        this.dots_TRANSs = new List<Transform>();
     }
 
     // Start is called before the first frame update
@@ -38,15 +41,51 @@ public class Chart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        test_run();
+        move_dots();
+        if(start_flag)
+        {
+            plot();
+        }
     }
+
+    private void test_run()
+    {
+        ys[0] = Mathf.Sin(DateTime.Now.Second) * proportion;
+    }
+
 
     private void plot()
     {
         switch(chart_mode)
         {
             case ChartModes.EyeRotation:
-                y = 
+                ys[0] = CoilData.IS.Left_eye_voltage.x * proportion;
+                ys[1] = CoilData.IS.Left_eye_voltage.y * proportion;
+                ys[2] = CoilData.IS.Right_eye_voltage.x * proportion;
+                ys[3] = CoilData.IS.Right_eye_voltage.y * proportion;
+                break;
+            case ChartModes.HeadRotation:
+                ys[0] = CoilData.IS.currentHeadOrientation.x * proportion;
+                ys[1] = CoilData.IS.currentHeadOrientation.y * proportion;
+                ys[2] = CoilData.IS.currentHeadOrientation.z * proportion;
+                break;
+            case ChartModes.HeadSpeed:
+                ys[0] = CoilData.IS.currentHeadVelocity.x * proportion;
+                ys[1] = CoilData.IS.currentHeadVelocity.y * proportion;
+                ys[2] = CoilData.IS.currentHeadVelocity.z * proportion;
+                break;
+        }
+
+        move_dots();
+    }
+
+    private void move_dots()
+    {
+        for(int i = 0;i < dots_num;i++)
+        {
+            dots_TRANSs[i].localPosition = new Vector3(dots_TRANSs[i].localPosition.x, 
+                                            ys[i], dots_TRANSs[i].localPosition.z);
         }
     }
 
@@ -64,6 +103,7 @@ public class Chart : MonoBehaviour
             new Vector3[] { UpCenter_TRANS.position, DownCenter_TRANS.position });
 
         init_extra_lines();
+        init_dots();
     }
 
     private void prop_cal()
@@ -111,6 +151,35 @@ public class Chart : MonoBehaviour
                                     RightCenter_TRANS.position.z);
                 EX2_LR.SetPositions(new Vector3[] { start_pos2, end_pos2 });
                 break;
+        }
+    }
+
+    private void init_dots()
+    {
+        switch(chart_mode)
+        {
+            case ChartModes.EyeRotation:
+                dots_num = 4;
+                break;
+            case ChartModes.HeadRotation:
+                dots_num = 3;
+                break;
+            case ChartModes.HeadSpeed:
+                dots_num = 3;
+                break;
+        }
+
+        for(int i = 0;i < dots_num;i++)
+        {
+            Transform temp_TRANS =
+                Instantiate(RC.IS.DotsPS_Prefab, RightCenter_TRANS.position, transform.rotation).transform;
+            temp_TRANS.parent = transform;
+            temp_TRANS.localPosition = new Vector3(temp_TRANS.localPosition.x, 
+                                        temp_TRANS.localPosition.y, temp_TRANS.localPosition.z - 0.1f);
+            ParticleSystem temp_PS = temp_TRANS.GetComponent<ParticleSystem>();
+            temp_PS.Play();
+            dots_TRANSs.Add(temp_TRANS);
+            ys.Add(0.0f);
         }
     }
 
