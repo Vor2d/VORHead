@@ -646,7 +646,7 @@ public class GameController : GeneralGameController {
         JLS_script.log_action(simulink_sample, trial_iter, "head_turned", 0.0f, 0);
         if(DC_script.Current_GM.UsingAcuityBefore)
         {
-            tar_script.turn_off_all_tmesh();
+            //tar_script.turn_off_all_tmesh();
             if(DC_script.Current_GM.UsingDynamicDelay)
             {
                 StartCoroutine(show_acuity(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
@@ -713,6 +713,7 @@ public class GameController : GeneralGameController {
             show_acuity_flag = true;
             update_SS();
             ALS_script.log_acuity_state(simulink_sample, "Show Acuity");
+            tar_script.turn_off_all_tmesh();
             acuity_dir = AG_script.turn_on_acuity(true);
             yield return new WaitForSeconds(time_dure);
             AG_script.turn_off_AG();
@@ -733,6 +734,7 @@ public class GameController : GeneralGameController {
             show_acuity_flag = true;
             update_SS();
             ALS_script.log_acuity_delay(simulink_sample, delay_time);
+            tar_script.turn_off_all_tmesh();
             acuity_dir = AG_script.turn_on_acuity(true);
             yield return new WaitForSeconds(time_dure);
             AG_script.turn_off_AG();
