@@ -1,0 +1,365 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	291916	7.97	StaticAcuity
+1	294020	2200	-1	Show Acuity	-1	-1
+2	295253	3485	3	True	left	left
+3	296940	5241	-1	Show Acuity	-1	-1
+4	298160	6513	4	True	right	right
+5	301913	10422	-1	Show Acuity	-1	-1
+6	303153	11714	2	True	down	down
+7	305039	13679	-1	Show Acuity	-1	-1
+8	306346	15041	3	True	dori	dori
+9	308080	16847	-1	Show Acuity	-1	-1
+10	309340	18160	3	True	left	left
+11	311419	20326	-1	Show Acuity	-1	-1
+12	312733	21694	0	False	uple	down
+13	314107	23125	-1	Show Acuity	-1	-1
+14	315326	24395	6	True	down	down
+15	316706	25833	-1	Show Acuity	-1	-1
+16	317952	27132	0	False	up	dori
+17	319766	29021	-1	Show Acuity	-1	-1
+18	320946	30250	7	True	dori	dori
+19	322319	31680	-1	Show Acuity	-1	-1
+20	324073	33507	1	True	dole	dole
+21	326086	35605	-1	Show Acuity	-1	-1
+22	327319	36889	7	True	dole	dole
+23	328932	38570	-1	Show Acuity	-1	-1
+24	330012	39695	1	True	uple	uple
+25	331306	41042	-1	Show Acuity	-1	-1
+26	332472	42258	5	True	dole	dole
+27	333779	43619	-1	Show Acuity	-1	-1
+28	334959	44848	3	True	up	up
+29	336739	46703	-1	Show Acuity	-1	-1
+30	338626	48668	4	True	up	up
+31	340759	50890	-1	Show Acuity	-1	-1
+32	341966	52147	8	True	left	left
+33	343232	53467	-1	Show Acuity	-1	-1
+34	344445	54730	6	True	left	left
+35	346359	56725	-1	Show Acuity	-1	-1
+36	347485	57897	8	True	left	left
+37	348992	59467	-1	Show Acuity	-1	-1
+38	350172	60696	8	True	up	up
+39	351579	62161	-1	Show Acuity	-1	-1
+40	352712	63342	7	True	dori	dori
+41	354432	65134	-1	Show Acuity	-1	-1
+42	355665	66419	6	True	up	up
+43	357832	68676	-1	Show Acuity	-1	-1
+44	359145	70044	7	True	uple	uple
+45	361072	72051	-1	Show Acuity	-1	-1
+46	362352	73384	5	True	upri	upri
+47	364199	75308	-1	Show Acuity	-1	-1
+48	366152	77343	3	True	uple	uple
+49	367765	79024	-1	Show Acuity	-1	-1
+50	369718	81058	0	False	dori	left
+51	371025	82420	-1	Show Acuity	-1	-1
+52	372299	83747	9	True	down	down
+53	373585	85086	-1	Show Acuity	-1	-1
+54	374979	86538	4	True	dole	dole
+55	377065	88712	-1	Show Acuity	-1	-1
+56	378319	90018	6	True	left	left
+57	379992	91760	-1	Show Acuity	-1	-1
+58	381332	93156	8	True	uple	uple
+59	382932	94824	-1	Show Acuity	-1	-1
+60	384319	96268	8	True	right	right
+61	386345	98379	-1	Show Acuity	-1	-1
+62	387592	99678	9	True	right	right
+63	389265	101421	-1	Show Acuity	-1	-1
+64	390571	102782	4	True	dole	dole
+65	392545	104838	-1	Show Acuity	-1	-1
+66	393865	106213	3	True	up	up
+67	395825	108255	-1	Show Acuity	-1	-1
+68	397145	109630	1	True	upri	upri
+69	399298	111873	-1	Show Acuity	-1	-1
+70	400525	113151	4	True	up	up
+71	402258	114956	-1	Show Acuity	-1	-1
+72	403532	116283	5	True	right	right
+73	405005	117818	-1	Show Acuity	-1	-1
+74	406245	119110	8	True	upri	upri
+75	408098	121040	-1	Show Acuity	-1	-1
+76	409318	122311	1	True	upri	upri
+77	410705	123755	-1	Show Acuity	-1	-1
+78	411912	125013	5	True	uple	uple
+79	413871	127054	-1	Show Acuity	-1	-1
+80	415051	128284	6	True	dori	dori
+81	416431	129721	-1	Show Acuity	-1	-1
+82	417591	130930	6	True	down	down
+83	418818	132208	-1	Show Acuity	-1	-1
+84	420058	133499	0	False	left	upri
+85	421611	135117	-1	Show Acuity	-1	-1
+86	422858	136416	7	True	down	down
+87	424744	138381	-1	Show Acuity	-1	-1
+88	425958	139645	9	True	dori	dori
+89	427344	141090	-1	Show Acuity	-1	-1
+90	428611	142409	9	True	dole	dole
+91	430431	144305	-1	Show Acuity	-1	-1
+92	431684	145611	9	True	up	up
+93	433471	147472	-1	Show Acuity	-1	-1
+94	434705	148757	6	True	down	down
+95	436118	150229	-1	Show Acuity	-1	-1
+96	437398	151563	8	True	dori	dori
+97	439484	153736	-1	Show Acuity	-1	-1
+98	440738	155043	0	False	right	up
+99	442731	157118	-1	Show Acuity	-1	-1
+100	443991	158431	5	True	right	right
+101	445931	160452	-1	Show Acuity	-1	-1
+102	447211	161786	5	True	up	up
+103	449297	163959	-1	Show Acuity	-1	-1
+104	450538	165251	3	True	right	right
+105	452344	167133	-1	Show Acuity	-1	-1
+106	453557	168397	2	True	down	down
+107	454957	169855	-1	Show Acuity	-1	-1
+108	456204	171154	2	True	dori	dori
+109	458157	173189	-1	Show Acuity	-1	-1
+110	459364	174446	5	True	uple	uple
+111	461090	176245	-1	Show Acuity	-1	-1
+112	462410	177620	4	True	right	right
+113	464377	179669	-1	Show Acuity	-1	-1
+114	465630	180974	7	True	right	right
+115	467797	183231	-1	Show Acuity	-1	-1
+116	469070	184558	3	True	upri	upri
+117	470824	186384	-1	Show Acuity	-1	-1
+118	472078	187691	5	True	down	down
+119	474164	189864	-1	Show Acuity	-1	-1
+120	475550	191308	2	True	down	down
+121	477490	193329	-1	Show Acuity	-1	-1
+122	478717	194607	6	True	down	down
+123	480204	196156	-1	Show Acuity	-1	-1
+124	481410	197412	9	True	dori	dori
+125	483570	199663	-1	Show Acuity	-1	-1
+126	484757	200899	5	True	dori	dori
+127	486297	202503	-1	Show Acuity	-1	-1
+128	487537	203795	9	True	uple	uple
+129	489343	205677	-1	Show Acuity	-1	-1
+130	490563	206948	2	True	upri	upri
+131	492597	209066	-1	Show Acuity	-1	-1
+132	493971	210497	4	True	uple	uple
+133	496003	212615	-1	Show Acuity	-1	-1
+134	497243	213907	2	True	uple	uple
+135	498724	215449	-1	Show Acuity	-1	-1
+136	499937	216712	4	True	dori	dori
+137	501403	218240	-1	Show Acuity	-1	-1
+138	502730	219622	1	True	upri	upri
+139	504217	221171	-1	Show Acuity	-1	-1
+140	505383	222386	8	True	right	right
+141	506823	223886	-1	Show Acuity	-1	-1
+142	508070	225185	0	False	left	up
+143	509583	226761	-1	Show Acuity	-1	-1
+144	510830	228060	3	True	dole	dole
+145	512637	229942	-1	Show Acuity	-1	-1
+146	514004	231366	9	True	down	down
+147	516157	233610	-1	Show Acuity	-1	-1
+148	517410	234915	7	True	dole	dole
+149	519210	236790	-1	Show Acuity	-1	-1
+150	520390	238019	2	True	left	left
+151	521650	239332	-1	Show Acuity	-1	-1
+152	522850	240582	7	True	down	down
+153	524937	242756	-1	Show Acuity	-1	-1
+154	526103	243971	0	False	right	left
+155	527703	245638	-1	Show Acuity	-1	-1
+156	529004	246993	0	True	left	left
+157	530916	248985	-1	Show Acuity	-1	-1
+158	532337	250465	1	True	left	left
+159	533957	252152	-1	Show Acuity	-1	-1
+160	535256	253506	9	True	uple	uple
+161	537030	255353	-1	Show Acuity	-1	-1
+162	538364	256743	8	True	dori	dori
+163	539656	258090	-1	Show Acuity	-1	-1
+164	540943	259430	2	True	left	left
+165	542250	260792	-1	Show Acuity	-1	-1
+166	543549	262146	4	True	up	up
+167	544983	263639	-1	Show Acuity	-1	-1
+168	546183	264889	1	False	right	left
+169	547396	266153	-1	Show Acuity	-1	-1
+170	550177	269049	0	False	right	left
+171	551956	270903	-1	Show Acuity	-1	-1
+172	553196	272195	7	True	dole	dole
+173	554856	273924	-1	Show Acuity	-1	-1
+174	556503	275639	2	True	dori	dori
+175	558683	277911	-1	Show Acuity	-1	-1
+176	560049	279334	6	True	upri	upri
+177	561823	281182	-1	Show Acuity	-1	-1
+178	564803	284286	1	False	dori	right
+179	566509	286064	-1	Show Acuity	-1	-1
+180	567756	287362	1	False	right	uple
+181	start	569040	288699.84	DynamicAcuity
+182	596862	317684	-1	Show Acuity	-1	-1
+183	598769	319670	3	True	upri	upri
+184	606069	327274	-1	Show Acuity	-1	-1
+185	606922	328163	4	True	left	left
+186	609469	330816	-1	Show Acuity	-1	-1
+187	610295	331677	2	True	dori	dori
+188	616582	338227	-1	Show Acuity	-1	-1
+189	617475	339157	3	True	dole	dole
+190	619615	341387	-1	Show Acuity	-1	-1
+191	620342	342143	3	True	left	left
+192	623502	345435	-1	Show Acuity	-1	-1
+193	624488	346463	0	False	left	down
+194	626728	348797	-1	Show Acuity	-1	-1
+195	627796	349908	6	True	down	down
+196	630422	352644	-1	Show Acuity	-1	-1
+197	631303	353562	0	False	uple	up
+198	633748	356110	-1	Show Acuity	-1	-1
+199	634449	356839	7	True	right	right
+200	637008	359506	-1	Show Acuity	-1	-1
+201	638341	360895	1	False	dole	left
+202	641448	364131	-1	Show Acuity	-1	-1
+203	642122	364833	7	True	dori	dori
+204	644681	367499	-1	Show Acuity	-1	-1
+205	646148	369027	1	True	uple	uple
+206	649241	372249	-1	Show Acuity	-1	-1
+207	650101	373145	5	True	upri	upri
+208	652934	376097	-1	Show Acuity	-1	-1
+209	653708	376902	3	True	up	up
+210	656035	379327	-1	Show Acuity	-1	-1
+211	656735	380055	4	True	right	right
+212	659082	382500	-1	Show Acuity	-1	-1
+213	659801	383250	8	True	uple	uple
+214	662148	385694	-1	Show Acuity	-1	-1
+215	663141	386729	6	False	upri	up
+216	668608	392424	-1	Show Acuity	-1	-1
+217	669361	393209	8	True	up	up
+218	676174	400307	-1	Show Acuity	-1	-1
+219	677054	401223	8	True	upri	upri
+220	680008	404300	-1	Show Acuity	-1	-1
+221	680808	405133	7	True	upri	upri
+222	683247	407675	-1	Show Acuity	-1	-1
+223	684028	408488	6	True	right	right
+224	686234	410786	-1	Show Acuity	-1	-1
+225	686962	411544	7	True	upri	upri
+226	689461	414148	-1	Show Acuity	-1	-1
+227	690141	414856	5	True	left	left
+228	692288	417092	-1	Show Acuity	-1	-1
+229	693175	418017	3	False	down	dole
+230	696294	421266	-1	Show Acuity	-1	-1
+231	697314	422329	0	False	down	up
+232	700520	425669	-1	Show Acuity	-1	-1
+233	701268	426448	9	True	down	down
+234	703907	429197	-1	Show Acuity	-1	-1
+235	704741	430065	4	True	right	right
+236	707300	432732	-1	Show Acuity	-1	-1
+237	708201	433670	6	True	upri	upri
+238	711127	436718	-1	Show Acuity	-1	-1
+239	711887	437510	8	True	down	down
+240	714227	439948	-1	Show Acuity	-1	-1
+241	714900	440649	8	True	down	down
+242	717341	443191	-1	Show Acuity	-1	-1
+243	718021	443900	9	True	left	left
+244	720574	446559	-1	Show Acuity	-1	-1
+245	721427	447448	4	True	uple	uple
+246	726860	453108	-1	Show Acuity	-1	-1
+247	728160	454463	3	False	upri	up
+248	734834	461414	-1	Show Acuity	-1	-1
+249	735654	462269	1	True	up	up
+250	742893	469811	-1	Show Acuity	-1	-1
+251	743893	470852	4	True	upri	upri
+252	746693	473769	-1	Show Acuity	-1	-1
+253	748454	475603	5	True	upri	upri
+254	750873	478124	-1	Show Acuity	-1	-1
+255	752013	479311	8	True	upri	upri
+256	754853	482270	-1	Show Acuity	-1	-1
+257	755980	483444	1	False	right	uple
+258	758833	486416	-1	Show Acuity	-1	-1
+259	759566	487180	5	True	left	left
+260	761840	489548	-1	Show Acuity	-1	-1
+261	762567	490305	6	True	left	left
+262	765307	493159	-1	Show Acuity	-1	-1
+263	766440	494340	6	True	down	down
+264	769020	497028	-1	Show Acuity	-1	-1
+265	770974	499063	0	False	uple	down
+266	773093	501271	-1	Show Acuity	-1	-1
+267	773933	502146	7	False	upri	up
+268	777126	505472	-1	Show Acuity	-1	-1
+269	778094	506480	9	True	dole	dole
+270	785440	514133	-1	Show Acuity	-1	-1
+271	786200	514925	9	True	dole	dole
+272	788726	517557	-1	Show Acuity	-1	-1
+273	789553	518418	9	True	uple	uple
+274	792453	521439	-1	Show Acuity	-1	-1
+275	793173	522189	6	True	uple	uple
+276	800512	529835	-1	Show Acuity	-1	-1
+277	801393	530752	8	True	upri	upri
+278	803806	533266	-1	Show Acuity	-1	-1
+279	805092	534606	0	False	down	uple
+280	808406	538058	-1	Show Acuity	-1	-1
+281	809252	538940	5	True	right	right
+282	811772	541565	-1	Show Acuity	-1	-1
+283	812639	542468	5	True	dori	dori
+284	815299	545239	-1	Show Acuity	-1	-1
+285	816066	546037	3	True	dori	dori
+286	818759	548843	-1	Show Acuity	-1	-1
+287	819606	549725	2	False	right	uple
+288	822406	552642	-1	Show Acuity	-1	-1
+289	823386	553663	2	True	up	up
+290	826385	556788	-1	Show Acuity	-1	-1
+291	827566	558018	5	True	upri	upri
+292	829932	560483	-1	Show Acuity	-1	-1
+293	830732	561316	4	True	uple	uple
+294	833219	563907	-1	Show Acuity	-1	-1
+295	834066	564789	7	True	dori	dori
+296	836592	567421	-1	Show Acuity	-1	-1
+297	837512	568379	3	True	up	up
+298	840492	571483	-1	Show Acuity	-1	-1
+299	841279	572303	5	True	dole	dole
+300	843746	574873	-1	Show Acuity	-1	-1
+301	844899	576074	2	False	upri	up
+302	847152	578421	-1	Show Acuity	-1	-1
+303	848259	579575	6	True	upri	upri
+304	855345	586956	-1	Show Acuity	-1	-1
+305	856331	587984	9	True	upri	upri
+306	863725	595686	-1	Show Acuity	-1	-1
+307	864592	596589	5	True	down	down
+308	867872	600006	-1	Show Acuity	-1	-1
+309	868865	601041	9	True	dori	dori
+310	875712	608173	-1	Show Acuity	-1	-1
+311	876713	609216	2	True	up	up
+312	883632	616424	-1	Show Acuity	-1	-1
+313	884539	617369	4	True	dole	dole
+314	887572	620528	-1	Show Acuity	-1	-1
+315	888386	621376	2	True	down	down
+316	892345	625500	-1	Show Acuity	-1	-1
+317	893193	626384	4	True	left	left
+318	895518	628806	-1	Show Acuity	-1	-1
+319	896411	629737	1	True	dole	dole
+320	899025	632459	-1	Show Acuity	-1	-1
+321	899838	633307	8	True	right	right
+322	902605	636189	-1	Show Acuity	-1	-1
+323	903611	637237	0	False	uple	down
+324	906251	639988	-1	Show Acuity	-1	-1
+325	907171	640946	3	True	dori	dori
+326	909644	643522	-1	Show Acuity	-1	-1
+327	910364	644272	9	True	uple	uple
+328	917345	651544	-1	Show Acuity	-1	-1
+329	918184	652419	7	True	dole	dole
+330	920698	655037	-1	Show Acuity	-1	-1
+331	921451	655822	2	True	left	left
+332	923692	658156	-1	Show Acuity	-1	-1
+333	924438	658934	7	True	right	right
+334	927444	662065	-1	Show Acuity	-1	-1
+335	928398	663059	0	False	up	down
+336	931264	666045	-1	Show Acuity	-1	-1
+337	932031	666843	0	False	uple	down
+338	935031	669969	-1	Show Acuity	-1	-1
+339	936218	671205	1	False	upri	down
+340	938664	673753	-1	Show Acuity	-1	-1
+341	939364	674483	9	True	right	right
+342	942151	677386	-1	Show Acuity	-1	-1
+343	942998	678269	8	True	dole	dole
+344	945677	681059	-1	Show Acuity	-1	-1
+345	946544	681962	2	True	left	left
+346	949210	684740	-1	Show Acuity	-1	-1
+347	949926	685485	4	True	right	right
+348	952331	687990	-1	Show Acuity	-1	-1
+349	953244	688942	1	True	upri	upri
+350	955877	691685	-1	Show Acuity	-1	-1
+351	956724	692567	0	False	dori	up
+352	962184	698255	-1	Show Acuity	-1	-1
+353	963290	699408	7	False	upri	up
+354	965844	702068	-1	Show Acuity	-1	-1
+355	967744	704047	2	True	right	right
+356	969983	706380	-1	Show Acuity	-1	-1
+357	970830	707262	6	True	dole	dole
+358	973404	709943	-1	Show Acuity	-1	-1
+359	974177	710749	1	True	dori	dori
+360	977203	713901	-1	Show Acuity	-1	-1
+361	977990	714721	1	True	up	up
+
