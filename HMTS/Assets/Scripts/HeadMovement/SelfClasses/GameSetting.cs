@@ -36,6 +36,7 @@ public class GameSetting
     public int PostDelayRepeatNum;
     public int PostDelayASOffset;
     public int DynaDelayRepeatNum;
+    public float DynaStopThresh;
 
     public GameSetting()
     {
@@ -71,6 +72,7 @@ public class GameSetting
         this.PostDelayRepeatNum = 0;
         this.PostDelayASOffset = 0;
         this.DynaDelayRepeatNum = 0;
+        this.DynaStopThresh = 1.1f; //default as no threshold;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -152,6 +154,7 @@ public class GameSetting
         result_str += "PostDelayRepeatNum" + " " + PostDelayRepeatNum.ToString() + " ";
         result_str += "PostDelayASOffset" + " " + PostDelayASOffset.ToString() + " ";
         result_str += "DynaDelayRepeatNum" + " " + DynaDelayRepeatNum.ToString() + " ";
+        result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
 
 
         return result_str;

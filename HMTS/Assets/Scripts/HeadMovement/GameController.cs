@@ -119,6 +119,9 @@ public class GameController : GeneralGameController {
     private CurveFit AC_curve_fit;
     private int AC_size_result;
     private float AC_LH;
+    private int AD_stop_num;
+    private int AD_left_right;
+    private int AD_right_right;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -147,7 +150,7 @@ public class GameController : GeneralGameController {
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
                                 curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
-                                AD_repeat_index,target_AD,AC_size_result,AC_LH};
+                                AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right};
         }
     }
 
@@ -228,6 +231,10 @@ public class GameController : GeneralGameController {
         this.AC_size_result = 0;
         this.AC_LH = 0.0f;
         this.ready_for_controller_flag = false;
+        this.AD_stop_num = (int)(DC_script.SystemSetting.DynaDelayRepeatNum * 
+                                    DC_script.SystemSetting.DynaStopThresh);
+        this.AD_left_right = 0;
+        this.AD_right_right = 0;
 
         Debug_str = new List<string>();
 
@@ -951,12 +958,17 @@ public class GameController : GeneralGameController {
         return false;
     }
 
+    private bool stop_by_threshold()
+    {
+        return (AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num);
+    }
+
     private bool DD_next_delay()
     {
         AD_repeat_index = 0;
         A_delay_index++;
         curr_A_delay += AD_incr_amount;
-        if(curr_A_delay > AD_max)
+        if(curr_A_delay > AD_max || stop_by_threshold())
         {
             return true;
         }
@@ -1333,6 +1345,9 @@ public class GameController : GeneralGameController {
             curr_A_delay = AD_min;
             A_delay_index = 0;
             AD_repeat_index = -1;
+            AD_left_right = 0;
+            AD_right_right = 0;
+            A_delay_right = 0;
         }
 
         if (DC_script.Current_GM.ADUsingStaticData)
@@ -1664,6 +1679,40 @@ public class GameController : GeneralGameController {
         return result;
     }
 
+    private int check_dir()
+    {
+        if(last_rot_ang_dir.x == 0.0f)
+        {
+            return 0;
+        }
+        else if(last_rot_ang_dir.y == 0)
+        {
+            return -1;
+        }
+        else if(last_rot_ang_dir.y == 1)
+        {
+            return 1;
+        }
+        return -100;
+    }
+
+    private void dir_acuity_right()
+    {
+        switch(check_dir())
+        {
+            case 0:
+                AD_left_right++;
+                AD_right_right++;
+                break;
+            case -1:
+                AD_left_right++;
+                break;
+            case 1:
+                AD_right_right++;
+                break;
+        }
+    }
+
     private bool check_common_controller()
     {
         bool result = false;
@@ -1681,6 +1730,7 @@ public class GameController : GeneralGameController {
                     acuity_right_num++;
                     A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
+                    dir_acuity_right();
                     result = true;
                 }
                 else
@@ -1701,6 +1751,7 @@ public class GameController : GeneralGameController {
                     acuity_right_num++;
                     A_delay_right++;
                     //StartCoroutine(show_text(1.0f, "Right"));
+                    dir_acuity_right();
                     result = true;
                 }
                 else
