@@ -14,6 +14,7 @@ public class GameMode
     public bool SkipCenterFlag { get; set; }
     public bool HideHeadIndicator { get; set; }
     public bool ChangeTargetByTime { get; set; }
+    public bool GS { get; set; }
     //Variables;
     public float Gain { get; set; }
     public bool UsingAcuityAfter { get; set; }
@@ -54,6 +55,7 @@ public class GameMode
         this.SkipCenterFlag = other_GM.SkipCenterFlag;
         this.HideHeadIndicator = other_GM.HideHeadIndicator;
         this.ChangeTargetByTime = other_GM.ChangeTargetByTime;
+        this.GS = other_GM.GS;
 
         this.Gain = other_GM.Gain;
         this.UsingAcuityAfter = other_GM.UsingAcuityAfter;
@@ -254,6 +256,8 @@ public class GameMode
         catch { DynaDelayMax = 0.0f; }
         try { DynaDelayInter = float.Parse(para_dict["DynaDelayInter"]); }
         catch { DynaDelayInter = 0.0f; }
+        try { GS = (para_dict["GS"] == "True"); }
+        catch { GS = false; }
     }
 
     public string VarToString()
@@ -291,6 +295,7 @@ public class GameMode
         result_str += "DynaDelayInit" + " " + DynaDelayInit.ToString("F3") + " ";
         result_str += "DynaDelayMax" + " " + DynaDelayMax.ToString("F3") + " ";
         result_str += "DynaDelayInter" + " " + DynaDelayInter.ToString("F3") + " ";
+        result_str += "GS" + " " + GS.ToString() + " ";
 
         return result_str;
     }

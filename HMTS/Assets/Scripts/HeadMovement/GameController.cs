@@ -231,8 +231,7 @@ public class GameController : GeneralGameController {
         this.AC_size_result = 0;
         this.AC_LH = 0.0f;
         this.ready_for_controller_flag = false;
-        this.AD_stop_num = (int)(DC_script.SystemSetting.DynaDelayRepeatNum * 
-                                    DC_script.SystemSetting.DynaStopThresh);
+        this.AD_stop_num = DC_script.SystemSetting.DynaStopThresh;
         this.AD_left_right = 0;
         this.AD_right_right = 0;
 
@@ -961,6 +960,15 @@ public class GameController : GeneralGameController {
     private bool stop_by_threshold()
     {
         return (AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num);
+        //if(!DC_script.Current_GM.GZ)
+        //{
+        //    return (AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num);
+        //}
+        //else
+        //{
+        //    return (AD_left_right >= (AD_stop_num / 2) && (AD_right_right >= AD_stop_num / 2));
+        //}
+
     }
 
     private bool DD_next_delay()
@@ -972,6 +980,8 @@ public class GameController : GeneralGameController {
         {
             return true;
         }
+        AD_left_right = 0;
+        AD_right_right = 0;
         return false;
     }
 
@@ -1681,15 +1691,15 @@ public class GameController : GeneralGameController {
 
     private int check_dir()
     {
-        if(last_rot_ang_dir.x == 0.0f)
+        if(!DC_script.Current_GM.GS)
         {
             return 0;
         }
-        else if(last_rot_ang_dir.y == 0)
+        else if(turn_direct_x == 0)
         {
             return -1;
         }
-        else if(last_rot_ang_dir.y == 1)
+        else if(turn_direct_x == 1)
         {
             return 1;
         }
