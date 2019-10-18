@@ -36,6 +36,7 @@ public class GameMode
     public float DynaDelayInit { get; set; }
     public float DynaDelayMax { get; set; }
     public float DynaDelayInter { get; set; }
+    public int DynaDir { get; set; }    //0: no dir; 1: left; 2: right;
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -56,6 +57,7 @@ public class GameMode
         this.HideHeadIndicator = other_GM.HideHeadIndicator;
         this.ChangeTargetByTime = other_GM.ChangeTargetByTime;
         this.GS = other_GM.GS;
+        this.DynaDir = other_GM.DynaDir;
 
         this.Gain = other_GM.Gain;
         this.UsingAcuityAfter = other_GM.UsingAcuityAfter;
@@ -258,6 +260,8 @@ public class GameMode
         catch { DynaDelayInter = 0.0f; }
         try { GS = (para_dict["GS"] == "True"); }
         catch { GS = false; }
+        try { DynaDir = int.Parse(para_dict["DynaDir"]); }
+        catch { DynaDir = 0; }
     }
 
     public string VarToString()
@@ -296,6 +300,7 @@ public class GameMode
         result_str += "DynaDelayMax" + " " + DynaDelayMax.ToString("F3") + " ";
         result_str += "DynaDelayInter" + " " + DynaDelayInter.ToString("F3") + " ";
         result_str += "GS" + " " + GS.ToString() + " ";
+        result_str += "LeftDir" + " " + DynaDir.ToString() + " ";
 
         return result_str;
     }

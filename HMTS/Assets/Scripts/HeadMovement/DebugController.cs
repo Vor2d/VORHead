@@ -14,8 +14,9 @@ public class DebugController : MonoBehaviour {
     const string VRLST_init_text = "VR Logging: ";    //VRLoggingState init text;
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
-    const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH/AD_LR/AD_RR): ";
-    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex/TargetAD): ";
+    const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH/AD_LR/AD_RR/HTC): ";
+    const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex" +
+                                            "/TargetAD): ";
 
     public bool UsingDebug;
     public GameController GC_script;
@@ -110,7 +111,8 @@ public class DebugController : MonoBehaviour {
                                         " / " + (GC_script.AcuityState[10]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[11]).ToString("F3") +
                                         " / " + (GC_script.AcuityState[12]).ToString("F0") +
-                                        " / " + (GC_script.AcuityState[13]).ToString("F0");
+                                        " / " + (GC_script.AcuityState[13]).ToString("F0") +
+                                        " / " + (GC_script.AcuityState[14]).ToString("F0");
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[5]).ToString("F3") +
                                 " / " + (GC_script.AcuityState[6]).ToString("F0") +

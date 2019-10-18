@@ -122,6 +122,10 @@ public class GameController : GeneralGameController {
     private int AD_stop_num;
     private int AD_left_right;
     private int AD_right_right;
+    private string error_message;
+    private int head_time_counter;
+    private System.Diagnostics.Stopwatch head_timer;
+    private int last_AC_size;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -150,7 +154,8 @@ public class GameController : GeneralGameController {
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
                                 curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
-                                AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right};
+                                AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
+                                head_time_counter};
         }
     }
 
@@ -234,6 +239,10 @@ public class GameController : GeneralGameController {
         this.AD_stop_num = DC_script.SystemSetting.DynaStopThresh;
         this.AD_left_right = 0;
         this.AD_right_right = 0;
+        this.error_message = "";
+        this.head_time_counter = 0;
+        this.head_timer = new System.Diagnostics.Stopwatch();
+        this.last_AC_size = 0;
 
         Debug_str = new List<string>();
 
@@ -630,6 +639,24 @@ public class GameController : GeneralGameController {
             }
             if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
             {
+                if(DC_script.Current_GM.GameModeName == GameModeEnum.DynamicAcuity)
+                {
+                    if(!DC_script.Current_GM.GS)
+                    {
+                        if((DC_script.Current_GM.DynaDir == 1) && head_speed_y > 0)
+                        {
+                            error_message = "Wrong Direction!";
+                            GCAnimator.SetTrigger("Reset");
+                            return;
+                        }
+                        else if ((DC_script.Current_GM.DynaDir == 2) && head_speed_y < 0)
+                        {
+                            error_message = "Wrong Direction!";
+                            GCAnimator.SetTrigger("Reset");
+                            return;
+                        }
+                    }
+                }
                 speed_passed();
                 return;
             }
@@ -637,6 +664,7 @@ public class GameController : GeneralGameController {
 
         if (ray_cast_scrip.hit_border_flag && !speed_passed_flag)
         {
+            error_message = "Too Slow";
             Debug.Log("hit_border_flag");
             GCAnimator.SetTrigger("Reset");
         }
@@ -645,6 +673,7 @@ public class GameController : GeneralGameController {
 
     private void speed_passed()
     {
+        head_timer.Start();
         speed_passed_flag = true;
         Check_speed_flag = false;
         //Debug.Log("speed_passed !!!!!!");
@@ -685,10 +714,21 @@ public class GameController : GeneralGameController {
         Check_stop_flag = true;
     }
 
+    private void check_head_timer()
+    {
+        head_timer.Stop();
+        if(head_timer.ElapsedMilliseconds < curr_A_delay)
+        {
+            head_time_counter++;
+        }
+        head_timer.Reset();
+    }
+
     public void CheckStop()
     {
         if (stop_window_timer < 0.0f)
         {
+            check_head_timer();
             update_SS();
             JLS_script.log_action(simulink_sample, trial_iter, "head_stop", 0.0f, 0);
             Check_stop_flag = false;    //One more step to guarantee the state is closed;
@@ -821,7 +861,7 @@ public class GameController : GeneralGameController {
         }
         else
         {
-            IndiText1.GetComponent<TextMesh>().text = "Too Slow!";
+            IndiText1.GetComponent<TextMesh>().text = error_message;
             IndiText1.GetComponent<Renderer>().enabled = true;
             if (DC_script.Current_GM.HideFlag)
             {
@@ -959,7 +999,8 @@ public class GameController : GeneralGameController {
 
     private bool stop_by_threshold()
     {
-        return (AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num);
+        return ((AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num) && 
+                (head_time_counter >= DC_script.SystemSetting.DynaDelayRepeatNum));
         //if(!DC_script.Current_GM.GZ)
         //{
         //    return (AD_left_right >= AD_stop_num && AD_right_right >= AD_stop_num);
@@ -1251,9 +1292,10 @@ public class GameController : GeneralGameController {
         switch(DC_script.Current_GM.CurrAcuityChangeMode)
         {
             case AcuityChangeMode.percent:
-                switch(GeneralMethods.change_by_percent(ref acuity_change_index,DC_script.SystemSetting.AcuityChangeNumber,
-                                        ref acuity_right_num,DC_script.SystemSetting.AcuityChangeUpPerc,
-                                        DC_script.SystemSetting.AcuityChangeDownPerc))
+                switch(GeneralMethods.change_by_percent(ref acuity_change_index,
+                                            DC_script.SystemSetting.AcuityChangeNumber,
+                                            ref acuity_right_num,DC_script.SystemSetting.AcuityChangeUpPerc,
+                                            DC_script.SystemSetting.AcuityChangeDownPerc))
                 {
                     case 1:
                         decrease_acuity_size();
@@ -1272,6 +1314,20 @@ public class GameController : GeneralGameController {
                 {
                     curr_acuity_size = DC_script.SystemSetting.AcuityList[acuity_change_index];
                     set_acuity_size(curr_acuity_size);
+                    if(last_AC_size != curr_acuity_size)
+                    {
+                        if((acuity_right_num + acuity_wrong_num) >= DC_script.SystemSetting.AcuityChangeNumber)
+                        {
+                            acuity_change_index = 0;
+                            return true;
+                        }
+                        else
+                        {
+                            acuity_right_num = 0;
+                            acuity_wrong_num = 0;
+                            last_AC_size = curr_acuity_size;
+                        }
+                    }
                 }
                 else
                 {
@@ -1320,6 +1376,15 @@ public class GameController : GeneralGameController {
         turn_data = DC_script.Current_TI.Turn_data;
         jump_data = DC_script.Current_TI.Jump_data;
 
+        AD_converge_index = -1;
+        AD_repeat_index = -1;
+        A_delay_right = 0;
+        head_time_counter = 0;
+        AD_left_right = 0;
+        AD_right_right = 0;
+        acuity_right_num = 0;
+        acuity_wrong_num = 0;
+
         if (UsingAcuity)
         {
             curr_acuity_size = DC_script.Current_GM.AcuitySize;
@@ -1327,6 +1392,7 @@ public class GameController : GeneralGameController {
             curr_A_delay = DC_script.Current_GM.PostDelayInit;
             update_SS();
             ALS_script.log_time("start", simulink_sample, DC_script.Current_GM.GameModeName.ToString());
+            last_AC_size = curr_acuity_size;
         }
 
         if (DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
@@ -1342,22 +1408,16 @@ public class GameController : GeneralGameController {
             AD_min = DC_script.Current_GM.PostDelayInit;
             AD_incr_amount = (AD_max - AD_min) / DC_script.SystemSetting.PostDelayNumber;
             A_delay_index = -1;
-            AD_repeat_index = -1;
-            AD_converge_index = -1;
             AD_results = new Dictionary<float, int>();
             curve_fit = new CurveFit();
         }
         else if(DC_script.Current_GM.UsingDynamicDelay)
         {
+            A_delay_index = 0;
             AD_max = DC_script.Current_GM.DynaDelayMax;
             AD_min = DC_script.Current_GM.DynaDelayInit;
             AD_incr_amount = DC_script.Current_GM.DynaDelayInter;
             curr_A_delay = AD_min;
-            A_delay_index = 0;
-            AD_repeat_index = -1;
-            AD_left_right = 0;
-            AD_right_right = 0;
-            A_delay_right = 0;
         }
 
         if (DC_script.Current_GM.ADUsingStaticData)
