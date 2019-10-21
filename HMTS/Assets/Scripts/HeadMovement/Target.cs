@@ -94,4 +94,9 @@ public class Target : MonoBehaviour {
         turn_off_tmesh();
         turn_off_tobjmesh();
     }
+
+    public void changeTOBJcolor(Color color)
+    {
+        tar_obj_script.change_color(color);
+    }
 }

@@ -30,4 +30,9 @@ public class TargetOBJ : MonoBehaviour {
         mesh_render.enabled = false;
     }
 
+    public void change_color(Color color)
+    {
+        mesh_render.material.color = color;
+    }
+
 }

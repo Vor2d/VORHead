@@ -300,7 +300,7 @@ public class GameMode
         result_str += "DynaDelayMax" + " " + DynaDelayMax.ToString("F3") + " ";
         result_str += "DynaDelayInter" + " " + DynaDelayInter.ToString("F3") + " ";
         result_str += "GS" + " " + GS.ToString() + " ";
-        result_str += "LeftDir" + " " + DynaDir.ToString() + " ";
+        result_str += "DynaDir" + " " + DynaDir.ToString() + " ";
 
         return result_str;
     }

@@ -50,6 +50,8 @@ public class GameController : GeneralGameController {
     [SerializeField] private GeneralControllerInput GCI_script;
     [SerializeField] private AcuityLogSystem ALS_script;
     [SerializeField] private int AD_Liter;
+    [SerializeField] private Color TOBJ_def_col;
+    [SerializeField] private Color TOBJ_rea_col;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -586,6 +588,7 @@ public class GameController : GeneralGameController {
     {
         Check_speed_flag = true;
         Target_raycast_flag = false;
+        tar_script.changeTOBJcolor(TOBJ_rea_col);
     }
 
     public void WaitForTurn()
@@ -601,6 +604,7 @@ public class GameController : GeneralGameController {
     {
         Check_speed_flag = false;
         speed_passed_flag = false;
+        tar_script.changeTOBJcolor(TOBJ_def_col);
     }
 
     private void check_speed_with_window()
@@ -643,13 +647,13 @@ public class GameController : GeneralGameController {
                 {
                     if(!DC_script.Current_GM.GS)
                     {
-                        if((DC_script.Current_GM.DynaDir == 1) && head_speed_y > 0)
+                        if((DC_script.Current_GM.DynaDir == 1) && head_speed_y < 0)
                         {
                             error_message = "Wrong Direction!";
                             GCAnimator.SetTrigger("Reset");
                             return;
                         }
-                        else if ((DC_script.Current_GM.DynaDir == 2) && head_speed_y < 0)
+                        else if ((DC_script.Current_GM.DynaDir == 2) && head_speed_y > 0)
                         {
                             error_message = "Wrong Direction!";
                             GCAnimator.SetTrigger("Reset");
@@ -717,7 +721,9 @@ public class GameController : GeneralGameController {
     private void check_head_timer()
     {
         head_timer.Stop();
-        if(head_timer.ElapsedMilliseconds < curr_A_delay)
+        float head_time = (head_timer.ElapsedMilliseconds / 1000.0f) - 
+                            DC_script.SystemSetting.StopWinodow;
+        if (head_time < curr_A_delay)
         {
             head_time_counter++;
         }
@@ -1023,6 +1029,7 @@ public class GameController : GeneralGameController {
         }
         AD_left_right = 0;
         AD_right_right = 0;
+        head_time_counter = 0;
         return false;
     }
 
@@ -1316,7 +1323,7 @@ public class GameController : GeneralGameController {
                     set_acuity_size(curr_acuity_size);
                     if(last_AC_size != curr_acuity_size)
                     {
-                        if((acuity_right_num + acuity_wrong_num) >= DC_script.SystemSetting.AcuityChangeNumber)
+                        if((acuity_right_num) >= DC_script.SystemSetting.AcuityChangeNumber)
                         {
                             acuity_change_index = 0;
                             return true;
