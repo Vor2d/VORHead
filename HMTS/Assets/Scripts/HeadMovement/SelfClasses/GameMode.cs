@@ -15,6 +15,7 @@ public class GameMode
     public bool HideHeadIndicator { get; set; }
     public bool ChangeTargetByTime { get; set; }
     public bool GS { get; set; }
+    public bool DoubleHeadSpeed { get; set; }
     //Variables;
     public float Gain { get; set; }
     public bool UsingAcuityAfter { get; set; }
@@ -37,6 +38,7 @@ public class GameMode
     public float DynaDelayMax { get; set; }
     public float DynaDelayInter { get; set; }
     public int DynaDir { get; set; }    //0: no dir; 1: left; 2: right;
+     
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -79,6 +81,7 @@ public class GameMode
         this.DynaDelayInit = other_GM.DynaDelayInit;
         this.DynaDelayMax = other_GM.DynaDelayMax;
         this.DynaDelayInter = other_GM.DynaDelayInter;
+        this.DoubleHeadSpeed = other_GM.DoubleHeadSpeed;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -262,6 +265,8 @@ public class GameMode
         catch { GS = false; }
         try { DynaDir = int.Parse(para_dict["DynaDir"]); }
         catch { DynaDir = 0; }
+        try { DoubleHeadSpeed = (para_dict["DoubleHeadSpeed"] == "True"); }
+        catch { DoubleHeadSpeed = false; }
     }
 
     public string VarToString()
@@ -301,6 +306,7 @@ public class GameMode
         result_str += "DynaDelayInter" + " " + DynaDelayInter.ToString("F3") + " ";
         result_str += "GS" + " " + GS.ToString() + " ";
         result_str += "DynaDir" + " " + DynaDir.ToString() + " ";
+        result_str += "DoubleHeadSpeed" + " " + DoubleHeadSpeed.ToString() + " ";
 
         return result_str;
     }

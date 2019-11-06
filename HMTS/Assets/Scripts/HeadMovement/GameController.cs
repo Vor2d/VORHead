@@ -138,6 +138,8 @@ public class GameController : GeneralGameController {
     private bool speed_passed_flag;
     private bool show_text_flag;
     private bool ready_for_controller_flag;
+    private bool check_double_speed_flag;
+    private bool double_speed_passed_flag;
 
 
     public bool UsingAcuity
@@ -280,21 +282,6 @@ public class GameController : GeneralGameController {
         {
             JLS_script.toggle_Log();
         }
-
-        //if(Input.GetKeyDown(KeyCode.C))
-        //{
-        //    if(!collaberating_flag)
-        //    {
-        //        GCAnimator.SetTrigger("Collaborate");
-        //    }
-        //    else
-        //    {
-        //        restart_scene();
-        //    }
-        //}
-
-        //TestText.text = (Screen.width).ToString();
-        //TestText2.text = (Screen.dpi).ToString();
 
         if (Check_stop_flag)
         {
@@ -1927,6 +1914,11 @@ public class GameController : GeneralGameController {
     public float back_cal()
     {
         return (float)(curve_fit.back_cal(0.5f)[0]);
+    }
+
+    public void ToCheckHeadSpeed()
+    {
+
     }
 }
 

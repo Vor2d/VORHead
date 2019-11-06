@@ -37,6 +37,7 @@ public class GameSetting
     public int PostDelayASOffset;
     public int DynaDelayRepeatNum;
     public int DynaStopThresh;
+    public float SecondHeadSpeed;
 
     public GameSetting()
     {
@@ -73,6 +74,7 @@ public class GameSetting
         this.PostDelayASOffset = 0;
         this.DynaDelayRepeatNum = 0;
         this.DynaStopThresh = Int32.MaxValue; //default as no threshold;
+        this.SecondHeadSpeed = 0.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -155,6 +157,7 @@ public class GameSetting
         result_str += "PostDelayASOffset" + " " + PostDelayASOffset.ToString() + " ";
         result_str += "DynaDelayRepeatNum" + " " + DynaDelayRepeatNum.ToString() + " ";
         result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
+        result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
 
 
         return result_str;
