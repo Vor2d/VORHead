@@ -16,6 +16,8 @@ public class CheckHeadSpeed : StateMachineBehaviour {
         
         GC_script.Current_state = "CheckHeadSpeed";
 
+        GC_script.ToCheckHeadSpeed();
+
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -247,6 +247,8 @@ public class GameController : GeneralGameController {
         this.head_time_counter = 0;
         this.head_timer = new System.Diagnostics.Stopwatch();
         this.last_AC_size = 0;
+        this.check_double_speed_flag = false;
+        this.double_speed_passed_flag = false;
 
         Debug_str = new List<string>();
 
@@ -341,6 +343,16 @@ public class GameController : GeneralGameController {
         if(TargetTimerFlag)
         {
             target_change_timer -= Time.deltaTime;
+        }
+
+        if(check_double_speed_flag)
+        {
+            head_speed_y = CD_script.currentHeadVelocity.z;
+            if(head_speed_y >= DC_script.SystemSetting.SecondHeadSpeed)
+            {
+                double_speed_passed_flag = true;
+                check_double_speed_flag = false;
+            }
         }
     }
 
@@ -670,6 +682,12 @@ public class GameController : GeneralGameController {
         //Debug.Log("speed_passed !!!!!!");
         update_SS();
         JLS_script.log_action(simulink_sample, trial_iter, "head_turned", 0.0f, 0);
+
+        if(DC_script.Current_GM.DoubleHeadSpeed)
+        {
+            check_double_speed_flag = true;
+        }
+
         if(DC_script.Current_GM.UsingAcuityBefore)
         {
             //tar_script.turn_off_all_tmesh();
@@ -1918,7 +1936,25 @@ public class GameController : GeneralGameController {
 
     public void ToCheckHeadSpeed()
     {
-
+        if(DC_script.Current_GM.DoubleHeadSpeed)
+        {
+            if(double_speed_passed_flag)
+            {
+                double_speed_passed_flag = false;
+                check_double_speed_flag = false;
+                GCAnimator.SetTrigger("NextStep");
+            }
+            else
+            {
+                double_speed_passed_flag = false;
+                check_double_speed_flag = false;
+                GCAnimator.SetTrigger("Reset");
+            }
+        }
+        else
+        {
+            GCAnimator.SetTrigger("NextStep");
+        }
     }
 }
 
