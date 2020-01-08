@@ -13,6 +13,7 @@ public class CoilData : MonoBehaviour {
     public UInt32 simulinkSample { get; set; }
     public Vector2 Left_eye_voltage { get; set; }   //horizontal then vertical;
     public Vector2 Right_eye_voltage { get; set; }
+    public float[] Raw_data { get; set; }
 
     //static information;
     private const int port = 5123;
@@ -46,6 +47,8 @@ public class CoilData : MonoBehaviour {
         this.currentHeadOrientation = new Quaternion();
         this.currentHeadVelocity = new Vector3();
         this.simulinkSample = (UInt32)0;
+        this.Raw_data = new float[6];
+
         this.RCThread = new Thread(read_coil);
 
         RCThread.Start();
@@ -62,7 +65,7 @@ public class CoilData : MonoBehaviour {
                 byte[] receiveBytes = udpClient.Receive(ref EP);
 
                 int offset = 0;
-                while (offset + 32 <= receiveBytes.Length)
+                while (offset + 72 <= receiveBytes.Length)
                 {
                     // process orientation (16 bytes)
                     float s = BitConverter.ToSingle(receiveBytes, offset);
@@ -77,13 +80,20 @@ public class CoilData : MonoBehaviour {
                     float rv = BitConverter.ToSingle(receiveBytes, offset + 36);  // right eye vertical
                     float lh = BitConverter.ToSingle(receiveBytes, offset + 40);  // left eye horizontal
                     float lv = BitConverter.ToSingle(receiveBytes, offset + 44);  // left eye vertical
-                    offset += 32;
+                    float hdx = BitConverter.ToSingle(receiveBytes, offset + 48);
+                    float hdy = BitConverter.ToSingle(receiveBytes, offset + 52);
+                    float hdz = BitConverter.ToSingle(receiveBytes, offset + 56);
+                    float htx = BitConverter.ToSingle(receiveBytes, offset + 60);
+                    float hty = BitConverter.ToSingle(receiveBytes, offset + 64);
+                    float htz = BitConverter.ToSingle(receiveBytes, offset + 68);
+                    offset += 72;
 
                     currentHeadOrientation = new Quaternion(x, y, z, w);
                     currentHeadVelocity = new Vector3(vx, vy, vz);
                     simulinkSample = (UInt32)s;
                     Left_eye_voltage = new Vector2(lh, lv);
                     Right_eye_voltage = new Vector2(rh, rv);
+                    Raw_data = new float[]{hdx,hdy,hdz,htx,hty,htz};
                 }
 
                 //Debug.Log("currentHeadOrientation1 " + currentHeadOrientation);
