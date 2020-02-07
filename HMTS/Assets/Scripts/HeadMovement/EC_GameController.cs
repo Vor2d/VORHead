@@ -18,6 +18,7 @@ public class EC_GameController : MonoBehaviour {
     public GameObject TargetOBJ;
     public Camera GameCamera;
     public Camera UICamera;
+    public Camera GameCamera2;
     [SerializeField] private CoilData CD_script;
     [SerializeField] private HeadSimulator HS_script;
     [SerializeField] private Transform IndicatorText1_TRANS;
@@ -73,6 +74,7 @@ public class EC_GameController : MonoBehaviour {
         this.start_flag = false;
         this.GameCamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.UICamera.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
+
         this.Left_eye_data = new List<KeyValuePair<Vector2, Vector2>>();
         this.Right_eye_data = new List<KeyValuePair<Vector2, Vector2>>();
         this.CalibrationThread = new Thread(calibrate);

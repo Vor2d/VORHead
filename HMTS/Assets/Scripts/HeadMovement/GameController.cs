@@ -45,8 +45,6 @@ public class GameController : GeneralGameController {
     public GameObject HeadSParent;
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
-    public Camera Cam1;
-    public Camera Cam2;
     //public AcuityGroup AG_script;
     public List<AcuityGroup> AGS_list;
     [SerializeField] private Controller_Input CI_script;
@@ -258,12 +256,16 @@ public class GameController : GeneralGameController {
         IndiText1.GetComponent<TextMesh>().text = "";
 
         //Active another monitor;
-        if (Display.displays.Length == 2) {Display.displays[1].Activate();}
+        if (Display.displays.Length == 2) 
+        {
+            Display.displays[1].Activate();
+        }
         else if(Display.displays.Length == 3)
         {
             Display.displays[1].Activate();
             Display.displays[2].Activate();
         }
+        adjust_camera();
 
         if(DC_script.MSM_script.using_VR)
         {
@@ -380,7 +382,7 @@ public class GameController : GeneralGameController {
                                                     0.0f,
                                                     DC_script.SystemSetting.Cam1Angle);
         }
-        Cam1.transform.localEulerAngles = virtual_rot;
+        GCS_script.camera1.transform.eulerAngles = virtual_rot;
 
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
@@ -396,7 +398,7 @@ public class GameController : GeneralGameController {
                                                     0.0f,
                                                     DC_script.SystemSetting.Cam2Angle);
         }
-        Cam2.transform.localEulerAngles = virtual_rot;
+        GCS_script.camera3.transform.eulerAngles = virtual_rot;
     }
 
     private void OnDestroy()

@@ -33,6 +33,7 @@ public class GameController_Setting : MonoBehaviour {
     public Dropdown Camera2_DD;
     public Camera camera1;
     public Camera camera2;
+    public Camera camera3;
     public InputField LoopNumber_IF;
     //Page2;
     [Header("Page2")]
@@ -75,6 +76,12 @@ public class GameController_Setting : MonoBehaviour {
         this.GC_script = Game_Controller.GetComponent<GameController>();
         this.camera1.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera1_display);
         this.camera2.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera2_display);
+        if (Display.displays.Length == 3)
+        {
+            this.camera3.targetDisplay = Int32.Parse(DC_script.SystemSetting.Camera3_display);
+        }
+        else { this.camera3.gameObject.SetActive(false); }
+        
         this.eye_enabled_flag = EyeIndi_TRNAS1.GetComponent<MeshRenderer>().enabled;
 
         UIIndicatorText1_OBJ.GetComponent<Text>().text = "";

@@ -6,6 +6,7 @@ public class GameSetting
 {
     public string Camera1_display;
     public string Camera2_display;
+    public string Camera3_display;
     public bool Using_curved_screen;
     public float Player_screen_cm;
     public float Screen_width_cm;
@@ -45,6 +46,7 @@ public class GameSetting
     {
         this.Camera1_display = "0";
         this.Camera2_display = "1";
+        this.Camera3_display = "3";
         this.Using_curved_screen = true;
         this.Player_screen_cm = 100.0f;
         this.Screen_width_cm = 100.0f;
@@ -135,6 +137,7 @@ public class GameSetting
         result_str += "Screen_width_cm" + " " + Screen_width_cm.ToString() + " ";
         result_str += "Camera1_display" + " " + Camera1_display.ToString() + " ";
         result_str += "Camera2_display" + " " + Camera2_display.ToString() + " ";
+        result_str += "Camera3_display" + " " + Camera3_display.ToString() + " ";
         result_str += "CameraFOVFactor" + " " + CameraFOVFactor.ToString() + " ";
 
         result_str += "GazeTime" + " " + GazeTime.ToString() + " ";

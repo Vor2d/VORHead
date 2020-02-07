@@ -40,6 +40,7 @@ public class DebugController : MonoBehaviour {
     public Text AcuityDelay_Text;
     public Camera camera1;
     public Camera camera2;
+    public Camera camera3;
     [SerializeField] private TextMesh DebugText1;
     [SerializeField] private TextMesh DebugText2;
     [SerializeField] private TextMeshPro DebugTMP1;
@@ -87,8 +88,17 @@ public class DebugController : MonoBehaviour {
             {
                 text2 += ds + "////";
             }
-            DebugTMP2.text = text2;
+            //DebugTMP2.text = text2;
             //DebugTMP1.text = GC_script.back_cal().ToString("F3");
+            string DT1 = "";
+            DT1 += camera1.transform.localEulerAngles.ToString("F2");
+            DT1 += camera2.transform.localEulerAngles.ToString("F2");
+            DT1 += camera3.transform.localEulerAngles.ToString("F2");
+            DebugText1.text = DT1;
+
+            DebugText2.text = GeneralMethods.RealToVirtual_curved(
+                DC_script.SystemSetting.Player_screen_cm,
+                DC_script.SystemSetting.Screen_width_cm, 0.0f, 0.0f).ToString("F2");
         }
     }
 
