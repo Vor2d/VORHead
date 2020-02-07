@@ -4,26 +4,26 @@ using System.Linq;
 public class AcuityGroup : MonoBehaviour
 {
     
-    private readonly Quaternion default_quat = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
+    protected readonly Quaternion default_quat = new Quaternion(1.0f, 1.0f, 1.0f, 1.0f);
 
     public enum AcuityDirections { up,right,down,left,upri,dori,dole,uple };
 
-    [SerializeField] private Canvas canvas;
-    [SerializeField] private Camera acu_camera;
-    [SerializeField] private Transform Target_TRANS;
-    [SerializeField] private Transform Background_TRANS;
-    [SerializeField] private Transform AcuitySprite_TRANS;
-    [SerializeField] private Transform AcuityIndi_TRANS;
-    [SerializeField] private Controller_Input CI_script;
-    [SerializeField] private GeneralControllerInput GCI_script;
+    [SerializeField] protected Canvas canvas;
+    [SerializeField] protected Camera acu_camera;
+    [SerializeField] protected Transform Target_TRANS;
+    [SerializeField] protected Transform Background_TRANS;
+    [SerializeField] protected Transform AcuitySprite_TRANS;
+    [SerializeField] protected Transform AcuityIndi_TRANS;
+    [SerializeField] protected Controller_Input CI_script;
+    [SerializeField] protected GeneralControllerInput GCI_script;
 
-    private bool AI_start_flag;
-    private GameController.AcuityMode acuity_mode;
-    private DataController DC_script;
-    private Sprite right_sprite;
-    private Sprite upri_sprite;
+    protected bool AI_start_flag;
+    protected GameController.AcuityMode acuity_mode;
+    protected DataController DC_script;
+    protected Sprite right_sprite;
+    protected Sprite upri_sprite;
 
-    private void Awake()
+    protected void Awake()
     {
         this.AI_start_flag = false;
         this.acuity_mode = default(GameController.AcuityMode);
@@ -33,13 +33,13 @@ public class AcuityGroup : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         turn_off_AG();
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         update_acuity_pos();
 
@@ -56,7 +56,7 @@ public class AcuityGroup : MonoBehaviour
         }
     }
 
-    private void update_acuity_pos()
+    protected void update_acuity_pos()
     {
         Vector3 pos =
                 GeneralMethods.world_to_canvas(Target_TRANS.position, acu_camera, canvas);
@@ -83,7 +83,6 @@ public class AcuityGroup : MonoBehaviour
         turn_off_AI();
         turn_off_AS();
         turn_off_BG();
-
     }
 
     public void turn_on_AG()
@@ -91,26 +90,27 @@ public class AcuityGroup : MonoBehaviour
         turn_on_BG();
     }
 
-    private void turn_off_BG()
+    protected void turn_off_BG()
     {
         Background_TRANS.gameObject.SetActive(false);
     }
 
-    private void turn_on_BG()
+    protected void turn_on_BG()
     {
         Background_TRANS.gameObject.SetActive(true);
     }
 
-    public AcuityDirections turn_on_acuity(bool random_rotate)
+    public virtual AcuityDirections turn_on_acuity(bool random_rotate,
+                                        AcuityDirections def_dir = AcuityDirections.up)
     {
         AcuityDirections dir = AcuityDirections.up;
         if (random_rotate)
         {
-            dir = rotate();
+            dir = rotate(true);
         }
         else
         {
-            AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+            dir = rotate(false, def_dir: def_dir);
         }
         turn_on_BG();
         AcuitySprite_TRANS.gameObject.SetActive(true);
@@ -128,23 +128,27 @@ public class AcuityGroup : MonoBehaviour
         AcuityIndi_TRANS.gameObject.SetActive(false);
     }
 
-    private AcuityDirections rotate()
+    protected virtual AcuityDirections rotate(bool random, AcuityDirections def_dir = AcuityDirections.up)
     {
         int random_dir = 0;
-        switch (acuity_mode)
+        if (random)
         {
-            case GameController.AcuityMode.four_dir:
-                random_dir = UnityEngine.Random.Range(0, 4);
-                break;
-            case GameController.AcuityMode.eight_dir:
-                random_dir = UnityEngine.Random.Range(0, 8);
-                break;
+            switch (acuity_mode)
+            {
+                case GameController.AcuityMode.four_dir:
+                    random_dir = UnityEngine.Random.Range(0, 4);
+                    break;
+                case GameController.AcuityMode.eight_dir:
+                    random_dir = UnityEngine.Random.Range(0, 8);
+                    break;
+            }
         }
+        else { random_dir = (int)def_dir; }
         AcuitySprite_TRANS.rotation = rotate_cal(random_dir);
         return (AcuityDirections)random_dir;
     }
 
-    private Quaternion rotate_cal(int ADir)
+    protected Quaternion rotate_cal(int ADir)
     {
         switch(acuity_mode)
         {
@@ -179,7 +183,7 @@ public class AcuityGroup : MonoBehaviour
         return Quaternion.identity;
     }
 
-    private Quaternion indicator_rotate_cal(int ADir)
+    protected Quaternion indicator_rotate_cal(int ADir)
     {
         switch (acuity_mode)
         {
@@ -216,7 +220,7 @@ public class AcuityGroup : MonoBehaviour
         AI_start_flag = true;
     }
 
-    private void acuity_indicator_VR()
+    protected void acuity_indicator_VR()
     {
         Quaternion rotate_caled = new Quaternion();
         switch(acuity_mode)
@@ -240,7 +244,7 @@ public class AcuityGroup : MonoBehaviour
         
     }
 
-    private void acuity_indicator()
+    protected void acuity_indicator()
     {
         Quaternion rotate_caled = new Quaternion();
         switch (acuity_mode)

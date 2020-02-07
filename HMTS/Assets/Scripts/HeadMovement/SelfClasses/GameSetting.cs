@@ -38,6 +38,8 @@ public class GameSetting
     public int DynaDelayRepeatNum;
     public int DynaStopThresh;
     public float SecondHeadSpeed;
+    public float Cam1Angle;
+    public float Cam2Angle;
 
     public GameSetting()
     {
@@ -75,6 +77,8 @@ public class GameSetting
         this.DynaDelayRepeatNum = 0;
         this.DynaStopThresh = Int32.MaxValue; //default as no threshold;
         this.SecondHeadSpeed = 0.0f;
+        this.Cam1Angle = 0.0f;
+        this.Cam2Angle = 0.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -158,6 +162,8 @@ public class GameSetting
         result_str += "DynaDelayRepeatNum" + " " + DynaDelayRepeatNum.ToString() + " ";
         result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
         result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
+        result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
+        result_str += "Cam2Angle" + " " + Cam2Angle.ToString("F2");
 
 
         return result_str;

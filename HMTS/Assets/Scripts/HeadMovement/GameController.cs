@@ -45,7 +45,10 @@ public class GameController : GeneralGameController {
     public GameObject HeadSParent;
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
-    public AcuityGroup AG_script;
+    public Camera Cam1;
+    public Camera Cam2;
+    //public AcuityGroup AG_script;
+    public List<AcuityGroup> AGS_list;
     [SerializeField] private Controller_Input CI_script;
     [SerializeField] private GeneralControllerInput GCI_script;
     [SerializeField] private AcuityLogSystem ALS_script;
@@ -157,9 +160,9 @@ public class GameController : GeneralGameController {
         get
         {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
-                                curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
-                                AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
-                                head_time_counter};
+                    curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
+                    AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
+                    head_time_counter};
         }
     }
 
@@ -255,8 +258,12 @@ public class GameController : GeneralGameController {
         IndiText1.GetComponent<TextMesh>().text = "";
 
         //Active another monitor;
-        if (Display.displays.Length > 1)
+        if (Display.displays.Length == 2) {Display.displays[1].Activate();}
+        else if(Display.displays.Length == 3)
+        {
             Display.displays[1].Activate();
+            Display.displays[2].Activate();
+        }
 
         if(DC_script.MSM_script.using_VR)
         {
@@ -356,6 +363,42 @@ public class GameController : GeneralGameController {
         }
     }
 
+    private void adjust_camera()
+    {
+        Vector3 virtual_rot = Vector3.zero;
+        if (!DC_script.SystemSetting.Using_curved_screen)
+        {
+            virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                                            DC_script.SystemSetting.Screen_width_cm,
+                                            0.0f,
+                                            DC_script.SystemSetting.Cam1Angle);
+        }
+        else
+        {
+            virtual_rot = GeneralMethods.RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
+                                                    DC_script.SystemSetting.Screen_width_cm,
+                                                    0.0f,
+                                                    DC_script.SystemSetting.Cam1Angle);
+        }
+        Cam1.transform.localEulerAngles = virtual_rot;
+
+        if (!DC_script.SystemSetting.Using_curved_screen)
+        {
+            virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                                            DC_script.SystemSetting.Screen_width_cm,
+                                            0.0f,
+                                            DC_script.SystemSetting.Cam2Angle);
+        }
+        else
+        {
+            virtual_rot = GeneralMethods.RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
+                                                    DC_script.SystemSetting.Screen_width_cm,
+                                                    0.0f,
+                                                    DC_script.SystemSetting.Cam2Angle);
+        }
+        Cam2.transform.localEulerAngles = virtual_rot;
+    }
+
     private void OnDestroy()
     {
         if(DC_script.MSM_script.using_VR)
@@ -375,7 +418,7 @@ public class GameController : GeneralGameController {
         //{
         //    HeadIndicator.GetComponent<Renderer>().enabled = true;
         //}
-        turn_degree_x = 0;
+        turn_degree_x = 0.0f;
         tar_CP_script.changePosition(turn_degree_x, 0.0f, 0, 0);
         GCAnimator.SetTrigger("NextStep");
         //center_rotatey = turn_degree;
@@ -763,6 +806,34 @@ public class GameController : GeneralGameController {
         }
     }
 
+    private AcuityGroup.AcuityDirections turn_on_acuity()
+    {
+        AcuityGroup.AcuityDirections dir = AcuityGroup.AcuityDirections.up;
+        int count = 0;
+        foreach(AcuityGroup AGS in AGS_list)
+        {
+            if (count == 0) { dir = AGS.turn_on_acuity(true); }
+            else { AGS.turn_on_acuity(false, def_dir: dir); }
+        }
+        return dir;
+    }
+
+    private void turn_on_AG()
+    {
+        foreach (AcuityGroup AGS in AGS_list)
+        {
+            AGS.turn_on_AG();
+        }
+    }
+
+    private void turn_off_AG()
+    {
+        foreach (AcuityGroup AGS in AGS_list)
+        {
+            AGS.turn_off_AG();
+        }
+    }
+
     private IEnumerator show_acuity(float time_dure,bool jump_next)
     {
         if(!show_acuity_flag)
@@ -771,9 +842,9 @@ public class GameController : GeneralGameController {
             update_SS();
             ALS_script.log_acuity_state(simulink_sample, "Show Acuity");
             tar_script.turn_off_all_tmesh();
-            acuity_dir = AG_script.turn_on_acuity(true);
+            acuity_dir = turn_on_acuity();
             yield return new WaitForSeconds(time_dure);
-            AG_script.turn_off_AG();
+            turn_off_AG();
             if(jump_next)
             {
                 GCAnimator.SetTrigger("NextStep");
@@ -792,9 +863,9 @@ public class GameController : GeneralGameController {
             update_SS();
             ALS_script.log_acuity_delay(simulink_sample, delay_time);
             tar_script.turn_off_all_tmesh();
-            acuity_dir = AG_script.turn_on_acuity(true);
+            acuity_dir = turn_on_acuity();
             yield return new WaitForSeconds(time_dure);
-            AG_script.turn_off_AG();
+            turn_off_AG();
             if (jump_next)
             {
                 GCAnimator.SetTrigger("NextStep");
@@ -1365,6 +1436,14 @@ public class GameController : GeneralGameController {
         set_acuity_size(curr_acuity_size);
     }
 
+    private void change_ACList_size(int size)
+    {
+        foreach(AcuityGroup AGS in AGS_list)
+        {
+            AGS.change_acuity_size(size);
+        }
+    }
+
     private void set_acuity_size(int size)
     {
         if(size >= DC_script.Acuity_sprites.Length)
@@ -1377,7 +1456,16 @@ public class GameController : GeneralGameController {
         }
         else
         {
-            AG_script.change_acuity_size(size);
+            change_ACList_size(size);
+        }
+    }
+
+    private void init_ACList(int acuity_size, GameController.AcuityMode _acuity_mode,
+                            DataController _DC_script)
+    {
+        foreach(AcuityGroup AGS in AGS_list)
+        {
+            AGS.init_acuity(acuity_size, acuity_mode, _DC_script);
         }
     }
 
@@ -1400,7 +1488,7 @@ public class GameController : GeneralGameController {
         if (UsingAcuity)
         {
             curr_acuity_size = DC_script.Current_GM.AcuitySize;
-            AG_script.init_acuity(DC_script.Current_GM.AcuitySize, acuity_mode, DC_script);
+            init_ACList(DC_script.Current_GM.AcuitySize, acuity_mode, DC_script);
             curr_A_delay = DC_script.Current_GM.PostDelayInit;
             update_SS();
             ALS_script.log_time("start", simulink_sample, DC_script.Current_GM.GameModeName.ToString());
@@ -1642,6 +1730,14 @@ public class GameController : GeneralGameController {
 
     }
 
+    private void start_AGList_AI()
+    {
+        foreach(AcuityGroup AGS in AGS_list)
+        {
+            AGS.start_AI();
+        }
+    }
+
     public void CheckController()
     {
         if (UsingAcuity)
@@ -1653,8 +1749,8 @@ public class GameController : GeneralGameController {
                 if (DC_script.SystemSetting.UseAcuityIndicator)
                 {
                     //Debug.Log("DC_script.SystemSetting.UseAcuityIndicator " + DC_script.SystemSetting.UseAcuityIndicator);
-                    AG_script.turn_on_AG();
-                    AG_script.start_AI();
+                    turn_on_AG();
+                    start_AGList_AI();
                 }
             }
         }
@@ -1888,7 +1984,7 @@ public class GameController : GeneralGameController {
     public void LeaveCheckController()
     {
         controller_flag = false;
-        AG_script.turn_off_AG();
+        turn_off_AG();
     }
 
     public static List<string> Debug_str { get; set; }
