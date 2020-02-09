@@ -60,6 +60,7 @@ public class AcuityGroup : MonoBehaviour
     {
         Vector3 pos =
                 GeneralMethods.world_to_canvas(Target_TRANS.position, acu_camera, canvas);
+        pos = Vector3Int.RoundToInt(pos);
         GetComponent<RectTransform>().localPosition = pos;
     }
 
@@ -144,7 +145,7 @@ public class AcuityGroup : MonoBehaviour
             }
         }
         else { random_dir = (int)def_dir; }
-        AcuitySprite_TRANS.rotation = rotate_cal(random_dir);
+        AcuitySprite_TRANS.localEulerAngles = Vector3Int.RoundToInt(rotate_cal_euler(random_dir));
         return (AcuityDirections)random_dir;
     }
 
@@ -181,6 +182,41 @@ public class AcuityGroup : MonoBehaviour
         }
 
         return Quaternion.identity;
+    }
+
+    protected Vector3 rotate_cal_euler(int ADir)
+    {
+        switch (acuity_mode)
+        {
+            case GameController.AcuityMode.four_dir:
+                if (ADir < 4)
+                {
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+                    return new Vector3(0.0f, 0.0f, -(ADir * 90.0f) + 90.0f);
+                }
+                else
+                {
+                    return default_quat.eulerAngles;
+                }
+            case GameController.AcuityMode.eight_dir:
+                if (ADir < 4)
+                {
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = right_sprite;
+                    return new Vector3(0.0f, 0.0f, -(ADir * 90.0f) + 90.0f);
+                }
+                else if (ADir < 8)
+                {
+                    Debug.Log("dir " + ADir);
+                    AcuitySprite_TRANS.GetComponent<SpriteRenderer>().sprite = upri_sprite;
+                    return new Vector3(0.0f, 0.0f, -((ADir - 4) * 90.0f));
+                }
+                else
+                {
+                    return default_quat.eulerAngles;
+                }
+        }
+
+        return Vector3.zero;
     }
 
     protected Quaternion indicator_rotate_cal(int ADir)

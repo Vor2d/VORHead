@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class DebugController : MonoBehaviour {
+public class DebugController : MonoBehaviour
+{
 
     //Debug Tests;
     public float RotateDegree = 0.0f;
@@ -41,23 +42,35 @@ public class DebugController : MonoBehaviour {
     public Camera camera1;
     public Camera camera2;
     public Camera camera3;
+    public Canvas canvas1;
+    public Transform target_TRANS;
     [SerializeField] private TextMesh DebugText1;
     [SerializeField] private TextMesh DebugText2;
     [SerializeField] private TextMeshPro DebugTMP1;
     [SerializeField] private TextMeshPro DebugTMP2;
 
+    public static DebugController Instance;
 
     private DataController DC_script;
+    private Dictionary<string, string> text1Hash;
 
-	// Use this for initialization
-	void Start () {
+    private void Awake()
+    {
+        Instance = this;
+        text1Hash = new Dictionary<string, string>();
+    }
+
+    // Use this for initialization
+    void Start()
+    {
         DC_script = GameObject.Find("DataController").GetComponent<DataController>();
 
         init_debug();
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         show_info();
 
         debug_group();
@@ -73,15 +86,33 @@ public class DebugController : MonoBehaviour {
 
     private void init_debug()
     {
-        if(UsingDebug)
+        if (UsingDebug)
         {
             //GC_script.test1();
         }
     }
 
+    private void gener_text1()
+    {
+        string DT1 = "";
+        DT1 += camera1.transform.eulerAngles.ToString("F4");
+        DT1 += camera2.transform.eulerAngles.ToString("F4");
+        DT1 += camera3.transform.eulerAngles.ToString("F4");
+        DebugText1.text = DT1;
+
+        DT1 = "";
+        DT1 += target_TRANS.eulerAngles.ToString("F4");
+        DebugText1.text += DT1;
+
+        foreach (string text in text1Hash.Values)
+        {
+            DebugText1.text += text;
+        }
+    }
+
     private void debug_group()
     {
-        if(UsingDebug)
+        if (UsingDebug)
         {
             string text2 = "";
             foreach (string ds in GameController.Debug_str)
@@ -90,11 +121,8 @@ public class DebugController : MonoBehaviour {
             }
             //DebugTMP2.text = text2;
             //DebugTMP1.text = GC_script.back_cal().ToString("F3");
-            string DT1 = "";
-            DT1 += camera1.transform.localEulerAngles.ToString("F2");
-            DT1 += camera2.transform.localEulerAngles.ToString("F2");
-            DT1 += camera3.transform.localEulerAngles.ToString("F2");
-            DebugText1.text = DT1;
+
+            gener_text1();
 
             DebugText2.text = GeneralMethods.RealToVirtual_curved(
                 DC_script.SystemSetting.Player_screen_cm,
@@ -153,5 +181,20 @@ public class DebugController : MonoBehaviour {
 
         RealToVirtualTest_Text.text = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
                                     RealToVirtualTest.x, RealToVirtualTest.y).ToString("F2");
+    }
+
+    public void add_text1(string str)
+    {
+        DebugText1.text += str;
+    }
+
+    public void update_text1(string str,string id)
+    {
+        text1Hash[id] = str;
+    }
+
+    public void clear_text1()
+    {
+        text1Hash.Clear();
     }
 }

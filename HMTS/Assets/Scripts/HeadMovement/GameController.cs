@@ -382,7 +382,7 @@ public class GameController : GeneralGameController {
                                                     0.0f,
                                                     DC_script.SystemSetting.Cam1Angle);
         }
-        GCS_script.camera1.transform.eulerAngles = virtual_rot;
+        GCS_script.camera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
 
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
@@ -398,7 +398,7 @@ public class GameController : GeneralGameController {
                                                     0.0f,
                                                     DC_script.SystemSetting.Cam2Angle);
         }
-        GCS_script.camera3.transform.eulerAngles = virtual_rot;
+        GCS_script.camera3.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
     }
 
     private void OnDestroy()
@@ -816,6 +816,7 @@ public class GameController : GeneralGameController {
         {
             if (count == 0) { dir = AGS.turn_on_acuity(true); }
             else { AGS.turn_on_acuity(false, def_dir: dir); }
+            count++;
         }
         return dir;
     }

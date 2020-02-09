@@ -1142,7 +1142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 114033028}
   - component: {fileID: 114033029}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1720,7 +1720,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 100
+  m_Depth: -100
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -2346,7 +2346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 256203457}
   - component: {fileID: 256203458}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AcuitySprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2663,7 +2663,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &330646769
 Transform:
   m_ObjectHideFlags: 0
@@ -4270,7 +4270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!102 &485104768
 TextMesh:
   serializedVersion: 3
@@ -5972,10 +5972,10 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 5943
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
+  m_TargetDisplay: 2
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -6736,7 +6736,8 @@ GameObject:
   m_Component:
   - component: {fileID: 904713020}
   - component: {fileID: 904713021}
-  m_Layer: 0
+  - component: {fileID: 904713022}
+  m_Layer: 11
   m_Name: AcuityGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6778,13 +6779,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 925483781}
-  acu_camera: {fileID: 205414024}
+  acu_camera: {fileID: 1303790925}
   Target_TRANS: {fileID: 980530794}
   Background_TRANS: {fileID: 114033028}
   AcuitySprite_TRANS: {fileID: 1274102992}
   AcuityIndi_TRANS: {fileID: 1806064471}
   CI_script: {fileID: 1373143160}
   GCI_script: {fileID: 825349163}
+--- !u!222 &904713022
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904713019}
+  m_CullTransparentMesh: 0
 --- !u!1 &913016689
 GameObject:
   m_ObjectHideFlags: 0
@@ -6882,7 +6891,7 @@ GameObject:
   - component: {fileID: 925483779}
   - component: {fileID: 925483781}
   - component: {fileID: 925483780}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: AcuityCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6941,7 +6950,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 205414024}
+  m_Camera: {fileID: 1303790925}
   m_PlaneDistance: 1
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
@@ -7399,7 +7408,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1012910732
 Transform:
   m_ObjectHideFlags: 0
@@ -7610,7 +7619,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1046359133}
   - component: {fileID: 1046359134}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AcuityGroup2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7652,7 +7661,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1169381813}
-  acu_camera: {fileID: 1303790925}
+  acu_camera: {fileID: 822404578}
   Target_TRANS: {fileID: 980530794}
   Background_TRANS: {fileID: 1812360603}
   AcuitySprite_TRANS: {fileID: 256203457}
@@ -7766,7 +7775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotateDegree: 0
-  UsingDebug: 1
+  UsingDebug: 0
   GC_script: {fileID: 913016690}
   HS_script: {fileID: 773851915}
   VRLS_script: {fileID: 370484276}
@@ -7789,6 +7798,8 @@ MonoBehaviour:
   camera1: {fileID: 205414024}
   camera2: {fileID: 365761175}
   camera3: {fileID: 1303790925}
+  canvas1: {fileID: 925483781}
+  target_TRANS: {fileID: 904713020}
   DebugText1: {fileID: 1867424266}
   DebugText2: {fileID: 485104768}
   DebugTMP1: {fileID: 144918656}
@@ -8078,7 +8089,7 @@ GameObject:
   - component: {fileID: 1169381814}
   - component: {fileID: 1169381813}
   - component: {fileID: 1169381812}
-  m_Layer: 5
+  m_Layer: 12
   m_Name: AcuityCanvas2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8117,7 +8128,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 1303790925}
+  m_Camera: {fileID: 822404578}
   m_PlaneDistance: 1
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
@@ -8558,7 +8569,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1274102992}
   - component: {fileID: 1274102993}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AcuitySprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9024,7 +9035,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1303790922}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -9062,10 +9073,10 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3895
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 2
+  m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
   m_AllowMSAA: 1
@@ -12576,7 +12587,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1806064471}
   - component: {fileID: 1806064472}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: AcuityIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12660,7 +12671,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1812360603}
   - component: {fileID: 1812360604}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: BackGround
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13162,7 +13173,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1867424265
 Transform:
   m_ObjectHideFlags: 0
@@ -13623,7 +13634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1942293728
 Transform:
   m_ObjectHideFlags: 0
@@ -13970,7 +13981,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1988430574}
   - component: {fileID: 1988430575}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AcuityIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
