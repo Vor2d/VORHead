@@ -357,7 +357,7 @@ public class GameController : GeneralGameController {
         if(check_double_speed_flag)
         {
             head_speed_y = CD_script.currentHeadVelocity.z;
-            if(head_speed_y >= DC_script.SystemSetting.SecondHeadSpeed)
+            if(Math.Abs(head_speed_y) >= DC_script.SystemSetting.SecondHeadSpeed)
             {
                 double_speed_passed_flag = true;
                 check_double_speed_flag = false;
@@ -2047,6 +2047,7 @@ public class GameController : GeneralGameController {
             {
                 double_speed_passed_flag = false;
                 check_double_speed_flag = false;
+                error_message = "Too Slow!!!";
                 GCAnimator.SetTrigger("Reset");
             }
         }

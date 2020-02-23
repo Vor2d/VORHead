@@ -6,6 +6,8 @@ public class ChangePosition : MonoBehaviour {
 
     private enum direction { left, right };
 
+    [SerializeField] private bool UsingLookAt;
+
     private float init_dist;
 
     // Use this for initialization
@@ -45,7 +47,7 @@ public class ChangePosition : MonoBehaviour {
                 GeneralMethods.PositionCal(init_dist, ang_degX, ang_degY, direcX, direcY);
         //Debug.Log("changePosition " + ang_degX);
 
-        //transform.LookAt(Camera.main.transform);
+        if (UsingLookAt) { transform.LookAt(Camera.main.transform); }
     }
 
     public void changePosition(float ang_degX, float ang_degY)

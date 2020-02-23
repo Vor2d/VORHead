@@ -323,6 +323,19 @@ public static class GeneralMethods {
         return destnation;
     }
 
+    //public static float DestinationCalSphere(float init_dist, float ang_deg, int direc)
+    //{
+    //    if ((ang_deg + 90) % 180 == 0)
+    //    {
+    //        Debug.Log("Angle can not be 0 or 180");
+    //        return float.MaxValue;
+    //    }
+
+    //    float ang_rand = ang_deg * Mathf.PI / 180.0f;
+
+
+    //}
+
     private static float DestinationCal(float init_dist, float ang_deg)
     {
         if ((ang_deg + 90) % 180 == 0)
@@ -343,6 +356,14 @@ public static class GeneralMethods {
         return new Vector3(DestinationCal(init_dist, ang_degX, direcX),
                             DestinationCal(init_dist, ang_degY, direcY),
                             init_dist);
+    }
+
+    public static Vector3 PositionCalSphere(float init_dist, float ang_degX,
+        float ang_degY, int direcX, int direcY)
+    {
+        return new Vector3(DestinationCal(init_dist, ang_degX, direcX),
+                    DestinationCal(init_dist, ang_degY, direcY),
+                    init_dist);
     }
 
     public static Vector3 PositionCal(float init_dist, float ang_degX, float ang_degY)

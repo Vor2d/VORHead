@@ -409,4 +409,9 @@ public class GameController_Setting : MonoBehaviour {
     {
         GeneralMethods.send_udp(SIM_RZ_IP, SIM_RZ_port, SIM_RZ_byte);
     }
+
+    public void ExitButton()
+    {
+        Application.Quit();
+    }
 }

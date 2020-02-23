@@ -86,13 +86,13 @@ public class CoilData : MonoBehaviour {
 					float rv = BitConverter.ToSingle(receiveBytes, offset + 36);  // right eye vertical
 					float lh = BitConverter.ToSingle(receiveBytes, offset + 40);  // left eye horizontal
 					float lv = BitConverter.ToSingle(receiveBytes, offset + 44);  // left eye vertical
-					float hdx = BitConverter.ToSingle(receiveBytes, offset + 48);
-					float hdy = BitConverter.ToSingle(receiveBytes, offset + 52);
-					float hdz = BitConverter.ToSingle(receiveBytes, offset + 56);
-					float htx = BitConverter.ToSingle(receiveBytes, offset + 60);
-					float hty = BitConverter.ToSingle(receiveBytes, offset + 64);
-					float htz = BitConverter.ToSingle(receiveBytes, offset + 68);
-					offset += 72;
+                    float hdx = BitConverter.ToSingle(receiveBytes, offset + 48);
+                    float hdy = BitConverter.ToSingle(receiveBytes, offset + 52);
+                    float hdz = BitConverter.ToSingle(receiveBytes, offset + 56);
+                    float htx = BitConverter.ToSingle(receiveBytes, offset + 60);
+                    float hty = BitConverter.ToSingle(receiveBytes, offset + 64);
+                    float htz = BitConverter.ToSingle(receiveBytes, offset + 68);
+                    offset += 72;
 
 					currentHeadOrientation = new Quaternion(x, y, z, w);
 					currentHeadVelocity = new Vector3(vx, vy, vz);
