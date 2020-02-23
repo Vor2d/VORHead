@@ -62,7 +62,7 @@ public class HeadSimulator : MonoBehaviour {
                                                     RRotateDegree.y);
                 transform.localEulerAngles = VirtualRDeg;
             }
-            CP_script.changePosition(VirtualRDeg.y, VirtualRDeg.x);
+            //CP_script.changePosition(VirtualRDeg.y, VirtualRDeg.x);
         }
         if(DC_script.using_VR)
         {

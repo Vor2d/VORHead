@@ -299,7 +299,7 @@ public class AcuityGroup : MonoBehaviour
         else
         {
             AcuityIndi_TRANS.gameObject.SetActive(true);
-            AcuityIndi_TRANS.rotation = rotate_caled;
+            AcuityIndi_TRANS.localRotation = rotate_caled;
         }
 
     }
