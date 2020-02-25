@@ -7,6 +7,7 @@ public class ChangePosition : MonoBehaviour {
     private enum direction { left, right };
 
     [SerializeField] private bool UsingLookAt;
+    [SerializeField] private bool UsingSphere;
 
     private float init_dist;
 
@@ -43,8 +44,17 @@ public class ChangePosition : MonoBehaviour {
     //x is horizontal, y is vertical;
     public void changePosition(float ang_degX, float ang_degY, int direcX, int direcY)
     {
-        transform.position =
+        if(!UsingSphere)
+        {
+            transform.position =
                 GeneralMethods.PositionCal(init_dist, ang_degX, ang_degY, direcX, direcY);
+        }
+        else
+        {
+            transform.position =
+                GeneralMethods.PositionCalSphere(init_dist, ang_degX, ang_degY, direcX, direcY);
+        }
+
         //Debug.Log("changePosition " + ang_degX);
 
         if (UsingLookAt) { transform.LookAt(Camera.main.transform); }

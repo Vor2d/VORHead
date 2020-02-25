@@ -5270,6 +5270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 0
+  UsingSphere: 0
 --- !u!23 &701531089
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7106,6 +7107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 1
+  UsingSphere: 1
 --- !u!1001 &985493174
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7291,6 +7293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 0
+  UsingSphere: 0
 --- !u!1 &1002722131
 GameObject:
   m_ObjectHideFlags: 0
@@ -10293,6 +10296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 0
+  UsingSphere: 0
 --- !u!1 &1424569857
 GameObject:
   m_ObjectHideFlags: 0
@@ -13631,6 +13635,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 0
+  UsingSphere: 0
 --- !u!23 &1908726925
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -14387,6 +14392,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   UsingLookAt: 0
+  UsingSphere: 0
 --- !u!23 &2039279158
 MeshRenderer:
   m_ObjectHideFlags: 0
