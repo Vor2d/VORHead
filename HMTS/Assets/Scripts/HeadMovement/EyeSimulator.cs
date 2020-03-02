@@ -40,7 +40,7 @@ public class EyeSimulator : MonoBehaviour
 
     private void Update()
     {
-        simulate_eye();
+        //simulate_eye();
 
     }
 
@@ -86,17 +86,17 @@ public class EyeSimulator : MonoBehaviour
         combined_RVDegr = HS_script.TrueHeadRR.x + real_vert_degree;
         if (DC_script.SystemSetting.Using_curved_screen)
         {
-            virtual_rotate = GeneralMethods.RealToVirtual_curved(
-                                DC_script.SystemSetting.Player_screen_cm,
-                                DC_script.SystemSetting.Screen_width_cm,
-                                combined_RVDegr, combined_RHDegr);
+            //virtual_rotate = GeneralMethods.RealToVirtual_curved(
+            //                    DC_script.SystemSetting.Player_screen_cm,
+            //                    DC_script.SystemSetting.Screen_width_cm,
+            //                    combined_RVDegr, combined_RHDegr);
         }
         else
         {
-            virtual_rotate = GeneralMethods.RealToVirtual(
-                                DC_script.SystemSetting.Player_screen_cm,
-                                DC_script.SystemSetting.Screen_width_cm,
-                                combined_RVDegr, combined_RHDegr);
+            //virtual_rotate = GeneralMethods.RealToVirtual(
+            //                    DC_script.SystemSetting.Player_screen_cm,
+            //                    DC_script.SystemSetting.Screen_width_cm,
+            //                    combined_RVDegr, combined_RHDegr);
         }
         transform.localEulerAngles = virtual_rotate;
         CP_script.changePosition(virtual_rotate.y, virtual_rotate.x);

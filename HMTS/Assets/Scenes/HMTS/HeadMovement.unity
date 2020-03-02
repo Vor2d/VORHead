@@ -6850,6 +6850,10 @@ MonoBehaviour:
   AD_Liter: 0
   TOBJ_def_col: {r: 1, g: 1, b: 0, a: 0}
   TOBJ_rea_col: {r: 0, g: 1, b: 0, a: 0}
+  MainCamera: {fileID: 205414024}
+  SettingCamera: {fileID: 365761175}
+  CapCamera1: {fileID: 1303790925}
+  CapCamera2: {fileID: 822404578}
 --- !u!4 &913016691
 Transform:
   m_ObjectHideFlags: 0

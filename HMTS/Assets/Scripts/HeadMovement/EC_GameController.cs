@@ -175,17 +175,17 @@ public class EC_GameController : MonoBehaviour {
             Vector3 virtual_degree = new Vector3();
             if (!DC_script.SystemSetting.Using_curved_screen)
             {
-                virtual_degree = GeneralMethods.
-                                RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
-                                                DC_script.SystemSetting.Screen_width_cm,
-                                                turn_degre_y,turn_direc_x);
+                //virtual_degree = GeneralMethods.
+                //                RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
+                //                                DC_script.SystemSetting.Screen_width_cm,
+                //                                turn_degre_y,turn_direc_x);
             }
             else
             {
-                virtual_degree = GeneralMethods.
-                        RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
-                                                DC_script.SystemSetting.Screen_width_cm,
-                                                turn_degre_y,turn_degre_x);
+                //virtual_degree = GeneralMethods.
+                //        RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
+                //                                DC_script.SystemSetting.Screen_width_cm,
+                //                                turn_degre_y,turn_degre_x);
             }
             TCP_script.changePosition(virtual_degree.y, virtual_degree.x, 
                                         turn_direc_x, turn_direc_y);

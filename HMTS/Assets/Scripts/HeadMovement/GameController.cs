@@ -45,7 +45,6 @@ public class GameController : GeneralGameController {
     public GameObject HeadSParent;
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
-    //public AcuityGroup AG_script;
     public List<AcuityGroup> AGS_list;
     [SerializeField] private Controller_Input CI_script;
     [SerializeField] private GeneralControllerInput GCI_script;
@@ -53,6 +52,10 @@ public class GameController : GeneralGameController {
     [SerializeField] private int AD_Liter;
     [SerializeField] private Color TOBJ_def_col;
     [SerializeField] private Color TOBJ_rea_col;
+    [SerializeField] private Camera MainCamera;
+    [SerializeField] private Camera SettingCamera;
+    [SerializeField] private Camera CapCamera1;
+    [SerializeField] private Camera CapCamera2;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -371,34 +374,48 @@ public class GameController : GeneralGameController {
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
-                                            DC_script.SystemSetting.Screen_width_cm,
-                                            0.0f,
-                                            DC_script.SystemSetting.Cam1Angle);
+                            DC_script.SystemSetting.Screen_width_cm,
+                            0.0f,
+                            DC_script.SystemSetting.Cam1Angle,
+                            DC_script.SystemSetting.ScreenResoV,
+                            DC_script.SystemSetting.ScreenResoH);
         }
         else
         {
             virtual_rot = GeneralMethods.RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
-                                                    DC_script.SystemSetting.Screen_width_cm,
-                                                    0.0f,
-                                                    DC_script.SystemSetting.Cam1Angle);
+                            DC_script.SystemSetting.Screen_width_cm,
+                            0.0f,
+                            DC_script.SystemSetting.Cam1Angle,
+                            DC_script.SystemSetting.ScreenResoV,
+                            DC_script.SystemSetting.ScreenResoH,
+                            scale: DC_script.SystemSetting.RotationScale);
         }
-        GCS_script.camera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
+        CapCamera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
 
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
-                                            DC_script.SystemSetting.Screen_width_cm,
-                                            0.0f,
-                                            DC_script.SystemSetting.Cam2Angle);
+                            DC_script.SystemSetting.Screen_width_cm,
+                            0.0f,
+                            DC_script.SystemSetting.Cam2Angle,
+                            DC_script.SystemSetting.ScreenResoV,
+                            DC_script.SystemSetting.ScreenResoH);
         }
         else
         {
             virtual_rot = GeneralMethods.RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
-                                                    DC_script.SystemSetting.Screen_width_cm,
-                                                    0.0f,
-                                                    DC_script.SystemSetting.Cam2Angle);
+                            DC_script.SystemSetting.Screen_width_cm,
+                            0.0f,
+                            DC_script.SystemSetting.Cam2Angle,
+                            DC_script.SystemSetting.ScreenResoV,
+                            DC_script.SystemSetting.ScreenResoH,
+                            scale: DC_script.SystemSetting.RotationScale);
         }
-        GCS_script.camera3.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
+        CapCamera2.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
+        MainCamera.fieldOfView = DC_script.SystemSetting.MainCameraFOV;
+        SettingCamera.fieldOfView = DC_script.SystemSetting.Camera2FOV;
+        CapCamera1.fieldOfView = DC_script.SystemSetting.Camera1FOV;
+        CapCamera2.fieldOfView = DC_script.SystemSetting.Camera3FOV;
     }
 
     private void OnDestroy()
@@ -569,7 +586,9 @@ public class GameController : GeneralGameController {
                 virtual_degree = GeneralMethods.
                         RealToVirtualy_curved(DC_script.SystemSetting.Player_screen_cm,
                                                 DC_script.SystemSetting.Screen_width_cm,
-                                                turn_degre);
+                                                turn_degre,
+                                                DC_script.SystemSetting.ScreenResoH,
+                                                scale: DC_script.SystemSetting.RotationScale);
             }
 
             tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direc, 0);

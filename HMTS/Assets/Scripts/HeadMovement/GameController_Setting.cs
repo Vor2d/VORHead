@@ -95,7 +95,7 @@ public class GameController_Setting : MonoBehaviour {
 
         update_page1();
 
-        set_cam_fov(camera1, camera2);
+        //set_cam_fov(camera1, camera2);
     }
 
     // Update is called once per frame
@@ -106,7 +106,7 @@ public class GameController_Setting : MonoBehaviour {
     private void set_cam_fov(Camera Mcamera,Camera Scamera)
     {
         float fov = Mcamera.fieldOfView;
-        Scamera.fieldOfView = fov * DC_script.SystemSetting.CameraFOVFactor;
+        //Scamera.fieldOfView = fov * DC_script.SystemSetting.CameraFOVFactor;
     }
 
     public void ToFinish()

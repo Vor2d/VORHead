@@ -50,7 +50,9 @@ public class HeadSimulator : MonoBehaviour {
                                     RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
                                                     DC_script.SystemSetting.Screen_width_cm,
                                                     RRotateDegree.x,
-                                                    RRotateDegree.y);
+                                                    RRotateDegree.y,
+                                                    DC_script.SystemSetting.ScreenResoV,
+                                                    DC_script.SystemSetting.ScreenResoH);
                 transform.localEulerAngles = VirtualRDeg;
             }
             else
@@ -59,7 +61,10 @@ public class HeadSimulator : MonoBehaviour {
                             RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
                                                     DC_script.SystemSetting.Screen_width_cm,
                                                     RRotateDegree.x,
-                                                    RRotateDegree.y);
+                                                    RRotateDegree.y,
+                                                    DC_script.SystemSetting.ScreenResoV,
+                                                    DC_script.SystemSetting.ScreenResoH,
+                                                    scale: DC_script.SystemSetting.RotationScale);
                 transform.localEulerAngles = VirtualRDeg;
             }
             //CP_script.changePosition(VirtualRDeg.y, VirtualRDeg.x);

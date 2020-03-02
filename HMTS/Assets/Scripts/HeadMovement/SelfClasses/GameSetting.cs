@@ -10,9 +10,13 @@ public class GameSetting
     public bool Using_curved_screen;
     public float Player_screen_cm;
     public float Screen_width_cm;
-    public float CameraFOVFactor;
     public float MainCameraFOV;
+    public float Camera1FOV;
+    public float Camera2FOV;
+    public float Camera3FOV;
     public float MCPPI;
+    public int ScreenResoH;
+    public int ScreenResoV;
 
     public float GazeTime;
     public float RandomGazeTime;
@@ -43,6 +47,7 @@ public class GameSetting
     public float SecondHeadSpeed;
     public float Cam1Angle;
     public float Cam2Angle;
+    public float RotationScale;
 
     public GameSetting()
     {
@@ -52,8 +57,10 @@ public class GameSetting
         this.Using_curved_screen = true;
         this.Player_screen_cm = 100.0f;
         this.Screen_width_cm = 100.0f;
-        this.CameraFOVFactor = 1.0f;
         this.MainCameraFOV = 120.0f;
+        this.Camera1FOV = 60.0f;
+        this.Camera2FOV = 60.0f;
+        this.Camera3FOV = 60.0f;
         this.MCPPI = 80.6f;
 
         this.GazeTime = 2.0f;
@@ -85,6 +92,7 @@ public class GameSetting
         this.SecondHeadSpeed = 0.0f;
         this.Cam1Angle = 0.0f;
         this.Cam2Angle = 0.0f;
+        this.RotationScale = 1.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -142,7 +150,9 @@ public class GameSetting
         result_str += "Camera1_display" + " " + Camera1_display.ToString() + " ";
         result_str += "Camera2_display" + " " + Camera2_display.ToString() + " ";
         result_str += "Camera3_display" + " " + Camera3_display.ToString() + " ";
-        result_str += "CameraFOVFactor" + " " + CameraFOVFactor.ToString() + " ";
+        result_str += "Camera1FOV" + " " + Camera1FOV.ToString() + " ";
+        result_str += "Camera2FOV" + " " + Camera2FOV.ToString() + " ";
+        result_str += "Camera3FOV" + " " + Camera3FOV.ToString() + " ";
         result_str += "MainCameraFOV" + " " + MainCameraFOV.ToString() + " ";
         result_str += "MCPPI" + " " + MCPPI.ToString() + " ";
 
@@ -173,6 +183,7 @@ public class GameSetting
         result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
         result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
         result_str += "Cam2Angle" + " " + Cam2Angle.ToString("F2");
+        result_str += "RotationScale" + " " + RotationScale.ToString("F2");
 
 
         return result_str;

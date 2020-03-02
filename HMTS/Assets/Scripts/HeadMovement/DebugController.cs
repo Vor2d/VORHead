@@ -123,10 +123,6 @@ public class DebugController : MonoBehaviour
             //DebugTMP1.text = GC_script.back_cal().ToString("F3");
 
             gener_text1();
-
-            DebugText2.text = GeneralMethods.RealToVirtual_curved(
-                DC_script.SystemSetting.Player_screen_cm,
-                DC_script.SystemSetting.Screen_width_cm, 0.0f, 0.0f).ToString("F2");
         }
     }
 
@@ -173,14 +169,14 @@ public class DebugController : MonoBehaviour
         //    new Vector2(DebugTargetDegree.y, DebugTargetDegree.x);
 
         //HS_script.TrueHeadRR = new Vector3(3.0f, -10.0f, 0.0f);
-        Vector3 Debug_taget = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
-                                DebugTargetDegree.x, DebugTargetDegree.y);
-        Debug_taget_Text.text = Debug_taget.ToString("F2");
-        DebugTarget_TRANS.GetComponent<ChangePosition>().changePosition(
-                                    Debug_taget.y, Debug_taget.x);
+        //Vector3 Debug_taget = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
+        //                        DebugTargetDegree.x, DebugTargetDegree.y);
+        //Debug_taget_Text.text = Debug_taget.ToString("F2");
+        //DebugTarget_TRANS.GetComponent<ChangePosition>().changePosition(
+        //                            Debug_taget.y, Debug_taget.x);
 
-        RealToVirtualTest_Text.text = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
-                                    RealToVirtualTest.x, RealToVirtualTest.y).ToString("F2");
+        //RealToVirtualTest_Text.text = GeneralMethods.RealToVirtual_curved(180.0f, 121.0f,
+        //                            RealToVirtualTest.x, RealToVirtualTest.y).ToString("F2");
     }
 
     public void add_text1(string str)
