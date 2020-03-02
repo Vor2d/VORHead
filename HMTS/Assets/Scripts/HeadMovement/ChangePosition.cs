@@ -42,8 +42,9 @@ public class ChangePosition : MonoBehaviour {
     //}
 
     //x is horizontal, y is vertical;
-    public void changePosition(float ang_degX, float ang_degY, int direcX, int direcY)
+    public void changePosition(float ang_degX, float ang_degY, int direcX, int direcY,float scale = 1.0f)
     {
+        init_dist *= scale;
         if(!UsingSphere)
         {
             transform.position =

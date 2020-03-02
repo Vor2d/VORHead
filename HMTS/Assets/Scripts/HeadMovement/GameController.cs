@@ -74,6 +74,7 @@ public class GameController : GeneralGameController {
     public int section_number { get; set; }
     public int loop_iter { get; set; }
     public bool TargetTimerFlag { get; set; }
+    public float CamScale { get; set; }
 
 
     //Scripts;
@@ -253,6 +254,9 @@ public class GameController : GeneralGameController {
         this.last_AC_size = 0;
         this.check_double_speed_flag = false;
         this.double_speed_passed_flag = false;
+        this.CamScale = 1.0f;
+
+        CamScale = 60.0f / DC_script.SystemSetting.Camera1FOV;
 
         Debug_str = new List<string>();
 
@@ -438,12 +442,12 @@ public class GameController : GeneralGameController {
         //    HeadIndicator.GetComponent<Renderer>().enabled = true;
         //}
         turn_degree_x = 0.0f;
-        tar_CP_script.changePosition(turn_degree_x, 0.0f, 0, 0);
+        tar_CP_script.changePosition(turn_degree_x, 0.0f, 0, 0,scale:CamScale);
         GCAnimator.SetTrigger("NextStep");
         //center_rotatey = turn_degree;
         last_rot_ang_dir = new Vector2(0.0f, 1);
         //LPI_script.changePosition(last_rot_ang_dir.x, (int)last_rot_ang_dir.y);
-        LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y , 0);
+        LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y , 0,scale:CamScale);
     }
 
     public void Gaze(HMTS_enum.GazeTarget gazeTarget)
@@ -591,12 +595,12 @@ public class GameController : GeneralGameController {
                                                 scale: DC_script.SystemSetting.RotationScale);
             }
 
-            tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direc, 0);
+            tar_CP_script.changePosition(virtual_degree, 0.0f, turn_direc, 0,scale:CamScale);
             return virtual_degree;
         }
         if (DC_script.using_VR)
         {
-            tar_CP_script.changePosition(turn_degre, 0.0f, turn_direc, 0);
+            tar_CP_script.changePosition(turn_degre, 0.0f, turn_direc, 0,scale:CamScale);
             return turn_degre;
         }
         return turn_degre;
@@ -1042,14 +1046,14 @@ public class GameController : GeneralGameController {
         if (trial_iter < 0)
         {
             last_rot_ang_dir = new Vector2(0.0f, 0.0f);
-            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0);
+            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0,scale:CamScale);
             trial_iter++;
             GCAnimator.SetTrigger("FirstLoopNext");
         }
         else
         {
             last_rot_ang_dir = current_rot_ang_dir_x;
-            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0);
+            LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y, 0,scale:CamScale);
             trial_iter++;
             if (trial_iter >= turn_data.Count)
             {
@@ -1590,7 +1594,7 @@ public class GameController : GeneralGameController {
 
     public void ToReturnPosition()
     {
-        tar_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y,0);
+        tar_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y,0,scale:CamScale);
 
         GCAnimator.SetTrigger("NextStep");
     }

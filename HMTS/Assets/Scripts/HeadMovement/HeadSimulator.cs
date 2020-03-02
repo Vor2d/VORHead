@@ -10,6 +10,8 @@ public class HeadSimulator : MonoBehaviour {
     public Vector3 TrueHeadRR { get; set; }
     public CoilData CD_script;
     public Vector3 VirtualRDeg { get; set; }
+
+    [SerializeField] private GameController GC_script;
     [SerializeField] private Transform HeadIndicator_TRANS;
 
     private DataController DC_script;
@@ -28,6 +30,8 @@ public class HeadSimulator : MonoBehaviour {
         this.TrueHeadRR = new Vector3();
         this.VirtualRDeg = new Vector3();
         this.CP_script = HeadIndicator_TRANS.GetComponent<ChangePosition>();
+
+        HeadIndicator_TRANS.localPosition *= GC_script.CamScale;
     }
 	
 	// Update is called once per frame
