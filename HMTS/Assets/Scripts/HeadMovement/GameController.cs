@@ -46,6 +46,7 @@ public class GameController : GeneralGameController {
     public GameObject LogSystem;
     public GameController_Setting GCS_script;
     public List<AcuityGroup> AGS_list;
+    public bool Using1to1;
     [SerializeField] private Controller_Input CI_script;
     [SerializeField] private GeneralControllerInput GCI_script;
     [SerializeField] private AcuityLogSystem ALS_script;
@@ -56,6 +57,7 @@ public class GameController : GeneralGameController {
     [SerializeField] private Camera SettingCamera;
     [SerializeField] private Camera CapCamera1;
     [SerializeField] private Camera CapCamera2;
+    
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -375,6 +377,7 @@ public class GameController : GeneralGameController {
     private void adjust_camera()
     {
         Vector3 virtual_rot = Vector3.zero;
+        if (Using1to1) { virtual_rot = new Vector3(0.0f,DC_script.SystemSetting.Cam1Angle,0.0f); }
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
@@ -396,12 +399,13 @@ public class GameController : GeneralGameController {
         }
         CapCamera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
 
+        if (Using1to1) { virtual_rot = new Vector3(0.0f, DC_script.SystemSetting.Cam3Angle, 0.0f); }
         if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
                             DC_script.SystemSetting.Screen_width_cm,
                             0.0f,
-                            DC_script.SystemSetting.Cam2Angle,
+                            DC_script.SystemSetting.Cam3Angle,
                             DC_script.SystemSetting.ScreenResoV,
                             DC_script.SystemSetting.ScreenResoH);
         }
@@ -410,7 +414,7 @@ public class GameController : GeneralGameController {
             virtual_rot = GeneralMethods.RealToVirtual_curved(DC_script.SystemSetting.Player_screen_cm,
                             DC_script.SystemSetting.Screen_width_cm,
                             0.0f,
-                            DC_script.SystemSetting.Cam2Angle,
+                            DC_script.SystemSetting.Cam3Angle,
                             DC_script.SystemSetting.ScreenResoV,
                             DC_script.SystemSetting.ScreenResoH,
                             scale: DC_script.SystemSetting.RotationScale);
@@ -578,7 +582,8 @@ public class GameController : GeneralGameController {
         if (DC_script.using_coil)
         {
             float virtual_degree = 0.0f;
-            if (!DC_script.SystemSetting.Using_curved_screen)
+            if(Using1to1) {virtual_degree = turn_degre;}
+            else if (!DC_script.SystemSetting.Using_curved_screen)
             {
                 virtual_degree = GeneralMethods.
                                 RealToVirtualy(DC_script.SystemSetting.Player_screen_cm,

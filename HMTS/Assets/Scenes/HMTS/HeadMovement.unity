@@ -5641,6 +5641,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CD_script: {fileID: 499942473}
+  GC_script: {fileID: 913016690}
   HeadIndicator_TRANS: {fileID: 1420746669}
 --- !u!114 &773851916
 MonoBehaviour:
@@ -6844,6 +6845,7 @@ MonoBehaviour:
   AGS_list:
   - {fileID: 904713021}
   - {fileID: 1046359134}
+  Using1to1: 1
   CI_script: {fileID: 1373143160}
   GCI_script: {fileID: 825349163}
   ALS_script: {fileID: 370484280}
@@ -7296,8 +7298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6911767a674efc40892d87bb270a304, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsingLookAt: 0
-  UsingSphere: 0
+  UsingLookAt: 1
+  UsingSphere: 1
 --- !u!1 &1002722131
 GameObject:
   m_ObjectHideFlags: 0

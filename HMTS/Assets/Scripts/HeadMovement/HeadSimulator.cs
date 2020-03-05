@@ -48,7 +48,8 @@ public class HeadSimulator : MonoBehaviour {
 
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
-            if (!DC_script.SystemSetting.Using_curved_screen)
+            if (GC_script.Using1to1) { transform.rotation = current_headQ; }
+            else if (!DC_script.SystemSetting.Using_curved_screen)
             {
                 VirtualRDeg = GeneralMethods.
                                     RealToVirtual(DC_script.SystemSetting.Player_screen_cm,

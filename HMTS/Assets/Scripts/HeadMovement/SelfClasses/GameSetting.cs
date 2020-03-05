@@ -4,7 +4,7 @@ using System;
 [Serializable]
 public class GameSetting
 {
-    public string Camera1_display;
+    public string Camera1_display;  //Main: virtual camera; 1: Main capture camera; 2: Setting camera; 3: Second camture camera;
     public string Camera2_display;
     public string Camera3_display;
     public bool Using_curved_screen;
@@ -46,7 +46,7 @@ public class GameSetting
     public int DynaStopThresh;
     public float SecondHeadSpeed;
     public float Cam1Angle;
-    public float Cam2Angle;
+    public float Cam3Angle;
     public float RotationScale;
 
     public GameSetting()
@@ -91,7 +91,7 @@ public class GameSetting
         this.DynaStopThresh = Int32.MaxValue; //default as no threshold;
         this.SecondHeadSpeed = 0.0f;
         this.Cam1Angle = 0.0f;
-        this.Cam2Angle = 0.0f;
+        this.Cam3Angle = 0.0f;
         this.RotationScale = 1.0f;
     }
 
@@ -182,7 +182,7 @@ public class GameSetting
         result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
         result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
         result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
-        result_str += "Cam2Angle" + " " + Cam2Angle.ToString("F2");
+        result_str += "Cam2Angle" + " " + Cam3Angle.ToString("F2");
         result_str += "RotationScale" + " " + RotationScale.ToString("F2");
 
 
