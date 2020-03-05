@@ -48,6 +48,7 @@ public class DebugController : MonoBehaviour
     [SerializeField] private TextMesh DebugText2;
     [SerializeField] private TextMeshPro DebugTMP1;
     [SerializeField] private TextMeshPro DebugTMP2;
+    [SerializeField] private Transform HeadIndicator_TRANS;
 
     public static DebugController Instance;
 
@@ -95,19 +96,20 @@ public class DebugController : MonoBehaviour
     private void gener_text1()
     {
         string DT1 = "";
-        DT1 += camera1.transform.eulerAngles.ToString("F4");
-        DT1 += camera2.transform.eulerAngles.ToString("F4");
-        DT1 += camera3.transform.eulerAngles.ToString("F4");
-        DebugText1.text = DT1;
+        //DT1 += camera1.transform.eulerAngles.ToString("F4");
+        //DT1 += camera2.transform.eulerAngles.ToString("F4");
+        //DT1 += camera3.transform.eulerAngles.ToString("F4");
+        //DebugText1.text = DT1;
 
         DT1 = "";
-        DT1 += target_TRANS.eulerAngles.ToString("F4");
-        DebugText1.text += DT1;
+        DT1 += target_TRANS.position.ToString("F4");
+        DT1 += HeadIndicator_TRANS.position.ToString("F4");
+        DebugText1.text = DT1;
 
-        foreach (string text in text1Hash.Values)
-        {
-            DebugText1.text += text;
-        }
+        //foreach (string text in text1Hash.Values)
+        //{
+        //    DebugText1.text += text;
+        //}
     }
 
     private void debug_group()

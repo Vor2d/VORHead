@@ -258,7 +258,9 @@ public class GameController : GeneralGameController {
         this.double_speed_passed_flag = false;
         this.CamScale = 1.0f;
 
-        CamScale = 60.0f / DC_script.SystemSetting.Camera1FOV;
+        CamScale = DC_script.SystemSetting.DistScale;
+
+        //CamScale = 60.0f / DC_script.SystemSetting.Camera1FOV;
 
         Debug_str = new List<string>();
 

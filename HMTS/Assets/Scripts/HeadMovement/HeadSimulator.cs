@@ -48,7 +48,7 @@ public class HeadSimulator : MonoBehaviour {
 
             RRotateDegree = TrueHeadRR * DC_script.Current_GM.Gain;
 
-            if (GC_script.Using1to1) { transform.rotation = current_headQ; }
+            if (GC_script.Using1to1) { transform.eulerAngles = TrueHeadRR; }
             else if (!DC_script.SystemSetting.Using_curved_screen)
             {
                 VirtualRDeg = GeneralMethods.

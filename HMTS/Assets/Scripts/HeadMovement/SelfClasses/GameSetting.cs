@@ -48,6 +48,7 @@ public class GameSetting
     public float Cam1Angle;
     public float Cam3Angle;
     public float RotationScale;
+    public float DistScale;
 
     public GameSetting()
     {
@@ -93,6 +94,7 @@ public class GameSetting
         this.Cam1Angle = 0.0f;
         this.Cam3Angle = 0.0f;
         this.RotationScale = 1.0f;
+        this.DistScale = 1.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -184,6 +186,7 @@ public class GameSetting
         result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
         result_str += "Cam2Angle" + " " + Cam3Angle.ToString("F2");
         result_str += "RotationScale" + " " + RotationScale.ToString("F2");
+        result_str += "DistScale" + " " + DistScale.ToString("F2");
 
 
         return result_str;
