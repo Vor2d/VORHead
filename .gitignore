@@ -36,3 +36,4 @@ sysinfo.txt
 *.unitypackage
 
 DataAnalyzer/data/*
+DA_python/DA_python/DA_python/data/*
