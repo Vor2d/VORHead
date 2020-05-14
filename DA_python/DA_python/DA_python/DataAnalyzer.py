@@ -1114,6 +1114,8 @@ def plot_sin_head(sta_sample,sto_sample,mat_data,mode = 0):
 
 """
 
+def find_max_gaze_pos(mat_data,)
+
 
 
 # In[34]:
