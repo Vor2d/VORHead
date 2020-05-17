@@ -26,9 +26,12 @@ xlab1 = "Optotype logMAR"
 xlab2 = "Time (seconds) from start of head-turn"
 xlab3 = "Time (seconds) from head completely stops"
 xlab4 = "Simulink samples"
+xlab5 = "StaticAcuity"
+xlab6 = "Time (milliseconds)"
 ylab1 = "Acuity correctness percentage"
 ylab2 = "Orientation (degrees)"
 ylab3 = "Speed (degrees/second)"
+ylab5 = "DynamicAcuity"
 
 
 # In[4]:
@@ -45,6 +48,9 @@ S_eye_left = -200
 S_eye_right = 800
 #Wide data trial speed threshold
 speed_TH = 40
+#Drop out threshold
+Drop_speed = 500.0
+Drop_pos = 40.0
 #Subplot info
 subplot_col_num = 5
 #Subplots for all trials
@@ -64,7 +70,8 @@ AC_threshold = (1.0 + 0.125) / 2.0
 DL_threshold = 7.0 / 9.0
 quant_low = 0.25
 quant_high = 0.75
-logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.7848501,0.7848501,           0.87200005,0.87200005,0.94455045,0.94455045]
+logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.7848501,0.7848501,\
+		0.87200005,0.87200005,0.94455045,0.94455045]
 
 
 # In[5]:
@@ -249,8 +256,7 @@ class Section:
 	def cal_SD_dir(self):
 		self._cal_SD_dir(self.SSSS_RW_sam,self.SD_percent)
 		self._cal_SD_dir(self.LSSSS_RW_sam,self.LSD_percent)
-		self._cal_SD_dir(self.RSSSS_RW_sam,self.RSD_percent)
-			
+		self._cal_SD_dir(self.RSSSS_RW_sam,self.RSD_percent)	
 		
 	def print_DEL_DIR_TO(self):
 		print("Left",self.Ldelay_counter)
@@ -381,9 +387,85 @@ class MatData:
 			elif(sectionN == 1):
 				self.GATR_HP_EP_GPs.append([matrix2,left,trial_index])
 			trial_index += 1
-			
+
+	def trial_adjust(self,rezero = True,drop = True):
+		#rezero
+		if(rezero):
+			#self.DYTR_HP_EP_GPs
+			for trial in self.DYTR_HP_EP_GPs:
+				if(trial[0].shape[0] == 0):
+					continue
+				diffH = -trial[0][0][0]
+				diffE = -trial[0][0][1]
+				diffG = -trial[0][0][2]
+				for sample in trial[0]:
+					sample[0] += diffH
+					sample[1] += diffE
+					sample[2] += diffG
+			#self.DYTR_HS_ES_GSs
+			for trial in self.DYTR_HS_ES_GSs:
+				if(trial[0].shape[0] == 0):
+					continue
+				diffH = -trial[0][0][0]
+				diffE = -trial[0][0][1]
+				diffG = -trial[0][0][2]
+				for sample in trial[0]:
+					sample[0] += diffH
+					sample[1] += diffE
+					sample[2] += diffG
+			#self.GATR_HS_ES_GSs
+			for trial in self.GATR_HS_ES_GSs:
+				if(trial[0].shape[0] == 0):
+					continue
+				diffH = -trial[0][0][0]
+				diffE = -trial[0][0][1]
+				diffG = -trial[0][0][2]
+				for sample in trial[0]:
+					sample[0] += diffH
+					sample[1] += diffE
+					sample[2] += diffG
+		if(drop):
+			#self.DYTR_HP_EP_GPs
+			trial_i = 0
+			for trial in self.DYTR_HP_EP_GPs:
+				speed_trial = self.DYTR_HS_ES_GSs[trial_i]
+				if(trial[0].shape[0] == 0 or speed_trial[0].shape[0] == 0):
+					continue
+				sample_i = 0
+				for sample in trial[0]:
+					speed_sam = speed_trial[0][sample_i]
+					if((abs(sample[1]) > Drop_pos or abs(sample[2]) > Drop_pos) or\
+						(abs(speed_sam[1]) > Drop_speed or abs(speed_sam[2]) > Drop_speed)):
+						sample[0] = numpy.nan
+						sample[1] = numpy.nan
+						sample[2] = numpy.nan
+						self.DYTR_HS_ES_GSs[trial_i][0][sample_i][0] = numpy.nan
+						self.DYTR_HS_ES_GSs[trial_i][0][sample_i][1] = numpy.nan
+						self.DYTR_HS_ES_GSs[trial_i][0][sample_i][2] = numpy.nan
+					sample_i += 1
+				trial_i += 1
+			#self.GATR_HP_EP_GPs
+			trial_i = 0
+			for trial in self.GATR_HP_EP_GPs:
+				speed_trial = self.GATR_HS_ES_GSs[trial_i]
+				if(trial[0].shape[0] == 0 or speed_trial[0].shape[0] == 0):
+					continue
+				sample_i = 0
+				for sample in trial[0]:
+					speed_sam = speed_trial[0][sample_i]
+					if((abs(sample[1]) > Drop_pos or abs(sample[2]) > Drop_pos) or\
+						(abs(speed_sam[1]) > Drop_speed or abs(speed_sam[2]) > Drop_speed)):
+						sample[0] = numpy.nan
+						sample[1] = numpy.nan
+						sample[2] = numpy.nan
+						self.GATR_HS_ES_GSs[trial_i][0][sample_i][0] = numpy.nan
+						self.GATR_HS_ES_GSs[trial_i][0][sample_i][1] = numpy.nan
+						self.GATR_HS_ES_GSs[trial_i][0][sample_i][2] = numpy.nan
+					sample_i += 1
+				trial_i += 1
+	
 	#Private fun, calculate mean
-	def _self_mean_cal(self,source):        
+	def _self_mean_cal(self,source,sta_div = True):        
 		left_flag = False
 		sample_num = len(source[0][0])
 		trial_num = len(source)
@@ -431,11 +513,17 @@ class MatData:
 				Lsquare_sum3 += numpy.power(numpy.absolute(Lmean3 - source[i,0]),2)
 			else:
 				Rsquare_sum3 += numpy.power(numpy.absolute(Rmean3 - source[i,0]),2)
-		variance3 = square_sum3 / float(trial_num)
-		Lvariance3 = Lsquare_sum3 / float(trial_num)
-		Rvariance3 = Rsquare_sum3 / float(trial_num)
-		
-		return ([mean3,variance3],[Lmean3,Lvariance3],[Rmean3,Rsquare_sum3])
+
+		if(not sta_div):
+			variance3 = square_sum3 / float(trial_num)
+			Lvariance3 = Lsquare_sum3 / float(trial_num)
+			Rvariance3 = Rsquare_sum3 / float(trial_num)
+			return ([mean3,variance3],[Lmean3,Lvariance3],[Rmean3,Rsquare_sum3])
+		else:
+			sta_div3 = numpy.sqrt(square_sum3 / float(trial_num-1))
+			Lsta_div3 = numpy.sqrt(Lsquare_sum3/ float(trial_num-1))
+			Rsta_div3 = numpy.sqrt(Rsquare_sum3/ float(trial_num-1))
+			return ([mean3,sta_div3],[Lmean3,Lsta_div3],[Rmean3,Rsta_div3])
 	
 	#Private fun, calculate start point
 	def _mean_start_cal(self,speed_arr):
@@ -473,9 +561,6 @@ class MatData:
 		self.GATR_HS_ES_GSs = self._self_drop_out(self.GA_delete_list,self.GATR_HS_ES_GSs)
 		self.DYTR_HP_EP_GPs = self._self_drop_out(self.DY_delete_list,self.DYTR_HP_EP_GPs)
 		self.GATR_HP_EP_GPs = self._self_drop_out(self.GA_delete_list,self.GATR_HP_EP_GPs)
-
-
-# In[11]:
 
 
 #Read section files(Acuity file name, Delay file name, Section number in the
@@ -552,9 +637,6 @@ def read_file(AF_name, DF_name,sectionN=0):
 	return section
 
 
-# In[12]:
-
-
 #MAT read fun(mat file name)
 def read_mat(filename,shift):
 	MD = MatData()
@@ -568,8 +650,6 @@ def read_mat(filename,shift):
 	return MD
 
 
-# In[13]:
-
 def read_head_mat(matdata,filename,shift):
 	file = loadmat(file_dir + filename)
 	matdata.head_init_sample = file['sampleNo'][0][0]
@@ -581,17 +661,11 @@ def read_head_mat(matdata,filename,shift):
 	return matdata
 
 
-# In[14]:
-
-
 #Plot percentage plots(x_data, y_data, legends, low_y_limit, high_y_limit)
 def plotplot(x_data,y_data,legends,limit1,limit2):
 	ylim(limit1, limit2)
 	tpl, = plot(x_data,y_data,label = legends)
 	return tpl
-
-
-# In[15]:
 
 
 #Plot acuity plots(section data,lable by mode/lable by subjects)
@@ -609,9 +683,6 @@ def plot_ac(section,lab_mode=0,dots=False):
 	return tpl
 
 
-# In[16]:
-
-
 #Plot statc and dynamic acuity plots(static data,dynamic data)
 def plot_ST_DY(section1,section2):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
@@ -623,7 +694,6 @@ def plot_ST_DY(section1,section2):
 	#pyplot.show()
 	pyplot.clf()
 
-# In[17]:
 
 def plot_static_dynamic_acuity(section1,lab=""):
 	#pyplot.title(lab)
@@ -636,8 +706,6 @@ def plot_static_dynamic_acuity(section1,lab=""):
 	pyplot.savefig(SavePath + lab + str(S_index) + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
-
-# In[18]:
 
 
 #Plot delay data(delay data, label by mode/label by subjects)
@@ -653,9 +721,6 @@ def plot_delay(section,lab_mode=0):
 	return tpl
 
 
-# In[19]:
-
-
 #Plot dynamic delay and gaze shift delay plots(dynamic delay data, gaze shift
 #data)
 def plot_DYD_GAD(section1,section2):
@@ -669,7 +734,6 @@ def plot_DYD_GAD(section1,section2):
 	#pyplot.show()
 	pyplot.clf()
 
-# In[20]:
 
 def plot_delay_dir(section,title):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
@@ -700,8 +764,6 @@ def plot_delay_dir(section,title):
 	#pyplot.show()
 	pyplot.clf()
 
-# In[21]:
-
 
 #Plot dynamic delay and gaze shift delay with direction plots(dynamic delay
 #data, gaze shift data)
@@ -710,9 +772,6 @@ def plot_DYD_GAD_dir(section1,section2):
 	plot_delay_dir(section1,"Dynamic Delays")
 	section2.print_DEL_DIR_TO()
 	plot_delay_dir(section2,"GazeShift Delays")
-
-
-# In[22]:
 
 
 #Plot single trial speed data(trial index, mat_data)
@@ -746,84 +805,109 @@ def plot_eye_single(index, mat_data):
 	return tpls
 
 
-# In[23]:
-
-
 #Plot single trial speed data(trial data)
-def plot_eye_trial(trial):
+def plot_eye_trial(trial,realtime = True):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	labels = ["HeadSpeed","EyeSpeed","GazeSpeed"]
-	x_data = range(0,len(trial))
+	x_data = numpy.arange(0,len(trial))
+	x_data_real = x_data * 960.0 / 1000.0
 	y_data = []
 	tpls = []
 	
 	y_data = trial[:,0]
-	tpl, = plot(x_data,y_data,label = labels[0])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'red',label = labels[0])
+	else:
+		tpl, = plot(x_data,y_data,color= 'red',label = labels[0])
 	tpls.append(tpl)
 	
 	y_data = trial[:,1]
-	tpl, = plot(x_data,y_data,label = labels[1])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[1])
+	else:
+		tpl, = plot(x_data,y_data,color = 'green',label = labels[1])
 	tpls.append(tpl)
 	
 	y_data = trial[:,2]
-	tpl, = plot(x_data,y_data,label = labels[2])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[2])
+	else:
+		tpl, = plot(x_data,y_data,color = 'blue',label = labels[2])
 	tpls.append(tpl)
 	
 	return tpls
-
-
-# In[24]:
 
 
 #Plot single trial position data(trial data)
-def plot_eye_trial_pos(trial):
+def plot_eye_trial_pos(trial,realtime = True):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	labels = ["HeadOrientation","EyeOrientation","GazeOrientation"]
-	x_data = range(0,len(trial))
+	x_data = numpy.arange(0,len(trial))
+	x_data_real = x_data * 960.0 / 1000.0
 	y_data = []
 	tpls = []
 	
 	y_data = trial[:,0]
-	tpl, = plot(x_data,y_data,label = labels[0])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'red',label = labels[0])
+	else:
+		tpl, = plot(x_data,y_data,color= 'red',label = labels[0])
 	tpls.append(tpl)
 	
 	y_data = trial[:,1]
-	tpl, = plot(x_data,y_data,label = labels[1])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[1])
+	else:
+		tpl, = plot(x_data,y_data,color = 'green',label = labels[1])
 	tpls.append(tpl)
 	
 	y_data = trial[:,2]
-	tpl, = plot(x_data,y_data,label = labels[2])
+	if(realtime):
+		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[2])
+	else:
+		tpl, = plot(x_data,y_data,color = 'blue',label = labels[2])
 	tpls.append(tpl)
 	
 	return tpls
 
 
-# In[25]:
-
-
 #Plot all trials speed data(mat data, 0 for DD/1 for GD)
-def plot_eye(mat_data,sectionN=0):
+def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
+	pyplot.close("all")
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	trials = []
+	trials_select = []
 	if(sectionN == 0):
-		trials = mat_data.DYTR_HS_ES_GSs
+		trials_select = mat_data.DYTR_HS_ES_GSs
 		#pyplot.title("DynamicSpeed")
 	if(sectionN == 1):
-		trials = mat_data.GATR_HS_ES_GSs
+		trials_select = mat_data.GATR_HS_ES_GSs
 		#pyplot.title("GazeShiftSpeed")
+	dir_flag = dir_mode - 1
+	if(dir_flag == -1):
+		trials = trials_select
+	else:
+		for piece in trials_select:
+			if(piece[1] == dir_flag):
+				trials.append(piece)
+	index = 0
 	for trial in trials:
-		tpl = plot_eye_trial(trial)
+		print("speed"+str(index))
+		tpl = plot_eye_trial(trial[0])
 		pyplot.legend(handles = tpl)
 		#pyplot.show()
-		pyplot.clf()
-	return tpl
-
-
-# In[26]:
+		if(not oneplot):
+			pyplot.savefig(SavePath + title + str(index) + "Speed_HeadEye" + ".png",dpi = 300)
+			pyplot.clf()
+		index += 1
+	if(oneplot):
+		pyplot.savefig(SavePath + title + "SpeedAll_HeadEye" + ".png",dpi = 300)
+		#pyplot.show()
+	pyplot.clf()
 
 
 #Plot all trials position data(tmat data, 0 for DD/1 for GD)
-def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0):
+def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	trials = []
 	trials_select = []
@@ -847,13 +931,14 @@ def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0):
 		pyplot.legend(handles = tpl)
 		pyplot.xlabel(xlab4)
 		pyplot.ylabel(ylab2)
-		pyplot.savefig(SavePath + title + str(index) + "_HeadEye" + ".png",dpi = 300)
 		#pyplot.show()
-		pyplot.clf()
+		if(not oneplot):
+			pyplot.savefig(SavePath + title + str(index) + "Pos_HeadEye" + ".png",dpi = 300)
+			pyplot.clf()
 		index += 1
-
-
-# In[27]:
+	if(oneplot):
+		pyplot.savefig(SavePath + title + "PosAll_HeadEye" + ".png",dpi = 300)
+	pyplot.clf()
 
 
 #Plot mean plot(mean arrays, 0 for data plot/1 for variance plot)
@@ -868,12 +953,12 @@ def plot_eye_mean(mean_arrs,mode=0):
 	return tpls
 
 
-# In[28]:
-
-
 #Plot single subplot position data(plot position, trial data)
-def subplotplot_pos(ax,trial):
-	labels = ["HeadPosition","EyePosition","GazePosition"]
+def subplotplot_pos(ax,trial,speed = False):
+	if(not speed):
+		labels = ["HeadPosition","EyePosition","GazePosition"]
+	else:
+		labels = ["HeadSpeed","EyeSpeed","GazeSpeed"]
 	x_data = range(0,len(trial))
 	y_data = []
 	tpls = []
@@ -893,11 +978,9 @@ def subplotplot_pos(ax,trial):
 	return tpls
 
 
-# In[29]:
-
-
 #Plot all subplots position plots(mat data, 0 for DD/1 for GD)
 def subplot_eye(mat_data,dir_mode,sectionN=0,title = ""):
+	pyplot.close("all")
 	data = []
 	data_select = []
 	if(sectionN == 0):
@@ -927,7 +1010,7 @@ def subplot_eye(mat_data,dir_mode,sectionN=0,title = ""):
 				data.append(piece)
 	row_n = len(data) // subplot_col_num + 1
 	#pyplot.rcParams["figure.figsize"] = (20,subplot_row_width * row_n)
-	fig, axes = pyplot.subplots(row_n,subplot_col_num,squeeze = False)
+	fig, axes = pyplot.subplots(row_n,subplot_col_num,squeeze = False,sharex=True,sharey = True)
 	index = 0
 	finished = False
 	for i in range(0,row_n):
@@ -939,18 +1022,65 @@ def subplot_eye(mat_data,dir_mode,sectionN=0,title = ""):
 				break
 			subplotplot_pos(axes[i,j],data[index][0])
 			index += 1
+	fig.text(0.5, 0.04, xlab6, ha='center', va='center')
+	fig.text(0.06, 0.5, ylab2, ha='center', va='center', rotation='vertical')
 	pyplot.savefig(SavePath + title + "EyeSubplots" + ".png",dpi = 300)
+	#pyplot.show()
+	pyplot.clf()
+
+#Plot all subplots speed plots(mat data, 0 for DD/1 for GD)
+def subplot_eye_speed(mat_data,dir_mode,sectionN=0,title = ""):
+	#pyplot.close("all")
+	data = []
+	data_select = []
+	if(sectionN == 0):
+		title += "Dynamic_"
+		data_select = mat_data.DYTR_HS_ES_GSs
+		if(dir_mode == 0):
+			print("DynamicAcuity")
+		elif(dir_mode == 1):
+			print("LeftDynamicAcuity")
+		elif(dir_mode == 2):
+			print("RightDynamicAcuity")
+	elif(sectionN == 1):
+		title += "Gazeshift_"
+		data_select = mat_data.GATR_HS_ES_GSs
+		if(dir_mode == 0):
+			print("GazeShift")
+		elif(dir_mode == 1):
+			print("LeftGazeShift")
+		elif(dir_mode == 2):
+			print("RightGazeShift")
+	dir_flag = dir_mode - 1
+	if(dir_flag == -1):
+		data = data_select
+	else:
+		for piece in data_select:
+			if(piece[1] == dir_flag):
+				data.append(piece)
+	row_n = len(data) // subplot_col_num + 1
+	#pyplot.rcParams["figure.figsize"] = (20,subplot_row_width * row_n)
+	fig, axes = pyplot.subplots(row_n,subplot_col_num,squeeze = False,sharex=True,sharey = True)
+	index = 0
+	finished = False
+	for i in range(0,row_n):
+		if(finished):
+			break
+		for j in range(0,subplot_col_num):
+			if(index >= len(data)):
+				finished = True
+				break
+			subplotplot_pos(axes[i,j],data[index][0],speed = True)
+			index += 1
+	pyplot.savefig(SavePath + title + "Speed_EyeSubplots" + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
 	
 
-
-# In[30]:
-
-
 #Plot subplots mean plots(mar data, section data, 0 for DD/1 for GD)
-def subplot_mean(mat_data,section,sectionN,dir_mode):
+def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
 	#pyplot.rcParams["figure.figsize"] = (20,4*SP_row_width2)
+	pyplot.close("all")
 	start = 0
 	mean_arr = []
 	mean_arr_speed = []
@@ -959,6 +1089,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 	if(sectionN == 0):
 		if(dir_mode == 0):
 			print("DynamicMeanPlot")
+			title += "_DynamicMeanPlot"
 			start = mat_data.DY_mean_start
 			mean_arr = mat_data.DYP_mean[0]
 			mean_arr_speed = mat_data.DYS_mean[0]
@@ -966,6 +1097,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 			section_dic = section.delay_percent
 		elif(dir_mode == 1):
 			print("LeftDynamicMeanPlot")
+			title += "_LeftDynamicMeanPlot"
 			start = mat_data.DYL_mean_start
 			mean_arr = mat_data.DYLP_mean[0]
 			mean_arr_speed = mat_data.DYLS_mean[0]
@@ -973,6 +1105,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 			section_dic = section.Ldelay_percent
 		elif(dir_mode == 2):
 			print("RightDynamicMeanPlot")
+			title += "_RightDynamicMeanPlot"
 			start = mat_data.DYR_mean_start
 			mean_arr = mat_data.DYRP_mean[0]
 			mean_arr_speed = mat_data.DYRS_mean[0]
@@ -981,6 +1114,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 	elif(sectionN == 1):
 		if(dir_mode == 0):
 			print("GazeShiftMeanPlot")
+			title += "_GazeShiftMeanPlot"
 			start = mat_data.GA_mean_start
 			mean_arr = mat_data.GAP_mean[0]
 			mean_arr_speed = mat_data.GAS_mean[0]
@@ -988,6 +1122,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 			section_dic = section.delay_percent
 		elif(dir_mode == 1):
 			print("LeftGazeShiftMeanPlot")
+			title += "_LeftGazeShiftMeanPlot"
 			start = mat_data.GAL_mean_start
 			mean_arr = mat_data.GALP_mean[0]
 			mean_arr_speed = mat_data.GALS_mean[0]
@@ -995,6 +1130,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 			section_dic = section.Ldelay_percent
 		elif(dir_mode == 2):
 			print("RightGazeShiftMeanPlot")
+			title += "_RightGazeShiftMeanPlot"
 			start = mat_data.GAR_mean_start
 			mean_arr = mat_data.GARP_mean[0]
 			mean_arr_speed = mat_data.GARS_mean[0]
@@ -1003,7 +1139,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 	arr = []
 	arr.append(mean_arr) #mean data position array
 	arr.append(mean_arr_speed) #mean data speed array
-	arr.append(mean_var) #mean variance array
+	arr.append(mean_var) #mean variance/sta_div array
 	
 	fig, axes = pyplot.subplots(4,1,squeeze = False,sharex = True)
 	
@@ -1018,12 +1154,12 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 	axes[0,0].set_ylim(C_limit1,C_limit2)
 	
 	for rx in ratio_x_data:   
-		axes[0,0].axvline(x=rx)
+		axes[0,0].axvline(x=rx,color = "black")
 	
 	for i in range(0,3):
 		x_data = range(0,len(arr[i]))
 		y_data = arr[i][:,0]
-		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head")
+		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head",color = "red")
 
 		y_data = arr[i][:,1]
 		tpl2, = axes[i + 1,0].plot(x_data,y_data,label = "eye")
@@ -1032,22 +1168,21 @@ def subplot_mean(mat_data,section,sectionN,dir_mode):
 		tpl3, = axes[i + 1,0].plot(x_data,y_data,label = "gaze")
 		
 		for rx in ratio_x_data:
-			axes[i + 1,0].axvline(x=rx)
+			axes[i + 1,0].axvline(x=rx,color = "black")
 		axes[i + 1,0].axhline(y=0)
-		axes[i + 1,0].legend([tpl1,tpl2,tpl3])
+		#axes[i + 1,0].legend([tpl1,tpl2,tpl3])
+	handles, labels = axes[2,0].get_legend_handles_labels()
+	fig.legend(handles, labels, loc='upper right')
 	
+	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
 
-
-# In[31]:
 
 def plot_SD_percent(x_data,y_data,labels):
 	tpl, = plot(x_data,y_data,label = labels)
 	return tpl
 
-
-# In[32]:
 
 def plot_SD_percent3(section,title,S_index=0):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
@@ -1086,8 +1221,6 @@ def plot_SD_percent3(section,title,S_index=0):
 	pyplot.clf()
 
 
-# In[33]:
-
 def print_CT(section):
 	print("Total:\n")
 	print(section.SD_percent)
@@ -1113,12 +1246,6 @@ def plot_sin_head(sta_sample,sto_sample,mat_data,mode = 0):
 		return tpl
 
 """
-
-def find_max_gaze_pos(mat_data,)
-
-
-
-# In[34]:
 
 
 #Run a single subject through(parameters, Dynamic delay delete list, Gazeshift
@@ -1169,6 +1296,7 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	mat_data.gaze_cal()
 	mat_data.get_eye_trials(section5,0)
 	mat_data.get_eye_trials(section6,1)
+	mat_data.trial_adjust()
 	mat_data.drop_out()
 	mat_data.mean_cal()
 	section3.cal_SD_dir()
@@ -1188,21 +1316,37 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	plot_ST_DY(section1,section2)
 	#plot_DYD_GAD(section3,section4)
 	plot_DYD_GAD_dir(section3,section4)
-	subplot_mean(mat_data,section3,0,0)
-	subplot_mean(mat_data,section3,0,1)
-	subplot_mean(mat_data,section3,0,2)
-	subplot_mean(mat_data,section4,1,0)
-	subplot_mean(mat_data,section4,1,1)
-	subplot_mean(mat_data,section4,1,2)
+	subplot_mean(mat_data,section3,0,0,title = str(sub_index))
+	subplot_mean(mat_data,section3,0,1,title = str(sub_index))
+	subplot_mean(mat_data,section3,0,2,title = str(sub_index))
+	subplot_mean(mat_data,section4,1,0,title = str(sub_index))
+	subplot_mean(mat_data,section4,1,1,title = str(sub_index))
+	subplot_mean(mat_data,section4,1,2,title = str(sub_index))
 	subplot_eye(mat_data,1,sectionN = 0,title = str(sub_index))
 	subplot_eye(mat_data,2,sectionN = 0,title = str(sub_index))
 	subplot_eye(mat_data,1,sectionN = 1,title = str(sub_index))
 	subplot_eye(mat_data,2,sectionN = 1,title = str(sub_index))
+	subplot_eye_speed(mat_data,1,sectionN = 0,title = str(sub_index))
+	subplot_eye_speed(mat_data,2,sectionN = 0,title = str(sub_index))
+	subplot_eye_speed(mat_data,1,sectionN = 1,title = str(sub_index))
+	subplot_eye_speed(mat_data,2,sectionN = 1,title = str(sub_index))
+	plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_DD_",sectionN = 0,oneplot = True)
+	plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_DD_",sectionN = 0,oneplot = True)
+	plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_GD_",sectionN = 1,oneplot = True)
+	plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_GD_",sectionN = 1,oneplot = True)
+	plot_eye(mat_data,1,title = str(sub_index) + "left_DD_",sectionN = 0,oneplot = True)
+	plot_eye(mat_data,2,title = str(sub_index) + "right_DD_",sectionN = 0,oneplot = True)
+	plot_eye(mat_data,1,title = str(sub_index) + "left_GD_",sectionN = 1,oneplot = True)
+	plot_eye(mat_data,2,title = str(sub_index) + "right_GD_",sectionN = 1,oneplot = True)
 	if(plot_detail):
 		plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_DD_",sectionN = 0)
 		plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_DD_",sectionN = 0)
 		plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_GD_",sectionN = 1)
 		plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_GD_",sectionN = 1)
+		plot_eye(mat_data,1,title = str(sub_index) + "left_DD_",sectionN = 0)
+		plot_eye(mat_data,2,title = str(sub_index) + "right_DD_",sectionN = 0)
+		plot_eye(mat_data,1,title = str(sub_index) + "left_GD_",sectionN = 1)
+		plot_eye(mat_data,2,title = str(sub_index) + "right_GD_",sectionN = 1)
 	
 	StaticSections.append(section1)
 	DynamicSections.append(section2)
@@ -1212,9 +1356,7 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	GA_EYSections.append(section6)
 	MatDatas.append(mat_data)
 
-
-# In[35]:
-
+#Sub 0
 S_index += 1
 sub_para = ["AcuityLog_2019_08_19_10_20_29.txt",        "AcuityLog_2019_08_19_10_35_08.txt",        "JumpLog__2019_08_19_10_20_29.txt",        "JumpLog__2019_08_19_10_35_08.txt",        "JumpLog__2019_08_19_10_35_08_2.txt",        "AcuityLog_2019_08_19_10_50_10.txt",        "",        "Mdata.mat",        "0",        "MdataH.mat"]
 DY_DL = []
@@ -1222,8 +1364,7 @@ GA_DL = [17]
 run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
-# In[36]:
-
+#Sub 1
 S_index += 1
 sub_para = ["AcuityLog_2019_08_30_01_05_31.txt",        "AcuityLog_2019_08_30_01_19_07.txt",        "JumpLog__2019_08_30_01_05_31.txt",        "JumpLog__2019_08_30_01_19_07.txt",        "JumpLog__2019_08_30_01_19_07_2.txt",        "AcuityLog_2019_08_30_01_33_17.txt",        "",        "Qdata.mat",        "0",        "QdataH.mat"]
 DY_DL = [0,5,8,9,10,11,12,13,14,15,16,17,18,19]
@@ -1231,8 +1372,7 @@ GA_DL = [0,1,2,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
 run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
-# In[37]:
-
+#Sub 2
 S_index += 1
 sub_para = ["AcuityLog_2019_08_30_02_09_54.txt",        "AcuityLog_2019_08_30_02_25_56.txt",        "JumpLog__2019_08_30_02_09_54.txt",        "JumpLog__2019_08_30_02_25_56.txt",        "JumpLog__2019_08_30_02_25_56_2.txt",        "AcuityLog_2019_08_30_02_48_29.txt",        "",        "MIdata.mat",        "0",        "MIdataH.mat"]
 DY_DL = [0]
@@ -1240,8 +1380,7 @@ GA_DL = [0,7,17]
 run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
-# In[38]:
-
+#Sub 3
 S_index += 1
 sub_para = ["AcuityLog_2019_08_30_03_30_50.txt",            "AcuityLog_2019_08_30_03_55_04.txt",            "JumpLog__2019_08_30_03_30_50.txt",            "JumpLog__2019_08_30_03_55_04.txt",            "JumpLog__2019_08_30_03_55_04_2.txt",            "AcuityLog_2019_08_30_04_11_56.txt",            "",            "S1data.mat",            "1",            "S1dataH.mat"]
 DY_DL = [7,10]
@@ -1249,8 +1388,7 @@ GA_DL = [0,7,8,9,10,11]
 run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
-# In[39]:
-
+#Sub 4
 S_index += 1
 sub_para = ["AcuityLog_2019_09_18_05_23_42.txt",            "AcuityLog_2019_09_18_05_36_44.txt",            "JumpLog__2019_09_18_05_23_42.txt",            "JumpLog__2019_09_18_05_36_44.txt",            "JumpLog__2019_09_18_05_36_44_2.txt",            "AcuityLog_2019_09_18_05_53_13.txt",            "",            "Hdata.mat",            "0",            "HdataH.mat"]
 DY_DL = []
@@ -1258,16 +1396,13 @@ GA_DL = [0,2,5,8,10,11,12,13,14,16,17,18]
 run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
-# In[40]:
-
+#Sub 5
 S_index += 1
 sub_para = ["AcuityLog_2019_10_18_01_43_44.txt",            "AcuityLog_2019_10_18_01_59_54.txt",            "JumpLog__2019_10_18_01_43_44.txt",            "JumpLog__2019_10_18_01_59_54.txt",            "JumpLog__2019_10_18_01_59_54_2.txt",            "AcuityLog_2019_10_18_02_22_03.txt",            "",            "Cdata.mat",            "0",            "CdataH.mat"]
 DY_DL = [2]
 GA_DL = [0,15,16,18]
 run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True,shift2 = -1)
 
-
-# In[41]:
 
 def plot_fit(x_data,popt,index,lab_mode=0):
 	x_data = np.arange(x_data[0],x_data[-1],fit_precise)
@@ -1276,8 +1411,6 @@ def plot_fit(x_data,popt,index,lab_mode=0):
 		tpl = plotplot(x_data,y_data,index,C_limit1,C_limit2)
 	return tpl
 
-
-# In[42]:
 
 class TotalMean:
 	def __init__(self):
@@ -1513,7 +1646,7 @@ class TotalMean:
 		y_data = sigmoid3(x_data, *(self.sa_fit[0]))
 		tpl2 = plotplot(x_data,y_data,"Static Acuity Fit",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],                      linestyles = 'dashed')
+		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl1,tpl2])
 		pyplot.xlabel(xlab1)
 		pyplot.ylabel(ylab1)
@@ -1578,7 +1711,7 @@ class TotalMean:
 			y_data.append(self.sdda_dict[k][2])
 		tpl = plotplot(x_data,y_data,"Delayed Dynamic Time From Stop Mean",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],                      linestyles = 'dashed')
+		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl])
 		pyplot.xlabel(xlab3)
 		pyplot.ylabel(ylab1)
@@ -1932,6 +2065,27 @@ class TotalMean:
 			pyplot.ylabel(ylab1)
 			#pyplot.show()
 			pyplot.clf()
+		elif(mode == 7):
+			#pyplot.close("all")
+			#scatter Static VS Dynamic
+			x_data = []
+			y_data = []
+			min_d = 100.0
+			max_d = -100.0
+			for sub in self.sa_total_dict.keys():
+				x_data.append(self.sa_total_dict[sub])
+				da = self.da_total_dict[sub]
+				y_data.append(da)
+				max_d = da if max_d < da else max_d
+				min_d = da if min_d > da else min_d
+			pyplot.scatter(x_data,y_data)
+			pyplot.xlim(min_d-0.1,max_d+0.1)
+			pyplot.ylim(min_d-0.1,max_d+0.1)
+			pyplot.xlabel(xlab5)
+			pyplot.ylabel(ylab5)
+			pyplot.savefig(SavePath + "StaticVSDynamic" + ".png",dpi = 300)
+			#pyplot.show()
+			pyplot.clf()
 	
 	def total_plot(self):
 		self._total_plot(mode = 0)
@@ -1941,6 +2095,7 @@ class TotalMean:
 		self._total_plot(mode = 4)
 		self._total_plot(mode = 5)
 		self._total_plot(mode = 6)
+		self._total_plot(mode = 7)
 		
 	def _find_vlinev(self,y_data):
 		count = 0
@@ -2331,11 +2486,13 @@ class TotalMean:
 		self.write_to_file(resdata+"delayed_gazeshift_acuity_raw_quantile_fromheadstop",rstr)
 		"""
 	
-	def plot_subjects(self,mode=0):
+	def plot_subjects(self,mode=0,scatter = True):
+		pyplot.close("all")
 		#self.sa_fit_total
 		print("Static fit")
 		counter = 0
 		for sub in self.sa_fit_total:
+			tpls = []
 			popt = self.sa_fit_total[sub]
 			temp = list(self.sa_dict.keys())
 			maxx = max(temp)
@@ -2343,9 +2500,17 @@ class TotalMean:
 			step = (maxx - minx) * fit_precise
 			x_data = numpy.arange(minx,maxx,step)
 			y_data = sigmoid3(x_data, *(popt))
-			tpl = plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2)
-			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',                                  label = "Threshold: 0.5625")
-			pyplot.legend(handles=[tpl,line])
+			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
+			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
+				label = "Threshold: 0.5625"))
+			if(scatter):
+				AZ_percent = StaticSections[sub].AZ_percent
+				x_data2 = list(AZ_percent.keys())
+				y_data2 = []
+				for x in x_data2:
+					y_data2.append(AZ_percent[x])
+				pyplot.scatter(x_data2,y_data2)
+			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab1)
 			pyplot.ylabel(ylab1)
 			pyplot.savefig(SavePath + str(counter) + "_StaticAcuityFit" + ".png",dpi = 300)
@@ -2356,6 +2521,7 @@ class TotalMean:
 		print("Dynamic fit")
 		counter = 0
 		for sub in self.da_fit_total:
+			tpls = []
 			popt = self.da_fit_total[sub]
 			temp = list(self.da_dict.keys())
 			maxx = max(temp)
@@ -2363,16 +2529,54 @@ class TotalMean:
 			step = (maxx - minx) * fit_precise
 			x_data = numpy.arange(minx,maxx,step)
 			y_data = sigmoid3(x_data, *(popt))
-			tpl = plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2)
-			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',                                  label = "Threshold: 0.5625")
-			pyplot.legend(handles=[tpl,line])
+			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
+			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
+				label = "Threshold: 0.5625"))
+			if(scatter):
+				AZ_percent = DynamicSections[sub].AZ_percent
+				x_data2 = list(AZ_percent.keys())
+				y_data2 = []
+				for x in x_data2:
+					y_data2.append(AZ_percent[x])
+				pyplot.scatter(x_data2,y_data2)
+			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab1)
 			pyplot.ylabel(ylab1)
 			pyplot.savefig(SavePath + str(counter) + "_DynamicACuityFit" + ".png",dpi = 300)
 			#pyplot.show()
 			pyplot.clf()
 			counter += 1
-			
+		#self.dga_fit_total
+		print("Gazeshift fit")
+		counter = 0
+		for sub in self.dga_fit_total:
+			tpls = []
+			popt = self.dga_fit_total[sub]
+			temp = list(self.dga_dict.keys())
+			maxx = max(temp)
+			minx = min(temp)
+			step = (maxx - minx) * fit_precise
+			x_data = numpy.arange(minx,maxx,step)
+			y_data = sigmoid3(x_data, *(popt))
+			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
+			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
+				label = "Threshold: 0.5625"))
+			if(scatter):
+				delay_percent = GA_delaySections[sub].delay_percent
+				x_data2 = list(delay_percent.keys())
+				y_data2 = []
+				for x in x_data2:
+					y_data2.append(delay_percent[x])
+				pyplot.scatter(x_data2,y_data2)
+			pyplot.legend(handles=tpls)
+			pyplot.xlabel(xlab2)
+			pyplot.ylabel(ylab1)
+			pyplot.savefig(SavePath + str(counter) + "_GazeshiftACuityFit" + ".png",dpi = 300)
+			#pyplot.show()
+			pyplot.clf()
+			counter += 1
+	
+	#Staic and Dynamic fit together
 	def plot_static_dynamic_fit(self,sub):
 		print("Static-Dynamic")
 		popt = self.sa_fit_total[sub]
@@ -2398,8 +2602,45 @@ class TotalMean:
 		pyplot.savefig(SavePath + str(sub) + "_SDFit" + ".png",dpi = 300)
 		#pyplot.show()
 		pyplot.clf()
-		
-		
+
+	#Static and Dynamic single plot
+	def _subplot_SD_single(self,ax,x_data,y_data_sa,y_data_da):
+		tpl1, = ax.plot(x_data,y_data_sa)
+		tpl2, = ax.plot(x_data,y_data_da)
+		tpl3 = ax.axhline(y = AC_threshold,linestyle = 'dashed')
+		return [tpl1,tpl2]
+
+
+	#Static and Dynamic subplots.
+	def subplot_static_dynamic_fit(self):
+		pyplot.close("all")
+		print("Static-Dynamic Sub")
+		sapopt = self.sa_fit_total
+		dapopt = self.da_fit_total
+		temp = list(self.da_dict.keys())
+		maxx = max(temp)
+		minx = min(temp)
+		step = (maxx - minx) * fit_precise
+		x_data = numpy.arange(minx,maxx,step)
+		sub_n = len(list(sapopt.keys()))
+		row_n = sub_n // subplot_col_num + 1
+		fig, axes = pyplot.subplots(row_n,subplot_col_num,squeeze = False,sharex=True,sharey = True)
+		index = 0
+		finished = False
+		for i in range(0,row_n):
+			if(finished):
+				break
+			for j in range(0,subplot_col_num):
+				if(index >= sub_n):
+					finished = True
+					break
+				y_data_sa = sigmoid3(x_data, *(sapopt[index]))
+				y_data_da = sigmoid3(x_data, *(dapopt[index]))
+				self._subplot_SD_single(axes[i,j],x_data,y_data_sa,y_data_da)
+				index += 1
+		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300)
+		#pyplot.show()
+		pyplot.clf()
 
 
 # In[43]:
@@ -2414,6 +2655,7 @@ def do_total_mean():
 	total_mean.quant_plot()
 	total_mean.plot_subjects(mode = 0)
 	total_mean.plot_static_dynamic_fit(2)
+	total_mean.subplot_static_dynamic_fit()
 	return total_mean
 
 
