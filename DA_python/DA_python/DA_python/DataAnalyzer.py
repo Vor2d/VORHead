@@ -89,6 +89,19 @@ def write_to_file(path,restr):
 	file.write(restr)
 	file.close
 
+def common_legend(fig,axs,pos = "upper right"):
+	handles = []
+	labels = []
+	for ax in axs:
+		handle, label = ax.get_legend_handles_labels()
+		handles.extend(handle)
+		labels.extend(label)
+	fig.legend(handles, labels, loc='upper right')
+
+def common_axes(fig,xlab,ylab,p1 = 0.5,p2 = 0.04,p3 = 0.06,p4 = 0.5):
+	fig.text(p1, p2, xlab, ha='center', va='center')
+	fig.text(p3, p4, ylab, ha='center', va='center', rotation='vertical')
+
 
 # In[7]:
 
@@ -465,48 +478,141 @@ class MatData:
 				trial_i += 1
 	
 	#Private fun, calculate mean
-	def _self_mean_cal(self,source,sta_div = True):        
+	def _self_mean_cal(self,source,sta_div = True):
+		pyplot.close("all")
 		left_flag = False
 		sample_num = len(source[0][0])
 		trial_num = len(source)
-		sum_head = numpy.zeros((sample_num,1))
-		sum_eye = numpy.zeros((sample_num,1))
-		sum_gaze = numpy.zeros((sample_num,1))
-		Lsum_head = numpy.zeros((sample_num,1))
-		Lsum_eye = numpy.zeros((sample_num,1))
-		Lsum_gaze = numpy.zeros((sample_num,1))
-		Rsum_head = numpy.zeros((sample_num,1))
-		Rsum_eye = numpy.zeros((sample_num,1))
-		Rsum_gaze = numpy.zeros((sample_num,1))
+		sum_head = None
+		sum_eye = None
+		sum_gaze = None
+		Lsum_head = None
+		Lsum_eye = None
+		Lsum_gaze = None
+		Rsum_head = None
+		Rsum_eye = None
+		Rsum_gaze = None
 		
-		for i in range(0,len(source)):
+		l_trials = 0
+		r_trials = 0
+		for i in range(0,trial_num):
 			trial = source[i,0]
-			sum_head += numpy.transpose([trial[:,0]])
-			sum_eye += numpy.transpose([trial[:,1]])
-			sum_gaze += numpy.transpose([trial[:,2]])
+			if(sum_head is None):
+				sum_head = numpy.transpose([trial[:,0]])
+				sum_eye = numpy.transpose([trial[:,1]])
+				sum_gaze = numpy.transpose([trial[:,2]])
+			else:
+				sum_head = numpy.column_stack((sum_head,numpy.transpose([trial[:,0]])))
+				sum_eye = numpy.column_stack((sum_eye,numpy.transpose([trial[:,1]])))
+				sum_gaze = numpy.column_stack((sum_gaze,numpy.transpose([trial[:,2]])))
+			#pyplot.plot(range(0,1000),sum_head[:,-1])
+			#pyplot.show()
 			if(source[i,1] == 0):
 				left_flag = True
-				Lsum_head += numpy.transpose([trial[:,0]])
-				Lsum_eye += numpy.transpose([trial[:,1]])
-				Lsum_gaze += numpy.transpose([trial[:,2]])
+				if(Lsum_head is None):
+					Lsum_head = numpy.transpose([trial[:,0]])
+					Lsum_eye = numpy.transpose([trial[:,1]])
+					Lsum_gaze = numpy.transpose([trial[:,2]])
+				else:
+					Lsum_head = numpy.column_stack((Lsum_head,numpy.transpose([trial[:,0]])))
+					Lsum_eye = numpy.column_stack((Lsum_eye,numpy.transpose([trial[:,1]])))
+					Lsum_gaze = numpy.column_stack((Lsum_gaze,numpy.transpose([trial[:,2]])))
+				l_trials += 1
 			else:
 				left_flag = False
-				Rsum_head += numpy.transpose([trial[:,0]])
-				Rsum_eye += numpy.transpose([trial[:,1]])
-				Rsum_gaze += numpy.transpose([trial[:,2]])
+				if(Rsum_head is None):
+					Rsum_head = numpy.transpose([trial[:,0]])
+					Rsum_eye = numpy.transpose([trial[:,1]])
+					Rsum_gaze = numpy.transpose([trial[:,2]])
+				else:
+					Rsum_head = numpy.column_stack((Rsum_head,numpy.transpose([trial[:,0]])))
+					Rsum_eye = numpy.column_stack((Rsum_eye,numpy.transpose([trial[:,1]])))
+					Rsum_gaze = numpy.column_stack((Rsum_gaze,numpy.transpose([trial[:,2]])))
+				r_trials += 1
+
+		#all
+		sumsum_head = numpy.nansum(sum_head,axis = 1)
+		sumsum_eye = numpy.nansum(sum_eye,axis = 1)
+		sumsum_gaze = numpy.nansum(sum_gaze,axis = 1)
+
+		sumsum_head = numpy.transpose([sumsum_head])
+		sumsum_eye = numpy.transpose([sumsum_eye])
+		sumsum_gaze = numpy.transpose([sumsum_gaze])
+
+		sum_3 = numpy.column_stack((sumsum_head,sumsum_eye,sumsum_gaze))
+
+		mean_head = numpy.nanmean(sum_head,axis = 1)
+		mean_eye = numpy.nanmean(sum_eye,axis = 1)
+		mean_gaze = numpy.nanmean(sum_gaze,axis = 1)
+
+		mean3 = numpy.column_stack((mean_head,mean_eye,mean_gaze))
+
+		std_head = numpy.nanstd(sum_head,axis = 1)
+		std_eye = numpy.nanstd(sum_eye,axis = 1)
+		std_gaze = numpy.nanstd(sum_gaze,axis = 1)
+
+		sta_div3 = numpy.column_stack((std_head,std_eye,std_gaze))
+
+		#left
+		if(not Lsum_head is None):
+			Lsumsum_head = numpy.nansum(Lsum_head,axis = 1)
+			Lsumsum_eye = numpy.nansum(Lsum_eye,axis = 1)
+			Lsumsum_gaze = numpy.nansum(Lsum_gaze,axis = 1)
+
+			Lsumsum_head = numpy.transpose([Lsumsum_head])
+			Lsumsum_eye = numpy.transpose([Lsumsum_eye])
+			Lsumsum_gaze = numpy.transpose([Lsumsum_gaze])
+
+			Lsum_3 = numpy.column_stack((Lsumsum_head,Lsumsum_eye,Lsumsum_gaze))
+
+			Lmean_head = numpy.nanmean(Lsum_head,axis = 1)
+			Lmean_eye = numpy.nanmean(Lsum_eye,axis = 1)
+			Lmean_gaze = numpy.nanmean(Lsum_gaze,axis = 1)
+
+			Lmean3 = numpy.column_stack((Lmean_head,Lmean_eye,Lmean_gaze))
+
+			Lstd_head = numpy.nanstd(Lsum_head,axis = 1)
+			Lstd_eye = numpy.nanstd(Lsum_eye,axis = 1)
+			Lstd_gaze = numpy.nanstd(Lsum_gaze,axis = 1)
+
+			Lsta_div3 = numpy.column_stack((Lstd_head,Lstd_eye,Lstd_gaze))
+		else:
+			Lsum_3 = numpy.zeros((trial_num,3))
+			Lmean3 = numpy.zeros((trial_num,3))
+			Lsta_div3 = numpy.zeros((trial_num,3))
+
+		#right
+		if(not Rsum_head is None):
+			Rsumsum_head = numpy.nansum(Rsum_head,axis = 1)
+			Rsumsum_eye = numpy.nansum(Rsum_eye,axis = 1)
+			Rsumsum_gaze = numpy.nansum(Rsum_gaze,axis = 1)
+
+			Rsumsum_head = numpy.transpose([Rsumsum_head])
+			Rsumsum_eye = numpy.transpose([Rsumsum_eye])
+			Rsumsum_gaze = numpy.transpose([Rsumsum_gaze])
+
+			Rsum_3 = numpy.column_stack((Rsumsum_head,Rsumsum_eye,Rsumsum_gaze))
+
+			Rmean_head = numpy.nanmean(Rsum_head,axis = 1)
+			Rmean_eye = numpy.nanmean(Rsum_eye,axis = 1)
+			Rmean_gaze = numpy.nanmean(Rsum_gaze,axis = 1)
+
+			Rmean3 = numpy.column_stack((Rmean_head,Rmean_eye,Rmean_gaze))
+
+			Rstd_head = numpy.nanstd(Rsum_head,axis = 1)
+			Rstd_eye = numpy.nanstd(Rsum_eye,axis = 1)
+			Rstd_gaze = numpy.nanstd(Rsum_gaze,axis = 1)
+
+			Rsta_div3 = numpy.column_stack((Rstd_head,Rstd_eye,Rstd_gaze))
+		else:
+			Rsum_3 = numpy.zeros((trial_num,3))
+			Rmean3 = numpy.zeros((trial_num,3))
+			Rsta_div3 = numpy.zeros((trial_num,3))
+
+		return ([mean3,sta_div3],[Lmean3,Lsta_div3],[Rmean3,Rsta_div3])
 		
-		sum_3 = numpy.column_stack((sum_head,sum_eye,sum_gaze))
-		Lsum_3 = numpy.column_stack((Lsum_head,Lsum_eye,Lsum_gaze))
-		Rsum_3 = numpy.column_stack((Rsum_head,Rsum_eye,Rsum_gaze))
-		
-		mean3 = sum_3 / float(trial_num)
-		Lmean3 = Lsum_3 / float(trial_num)
-		Rmean3 = Rsum_3 / float(trial_num)
-		
-		square_sum3 = numpy.zeros((sample_num,3))
-		Lsquare_sum3 = numpy.zeros((sample_num,3))
-		Rsquare_sum3 = numpy.zeros((sample_num,3))
-		
+
+		"""
 		for i in range(0,len(source)):
 			square_sum3 += numpy.power(numpy.absolute(mean3 - source[i,0]),2)
 			if(source[i,1] == 0):
@@ -516,14 +622,15 @@ class MatData:
 
 		if(not sta_div):
 			variance3 = square_sum3 / float(trial_num)
-			Lvariance3 = Lsquare_sum3 / float(trial_num)
-			Rvariance3 = Rsquare_sum3 / float(trial_num)
+			Lvariance3 = Lsquare_sum3 / float(l_trials)
+			Rvariance3 = Rsquare_sum3 / float(r_trials)
 			return ([mean3,variance3],[Lmean3,Lvariance3],[Rmean3,Rsquare_sum3])
 		else:
 			sta_div3 = numpy.sqrt(square_sum3 / float(trial_num-1))
-			Lsta_div3 = numpy.sqrt(Lsquare_sum3/ float(trial_num-1))
-			Rsta_div3 = numpy.sqrt(Rsquare_sum3/ float(trial_num-1))
+			Lsta_div3 = numpy.sqrt(Lsquare_sum3/ float(l_trials-1))
+			Rsta_div3 = numpy.sqrt(Rsquare_sum3/ float(r_trials-1))
 			return ([mean3,sta_div3],[Lmean3,Lsta_div3],[Rmean3,Rsta_div3])
+		"""
 	
 	#Private fun, calculate start point
 	def _mean_start_cal(self,speed_arr):
@@ -810,7 +917,7 @@ def plot_eye_trial(trial,realtime = True):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	labels = ["HeadSpeed","EyeSpeed","GazeSpeed"]
 	x_data = numpy.arange(0,len(trial))
-	x_data_real = x_data * 960.0 / 1000.0
+	x_data_real = x_data / SS_Ratio * 1000.0
 	y_data = []
 	tpls = []
 	
@@ -843,7 +950,7 @@ def plot_eye_trial_pos(trial,realtime = True):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	labels = ["HeadOrientation","EyeOrientation","GazeOrientation"]
 	x_data = numpy.arange(0,len(trial))
-	x_data_real = x_data * 960.0 / 1000.0
+	x_data_real = x_data / SS_Ratio * 1000.0
 	y_data = []
 	tpls = []
 	
@@ -895,6 +1002,9 @@ def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 		print("speed"+str(index))
 		tpl = plot_eye_trial(trial[0])
 		pyplot.legend(handles = tpl)
+		pyplot.xlabel(xlab6)
+		pyplot.ylabel(ylab3)
+		pyplot.grid(True)
 		#pyplot.show()
 		if(not oneplot):
 			pyplot.savefig(SavePath + title + str(index) + "Speed_HeadEye" + ".png",dpi = 300)
@@ -929,8 +1039,9 @@ def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 		print(index)
 		tpl = plot_eye_trial_pos(trial[0])
 		pyplot.legend(handles = tpl)
-		pyplot.xlabel(xlab4)
+		pyplot.xlabel(xlab6)
 		pyplot.ylabel(ylab2)
+		pyplot.grid(True)
 		#pyplot.show()
 		if(not oneplot):
 			pyplot.savefig(SavePath + title + str(index) + "Pos_HeadEye" + ".png",dpi = 300)
@@ -953,26 +1064,27 @@ def plot_eye_mean(mean_arrs,mode=0):
 	return tpls
 
 
-#Plot single subplot position data(plot position, trial data)
+#Plot single subplot position or speed data(plot position, trial data)
 def subplotplot_pos(ax,trial,speed = False):
 	if(not speed):
 		labels = ["HeadPosition","EyePosition","GazePosition"]
 	else:
 		labels = ["HeadSpeed","EyeSpeed","GazeSpeed"]
-	x_data = range(0,len(trial))
+	x_data = numpy.array(range(0,len(trial)))
+	x_data_real = x_data / SS_Ratio * 1000.0
 	y_data = []
 	tpls = []
 	
 	y_data = trial[:,0]
-	tpl, = ax.plot(x_data,y_data,label = labels[0])
+	tpl, = ax.plot(x_data_real,y_data,label = labels[0])
 	tpls.append(tpl)
 	
 	y_data = trial[:,1]
-	tpl, = ax.plot(x_data,y_data,label = labels[1])
+	tpl, = ax.plot(x_data_real,y_data,label = labels[1])
 	tpls.append(tpl)
 	
 	y_data = trial[:,2]
-	tpl, = ax.plot(x_data,y_data,label = labels[2])
+	tpl, = ax.plot(x_data_real,y_data,label = labels[2])
 	tpls.append(tpl)
 	
 	return tpls
@@ -1022,8 +1134,11 @@ def subplot_eye(mat_data,dir_mode,sectionN=0,title = ""):
 				break
 			subplotplot_pos(axes[i,j],data[index][0])
 			index += 1
-	fig.text(0.5, 0.04, xlab6, ha='center', va='center')
-	fig.text(0.06, 0.5, ylab2, ha='center', va='center', rotation='vertical')
+
+			axes[i,j].grid(True)
+
+	common_legend(fig,[axes[0,0]])
+	common_axes(fig,xlab6,ylab2)
 	pyplot.savefig(SavePath + title + "EyeSubplots" + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1072,6 +1187,9 @@ def subplot_eye_speed(mat_data,dir_mode,sectionN=0,title = ""):
 				break
 			subplotplot_pos(axes[i,j],data[index][0],speed = True)
 			index += 1
+
+	common_legend(fig,[axes[0,0]])
+	common_axes(fig,xlab6,ylab3)
 	pyplot.savefig(SavePath + title + "Speed_EyeSubplots" + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1143,23 +1261,27 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
 	
 	fig, axes = pyplot.subplots(4,1,squeeze = False,sharex = True)
 	
-	x_data = sorted(section_dic.keys())
+	x_data = numpy.array(sorted(section_dic.keys()))
 	y_data = []
 	for x in x_data:
 		y_data.append(section_dic[x])
 	ratio_x_data = []
 	for x in x_data:
-		ratio_x_data.append(x * SS_Ratio + start)
-	axes[0,0].plot(ratio_x_data,y_data)
+		ratio_x_data.append(x * 1000.0 + start)
+	axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
+	axes[0,0].plot(ratio_x_data,y_data,label = "percentage",color = "red")
 	axes[0,0].set_ylim(C_limit1,C_limit2)
+	axes[0,0].set_ylabel("percentage")
 	
 	for rx in ratio_x_data:   
 		axes[0,0].axvline(x=rx,color = "black")
 	
+	ylabels = ["orientation","speed","orientation\n standard deviation"]
 	for i in range(0,3):
-		x_data = range(0,len(arr[i]))
+		x_data = numpy.array(range(0,len(arr[i])))
+		x_data = x_data / SS_Ratio * 1000.0
 		y_data = arr[i][:,0]
-		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head",color = "red")
+		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head")
 
 		y_data = arr[i][:,1]
 		tpl2, = axes[i + 1,0].plot(x_data,y_data,label = "eye")
@@ -1170,10 +1292,12 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
 		for rx in ratio_x_data:
 			axes[i + 1,0].axvline(x=rx,color = "black")
 		axes[i + 1,0].axhline(y=0)
+		axes[i + 1,0].set_ylabel(ylabels[i])
 		#axes[i + 1,0].legend([tpl1,tpl2,tpl3])
-	handles, labels = axes[2,0].get_legend_handles_labels()
-	fig.legend(handles, labels, loc='upper right')
-	
+
+	fig.align_ylabels(axes[:, 0])
+	common_legend(fig,[axes[0,0],axes[3,0]])
+	common_axes(fig,xlab6,"")
 	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1454,7 +1578,7 @@ class TotalMean:
 		self.da_raw_quant = [] #Raw Dynamic Acuity Quantile -> arr[x,low,med,up]
 		self.dda_raw_quant = [] #Raw Delayed Dynamic Acuity Quantile -> arr[x,low,med,up]
 		self.dga_raw_quant = [] #Raw Delayed Gaze-shift Quantile -> arr[x,low,med,up]
-		self.sdda_raw_quant = [] #Raw Stop Delayed Dynmaic Acuity Quantile -> arr[x,low,med,up]
+		self.sdda_raw_quant = [] #Raw Stop Delayed Dynamic Acuity Quantile -> arr[x,low,med,up]
 		self.sdga_raw_quant = [] #Raw Stop Delayed Gaze-shift Acuity Quantile -> arr[x,low,med,up]
 		self.sa_raw_quant_fit = [] #Raw Static Acuity Quantile Fit POPTs -> arr[low POPTS,med POPTS,up POPTS]
 		self.da_raw_quant_fit = [] #Raw Dynamic Acuity Quantile Fit POPTs -> arr[low POPTS,med POPTS,up POPTS]
@@ -2605,10 +2729,10 @@ class TotalMean:
 
 	#Static and Dynamic single plot
 	def _subplot_SD_single(self,ax,x_data,y_data_sa,y_data_da):
-		tpl1, = ax.plot(x_data,y_data_sa)
-		tpl2, = ax.plot(x_data,y_data_da)
-		tpl3 = ax.axhline(y = AC_threshold,linestyle = 'dashed')
-		return [tpl1,tpl2]
+		tpl1, = ax.plot(x_data,y_data_sa,label = "static acuity")
+		tpl2, = ax.plot(x_data,y_data_da,label = "dynamic acuity")
+		tpl3 = ax.axhline(y = AC_threshold,linestyle = 'dashed',label = "threshold = 0.5625")
+		return [tpl1,tpl2,tpl3]
 
 
 	#Static and Dynamic subplots.
@@ -2638,10 +2762,11 @@ class TotalMean:
 				y_data_da = sigmoid3(x_data, *(dapopt[index]))
 				self._subplot_SD_single(axes[i,j],x_data,y_data_sa,y_data_da)
 				index += 1
+		common_legend(fig,[axes[0,0]])
+		common_axes(fig,xlab1,ylab1)
 		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300)
 		#pyplot.show()
 		pyplot.clf()
-
 
 # In[43]:
 
