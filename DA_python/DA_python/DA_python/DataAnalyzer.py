@@ -19,6 +19,8 @@ pyplot.rcParams["figure.figsize"] = (6,6)
 pyplot.rcParams["figure.dpi"] = 300
 pyplot.rcParams["font.size"] = 8
 
+LogToFile = False
+
 
 # In[3]:
 
@@ -66,12 +68,14 @@ SM_inter_range = 500
 SD_range = 77 #stop_delay range (SS)
 logistic_base = 0.125
 fit_precise = 0.001
-AC_threshold = (1.0 + 0.125) / 2.0
 DL_threshold = 7.0 / 9.0
 quant_low = 0.25
 quant_high = 0.75
 logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.7848501,0.7848501,\
 		0.87200005,0.87200005,0.94455045,0.94455045]
+Z_90_confi = 1.960
+Percent_rat = 100.0
+AC_threshold = (1.0 + 0.125) / 2.0 * Percent_rat
 
 
 # In[5]:
@@ -96,7 +100,7 @@ def common_legend(fig,axs,pos = "upper right"):
 		handle, label = ax.get_legend_handles_labels()
 		handles.extend(handle)
 		labels.extend(label)
-	fig.legend(handles, labels, loc='upper right')
+	fig.legend(handles, labels, loc=pos)
 
 def common_axes(fig,xlab,ylab,p1 = 0.5,p2 = 0.04,p3 = 0.06,p4 = 0.5):
 	fig.text(p1, p2, xlab, ha='center', va='center')
@@ -285,6 +289,8 @@ class Section:
 		pyplot.clf()
 		
 	def log_to_file(self,prefix,mode=0):
+		if(not LogToFile):
+			return
 		#self.AZ_percent
 		if(mode == 0):
 			restr = "LogMAR\tPercent\n"
@@ -477,8 +483,8 @@ class MatData:
 					sample_i += 1
 				trial_i += 1
 	
-	#Private fun, calculate mean
-	def _self_mean_cal(self,source,sta_div = True):
+	#Private fun, calculate mean, err_mode 1: sta_div, 2: confi 90%
+	def _self_mean_cal(self,source,err_mode = 2):
 		pyplot.close("all")
 		left_flag = False
 		sample_num = len(source[0][0])
@@ -502,7 +508,7 @@ class MatData:
 				sum_eye = numpy.transpose([trial[:,1]])
 				sum_gaze = numpy.transpose([trial[:,2]])
 			else:
-				sum_head = numpy.column_stack((sum_head,numpy.transpose([trial[:,0]])))
+				sum_head = numpy.column_stack((sum_head,numpy.transpose([trial[:,0]]))) #arr[(sam_num)arr[(trial)]]
 				sum_eye = numpy.column_stack((sum_eye,numpy.transpose([trial[:,1]])))
 				sum_gaze = numpy.column_stack((sum_gaze,numpy.transpose([trial[:,2]])))
 			#pyplot.plot(range(0,1000),sum_head[:,-1])
@@ -541,17 +547,37 @@ class MatData:
 
 		sum_3 = numpy.column_stack((sumsum_head,sumsum_eye,sumsum_gaze))
 
-		mean_head = numpy.nanmean(sum_head,axis = 1)
+		mean_head = numpy.nanmean(sum_head,axis = 1) 
 		mean_eye = numpy.nanmean(sum_eye,axis = 1)
 		mean_gaze = numpy.nanmean(sum_gaze,axis = 1)
 
 		mean3 = numpy.column_stack((mean_head,mean_eye,mean_gaze))
 
-		std_head = numpy.nanstd(sum_head,axis = 1)
+
+		std_head = numpy.nanstd(sum_head,axis = 1) #arr[(sam_num)]
 		std_eye = numpy.nanstd(sum_eye,axis = 1)
 		std_gaze = numpy.nanstd(sum_gaze,axis = 1)
 
-		sta_div3 = numpy.column_stack((std_head,std_eye,std_gaze))
+		error = numpy.column_stack((std_head,std_eye,std_gaze))
+
+		if(err_mode == 2):
+			nan_len_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+			confihead_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+			confieye_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+			configaze_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+			counter = 0
+			for i in range(0,sample_num):
+				counter = 0
+				for j in range(0,trial_num):
+					if(not numpy.isnan(sum_head[i,j])):
+						counter += 1
+				nan_len_arr[i] = counter
+			for i in range(0,sample_num):
+				confihead_arr[i] = std_head[i] * Z_90_confi / math.sqrt(nan_len_arr[i])
+				confieye_arr[i] = std_eye[i] * Z_90_confi / math.sqrt(nan_len_arr[i])
+				configaze_arr[i] = std_gaze[i] * Z_90_confi / math.sqrt(nan_len_arr[i])
+
+			error = numpy.column_stack((confihead_arr,confieye_arr,configaze_arr))
 
 		#left
 		if(not Lsum_head is None):
@@ -575,11 +601,31 @@ class MatData:
 			Lstd_eye = numpy.nanstd(Lsum_eye,axis = 1)
 			Lstd_gaze = numpy.nanstd(Lsum_gaze,axis = 1)
 
-			Lsta_div3 = numpy.column_stack((Lstd_head,Lstd_eye,Lstd_gaze))
+			Lerror = numpy.column_stack((Lstd_head,Lstd_eye,Lstd_gaze))
+
+			if(err_mode == 2):
+				Lnan_len_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Lconfihead_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Lconfieye_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Lconfigaze_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				counter = 0
+				for i in range(0,sample_num):
+					counter = 0
+					for j in range(0,l_trials):
+						if(not numpy.isnan(Lsum_head[i,j])):
+							counter += 1
+					Lnan_len_arr[i] = counter
+				for i in range(0,sample_num):
+					Lconfihead_arr[i] = Lstd_head[i] * Z_90_confi / math.sqrt(Lnan_len_arr[i])
+					Lconfieye_arr[i] = Lstd_eye[i] * Z_90_confi / math.sqrt(Lnan_len_arr[i])
+					Lconfigaze_arr[i] = Lstd_gaze[i] * Z_90_confi / math.sqrt(Lnan_len_arr[i])
+
+				Lerror = numpy.column_stack((Lconfihead_arr,Lconfieye_arr,Lconfigaze_arr))
+
 		else:
 			Lsum_3 = numpy.zeros((trial_num,3))
 			Lmean3 = numpy.zeros((trial_num,3))
-			Lsta_div3 = numpy.zeros((trial_num,3))
+			Lerror = numpy.zeros((trial_num,3))
 
 		#right
 		if(not Rsum_head is None):
@@ -603,13 +649,32 @@ class MatData:
 			Rstd_eye = numpy.nanstd(Rsum_eye,axis = 1)
 			Rstd_gaze = numpy.nanstd(Rsum_gaze,axis = 1)
 
-			Rsta_div3 = numpy.column_stack((Rstd_head,Rstd_eye,Rstd_gaze))
+			Rerror = numpy.column_stack((Rstd_head,Rstd_eye,Rstd_gaze))
+
+			if(err_mode == 2):
+				Rnan_len_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Rconfihead_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Rconfieye_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				Rconfigaze_arr = numpy.zeros((sample_num)) #arr[(sam_num)]
+				counter = 0
+				for i in range(0,sample_num):
+					counter = 0
+					for j in range(0,r_trials):
+						if(not numpy.isnan(Rsum_head[i,j])):
+							counter += 1
+					Rnan_len_arr[i] = counter
+				for i in range(0,sample_num):
+					Rconfihead_arr[i] = Rstd_head[i] * Z_90_confi / math.sqrt(Rnan_len_arr[i])
+					Rconfieye_arr[i] = Rstd_eye[i] * Z_90_confi / math.sqrt(Rnan_len_arr[i])
+					Rconfigaze_arr[i] = Rstd_gaze[i] * Z_90_confi / math.sqrt(Rnan_len_arr[i])
+
+				Rerror = numpy.column_stack((Rconfihead_arr,Rconfieye_arr,Rconfigaze_arr))
 		else:
 			Rsum_3 = numpy.zeros((trial_num,3))
 			Rmean3 = numpy.zeros((trial_num,3))
-			Rsta_div3 = numpy.zeros((trial_num,3))
+			Rerror = numpy.zeros((trial_num,3))
 
-		return ([mean3,sta_div3],[Lmean3,Lsta_div3],[Rmean3,Rsta_div3])
+		return ([mean3,error],[Lmean3,Lerror],[Rmean3,Rerror])
 		
 
 		"""
@@ -780,7 +845,7 @@ def plot_ac(section,lab_mode=0,dots=False):
 	x_data = sorted(section.AZ_percent.keys())
 	y_data = []
 	for x in x_data:
-		y_data.append(section.AZ_percent[x])
+		y_data.append(section.AZ_percent[x] * Percent_rat)
 	if(lab_mode == 0):
 		tpl = plotplot(x_data,y_data,section.mode,C_limit1,C_limit2)
 	elif(lab_mode == 1):
@@ -803,7 +868,7 @@ def plot_ST_DY(section1,section2):
 
 
 def plot_static_dynamic_acuity(section1,lab=""):
-	#pyplot.title(lab)
+	pyplot.title(lab)
 	tpl1 = plot_ac(section1,dots = True)
 	x_data = sorted(list(section1.AZ_percent.keys()))
 	line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',label = "Threshold: 0.5625")
@@ -820,7 +885,7 @@ def plot_delay(section,lab_mode=0):
 	x_data = sorted(section.delay_percent.keys())
 	y_data = []
 	for x in x_data:
-		y_data.append(section.delay_percent[x])
+		y_data.append(section.delay_percent[x] * Percent_rat)
 	if(lab_mode == 0):
 		tpl = plotplot(x_data,y_data,section.mode,C_limit1,C_limit2)
 	elif(lab_mode == 1):
@@ -845,28 +910,29 @@ def plot_DYD_GAD(section1,section2):
 def plot_delay_dir(section,title):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
 	#pyplot.title(title)
-	
+	titlestr = ""
 	x_data = sorted(section.delay_percent.keys())
 	y_data = []
 	for x in x_data:
-		y_data.append(section.delay_percent[x])
+		y_data.append(section.delay_percent[x] * Percent_rat)
 	tpl0 = plotplot(x_data,y_data,"Total",C_limit1,C_limit2)
 	
 	x_data = sorted(section.Ldelay_percent.keys())
 	y_data = []
 	for x in x_data:
-		y_data.append(section.Ldelay_percent[x])
+		y_data.append(section.Ldelay_percent[x] * Percent_rat)
 	tpl1 = plotplot(x_data,y_data,"Left",C_limit1,C_limit2)
 	
 	x_data = sorted(section.Rdelay_percent.keys())
 	y_data = []
 	for x in x_data:
-		y_data.append(section.Rdelay_percent[x])
+		y_data.append(section.Rdelay_percent[x] * Percent_rat)
 	tpl2 = plotplot(x_data,y_data,"Right",C_limit1,C_limit2)
 	
 	pyplot.legend(handles=[tpl0,tpl1,tpl2])
 	pyplot.xlabel(xlab2)
 	pyplot.ylabel(ylab1)
+	pyplot.title(title)
 	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -982,13 +1048,16 @@ def plot_eye_trial_pos(trial,realtime = True):
 def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 	pyplot.close("all")
 	#pyplot.rcParams["figure.figsize"] = (20,10)
+	titlestr = ""
 	trials = []
 	trials_select = []
 	if(sectionN == 0):
 		trials_select = mat_data.DYTR_HS_ES_GSs
+		titlestr += "Left Side" if dir_mode == 1 else ("Right Side" if dir_mode == 2 else "")
 		#pyplot.title("DynamicSpeed")
 	if(sectionN == 1):
 		trials_select = mat_data.GATR_HS_ES_GSs
+		titlestr += "Left Side" if dir_mode == 1 else ("Right Side" if dir_mode == 2 else "")
 		#pyplot.title("GazeShiftSpeed")
 	dir_flag = dir_mode - 1
 	if(dir_flag == -1):
@@ -1006,11 +1075,13 @@ def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 		pyplot.ylabel(ylab3)
 		pyplot.grid(True)
 		#pyplot.show()
+		pyplot.title("Rotation Speed Data")
 		if(not oneplot):
 			pyplot.savefig(SavePath + title + str(index) + "Speed_HeadEye" + ".png",dpi = 300)
 			pyplot.clf()
 		index += 1
 	if(oneplot):
+		pyplot.title("Rotation Speed Data All Trials")
 		pyplot.savefig(SavePath + title + "SpeedAll_HeadEye" + ".png",dpi = 300)
 		#pyplot.show()
 	pyplot.clf()
@@ -1019,14 +1090,16 @@ def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 #Plot all trials position data(tmat data, 0 for DD/1 for GD)
 def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 	#pyplot.rcParams["figure.figsize"] = (20,10)
+	titlestr = ""
 	trials = []
 	trials_select = []
 	if(sectionN == 0):
 		trials_select = mat_data.DYTR_HP_EP_GPs
-		#pyplot.title("DynamicPosition,Direction:" + str(dir_mode))
+		titlestr += "Left Side" if dir_mode == 1 else ("Right Side" if dir_mode == 2 else "")
 	if(sectionN == 1):
 		trials_select = mat_data.GATR_HP_EP_GPs
 		#pyplot.title("GazeShiftPosition,Direction:" + str(dir_mode))
+		titlestr += "Left Side" if dir_mode == 1 else ("Right Side" if dir_mode == 2 else "")
 	dir_flag = dir_mode - 1
 	if(dir_flag == -1):
 		trials = trials_select
@@ -1044,24 +1117,188 @@ def plot_eye_pos(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 		pyplot.grid(True)
 		#pyplot.show()
 		if(not oneplot):
+			pyplot.title(titlestr + " Rotation Orientation Data")
 			pyplot.savefig(SavePath + title + str(index) + "Pos_HeadEye" + ".png",dpi = 300)
 			pyplot.clf()
 		index += 1
 	if(oneplot):
+		pyplot.title(titlestr + "Rotation Orientation Data All Trials")
 		pyplot.savefig(SavePath + title + "PosAll_HeadEye" + ".png",dpi = 300)
 	pyplot.clf()
 
 
-#Plot mean plot(mean arrays, 0 for data plot/1 for variance plot)
-def plot_eye_mean(mean_arrs,mode=0):
-	#pyplot.rcParams["figure.figsize"] = (20,10)
-	#pyplot.title("MeanPlot")
-	mean_arr = mean_arrs[mode]
-	tpls = plot_eye_trial_pos(mean_arr)
+#Plot mean plot(sectionN, 0 for data plot/1 for variance plot)
+def plot_eye_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,speed = False):
+	pyplot.close("all")
+	start = 0
+	mean_arr = []
+	mean_arr_speed = []
+	mean_var = []
+	section_dic = {}
+	if(sectionN == 0):
+		if(dir_mode == 0):
+			print("Delay Dynamic Acuity Mean")
+			title += "Delay Dynamic Acuity Mean"
+			start = mat_data.DY_mean_start
+			mean_arr = mat_data.DYP_mean[0]
+			mean_arr_speed = mat_data.DYS_mean[0]
+			mean_var = mat_data.DYP_mean[1]
+			mean_var_speed = mat_data.DYS_mean[1]
+			section_dic = section.delay_percent
+		elif(dir_mode == 1):
+			print("Left Side Delay Dynamic Acuity Mean")
+			title += "Left Side Delay Dynamic Acuity Mean"
+			start = mat_data.DYL_mean_start
+			mean_arr = mat_data.DYLP_mean[0]
+			mean_arr_speed = mat_data.DYLS_mean[0]
+			mean_var = mat_data.DYLP_mean[1]
+			mean_var_speed = mat_data.DYLS_mean[1]
+			section_dic = section.Ldelay_percent
+		elif(dir_mode == 2):
+			print("Right Side Delay Dynamic Acuity Mean")
+			title += "Right Side Delay Dynamic Acuity Mean"
+			start = mat_data.DYR_mean_start
+			mean_arr = mat_data.DYRP_mean[0]
+			mean_arr_speed = mat_data.DYRS_mean[0]
+			mean_var = mat_data.DYRP_mean[1]
+			mean_var_speed = mat_data.DYRS_mean[1]
+			section_dic = section.Rdelay_percent
+	elif(sectionN == 1):
+		if(dir_mode == 0):
+			print("Delayed Gaze-shift Acuity Mean")
+			title += "Delayed Gaze-shift Acuity Mean"
+			start = mat_data.GA_mean_start
+			mean_arr = mat_data.GAP_mean[0]
+			mean_arr_speed = mat_data.GAS_mean[0]
+			mean_var = mat_data.GAP_mean[1]
+			mean_var_speed = mat_data.GAS_mean[1]
+			section_dic = section.delay_percent
+		elif(dir_mode == 1):
+			print("Left Side Delayed Gaze-shift Acuity Mean")
+			title += "Left Side Delayed Gaze-shift Acuity Mean"
+			start = mat_data.GAL_mean_start
+			mean_arr = mat_data.GALP_mean[0]
+			mean_arr_speed = mat_data.GALS_mean[0]
+			mean_var = mat_data.GALP_mean[1]
+			mean_var_speed = mat_data.GALS_mean[1]
+			section_dic = section.Ldelay_percent
+		elif(dir_mode == 2):
+			print("Right Side Delayed Gaze-shift Acuity Mean")
+			title += "Right Side Delayed Gaze-shift Acuity Mean"
+			start = mat_data.GAR_mean_start
+			mean_arr = mat_data.GARP_mean[0]
+			mean_arr_speed = mat_data.GARS_mean[0]
+			mean_var = mat_data.GARP_mean[1]
+			mean_var_speed = mat_data.GARS_mean[1]
+			section_dic = section.Rdelay_percent
+	arr = []
+	arr.append(mean_arr) #mean data position array
+	arr.append(mean_arr_speed) #mean data speed array
+	arr.append(mean_var) #mean variance/sta_div array
+	arr.append(mean_var_speed) #mean variance/sta_div array
+	
+	ylabels = ["orientation","speed","orientation\n standard deviation"]
+	if(not speed):
+		x_data = numpy.array(range(0,len(arr[0])))
+		x_data = x_data / SS_Ratio * 1000.0
+		y_data = arr[0][:,0]
+		tpls = []
+		tpl1, = pyplot.plot(x_data,y_data,label = "head",color = "Green")
+		tpls.append(tpl1)
+		if(confi):
+			ycon_dataU = arr[0+2][:,0] + y_data
+			tpl4, = pyplot.plot(x_data,ycon_dataU,label = "head 95% confidence",\
+				linestyle = "dashed",color = "Green")
+			tpls.append(tpl4)
+			ycon_dataD = -arr[0+2][:,0] + y_data
+			tpl4, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Green")
+			
+
+		y_data = arr[0][:,1]
+		tpl2, = pyplot.plot(x_data,y_data,label = "eye",color = "Blue")
+		tpls.append(tpl2)
+		if(confi):
+			ycon_dataU = arr[0+2][:,1] + y_data
+			tpl5, = pyplot.plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Blue")
+			tpls.append(tpl5)
+			ycon_dataD = -arr[0+2][:,1] + y_data
+			tpl5, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Blue")
+			
+
+		y_data = arr[0][:,2]
+		tpl3, = pyplot.plot(x_data,y_data,label = "gaze",color = "Orange")
+		tpls.append(tpl3)
+		if(confi):
+			ycon_dataU = arr[0+2][:,2] + y_data
+			tpl6, = pyplot.plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Orange")
+			tpls.append(tpl6)
+			ycon_dataD = -arr[0+2][:,2] + y_data
+			tpl6, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Orange")
+			
+
+	else:
+		x_data = numpy.array(range(0,len(arr[0])))
+		x_data = x_data / SS_Ratio * 1000.0
+		y_data = arr[1][:,0]
+		tpls = []
+		tpl1, = pyplot.plot(x_data,y_data,label = "head",color = "Green")
+		tpls.append(tpl1)
+		if(confi):
+			ycon_dataU = arr[1+2][:,0] + y_data
+			tpl4, = pyplot.plot(x_data,ycon_dataU,label = "head 95% confidence",\
+				linestyle = "dashed",color = "Green")
+			tpls.append(tpl4)
+			ycon_dataD = -arr[1+2][:,0] + y_data
+			tpl4, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Green")
+			
+
+		y_data = arr[1][:,1]
+		tpl2, = pyplot.plot(x_data,y_data,label = "eye",color = "Blue")
+		tpls.append(tpl2)
+		if(confi):
+			ycon_dataU = arr[1+2][:,1] + y_data
+			tpl5, = pyplot.plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Blue")
+			tpls.append(tpl5)
+			ycon_dataD = -arr[1+2][:,1] + y_data
+			tpl5, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Blue")
+			
+
+		y_data = arr[1][:,2]
+		tpl3, = pyplot.plot(x_data,y_data,label = "gaze",color = "Orange")
+		tpls.append(tpl3)
+		if(confi):
+			ycon_dataU = arr[1+2][:,2] + y_data
+			tpl6, = pyplot.plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Orange")
+			tpls.append(tpl6)
+			ycon_dataD = -arr[1+2][:,2] + y_data
+			tpl6, = pyplot.plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Orange")
+			
+
+	if(speed):
+		title += " Speed "
+	else:
+		title += " Position "
+	pyplot.title(title)
+	pyplot.xlabel(xlab6)
+	if(not speed):
+		pyplot.ylabel(ylab2)
+	else:
+		pyplot.ylabel(ylab3)
 	pyplot.legend(handles = tpls)
+	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
-	return tpls
+
 
 
 #Plot single subplot position or speed data(plot position, trial data)
@@ -1196,7 +1433,7 @@ def subplot_eye_speed(mat_data,dir_mode,sectionN=0,title = ""):
 	
 
 #Plot subplots mean plots(mar data, section data, 0 for DD/1 for GD)
-def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
+def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit = False,TM = None):
 	#pyplot.rcParams["figure.figsize"] = (20,4*SP_row_width2)
 	pyplot.close("all")
 	start = 0
@@ -1207,87 +1444,136 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
 	if(sectionN == 0):
 		if(dir_mode == 0):
 			print("DynamicMeanPlot")
-			title += "_DynamicMeanPlot"
+			title += "_Delayed_Dynamic_Acuity_Analyse_Plot"
 			start = mat_data.DY_mean_start
 			mean_arr = mat_data.DYP_mean[0]
 			mean_arr_speed = mat_data.DYS_mean[0]
 			mean_var = mat_data.DYP_mean[1]
+			mean_var_speed = mat_data.DYS_mean[1]
 			section_dic = section.delay_percent
 		elif(dir_mode == 1):
 			print("LeftDynamicMeanPlot")
-			title += "_LeftDynamicMeanPlot"
+			title += "Left_Side_Delayed_Dynamic_Acuity_Analyse_Plot"
 			start = mat_data.DYL_mean_start
 			mean_arr = mat_data.DYLP_mean[0]
 			mean_arr_speed = mat_data.DYLS_mean[0]
 			mean_var = mat_data.DYLP_mean[1]
+			mean_var_speed = mat_data.DYLS_mean[1]
 			section_dic = section.Ldelay_percent
 		elif(dir_mode == 2):
 			print("RightDynamicMeanPlot")
-			title += "_RightDynamicMeanPlot"
+			title += "Right_Side_Delayed_Dynamic_Acuity_Analyse_Plot"
 			start = mat_data.DYR_mean_start
 			mean_arr = mat_data.DYRP_mean[0]
 			mean_arr_speed = mat_data.DYRS_mean[0]
 			mean_var = mat_data.DYRP_mean[1]
+			mean_var_speed = mat_data.DYRS_mean[1]
 			section_dic = section.Rdelay_percent
 	elif(sectionN == 1):
 		if(dir_mode == 0):
 			print("GazeShiftMeanPlot")
-			title += "_GazeShiftMeanPlot"
+			title += "_Gaze-shift_Acuity_Analyse_Plot"
 			start = mat_data.GA_mean_start
 			mean_arr = mat_data.GAP_mean[0]
 			mean_arr_speed = mat_data.GAS_mean[0]
 			mean_var = mat_data.GAP_mean[1]
+			mean_var_speed = mat_data.GAS_mean[1]
 			section_dic = section.delay_percent
 		elif(dir_mode == 1):
 			print("LeftGazeShiftMeanPlot")
-			title += "_LeftGazeShiftMeanPlot"
+			title += "Left_Side_Gaze-shift_Acuity_Analyse_Plot"
 			start = mat_data.GAL_mean_start
 			mean_arr = mat_data.GALP_mean[0]
 			mean_arr_speed = mat_data.GALS_mean[0]
 			mean_var = mat_data.GALP_mean[1]
+			mean_var_speed = mat_data.GALS_mean[1]
 			section_dic = section.Ldelay_percent
 		elif(dir_mode == 2):
 			print("RightGazeShiftMeanPlot")
-			title += "_RightGazeShiftMeanPlot"
+			title += "Right_Side_Gaze-shift_Acuity_Analyse_Plot"
 			start = mat_data.GAR_mean_start
 			mean_arr = mat_data.GARP_mean[0]
 			mean_arr_speed = mat_data.GARS_mean[0]
 			mean_var = mat_data.GARP_mean[1]
+			mean_var_speed = mat_data.GARS_mean[1]
 			section_dic = section.Rdelay_percent
 	arr = []
 	arr.append(mean_arr) #mean data position array
 	arr.append(mean_arr_speed) #mean data speed array
 	arr.append(mean_var) #mean variance/sta_div array
+	arr.append(mean_var_speed) #mean variance/sta_div array
 	
-	fig, axes = pyplot.subplots(4,1,squeeze = False,sharex = True)
+	fig, axes = pyplot.subplots(3,1,squeeze = False,sharex = True)
 	
-	x_data = numpy.array(sorted(section_dic.keys()))
-	y_data = []
-	for x in x_data:
-		y_data.append(section_dic[x])
-	ratio_x_data = []
-	for x in x_data:
-		ratio_x_data.append(x * 1000.0 + start)
-	axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
-	axes[0,0].plot(ratio_x_data,y_data,label = "percentage",color = "red")
-	axes[0,0].set_ylim(C_limit1,C_limit2)
-	axes[0,0].set_ylabel("percentage")
-	
+	if(not fit):
+		x_data = numpy.array(sorted(section_dic.keys()))
+		y_data = []
+		for x in x_data:
+			y_data.append(section_dic[x] * Percent_rat)
+		ratio_x_data = []
+		for x in x_data:
+			ratio_x_data.append(x * 1000.0 + start)
+		axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
+		axes[0,0].plot(ratio_x_data,y_data,label = "percentage",color = "red")
+		axes[0,0].set_ylim(C_limit1,C_limit2)
+		axes[0,0].set_ylabel("percentage")
+	else:
+		#dot
+		sub_num = section.sub_index
+		x_data = numpy.array(sorted(section_dic.keys()))
+		y_data = []
+		for x in x_data:
+			y_data.append(section_dic[x] * Percent_rat)
+		ratio_x_data = []
+		for x in x_data:
+			ratio_x_data.append(x * 1000.0 + start)
+		axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
+		axes[0,0].scatter(ratio_x_data,y_data,label = "ACP")
+		#curve
+		popt = TM.dga_fit_total[sub_num]
+		x_data2 = numpy.arange(x_data[0],x_data[-1],(x_data[-1] - x_data[0])*fit_precise)
+		y_data2 = sigmoid3(x_data2, *(popt))
+		ratio_x_data2 = x_data2 * 1000.0 + start
+		axes[0,0].plot(ratio_x_data2,y_data2,label = "logistic curve",color = "red")
+		axes[0,0].set_ylim(C_limit1,C_limit2)
+		axes[0,0].set_ylabel("percentage")
+
 	for rx in ratio_x_data:   
 		axes[0,0].axvline(x=rx,color = "black")
 	
 	ylabels = ["orientation","speed","orientation\n standard deviation"]
-	for i in range(0,3):
+	for i in range(0,2):
 		x_data = numpy.array(range(0,len(arr[i])))
 		x_data = x_data / SS_Ratio * 1000.0
 		y_data = arr[i][:,0]
-		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head")
+		tpl1, = axes[i + 1,0].plot(x_data,y_data,label = "head",color = "Green")
+		if(confi):
+			ycon_dataU = arr[i+2][:,0] + y_data
+			tpl4, = axes[i + 1,0].plot(x_data,ycon_dataU,label = "head 95% confidence",\
+				linestyle = "dashed",color = "Green")
+			ycon_dataD = -arr[i+2][:,0] + y_data
+			tpl4, = axes[i + 1,0].plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Green")
 
 		y_data = arr[i][:,1]
-		tpl2, = axes[i + 1,0].plot(x_data,y_data,label = "eye")
+		tpl2, = axes[i + 1,0].plot(x_data,y_data,label = "eye",color = "Blue")
+		if(confi):
+			ycon_dataU = arr[i+2][:,1] + y_data
+			tpl5, = axes[i + 1,0].plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Blue")
+			ycon_dataD = -arr[i+2][:,1] + y_data
+			tpl5, = axes[i + 1,0].plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Blue")
 
 		y_data = arr[i][:,2]
-		tpl3, = axes[i + 1,0].plot(x_data,y_data,label = "gaze")
+		tpl3, = axes[i + 1,0].plot(x_data,y_data,label = "gaze",color = "Orange")
+		if(confi):
+			ycon_dataU = arr[i+2][:,2] + y_data
+			tpl6, = axes[i + 1,0].plot(x_data,ycon_dataU,label = "eye 95% confidence",\
+				linestyle = "dashed",color = "Orange")
+			ycon_dataD = -arr[i+2][:,2] + y_data
+			tpl6, = axes[i + 1,0].plot(x_data,ycon_dataD,\
+				linestyle = "dashed",color = "Orange")
 		
 		for rx in ratio_x_data:
 			axes[i + 1,0].axvline(x=rx,color = "black")
@@ -1296,8 +1582,9 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = ""):
 		#axes[i + 1,0].legend([tpl1,tpl2,tpl3])
 
 	fig.align_ylabels(axes[:, 0])
-	common_legend(fig,[axes[0,0],axes[3,0]])
+	common_legend(fig,[axes[0,0],axes[2,0]],pos = "lower right")
 	common_axes(fig,xlab6,"")
+	pyplot.title(title)
 	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1318,7 +1605,7 @@ def plot_SD_percent3(section,title,S_index=0):
 	x_data.sort()
 	x_data_S = x_data * SD_range / 1000.0
 	for x in x_data:
-		y_data.append(section.SD_percent[x][2])
+		y_data.append(section.SD_percent[x][2] * Percent_rat)
 	tpls.append(plot_SD_percent(x_data_S,y_data,"Total"))
 	
 	y_data = []
@@ -1326,7 +1613,7 @@ def plot_SD_percent3(section,title,S_index=0):
 	x_data.sort()
 	x_data_S = x_data * SD_range / 1000.0
 	for x in x_data:
-		y_data.append(section.LSD_percent[x][2])
+		y_data.append(section.LSD_percent[x][2] * Percent_rat)
 	tpls.append(plot_SD_percent(x_data_S,y_data,"Left"))
 	
 	y_data = []
@@ -1334,7 +1621,7 @@ def plot_SD_percent3(section,title,S_index=0):
 	x_data.sort()
 	x_data_S = x_data * SD_range / 1000.0
 	for x in x_data:
-		y_data.append(section.RSD_percent[x][2])
+		y_data.append(section.RSD_percent[x][2] * Percent_rat)
 	tpls.append(plot_SD_percent(x_data_S,y_data,"Right"))
 	
 	pyplot.xlabel(xlab3)
@@ -1428,11 +1715,11 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	
 	#plot_head(section3,mat_data,mode = 0,title = "Head_Position")
 	print_CT(section3)
-	plot_delay_dir(section3,"DynamicDelay_" + str(sub_index))
-	plot_SD_percent3(section3,"DynamicStopDelay",S_index = sub_index)
+	plot_delay_dir(section3,"Temporal Dynamic Acuity" + str(sub_index))
+	plot_SD_percent3(section3,"Temporal Dynamic Acuity Relative to Head Stopped Time",S_index = sub_index)
 	print_CT(section4)
-	plot_delay_dir(section4,"GazeShiftDelay_" + str(sub_index))
-	plot_SD_percent3(section4,"GazeShiftStopDelay",S_index = sub_index)
+	plot_delay_dir(section4,"Temporal Gaze-shift Acuity" + str(sub_index))
+	plot_SD_percent3(section4,"Temporal Gaze-shift Acuity Relative to Head Stopped Time",S_index = sub_index)
 	print("Static Acuity: ",section1.AZ_percent)
 	print("Dynamic Acuity: ",section2.AZ_percent)
 	plot_static_dynamic_acuity(section1,"Static_Acuity")
@@ -1440,28 +1727,45 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	plot_ST_DY(section1,section2)
 	#plot_DYD_GAD(section3,section4)
 	plot_DYD_GAD_dir(section3,section4)
-	subplot_mean(mat_data,section3,0,0,title = str(sub_index))
-	subplot_mean(mat_data,section3,0,1,title = str(sub_index))
-	subplot_mean(mat_data,section3,0,2,title = str(sub_index))
-	subplot_mean(mat_data,section4,1,0,title = str(sub_index))
-	subplot_mean(mat_data,section4,1,1,title = str(sub_index))
-	subplot_mean(mat_data,section4,1,2,title = str(sub_index))
-	subplot_eye(mat_data,1,sectionN = 0,title = str(sub_index))
-	subplot_eye(mat_data,2,sectionN = 0,title = str(sub_index))
-	subplot_eye(mat_data,1,sectionN = 1,title = str(sub_index))
-	subplot_eye(mat_data,2,sectionN = 1,title = str(sub_index))
-	subplot_eye_speed(mat_data,1,sectionN = 0,title = str(sub_index))
-	subplot_eye_speed(mat_data,2,sectionN = 0,title = str(sub_index))
-	subplot_eye_speed(mat_data,1,sectionN = 1,title = str(sub_index))
-	subplot_eye_speed(mat_data,2,sectionN = 1,title = str(sub_index))
-	plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_DD_",sectionN = 0,oneplot = True)
-	plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_DD_",sectionN = 0,oneplot = True)
-	plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_GD_",sectionN = 1,oneplot = True)
-	plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_GD_",sectionN = 1,oneplot = True)
-	plot_eye(mat_data,1,title = str(sub_index) + "left_DD_",sectionN = 0,oneplot = True)
-	plot_eye(mat_data,2,title = str(sub_index) + "right_DD_",sectionN = 0,oneplot = True)
-	plot_eye(mat_data,1,title = str(sub_index) + "left_GD_",sectionN = 1,oneplot = True)
-	plot_eye(mat_data,2,title = str(sub_index) + "right_GD_",sectionN = 1,oneplot = True)
+	plot_eye_mean(mat_data,section3,0,0,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section3,0,1,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section3,0,2,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section4,1,0,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section4,1,1,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section4,1,2,title = "Sub "+str(sub_index)+" ")
+	plot_eye_mean(mat_data,section3,0,0,title = "Sub "+str(sub_index)+" ",speed = True)
+	plot_eye_mean(mat_data,section3,0,1,title = "Sub "+str(sub_index)+" ",speed = True)
+	plot_eye_mean(mat_data,section3,0,2,title = "Sub "+str(sub_index)+" ",speed = True)
+	plot_eye_mean(mat_data,section4,1,0,title = "Sub "+str(sub_index)+" ",speed = True)
+	plot_eye_mean(mat_data,section4,1,1,title = "Sub "+str(sub_index)+" ",speed = True)
+	plot_eye_mean(mat_data,section4,1,2,title = "Sub "+str(sub_index)+" ",speed = True)
+	subplot_mean(mat_data,section3,0,0,title = "Sub "+str(sub_index)+" ")
+	subplot_mean(mat_data,section3,0,1,title = "Sub "+str(sub_index)+" ")
+	subplot_mean(mat_data,section3,0,2,title = "Sub "+str(sub_index)+" ")
+	subplot_mean(mat_data,section4,1,0,title = "Sub "+str(sub_index)+" ")
+	subplot_mean(mat_data,section4,1,1,title = "Sub "+str(sub_index)+" ")
+	subplot_mean(mat_data,section4,1,2,title = "Sub "+str(sub_index)+" ")
+	subplot_eye(mat_data,1,sectionN = 0,title = "Sub "+str(sub_index)+" ")
+	subplot_eye(mat_data,2,sectionN = 0,title = "Sub "+str(sub_index)+" ")
+	subplot_eye(mat_data,1,sectionN = 1,title = "Sub "+str(sub_index)+" ")
+	subplot_eye(mat_data,2,sectionN = 1,title = "Sub "+str(sub_index)+" ")
+	subplot_eye_speed(mat_data,1,sectionN = 0,title = "Sub "+str(sub_index)+" ")
+	subplot_eye_speed(mat_data,2,sectionN = 0,title = "Sub "+str(sub_index)+" ")
+	subplot_eye_speed(mat_data,1,sectionN = 1,title = "Sub "+str(sub_index)+" ")
+	subplot_eye_speed(mat_data,2,sectionN = 1,title = "Sub "+str(sub_index)+" ")
+	plot_eye_pos(mat_data,1,title = "Sub "+str(sub_index) + "_left_DD_",sectionN = 0,oneplot = True)
+	plot_eye_pos(mat_data,2,title = "Sub "+str(sub_index) + "_right_DD_",sectionN = 0,oneplot = True)
+	plot_eye_pos(mat_data,0,title = "Sub "+str(sub_index) + "_All_DD_",sectionN = 0,oneplot = True)
+	plot_eye_pos(mat_data,1,title = "Sub "+str(sub_index) + "_left_GD_",sectionN = 1,oneplot = True)
+	plot_eye_pos(mat_data,2,title = "Sub "+str(sub_index) + "_right_GD_",sectionN = 1,oneplot = True)
+	plot_eye_pos(mat_data,2,title = "Sub "+str(sub_index) + "_right_GD_",sectionN = 1,oneplot = True)
+	plot_eye_pos(mat_data,0,title = "Sub "+str(sub_index) + "_All_GD_",sectionN = 1,oneplot = True)
+	plot_eye(mat_data,1,title = "Sub "+str(sub_index) + "left_DD_",sectionN = 0,oneplot = True)
+	plot_eye(mat_data,2,title = "Sub "+str(sub_index) + "right_DD_",sectionN = 0,oneplot = True)
+	plot_eye(mat_data,0,title = "Sub "+str(sub_index) + "All_DD_",sectionN = 0,oneplot = True)
+	plot_eye(mat_data,1,title = "Sub "+str(sub_index) + "left_GD_",sectionN = 1,oneplot = True)
+	plot_eye(mat_data,2,title = "Sub "+str(sub_index) + "right_GD_",sectionN = 1,oneplot = True)
+	plot_eye(mat_data,0,title = "Sub "+str(sub_index) + "All_GD_",sectionN = 1,oneplot = True)
 	if(plot_detail):
 		plot_eye_pos(mat_data,1,title = str(sub_index) + "_left_DD_",sectionN = 0)
 		plot_eye_pos(mat_data,2,title = str(sub_index) + "_right_DD_",sectionN = 0)
@@ -1589,6 +1893,18 @@ class TotalMean:
 									 #POPTS]
 		self.sdga_raw_quant_fit = [] #Raw Stop Delayed Gaze-shift Acuity Quantile POPTs -> arr[low POPTS,med
 									 #POPTS,up POPTS]
+		self.HE_mean_DAP = [] #Head eye mean DA position -> arr[arr[HP,EP,GP],arr[H variance,EV,GV]]
+		self.HE_mean_LDAP = [] #Left
+		self.HE_mean_RDAP = [] #Right
+		self.HE_mean_DAS = [] #Speed
+		self.HE_mean_LDAS = []
+		self.HE_mean_RDAS = []
+		self.HE_mean_GAP = [] #Head eye mean GA position -> arr[arr[HP,EP,GP],arr[H variance,EV,GV]]
+		self.HE_mean_LGAP = [] #Left
+		self.HE_mean_RGAP = [] #Right
+		self.HE_mean_GAS = [] #Speed
+		self.HE_mean_LGAS = []
+		self.HE_mean_RGAS = []
 	
 	def _mean_cal(self,sections, mode=0):
 		res_dict = {}
@@ -1762,7 +2078,7 @@ class TotalMean:
 		x_data.sort()
 		y_data = []
 		for k in x_data:
-			y_data.append(self.sa_dict[k])
+			y_data.append(self.sa_dict[k] * Percent_rat)
 		tpl1 = plotplot(x_data,y_data,"Static Acuity Mean",C_limit1,C_limit2)
 		#SA Fit Plot
 		fp = float(x_data[-1] - x_data[0]) * fit_precise
@@ -1790,7 +2106,7 @@ class TotalMean:
 		y_data = sigmoid3(x_data, *(self.da_fit[0]))
 		tpl2 = plotplot(x_data,y_data,"Dynamic Acuity Fit",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],                     linestyles = 'dashed')
+		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl1, tpl2])
 		pyplot.xlabel(xlab1)
 		pyplot.ylabel(ylab1)
@@ -1805,7 +2121,7 @@ class TotalMean:
 			y_data.append(self.dda_dict[k])
 		tpl = plotplot(x_data,y_data,"Delayed Dynamic Time Mean",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],                      linestyles = 'dashed')
+		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl])
 		pyplot.xlabel(xlab2)
 		pyplot.ylabel(ylab1)
@@ -2246,7 +2562,8 @@ class TotalMean:
 			y_data = sigmoid3(x_data, *(self.sa_fit[0]))
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl4 = plotplot(x_data,y_data,"mean",C_limit1,C_limit2)
-			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',label = "Threshold: 0.5625")
+			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
+				label = "Threshold: 0.5625")
 			#pyplot.vlines(vlinev[3],C_limit1,AC_threshold,linestyles =
 			#'dashed')
 			print("Threshold 25,50,75,m ",vlinev)
@@ -2409,6 +2726,8 @@ class TotalMean:
 		file.close
 		
 	def log_to_file(self):
+		if(not LogToFile):
+			return
 		#sa_dict
 		rstr = "LogMAR\tpercentage\n"
 		for sa in self.sa_dict:
@@ -2623,7 +2942,7 @@ class TotalMean:
 			minx = min(temp)
 			step = (maxx - minx) * fit_precise
 			x_data = numpy.arange(minx,maxx,step)
-			y_data = sigmoid3(x_data, *(popt))
+			y_data = sigmoid3(x_data, *(popt)) * Percent_rat
 			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
 			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
 				label = "Threshold: 0.5625"))
@@ -2632,11 +2951,12 @@ class TotalMean:
 				x_data2 = list(AZ_percent.keys())
 				y_data2 = []
 				for x in x_data2:
-					y_data2.append(AZ_percent[x])
+					y_data2.append(AZ_percent[x] * Percent_rat)
 				pyplot.scatter(x_data2,y_data2)
 			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab1)
 			pyplot.ylabel(ylab1)
+			pyplot.title("Static Acuity Logistic Curve")
 			pyplot.savefig(SavePath + str(counter) + "_StaticAcuityFit" + ".png",dpi = 300)
 			#pyplot.show()
 			pyplot.clf()
@@ -2661,11 +2981,12 @@ class TotalMean:
 				x_data2 = list(AZ_percent.keys())
 				y_data2 = []
 				for x in x_data2:
-					y_data2.append(AZ_percent[x])
+					y_data2.append(AZ_percent[x]*Percent_rat)
 				pyplot.scatter(x_data2,y_data2)
 			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab1)
 			pyplot.ylabel(ylab1)
+			pyplot.title("Dynamic Acuity Logistic Curve")
 			pyplot.savefig(SavePath + str(counter) + "_DynamicACuityFit" + ".png",dpi = 300)
 			#pyplot.show()
 			pyplot.clf()
@@ -2690,11 +3011,12 @@ class TotalMean:
 				x_data2 = list(delay_percent.keys())
 				y_data2 = []
 				for x in x_data2:
-					y_data2.append(delay_percent[x])
+					y_data2.append(delay_percent[x] * Percent_rat)
 				pyplot.scatter(x_data2,y_data2)
 			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab2)
 			pyplot.ylabel(ylab1)
+			pyplot.title("Temporal Gaze-shist Acuity Logisic Curve")
 			pyplot.savefig(SavePath + str(counter) + "_GazeshiftACuityFit" + ".png",dpi = 300)
 			#pyplot.show()
 			pyplot.clf()
@@ -2723,6 +3045,7 @@ class TotalMean:
 		pyplot.legend(handles=[tpl1,tpl2,line])
 		pyplot.xlabel(xlab1)
 		pyplot.ylabel(ylab1)
+		pyplot.title("Comparison Between Static and Dynamic Acuity")
 		pyplot.savefig(SavePath + str(sub) + "_SDFit" + ".png",dpi = 300)
 		#pyplot.show()
 		pyplot.clf()
@@ -2764,14 +3087,205 @@ class TotalMean:
 				index += 1
 		common_legend(fig,[axes[0,0]])
 		common_axes(fig,xlab1,ylab1)
+		pyplot.title("Comparison of Static Acuity and Dynamic Acuity of Healthy Group")
 		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300)
 		#pyplot.show()
 		pyplot.clf()
+
+	#Mode: 0 DDA, 1 DGA. Dir: 0 all, 1, left, 2 right.
+	def _head_eye_mean_cal(self,mat_data_arr,mode = 0,dir = 0,speed = False):
+		print(title)
+		head_sum = None
+		eye_sum = None
+		gaze_sum = None
+		sub_num = len(mat_data_arr)
+		real_sub = sub_num
+		for sub in range(0,sub_num):
+			if(mode == 0):
+				if(not speed):
+					if(dir == 0):
+						source = mat_data_arr[sub].DYP_mean
+					elif(dir == 1):
+						source = mat_data_arr[sub].DYLP_mean
+					elif(dir == 2):
+						source = mat_data_arr[sub].DYRP_mean
+				else:
+					if(dir == 0):
+						source = mat_data_arr[sub].DYS_mean
+					elif(dir == 1):
+						source = mat_data_arr[sub].DYLS_mean
+					elif(dir == 2):
+						source = mat_data_arr[sub].DYRS_mean
+			elif(mode == 1):
+				if(not speed):
+					if(dir == 0):
+						source = mat_data_arr[sub].GAP_mean
+					elif(dir == 1):
+						source = mat_data_arr[sub].GALP_mean
+					elif(dir == 2):
+						source = mat_data_arr[sub].GARP_mean
+				else:
+					if(dir == 0):
+						source = mat_data_arr[sub].GAS_mean
+					elif(dir == 1):
+						source = mat_data_arr[sub].GALS_mean
+					elif(dir == 2):
+						source = mat_data_arr[sub].GARS_mean
+			if(len(source[0][:,0]) < 10):
+				real_sub -= 1
+				continue
+			if(head_sum is None):
+				head_sum = source[0][:,0]
+				eye_sum = source[0][:,1]
+				gaze_sum = source[0][:,2]
+			else:
+				print("!!!!!!",head_sum)
+				print("!!!!!!",head_sum.shape)
+				print("!!!!!!",source[0][:,0].shape)
+				print("!!!!!!",sub_num)
+				print("!!!!!!",mode,dir,speed)
+				print("!!!!!!",source[0][:,0])
+				print("@@@@@@",source[0])
+				head_sum = numpy.column_stack((head_sum,source[0][:,0]))
+				eye_sum = numpy.column_stack((eye_sum,source[0][:,1]))
+				gaze_sum = numpy.column_stack((gaze_sum,source[0][:,2]))
+
+		head_mean = numpy.mean(head_sum,axis = 1) #(1000,)
+		eye_mean = numpy.mean(eye_sum,axis = 1)
+		gaze_mean = numpy.mean(gaze_sum,axis = 1)
+
+		head_std = numpy.std(head_sum,axis = 1)
+		eye_std = numpy.std(eye_sum,axis = 1)
+		gaze_std = numpy.std(gaze_sum,axis = 1)
+
+		sam_num = len(head_mean)
+
+		head_confi = head_std * Z_90_confi / math.sqrt(real_sub) #(1000,)
+		eye_confi = eye_std * Z_90_confi / math.sqrt(real_sub)
+		gaze_confi = gaze_std * Z_90_confi / math.sqrt(real_sub)
+
+		mean_result = head_mean #(1000,3)
+		mean_result = numpy.column_stack((mean_result,eye_mean))
+		mean_result = numpy.column_stack((mean_result,gaze_mean))
+
+		vari_result = head_confi
+		vari_result = numpy.column_stack((vari_result,eye_confi))
+		vari_result = numpy.column_stack((vari_result,gaze_confi))
+
+		if(mode == 0):
+			if(not speed):
+				if(dir == 0):
+					self.HE_mean_DAP = [mean_result,vari_result]
+				elif(dir == 1):
+					self.HE_mean_LDAP = [mean_result,vari_result]
+				elif(dir == 2):
+					self.HE_mean_RDAP = [mean_result,vari_result]
+			else:
+				if(dir == 0):
+					self.HE_mean_DAS = [mean_result,vari_result]
+				elif(dir == 1):
+					self.HE_mean_LDAS = [mean_result,vari_result]
+				elif(dir == 2):
+					self.HE_mean_RDAS = [mean_result,vari_result]
+		elif(mode == 1):
+			if(not speed):
+				if(dir == 0):
+					self.HE_mean_GAP = [mean_result,vari_result]
+				elif(dir == 1):
+					self.HE_mean_LGAP = [mean_result,vari_result]
+				elif(dir == 2):
+					self.HE_mean_RGAP = [mean_result,vari_result]
+			else:
+				if(dir == 0):
+					self.HE_mean_GAS = [mean_result,vari_result]
+				elif(dir == 1):
+					self.HE_mean_LGAS = [mean_result,vari_result]
+				elif(dir == 2):
+					self.HE_mean_RGAS = [mean_result,vari_result]
+
+	def HE_mean_cal(self,mat_data_arr):
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 0,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 1,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 2,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 0,speed = True)
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 1,speed = True)
+		self._head_eye_mean_cal(mat_data_arr,mode = 0,dir = 2,speed = True)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 0,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 1,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 2,speed = False)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 0,speed = True)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 1,speed = True)
+		self._head_eye_mean_cal(mat_data_arr,mode = 1,dir = 2,speed = True)
+
+	def _head_eye_mean_plot(self,mean_data,title = "",speed = False,return_tpl = False):
+		mean_d = mean_data[0]
+		var_d = mean_data[1]
+		sam_num = len(mean_d)
+
+		labels = ["Head","Eye","Gaze"]
+		labels2 = ["Head 95% confidence","Eye 95% confidence","Gaze 95% confidence"]
+		colors = ["Red","Green","Blue"]
+
+		x_data = numpy.array(range(0,sam_num))
+		x_data = x_data / SS_Ratio * 1000.0
+		tpls = []
+		for i in range(0,3):
+			y_data = mean_d[:,i]
+			tpl1 = pyplot.plot(x_data,y_data,label = labels[i],color = colors[i])
+			y_datav = var_d[:,i]
+			tpl2 = pyplot.plot(x_data,y_datav+y_data,label = labels2[i],color = colors[i],\
+				linestyle = "dashed")
+			tpl3 = pyplot.plot(x_data,-y_datav+y_data,color = colors[i],linestyle = "dashed")
+			tpls.append(tpl1)
+			tpls.append(tpl2)
+			tpls.append(tpl3)
+
+		
+		pyplot.xlabel(xlab6)
+		if(not speed):
+			pyplot.ylabel(ylab2)
+		else:
+			pyplot.ylabel(ylab3)
+		pyplot.title(title)
+		if(return_tpl):
+			return tpls
+		pyplot.savefig(SavePath + title + ".png",dpi = 300)
+		#pyplot.show()
+		pyplot.clf()
+
+	def HE_mean_plot(self):
+		self._head_eye_mean_plot(self.HE_mean_DAP,\
+			title = "Healthy Group TDVA Mean Orientation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_LDAP,\
+			title = "Healthy Group TDVA Left Side Mean Orientation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_RDAP,\
+			title = "Healthy Group TDVA Right Side Mean Orientation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_DAS,\
+			title = "Healthy Group TDVA Mean Speed Data",speed = True)
+		self._head_eye_mean_plot(self.HE_mean_LDAS,\
+			title = "Healthy Group TDVA Left Side Mean Speed Data",speed = True)
+		self._head_eye_mean_plot(self.HE_mean_RDAS,\
+			title = "Healthy Group TDVA Right Side Mean Speed Data",speed = True)
+		self._head_eye_mean_plot(self.HE_mean_GAP,\
+			title = "Healthy Group TGVA Mean Orienation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_LGAP,\
+			title = "Healthy Group TGVA Left Side Mean Orientation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_RGAP,\
+			title = "Healthy Group TGVA Right Side Mean Orientation Data",speed = False)
+		self._head_eye_mean_plot(self.HE_mean_GAS,\
+			title = "Healthy Group TGVA Mean Speed Data",speed = True)
+		self._head_eye_mean_plot(self.HE_mean_LGAS,\
+			title = "Healthy Group TGVA Left Side Mean Speed Data",speed = True)
+		self._head_eye_mean_plot(self.HE_mean_RGAS,\
+			title = "Healthy Group TGVA Right Side Mean Speed Data",speed = True)
+
 
 # In[43]:
 
 def do_total_mean():
 	total_mean = TotalMean()
+	total_mean.HE_mean_cal(MatDatas)
+	total_mean.HE_mean_plot()
 	total_mean.mean_cal_tot(StaticSections,DynamicSections,DY_delaySections,GA_delaySections)
 	total_mean.log_fit()
 	total_mean.mean_plot()
@@ -2792,6 +3306,20 @@ total_mean = do_total_mean()
 # In[45]:
 
 total_mean.log_to_file()
+
+#mean with fit
+def SPM(TM):
+	sub_len = len(StaticSections)
+	for i in range(0,sub_len):
+		subplot_mean(MatDatas[i],GA_delaySections[i],1,0,\
+			title = "Sub " + str(i) + " With Logistic",confi = True,fit = True,TM = TM)
+		subplot_mean(MatDatas[i],GA_delaySections[i],1,1,\
+			title = "Sub " + str(i) + " With Logistic",confi = True,fit = True,TM = TM)
+		subplot_mean(MatDatas[i],GA_delaySections[i],1,2,\
+			title = "Sub " + str(i) + " With Logistic",confi = True,fit = True,TM = TM)
+
+SPM(total_mean)
+
 
 
 # x_data = sorted(list(total_mean.dga_dict.keys()))
@@ -2815,7 +3343,7 @@ def plot_stop_delay(section,lab_mode=0):
 	x_data = sorted(list(section.SD_percent.keys()))
 	y_data = []
 	for x in x_data:
-		y_data.append(section.SD_percent[x][2])
+		y_data.append(section.SD_percent[x][2] * Percent_rat)
 	if(lab_mode == 0):
 		tpl = plotplot(x_data,y_data,section.mode,C_limit1,C_limit2)
 	elif(lab_mode == 1):
@@ -2857,9 +3385,11 @@ def mix_plot():
 	for DDS in DY_delaySections:
 		tpl = plot_delay(DDS,lab_mode = 1)
 		handles.append(tpl)
-	#pyplot.legend(handles=handles)
+	line = pyplot.axhline(AC_threshold,linestyle = 'dashed',label = "Threshold: 0.5625")
+	pyplot.legend(handles=[line])
 	pyplot.xlabel(xlab2)
 	pyplot.ylabel(ylab1)
+	pyplot.title("Healthy Group Temporal Dynamic Acuity")
 	pyplot.savefig(SavePath + "DynamicDelayMix" + ".png",dpi = 300)
 	#pyplot.title("Dynamic Delay")
 	#pyplot.show()
@@ -2917,6 +3447,7 @@ def mix_plot():
 	pyplot.legend(handles = [line])
 	pyplot.xlabel(xlab1)
 	pyplot.ylabel(ylab1)
+	pyplot.title("Logistic Static Curves for All Subjects")
 	pyplot.savefig(SavePath + "Static Acuity Fit" + ".png",dpi = 300)
 	#pyplot.title("Static Acuity Fit")
 	#pyplot.show()
@@ -2936,6 +3467,7 @@ def mix_plot():
 	pyplot.legend(handles=[line])
 	pyplot.xlabel(xlab1)
 	pyplot.ylabel(ylab1)
+	pyplot.title("Logistic Dynamic Curves for All Subjects")
 	pyplot.savefig(SavePath + "Dynamic Acuity Fit" + ".png",dpi = 300)
 	#pyplot.title("Dynamic Acuity Fit")
 	#pyplot.show()
@@ -2955,8 +3487,8 @@ def mix_plot():
 	pyplot.legend(handles=[line])
 	pyplot.xlabel(xlab2)
 	pyplot.ylabel(ylab1)
+	pyplot.title("Healthy Group Gaze-shift Acuity Logistic Curves")
 	pyplot.savefig(SavePath + "Gazeshift Acuity Fit" + ".png",dpi = 300)
-	#pyplot.title("Gazeshift Acuity Fit")
 	#pyplot.show()
 	pyplot.clf()
 	
@@ -2988,6 +3520,8 @@ mix_plot()
 # In[49]:
 
 def subjects_log_to_file():
+	if(not LogToFile):
+		return
 	#StaticSections
 	counter = 0
 	for SS in StaticSections:
