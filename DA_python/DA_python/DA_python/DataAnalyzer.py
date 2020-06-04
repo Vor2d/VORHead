@@ -40,8 +40,8 @@ ylab5 = "DynamicAcuity"
 
 maxfitv = 80000
 #Percentage plot limit
-C_limit1 = -0.1
-C_limit2 = 1.1
+C_limit1 = -10.0
+C_limit2 = 110.0
 #Wide data trial range
 eye_left = -800
 eye_right = 500
@@ -68,7 +68,6 @@ SM_inter_range = 500
 SD_range = 77 #stop_delay range (SS)
 logistic_base = 0.125
 fit_precise = 0.001
-DL_threshold = 7.0 / 9.0
 quant_low = 0.25
 quant_high = 0.75
 logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.7848501,0.7848501,\
@@ -76,6 +75,7 @@ logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.78
 Z_90_confi = 1.960
 Percent_rat = 100.0
 AC_threshold = (1.0 + 0.125) / 2.0 * Percent_rat
+DL_threshold = 7.0 / 9.0 * Percent_rat
 
 
 # In[5]:
@@ -308,7 +308,7 @@ class Section:
 				restr += str(DTFS) + "\t" + str(self.SD_percent[DTFS][0]) + "\t" + str(self.SD_percent[DTFS][1]) + "\t" + str(self.SD_percent[DTFS][2]) + "\n"
 		path = resdata + prefix
 		write_to_file(path,restr)
-		print("!!!!!! ",path)
+		print("logging Section",path)
 
 
 # In[10]:
@@ -1532,7 +1532,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		#curve
 		popt = TM.dga_fit_total[sub_num]
 		x_data2 = numpy.arange(x_data[0],x_data[-1],(x_data[-1] - x_data[0])*fit_precise)
-		y_data2 = sigmoid3(x_data2, *(popt))
+		y_data2 = sigmoid3(x_data2, *(popt)) * Percent_rat
 		ratio_x_data2 = x_data2 * 1000.0 + start
 		axes[0,0].plot(ratio_x_data2,y_data2,label = "logistic curve",color = "red")
 		axes[0,0].set_ylim(C_limit1,C_limit2)
@@ -1584,7 +1584,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 	fig.align_ylabels(axes[:, 0])
 	common_legend(fig,[axes[0,0],axes[2,0]],pos = "lower right")
 	common_axes(fig,xlab6,"")
-	pyplot.title(title)
+	pyplot.suptitle(title)
 	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1834,7 +1834,7 @@ run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True,sh
 
 def plot_fit(x_data,popt,index,lab_mode=0):
 	x_data = np.arange(x_data[0],x_data[-1],fit_precise)
-	y_data = sigmoid3(x_data, *popt)
+	y_data = sigmoid3(x_data, *popt) * Percent_rat
 	if(lab_mode == 1):
 		tpl = plotplot(x_data,y_data,index,C_limit1,C_limit2)
 	return tpl
@@ -2014,7 +2014,7 @@ class TotalMean:
 			fp = float(x_data[-1] - x_data[0]) * fit_precise
 			x_data = np.arange(x_data[0],x_data[-1],fp)
 			for x in x_data:
-				if(sigmoid3(x,*(self.sa_fit[0])) >= AC_threshold):
+				if(sigmoid3(x,*(self.sa_fit[0])) * Percent_rat >= AC_threshold):
 					self.sa_TH = x
 					break
 		elif(mode == 1):
@@ -2022,31 +2022,31 @@ class TotalMean:
 			fp = float(x_data[-1] - x_data[0]) * fit_precise
 			x_data = np.arange(x_data[0],x_data[-1],fp)
 			for x in x_data:
-				if(sigmoid3(x,*(self.da_fit[0])) >= AC_threshold):
+				if(sigmoid3(x,*(self.da_fit[0])) * Percent_rat >= AC_threshold):
 					self.da_TH = x
 					break
 		elif(mode == 2):
 			x_data = sorted(numpy.asarray(list(self.dda_dict.keys())))
 			for x in x_data:
-				if(self.dda_dict[x] >= DL_threshold):
+				if(self.dda_dict[x] * Percent_rat >= DL_threshold):
 					self.dda_TH = x
 					break
 		elif(mode == 3):
 			x_data = sorted(numpy.asarray(list(self.dga_dict.keys())))
 			for x in x_data:
-				if(self.dga_dict[x] >= DL_threshold):
+				if(self.dga_dict[x] * Percent_rat >= DL_threshold):
 					self.dga_TH = x
 					break
 		elif(mode == 4):
 			x_data = sorted(numpy.asarray(list(self.sdda_dict.keys())))
 			for x in x_data:
-				if(self.sdda_dict[x][2] >= DL_threshold):
+				if(self.sdda_dict[x][2] * Percent_rat >= DL_threshold):
 					self.sdda_TH = x
-					break     
+					break
 		elif(mode == 5):
 			x_data = sorted(numpy.asarray(list(self.sdga_dict.keys())))
 			for x in x_data:
-				if(self.sdga_dict[x][2] >= DL_threshold):
+				if(self.sdga_dict[x][2] * Percent_rat >= DL_threshold):
 					self.sdga_TH = x
 					break   
 		
@@ -2083,7 +2083,7 @@ class TotalMean:
 		#SA Fit Plot
 		fp = float(x_data[-1] - x_data[0]) * fit_precise
 		x_data = np.arange(x_data[0],x_data[-1],fp)
-		y_data = sigmoid3(x_data, *(self.sa_fit[0]))
+		y_data = sigmoid3(x_data, *(self.sa_fit[0])) * Percent_rat
 		tpl2 = plotplot(x_data,y_data,"Static Acuity Fit",C_limit1,C_limit2)
 		#Threshold line
 		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
@@ -2103,7 +2103,7 @@ class TotalMean:
 		#DA Fit Plot
 		fp = float(x_data[-1] - x_data[0]) * fit_precise
 		x_data = np.arange(x_data[0],x_data[-1],fp)
-		y_data = sigmoid3(x_data, *(self.da_fit[0]))
+		y_data = sigmoid3(x_data, *(self.da_fit[0])) * Percent_rat
 		tpl2 = plotplot(x_data,y_data,"Dynamic Acuity Fit",C_limit1,C_limit2)
 		#Threshold line
 		pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
@@ -2118,7 +2118,7 @@ class TotalMean:
 		x_data.sort()
 		y_data = []
 		for k in x_data:
-			y_data.append(self.dda_dict[k])
+			y_data.append(self.dda_dict[k] * Percent_rat)
 		tpl = plotplot(x_data,y_data,"Delayed Dynamic Time Mean",C_limit1,C_limit2)
 		#Threshold line
 		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
@@ -2133,10 +2133,10 @@ class TotalMean:
 		x_data.sort()
 		y_data = []
 		for k in x_data:
-			y_data.append(self.dga_dict[k])
+			y_data.append(self.dga_dict[k] * Percent_rat)
 		tpl = plotplot(x_data,y_data,"Delayed Gazeshift Time Mean",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],                      linestyles = 'dashed')
+		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl])
 		pyplot.xlabel(xlab2)
 		pyplot.ylabel(ylab1)
@@ -2148,7 +2148,7 @@ class TotalMean:
 		x_data.sort()
 		y_data = []
 		for k in x_data:
-			y_data.append(self.sdda_dict[k][2])
+			y_data.append(self.sdda_dict[k][2] * Percent_rat)
 		tpl = plotplot(x_data,y_data,"Delayed Dynamic Time From Stop Mean",C_limit1,C_limit2)
 		#Threshold line
 		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
@@ -2163,10 +2163,10 @@ class TotalMean:
 		x_data.sort()
 		y_data = []
 		for k in x_data:
-			y_data.append(self.sdga_dict[k][2])
+			y_data.append(self.sdga_dict[k][2] * Percent_rat)
 		tpl = plotplot(x_data,y_data,"Delayed Gazeshift Time From Stop Mean",C_limit1,C_limit2)
 		#Threshold line
-		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],                      linestyles = 'dashed')
+		pyplot.hlines(DL_threshold,x_data[0],x_data[-1],linestyles = 'dashed')
 		pyplot.legend(handles=[tpl])
 		pyplot.xlabel(xlab3)
 		pyplot.ylabel(ylab1)
@@ -2177,7 +2177,7 @@ class TotalMean:
 		fp = float(x_data[-1] - x_data[0]) * fit_precise
 		x_data = np.arange(x_data[0],x_data[-1],fp)
 		for x in x_data:
-			if(sigmoid3(x,*popt) >= AC_threshold):
+			if(sigmoid3(x,*popt) * Percent_rat >= AC_threshold):
 				return x
 	
 	#Fit and calculate thresholds for all subjects
@@ -2540,7 +2540,7 @@ class TotalMean:
 	def _find_vlinev(self,y_data):
 		count = 0
 		for y in y_data:
-			if(y >= AC_threshold):
+			if(y * Percent_rat >= AC_threshold):
 				return count
 			count += 1
 		
@@ -2550,16 +2550,16 @@ class TotalMean:
 			print("self.sa_quant")
 			vlinev = []
 			x_data = self.sa_quant[:,0]
-			y_data = self.sa_quant[:,1]
+			y_data = self.sa_quant[:,1] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl1 = plotplot(x_data,y_data,str(quant_low),C_limit1,C_limit2)
-			y_data = self.sa_quant[:,2]
+			y_data = self.sa_quant[:,2] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl2 = plotplot(x_data,y_data,str(0.5),C_limit1,C_limit2)
-			y_data = self.sa_quant[:,3]
+			y_data = self.sa_quant[:,3] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl3 = plotplot(x_data,y_data,str(quant_high),C_limit1,C_limit2)
-			y_data = sigmoid3(x_data, *(self.sa_fit[0]))
+			y_data = sigmoid3(x_data, *(self.sa_fit[0])) * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl4 = plotplot(x_data,y_data,"mean",C_limit1,C_limit2)
 			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
@@ -2580,17 +2580,17 @@ class TotalMean:
 			#self.da_quant
 			print("self.da_quant")
 			vlinev = []
-			x_data = self.da_quant[:,0]
-			y_data = self.da_quant[:,1]
+			x_data = self.da_quant[:,0] * Percent_rat
+			y_data = self.da_quant[:,1] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl1 = plotplot(x_data,y_data,str(quant_low),C_limit1,C_limit2)
-			y_data = self.da_quant[:,2]
+			y_data = self.da_quant[:,2] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl2 = plotplot(x_data,y_data,str(0.5),C_limit1,C_limit2)
-			y_data = self.da_quant[:,3]
+			y_data = self.da_quant[:,3] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl3 = plotplot(x_data,y_data,str(quant_high),C_limit1,C_limit2)
-			y_data = sigmoid3(x_data, *(self.da_fit[0]))
+			y_data = sigmoid3(x_data, *(self.da_fit[0])) * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl4 = plotplot(x_data,y_data,"mean",C_limit1,C_limit2)
 			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',label = "Threshold: 0.5625")
@@ -2607,14 +2607,14 @@ class TotalMean:
 			#dda_quant
 			print("self.dda_quant")
 			vlinev = []
-			x_data = self.dda_quant[:,0]
-			y_data = self.dda_quant[:,1]
+			x_data = self.dda_quant[:,0] * Percent_rat
+			y_data = self.dda_quant[:,1] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl1 = plotplot(x_data,y_data,str(quant_low),C_limit1,C_limit2)
-			y_data = self.dda_quant[:,2]
+			y_data = self.dda_quant[:,2] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl2 = plotplot(x_data,y_data,str(0.5),C_limit1,C_limit2)
-			y_data = self.dda_quant[:,3]
+			y_data = self.dda_quant[:,3] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl3 = plotplot(x_data,y_data,str(quant_high),C_limit1,C_limit2)
 			#line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles
@@ -2632,17 +2632,17 @@ class TotalMean:
 			#dga_quant
 			print("self.dga_quant")
 			vlinev = []
-			x_data = self.dga_quant[:,0]
-			y_data = self.dga_quant[:,1]
+			x_data = self.dga_quant[:,0] * Percent_rat
+			y_data = self.dga_quant[:,1] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl1 = plotplot(x_data,y_data,str(quant_low),C_limit1,C_limit2)
-			y_data = self.dga_quant[:,2]
+			y_data = self.dga_quant[:,2] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl2 = plotplot(x_data,y_data,str(0.5),C_limit1,C_limit2)
-			y_data = self.dga_quant[:,3]
+			y_data = self.dga_quant[:,3] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl3 = plotplot(x_data,y_data,str(quant_high),C_limit1,C_limit2)
-			y_data = sigmoid3(x_data, *(self.dga_fit[0]))
+			y_data = sigmoid3(x_data, *(self.dga_fit[0])) * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl4 = plotplot(x_data,y_data,"mean",C_limit1,C_limit2)
 			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',label = "Threshold: 0.5625")
@@ -2661,17 +2661,17 @@ class TotalMean:
 			#sdga_quant
 			print("self.sdga_quant")
 			vlinev = []
-			x_data = self.sdga_quant[:,0]
-			y_data = self.sdga_quant[:,1]
+			x_data = self.sdga_quant[:,0] * Percent_rat
+			y_data = self.sdga_quant[:,1] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl1 = plotplot(x_data,y_data,str(quant_low),C_limit1,C_limit2)
-			y_data = self.sdga_quant[:,2]
+			y_data = self.sdga_quant[:,2] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl2 = plotplot(x_data,y_data,str(0.5),C_limit1,C_limit2)
-			y_data = self.sdga_quant[:,3]
+			y_data = self.sdga_quant[:,3] * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl3 = plotplot(x_data,y_data,str(quant_high),C_limit1,C_limit2)
-			y_data = sigmoid3(x_data, *(self.sdga_fit[0]))
+			y_data = sigmoid3(x_data, *(self.sdga_fit[0])) * Percent_rat
 			vlinev.append(x_data[self._find_vlinev(y_data)])
 			tpl4 = plotplot(x_data,y_data,"mean",C_limit1,C_limit2)
 			line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',label = "Threshold: 0.5625")
@@ -2697,7 +2697,7 @@ class TotalMean:
 				tpls.append(tpl)
 				count += 1
 			p_x_data = np.arange(x_data[0],x_data[-1],fit_precise)
-			y_data = sigmoid3(p_x_data, *(self.sa_fit[0]))
+			y_data = sigmoid3(p_x_data, *(self.sa_fit[0])) * Percent_rat
 			tpl = plotplot(p_x_data,y_data,"mean",C_limit1,C_limit2)
 			tpls.append(tpl)
 			vlinev.append(p_x_data[self._find_vlinev(y_data)])
@@ -2972,7 +2972,7 @@ class TotalMean:
 			minx = min(temp)
 			step = (maxx - minx) * fit_precise
 			x_data = numpy.arange(minx,maxx,step)
-			y_data = sigmoid3(x_data, *(popt))
+			y_data = sigmoid3(x_data, *(popt)) * Percent_rat
 			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
 			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
 				label = "Threshold: 0.5625"))
@@ -3002,7 +3002,7 @@ class TotalMean:
 			minx = min(temp)
 			step = (maxx - minx) * fit_precise
 			x_data = numpy.arange(minx,maxx,step)
-			y_data = sigmoid3(x_data, *(popt))
+			y_data = sigmoid3(x_data, *(popt)) * Percent_rat
 			tpls.append(plotplot(x_data,y_data,"Logistic Curve",C_limit1,C_limit2))
 			tpls.append(pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',\
 				label = "Threshold: 0.5625"))
@@ -3031,7 +3031,7 @@ class TotalMean:
 		minx = min(temp)
 		step = (maxx - minx) * fit_precise
 		x_data = numpy.arange(minx,maxx,step)
-		y_data = sigmoid3(x_data, *(popt))
+		y_data = sigmoid3(x_data, *(popt)) * Percent_rat
 		tpl1 = plotplot(x_data,y_data,"Static Acuity",C_limit1,C_limit2)
 		popt = self.da_fit_total[sub]
 		temp = list(self.da_dict.keys())
@@ -3039,7 +3039,7 @@ class TotalMean:
 		minx = min(temp)
 		step = (maxx - minx) * fit_precise
 		x_data = numpy.arange(minx,maxx,step)
-		y_data = sigmoid3(x_data, *(popt))
+		y_data = sigmoid3(x_data, *(popt)) * Percent_rat
 		tpl2 = plotplot(x_data,y_data,"Dynamic Acuity",C_limit1,C_limit2)
 		line = pyplot.hlines(AC_threshold,x_data[0],x_data[-1],linestyles = 'dashed',                              label = "Threshold: 0.5625")
 		pyplot.legend(handles=[tpl1,tpl2,line])
@@ -3081,13 +3081,13 @@ class TotalMean:
 				if(index >= sub_n):
 					finished = True
 					break
-				y_data_sa = sigmoid3(x_data, *(sapopt[index]))
-				y_data_da = sigmoid3(x_data, *(dapopt[index]))
+				y_data_sa = sigmoid3(x_data, *(sapopt[index])) * Percent_rat
+				y_data_da = sigmoid3(x_data, *(dapopt[index])) * Percent_rat
 				self._subplot_SD_single(axes[i,j],x_data,y_data_sa,y_data_da)
 				index += 1
 		common_legend(fig,[axes[0,0]])
 		common_axes(fig,xlab1,ylab1)
-		pyplot.title("Comparison of Static Acuity and Dynamic Acuity of Healthy Group")
+		pyplot.suptitle("Comparison of Static Acuity and Dynamic Acuity of Healthy Group")
 		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300)
 		#pyplot.show()
 		pyplot.clf()
@@ -3139,13 +3139,6 @@ class TotalMean:
 				eye_sum = source[0][:,1]
 				gaze_sum = source[0][:,2]
 			else:
-				print("!!!!!!",head_sum)
-				print("!!!!!!",head_sum.shape)
-				print("!!!!!!",source[0][:,0].shape)
-				print("!!!!!!",sub_num)
-				print("!!!!!!",mode,dir,speed)
-				print("!!!!!!",source[0][:,0])
-				print("@@@@@@",source[0])
 				head_sum = numpy.column_stack((head_sum,source[0][:,0]))
 				eye_sum = numpy.column_stack((eye_sum,source[0][:,1]))
 				gaze_sum = numpy.column_stack((gaze_sum,source[0][:,2]))
