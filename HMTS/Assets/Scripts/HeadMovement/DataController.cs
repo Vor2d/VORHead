@@ -6,7 +6,7 @@ using HMTS_enum;
 
 public class DataController : ParentDataController {
 
-    private const string acuity_path = "Sprites/Acuity/Transparant Cs/WhiteLandC/";
+    private const string acuity_path = "Sprites/Acuity/Transparant Cs/WhiteLandC_V2/";
     private const string trial_path = "Default.txt";
     private const string ECTrial_path = "ECTrial.txt";
     private readonly char[] line_spliter = new char[] { ' ', '\t' };
