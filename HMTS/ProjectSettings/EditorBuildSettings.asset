@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/HMTS/HeadMovement.unity
     guid: 9c00cf293d78d2a4786c4837529b2916
+  - enabled: 1
+    path: Assets/Scenes/HMTS/SettingScene/SettingScene.unity
+    guid: c865cb59eccc54f47b059c2255347f59
   m_configObjects: {}

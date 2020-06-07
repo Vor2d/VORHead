@@ -27,8 +27,12 @@ public class DataController : ParentDataController {
 
     private Dictionary<string, string> init_data;
 
+    public static DataController IS { get; set; }
+
     protected override void Awake()
     {
+        IS = this;
+
         base.Awake();
 
         this.init_data = new Dictionary<string, string>();

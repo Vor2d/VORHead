@@ -23,7 +23,7 @@ public class WorldCanvasController : MonoBehaviour {
     private bool entered_flag;
 
     private void Awake()
-    {
+    { 
         
     }
 

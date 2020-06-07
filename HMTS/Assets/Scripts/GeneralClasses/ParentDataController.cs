@@ -17,8 +17,12 @@ public class ParentDataController : MonoBehaviour {
 
     public MySceneManager MSM_script { get; private set; }
 
+    public static ParentDataController IS { get; set; }
+
     protected virtual void Awake()
     {
+        IS = this;
+
         DontDestroyOnLoad(gameObject);
 
         init_DC();
