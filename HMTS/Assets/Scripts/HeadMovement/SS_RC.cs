@@ -13,6 +13,8 @@ public class SS_RC : MonoBehaviour
     private void Awake()
     {
         IS = this;
+
+    
     }
 
 }
