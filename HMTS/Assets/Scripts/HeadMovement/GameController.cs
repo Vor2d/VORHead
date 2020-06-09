@@ -380,7 +380,7 @@ public class GameController : GeneralGameController {
     {
         Vector3 virtual_rot = Vector3.zero;
         if (Using1to1) { virtual_rot = new Vector3(0.0f,DC_script.SystemSetting.Cam1Angle,0.0f); }
-        if (!DC_script.SystemSetting.Using_curved_screen)
+        else if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
                             DC_script.SystemSetting.Screen_width_cm,
@@ -402,7 +402,7 @@ public class GameController : GeneralGameController {
         CapCamera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
 
         if (Using1to1) { virtual_rot = new Vector3(0.0f, DC_script.SystemSetting.Cam3Angle, 0.0f); }
-        if (!DC_script.SystemSetting.Using_curved_screen)
+        else if (!DC_script.SystemSetting.Using_curved_screen)
         {
             virtual_rot = GeneralMethods.RealToVirtual(DC_script.SystemSetting.Player_screen_cm,
                             DC_script.SystemSetting.Screen_width_cm,
