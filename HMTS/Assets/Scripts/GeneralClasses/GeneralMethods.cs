@@ -612,9 +612,25 @@ public static class GeneralMethods {
         }
     }
 
-    public static Vector3 world_to_canvas(Vector3 target_pos,Camera camera,Canvas canvas)
+    public static Vector3 world_to_canvas(Vector3 target_pos,Camera camera,Canvas canvas,bool boundary = false)
     {
-		Vector3 screenPos = camera.WorldToViewportPoint(target_pos);
+        Vector3 screenPos = new Vector3();
+        try
+        {
+            screenPos = camera.WorldToViewportPoint(target_pos);
+        }
+        catch (Exception e) 
+        {
+            Debug.Log("world_to_canvas "+e);
+            screenPos.z = -1.0f;
+        }
+        if(boundary)
+        {
+            if (screenPos.x < 0.0f) { screenPos.x = 0.0f; }
+            else if (screenPos.x > 1.0f) { screenPos.x = 1.0f; }
+            if (screenPos.y < 0.0f) { screenPos.y = 0.0f; }
+            else if (screenPos.y > 1.0f) { screenPos.y = 1.0f; }
+        }
         if (screenPos.z < 0) { screenPos = new Vector3(int.MaxValue, int.MaxValue, 0.0f); }
         else
         {

@@ -57,7 +57,13 @@ public class GameController : GeneralGameController {
     [SerializeField] private Camera SettingCamera;
     [SerializeField] private Camera CapCamera1;
     [SerializeField] private Camera CapCamera2;
-    
+    [SerializeField] private bool UsingHIOC;
+    [SerializeField] private Transform HIOC_TRANS1;
+    [SerializeField] private Transform HIOC_TRANS2;
+    [SerializeField] private bool UsingErrorFrame;
+    [SerializeField] private Transform EF_TRANS1;
+    [SerializeField] private Transform EF_TRANS2;
+
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -286,6 +292,14 @@ public class GameController : GeneralGameController {
         {
             GCI_script.Button5_act += check_controller;
         }
+
+        if (UsingHIOC) 
+        {
+            HIOC_TRANS1.GetComponent<HeadIndiOnCanvas>().init_HIOC(HeadIndicator.transform);
+            HIOC_TRANS2.GetComponent<HeadIndiOnCanvas>().init_HIOC(HeadIndicator.transform);
+        }
+
+        turn_off_EF();
     }
 
     // Update is called once per frame
@@ -962,6 +976,19 @@ public class GameController : GeneralGameController {
     //    }
     //}
 
+
+    private void turn_on_EF()
+    {
+        EF_TRANS1.GetComponent<SpriteRenderer>().enabled = true;
+        EF_TRANS2.GetComponent<SpriteRenderer>().enabled = true;
+    }
+
+    private void turn_off_EF()
+    {
+        EF_TRANS1.GetComponent<SpriteRenderer>().enabled = false;
+        EF_TRANS2.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
     public void ToShowError()
     {
         if(TurnSpeedWindow)
@@ -984,6 +1011,8 @@ public class GameController : GeneralGameController {
             }
         }
 
+        if (UsingErrorFrame) { turn_on_EF(); }
+
         //Debug.Log("")
     }
 
@@ -1000,6 +1029,7 @@ public class GameController : GeneralGameController {
     public void LeaveShowError()
     {
         IndiText1.GetComponent<Renderer>().enabled = false;
+        turn_off_EF();
     }
 
     //public void to_next_trial()
@@ -1015,11 +1045,11 @@ public class GameController : GeneralGameController {
         }
         if (!DC_script.Current_GM.HideHeadIndicator)
         {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+            turn_on_HI();
         }
         else
         {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+            turn_off_HI();
         }
 
         if (DC_script.Current_GM.UsingAcuityChange)
@@ -1636,11 +1666,35 @@ public class GameController : GeneralGameController {
         IndiText1.GetComponent<Renderer>().enabled = true;
     }
 
+    private void turn_on_HIOC()
+    {
+        HIOC_TRANS1.GetComponent<HeadIndiOnCanvas>().turn_on_sprite();
+        HIOC_TRANS2.GetComponent<HeadIndiOnCanvas>().turn_on_sprite();
+    }
+
+    private void turn_off_HIOC()
+    {
+        HIOC_TRANS1.GetComponent<HeadIndiOnCanvas>().turn_off_sprite();
+        HIOC_TRANS2.GetComponent<HeadIndiOnCanvas>().turn_off_sprite();
+    }
+
+    private void turn_on_HI()
+    {
+        HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+        if (UsingHIOC) { turn_on_HIOC(); }
+    }
+
+    private void turn_off_HI()
+    {
+        HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+        if (UsingHIOC) { turn_off_HIOC(); }
+    }
+
     public void ToHideHeadIndicator()
     {
         if(DC_script.Current_GM.HeadIndicatorChange)
         {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
+            turn_off_HI();
         }
         
         GCAnimator.SetTrigger("NextStep");
@@ -1651,7 +1705,7 @@ public class GameController : GeneralGameController {
         //Debug.Log("ToShowHeadIndicator");
         if (DC_script.Current_GM.HeadIndicatorChange)
         {
-            HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
+            turn_on_HI();
         }
 
         GCAnimator.SetTrigger("NextStep");
