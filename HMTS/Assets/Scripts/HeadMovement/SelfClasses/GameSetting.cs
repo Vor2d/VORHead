@@ -184,7 +184,7 @@ public class GameSetting
         result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
         result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
         result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
-        result_str += "Cam2Angle" + " " + Cam3Angle.ToString("F2");
+        result_str += "Cam3Angle" + " " + Cam3Angle.ToString("F2");
         result_str += "RotationScale" + " " + RotationScale.ToString("F2");
         result_str += "DistScale" + " " + DistScale.ToString("F2");
 

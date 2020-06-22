@@ -2,11 +2,24 @@ GameMode	StaticAcuity
 AcuitySize	8
 UsingAcuityChange	True
 AcuityChangeMode	acuity_list
-UsingDynamicDelay	True
-DynamicDelayMode	fix_amount
-DynaDelayInit	0.0
-DynaDelayMax	1.0
-DynaDelayInter	0.1
+________________________________
+-1
+0	0
+________________________________
+GameMode	DynamicAcuity
+AcuitySize	8
+UsingAcuityChange	True
+AcuityChangeMode	acuity_list
+DynaDir	1
+________________________________
+-1
+0	0
+________________________________
+GameMode	DynamicAcuity
+AcuitySize	8
+UsingAcuityChange	True
+AcuityChangeMode	acuity_list
+DynaDir	2
 ________________________________
 -1
 0	0

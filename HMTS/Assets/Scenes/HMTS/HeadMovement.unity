@@ -1768,7 +1768,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &207210409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10986,6 +10986,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1585229709}
   - component: {fileID: 1585229710}
+  - component: {fileID: 1585229711}
   m_Layer: 11
   m_Name: HeadIndiOnCanvas
   m_TagString: Untagged
@@ -11060,6 +11061,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1585229711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585229708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c381d5d29dfda4980accd0b4c33b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 925483781}
+  camara: {fileID: 1303790925}
 --- !u!1 &1585921740
 GameObject:
   m_ObjectHideFlags: 0
@@ -15295,6 +15310,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2134503206}
   - component: {fileID: 2134503207}
+  - component: {fileID: 2134503208}
   m_Layer: 12
   m_Name: HeadIndiOnCanvas
   m_TagString: Untagged
@@ -15369,6 +15385,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &2134503208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2134503205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c381d5d29dfda4980accd0b4c33b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1169381813}
+  camara: {fileID: 822404578}
 --- !u!1 &2139837188
 GameObject:
   m_ObjectHideFlags: 0

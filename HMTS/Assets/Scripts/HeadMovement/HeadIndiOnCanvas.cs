@@ -5,10 +5,10 @@ using UnityEngine;
 public class HeadIndiOnCanvas : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
+    [SerializeField] private Camera camara;
 
     private SpriteRenderer sprite_renderer;
     private Transform HI_TRANS;
-    private Camera camara;
     private bool activate;
 
 
@@ -16,7 +16,6 @@ public class HeadIndiOnCanvas : MonoBehaviour
     {
         this.sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
         this.HI_TRANS = null;
-        this.camara = null;
         this.activate = false;
     }
 
