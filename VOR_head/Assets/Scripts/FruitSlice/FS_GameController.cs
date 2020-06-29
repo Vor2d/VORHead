@@ -4,28 +4,33 @@ using UnityEngine.SceneManagement;
 [RequireComponent(typeof(Animator))]
 public class FS_GameController : GeneralGameController {
 
-    [SerializeField] private FS_RC FSRC;    //Reference Controller;
-
-    [SerializeField] private string ScoreTextPre_str = "Score: ";   //Score text prefix;
+    [SerializeField] private const string ScoreTextPre_str = "Score: ";   //Score text prefix;
 
     public bool Start_flag { get; private set; }
+
     private Animator FSGCAnimator;  //State machine animator;
     private int score;
     private int score_increase;
+    private int curr_trial_index;
+
+    public static FS_GameController IS { get; set; }
 
     private void Awake()
     {
+        IS = this;
+
         this.FSGCAnimator = null;
         this.score = 0;
         this.Start_flag = false;
         this.score_increase = 0;
+        this.curr_trial_index = -1;
     }
 
     // Use this for initialization
     void Start ()
     {
         FSGCAnimator = GetComponent<Animator>();
-        score_increase = FSRC.DC_script.GameSetting.ScoreIncrPerCut;
+        score_increase = FS_DataController.IS.GameSetting.ScoreIncrPerCut;
         register_controller();
     }
 	
@@ -42,12 +47,14 @@ public class FS_GameController : GeneralGameController {
 
     private void register_controller()
     {
-        FSRC.CI_script.Button_B += recenter_VR;
+        FS_RC.IS.CI_script.Button_B += recenter_VR;
+        FS_RC.IS.CI_script.Button_A += next_trial_but;
     }
 
     private void deregister_controller()
     {
-        FSRC.CI_script.Button_B -= recenter_VR;
+        FS_RC.IS.CI_script.Button_B -= recenter_VR;
+        FS_RC.IS.CI_script.Button_A -= next_trial_but;
     }
 
 
@@ -57,25 +64,30 @@ public class FS_GameController : GeneralGameController {
         score_changed();
     }
 
-    public void restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
+    //public void restart()
+    //{
+    //    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    //}
 
     public void quit_game()
     {
-        FSRC.DC_script.MSM_script.to_start_scene();
+        FS_DataController.IS.MSM_script.to_start_scene();
     }
 
     private void score_changed()
     {
-        FSRC.ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreTextPre_str + score.ToString();
+        FS_RC.IS.ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreTextPre_str + score.ToString();
     }
 
     public void start_game()
     {
         Start_flag = true;
         FSGCAnimator.SetTrigger(FS_SD.AniStart_str);
+    }
+
+    private void next_trial_but()
+    {
+        FSGCAnimator.SetTrigger(FS_SD.AniNextTrial_str);
     }
 
     #region Animator
@@ -87,13 +99,55 @@ public class FS_GameController : GeneralGameController {
 
     public void ToStartGame()
     {
-        FSRC.Fruit_TRANS.GetComponent<FS_Fruit>().start_fruit();
+        FS_RC.IS.Fruit_TRANS.GetComponent<FS_Fruit>().start_fruit();
         FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
     }
 
     public void ToInGame()
     {
 
+    }
+
+    public void ToLoadTrial()
+    {
+        load_trial();
+        FSGCAnimator.SetTrigger(FS_SD.AniNextStep_str);
+    }
+
+    private void load_trial()
+    {
+        curr_trial_index++;
+        Vector2[] poss = mesh_size_cal(curr_trial_index);
+        FS_RC.IS.Fruit_TRANS.GetComponent<FS_Fruit>().
+            load_trial(poss, FS_DataController.IS.FruitTextures[curr_trial_index]);
+    }
+
+    /// <summary>
+    /// Calculate the rectangles for the mesh;
+    /// </summary>
+    /// <param name="tex_index"></param>
+    /// <returns>{upper left point, down right point}</returns>
+    private Vector2[] mesh_size_cal(int tex_index)
+    {
+        Vector2[] poss = new Vector2[2];
+        Texture2D texture = FS_DataController.IS.FruitTextures[tex_index];
+        float h_w_ratio = (float)texture.height / (float)texture.width;
+        float mesh_h = 0.0f, mesh_w = 0.0f;
+        float frame_size = FS_DataController.IS.GameSetting.FruitFrameSize;
+        if (h_w_ratio >= 1.0f)
+        {
+            mesh_h = frame_size;
+            mesh_w = frame_size / h_w_ratio;
+        }
+        else
+        {
+            mesh_h = frame_size * h_w_ratio;
+            mesh_w = frame_size;
+        }
+        poss[0] = new Vector2(mesh_w / 2.0f * -1.0f, mesh_h / 2.0f);
+        poss[1] = new Vector2(mesh_w / 2.0f, mesh_h / 2.0f * -1.0f);
+        Debug.Log("!!!!! " + poss[0].ToString() + poss[1].ToString());
+        return poss;
     }
     #endregion
 

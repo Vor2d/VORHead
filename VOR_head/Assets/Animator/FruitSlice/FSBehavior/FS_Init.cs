@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class FS_Init : StateMachineBehaviour {
 
-    private FS_GameController FSGC_script;
+    //private FS_GameController FSGC_script;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(FSGC_script == null)
-        {
-            FSGC_script =
-                GameObject.Find("FS_GameController").GetComponent<FS_GameController>();
-        }
-        FSGC_script.ToInit();
+        //if(FSGC_script == null)
+        //{
+        //    FSGC_script =
+        //        GameObject.Find("FS_GameController").GetComponent<FS_GameController>();
+        //}
+        //FSGC_script.ToInit();
+
+        FS_GameController.IS.ToInit();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

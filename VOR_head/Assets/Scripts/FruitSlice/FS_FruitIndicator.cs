@@ -45,6 +45,7 @@ public class FS_FruitIndicator : MonoBehaviour {
             if(i == 0)
             {
                 temp_TRANS.GetComponent<FS_Indicator>().init_indicator(this, true);
+                F_script.set_start_pos(temp_TRANS.position);
             }
             else
             {

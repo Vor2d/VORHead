@@ -6,9 +6,14 @@
 public class FS_DataController : ParentDataController
 {
     public FS_Setting GameSetting { get; set; }
+    public Texture2D[] FruitTextures;
+
+    public static FS_DataController IS { get; set; }
 
     protected override void Awake()
     {
+        IS = this;
+
         base.Awake();
 
         this.GameSetting = new FS_Setting();

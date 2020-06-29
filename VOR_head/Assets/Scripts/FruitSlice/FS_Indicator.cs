@@ -40,7 +40,7 @@ public class FS_Indicator : MonoBehaviour
     {
         FI_script = _FSFI_script;
         set_act_state(on_off);
-        RC_cache = FI_script.F_script.FSRC.RC_script;
+        RC_cache = FS_RC.IS.RC_script;
     }
 
     public void set_act_state(bool on_off)

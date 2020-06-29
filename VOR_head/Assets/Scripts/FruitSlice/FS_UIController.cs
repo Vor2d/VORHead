@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 public class FS_UIController : MonoBehaviour
 {
-    [SerializeField] private FS_RC FSRC;
     [SerializeField] private Animator UIAnimator;
     [Header("Pages")]
     [SerializeField] private Transform InitPage_TRANS;
@@ -11,8 +10,12 @@ public class FS_UIController : MonoBehaviour
 
     private List<Transform> Pages_TRANSs;
 
+    public static FS_UIController IS { get; set; }
+
     private void Start()
     {
+        IS = this;
+
         this.Pages_TRANSs = new List<Transform>();
 
         init_page_list();
@@ -45,18 +48,18 @@ public class FS_UIController : MonoBehaviour
     #region Buttons
     public void restart_button()
     {
-        FSRC.GC_script.restart();
+        FS_GameController.IS.restart();
     }
 
     public void start_button()
     {
-        FSRC.GC_script.start_game();
+        FS_GameController.IS.start_game();
         UIAnimator.SetTrigger(FS_SD.AniStart_str);
     }
 
     public void quit_button()
     {
-        FSRC.GC_script.quit_game();
+        FS_GameController.IS.quit_game();
     }
     #endregion
 

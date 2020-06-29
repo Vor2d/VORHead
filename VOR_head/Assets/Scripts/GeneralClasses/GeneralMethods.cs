@@ -604,4 +604,9 @@ public static class GeneralMethods {
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+
+    public static Vector2[] get_perpen_vec(Vector2 origin)
+    {
+        return new Vector2[] { new Vector2(origin.y, -origin.x), new Vector2(-origin.y, origin.x) };
+    }
 }

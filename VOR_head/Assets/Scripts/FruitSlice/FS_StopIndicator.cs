@@ -18,7 +18,7 @@ public class FS_StopIndicator : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        RC_cache = F_script.FSRC.RC_script;
+        RC_cache = FS_RC.IS.RC_script;
     }
 	
 	// Update is called once per frame
@@ -34,6 +34,11 @@ public class FS_StopIndicator : MonoBehaviour {
             spawn_stop_indi(hit_point, 
                     FSFI_script.indicators_TRANSs[FSFI_script.activated_index].position);
         }
+    }
+
+    public void mark_cut(Vector3 stop_pos)
+    {
+        spawn_stop_indi(stop_pos, FSFI_script.indicators_TRANSs[FSFI_script.activated_index].position);
     }
 
     private void spawn_stop_indi(Vector3 pos, Vector3 start_pos)

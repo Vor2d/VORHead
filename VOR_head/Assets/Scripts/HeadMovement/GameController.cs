@@ -333,12 +333,12 @@ public class GameController : GeneralGameController {
         LPI_CP_script.changePosition(last_rot_ang_dir.x, 0.0f, (int)last_rot_ang_dir.y , 0);
     }
 
-    public void Gaze(GazeTarget gazeTarget)
+    public void Gaze(HMTS_enum.GazeTarget gazeTarget)
     {
         //Debug.Log("gaze_timer" + gaze_timer);
         switch(gazeTarget)
         {
-            case GazeTarget.DefaultTarget:
+            case HMTS_enum.GazeTarget.DefaultTarget:
                 if (gaze_timer <= 0)
                 {
                     GCAnimator.SetTrigger("NextStep");
@@ -346,7 +346,7 @@ public class GameController : GeneralGameController {
                 }
                 break;
 
-            case GazeTarget.HideDetector:
+            case HMTS_enum.GazeTarget.HideDetector:
                 if(hide_gaze_timer <= 0)
                 {
                     GCAnimator.SetTrigger("NextStep");
@@ -369,11 +369,11 @@ public class GameController : GeneralGameController {
         if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag)
             || DC_script.Current_GM.HideHeadIndicator)
         {
-            Gaze(GazeTarget.HideDetector);
+            Gaze(HMTS_enum.GazeTarget.HideDetector);
         }
         else
         {
-            Gaze(GazeTarget.DefaultTarget);
+            Gaze(HMTS_enum.GazeTarget.DefaultTarget);
         }
     }
 
@@ -410,11 +410,11 @@ public class GameController : GeneralGameController {
         if ((DC_script.Current_GM.HideFlag && !DC_script.Current_GM.ShowTargetFlag) 
                 || DC_script.Current_GM.HideHeadIndicator)
         {
-            Gaze(GazeTarget.HideDetector);
+            Gaze(HMTS_enum.GazeTarget.HideDetector);
         }
         else
         {
-            Gaze(GazeTarget.DefaultTarget);
+            Gaze(HMTS_enum.GazeTarget.DefaultTarget);
         }
     }
 

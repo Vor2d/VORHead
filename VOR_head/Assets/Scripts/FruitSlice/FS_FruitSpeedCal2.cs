@@ -17,7 +17,7 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
 
     private void Start()
     {
-        slice_speed = F_script.FSRC.DC_script.GameSetting.SliceSpeed;
+        slice_speed = FS_DataController.IS.GameSetting.SliceSpeed;
     }
 
     // Update is called once per frame
