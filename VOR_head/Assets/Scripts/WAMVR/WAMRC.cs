@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Boo.Lang;
+using UnityEngine;
 
 public class WAMRC : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class WAMRC : MonoBehaviour
     public Transform WhacPartical_TRANS;
     public Transform Text1_TRANS;
     public Transform ScoreText_TRANS;
+    public Transform BG_Grid_TRANS;
+    public Transform Splash_TRANS;
+    public Transform Fishnet_TRANS;
     //Object;
     //public WAM_GameController GC_script;
     [HideInInspector]
@@ -17,14 +21,16 @@ public class WAMRC : MonoBehaviour
     public GameObject MoleCenter_Prefab;
     public GameObject MoleFrame_Prefab;
     public GameObject Mole_Prefab;
+    public GameObject[] Fish_Prefabs;
+    //public GameObject Hole_Prefab;
     //Pool;
     public Transform MoleCenter_TRANS { get; set; }
+
+    public static WAMRC IS { get; private set; }
 
     private void Awake()
     {
         IS = this;
-
-        //GeneralMethods.check_ref<WAM_DataController>(ref DC_script,WAMSD.DC_name);
     }
 
     // Start is called before the first frame update
@@ -38,6 +44,4 @@ public class WAMRC : MonoBehaviour
     {
         
     }
-
-    public static WAMRC IS { get; private set; }
 }

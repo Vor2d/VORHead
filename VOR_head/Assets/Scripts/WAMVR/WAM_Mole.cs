@@ -18,6 +18,7 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private float AfterWhacTime;
 
     private WAM_MoleCenter MC_script;
+    private Transform NITRANS_Cache;
 
     public bool aimming_flag { get; private set; }
     private bool start_flag;
@@ -27,6 +28,8 @@ public class WAM_Mole : MonoBehaviour
     private int direction;
     private int last_Cdirection;
     private bool collider_checked_flag;
+    private bool whac_ani_flag;
+    private bool fish_move_flag;
 
     private void Awake()
     {
@@ -34,13 +37,21 @@ public class WAM_Mole : MonoBehaviour
         this.RCT_cache = null;
         this.start_flag = false;
         this.aimming_flag = false;
-        this.init_color = Mesh_TRANS.GetComponent<MeshRenderer>().material.color;
         this.timer = 0.0f;
         this.direction = 0;
         this.last_Cdirection = 0;
         this.collider_checked_flag = false;
+        this.NITRANS_Cache = null;
+        this.whac_ani_flag = false;
+        this.init_color = Color.white;
+        this.fish_move_flag = false;
     }
 
+    private void Start()
+    {
+        NITRANS_Cache = WAMRC.IS.Fishnet_TRANS.GetComponent<WAM_Fishnet>().NetIn_TRANS;
+        //init_color = Mesh_TRANS.GetComponent<MeshRenderer>().material.color;
+    }
 
     // Update is called once per frame
     void Update()
@@ -52,12 +63,13 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    public void init_mole(WAM_MoleCenter _MC_script)
+    public void init_mole(WAM_MoleCenter _MC_script, Transform self_mesh = null)
     {
         MC_script = _MC_script;
         timer = WAMSetting.IS.Mole_des_time;
         RCT_cache = WAMRC.IS.RCT_script;
         last_Cdirection = -1;
+        if(self_mesh != null) { Mesh_TRANS = self_mesh; }
     }
 
     public void start_mole()
@@ -97,10 +109,24 @@ public class WAM_Mole : MonoBehaviour
             {
                 WAM_GameController.IS.Check_stop_instance++;
             }
-            Mesh_TRANS.GetComponent<MeshRenderer>().material.color = Color.red;
+            change_mesh(true);
 
         }
         collider_reached();
+    }
+
+
+    private void change_mesh(bool aimed)
+    {
+        if (WAM_GameController.IS.Use_self_mesh)
+        {
+
+        }
+        else
+        {
+            if (aimed) { Mesh_TRANS.GetComponent<MeshRenderer>().material.color = Color.red; }
+            else { Mesh_TRANS.GetComponent<MeshRenderer>().material.color = init_color; }
+        }
     }
 
     private void to_unaim_state()
@@ -112,7 +138,7 @@ public class WAM_Mole : MonoBehaviour
             {
                 WAM_GameController.IS.Check_stop_instance--;
             }
-            Mesh_TRANS.GetComponent<MeshRenderer>().material.color = init_color;
+            change_mesh(false);
         }
         
     }
@@ -121,7 +147,7 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            WAM_GameController.IS.success_whac();
+            WAM_GameController.IS.success_whac(transform, direction);
             play_correct_sound();
             StartCoroutine(whac_anim(AfterWhacTime));
             start_flag = false;
@@ -274,13 +300,29 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    private IEnumerator whac_anim(float time)
+    private IEnumerator whac_anim(float time = 0.0f)
     {
-        turn_off_mesh();
-        WAMRC.IS.WhacPartical_TRANS.position = transform.position;
-        WAMRC.IS.WhacPartical_TRANS.GetComponent<ParticleSystem>().Play();
-        yield return new WaitForSeconds(time);
+        //turn_off_mesh();
+        //WAMRC.IS.WhacPartical_TRANS.position = transform.position;
+        //WAMRC.IS.WhacPartical_TRANS.GetComponent<ParticleSystem>().Play();
+        //yield return new WaitForSeconds(time);
+        whac_ani_flag = true;
+        float last_dist = float.MaxValue;
+        while(whac_ani_flag)
+        {
+            if (!fish_move_flag) { fish_move_flag = fish_move_check(ref last_dist); }
+            else { transform.position = NITRANS_Cache.position; }
+            yield return null;
+        }
         clean_destroy();
+    }
+
+    private bool fish_move_check(ref float last_dist)
+    {
+        float dist = Vector3.Distance(NITRANS_Cache.position, transform.position);
+        if (dist > last_dist) { return true; }
+        last_dist = dist;
+        return false;
     }
 
     private void self_destroy()
@@ -319,7 +361,8 @@ public class WAM_Mole : MonoBehaviour
 
     private void turn_off_mesh()
     {
-        Mesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        if (WAM_GameController.IS.Use_self_mesh) { Mesh_TRANS.GetComponent<SpriteRenderer>().enabled = false; }
+        else { Mesh_TRANS.GetComponent<MeshRenderer>().enabled = false; }
         Collider_TRANS.GetComponent<Collider>().enabled = false;
         AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
         ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
@@ -342,5 +385,10 @@ public class WAM_Mole : MonoBehaviour
     private void play_correct_sound()
     {
         CorrectSFX_script.start_coroutine();
+    }
+
+    public void finish_mole()
+    {
+        whac_ani_flag = false;
     }
 }

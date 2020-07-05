@@ -516,7 +516,8 @@ public static class GeneralMethods {
         {
             try
             {
-                animator.ResetTrigger(parameter.name);
+                if (parameter.type == AnimatorControllerParameterType.Trigger)
+                { animator.ResetTrigger(parameter.name); }
             }
             catch (Exception e)
             {

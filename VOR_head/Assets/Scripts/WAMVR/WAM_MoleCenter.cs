@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using WAMEC;
 
@@ -18,7 +19,6 @@ public class WAM_MoleCenter : MonoBehaviour
         this.last_pos = new Vector3();
     }
 
-
     public void init_mole_center()
     {
         list_index = -1;
@@ -32,12 +32,13 @@ public class WAM_MoleCenter : MonoBehaviour
                 generate_circle();
                 break;
             case MoleGenerShape.gird:
-                generate_grid();
+                generate_grid(random_pick: WAMSetting.IS.Mole_frame_randomPick,
+                    ran_num: WAMSetting.IS.Mole_frame_randomNum);
                 break;
         }
     }
 
-    private void generate_grid()
+    private void generate_grid(bool random_pick = false,int ran_num = 0)
     {
         float distant2 = WAMSetting.IS.Mole_frame_dist2;
         float distant = WAMSetting.IS.Mole_frame_dist;
@@ -67,22 +68,59 @@ public class WAM_MoleCenter : MonoBehaviour
         }
 
         Vector3 pos = new Vector3();
-        for(int row = 0;row<mole_frame_num;row++)
+        if (!random_pick)
         {
-            if(mole_frame_num > 1)
-            { 
-                y = -up_board + row * vert_dist;
-            }
-            for(int col = 0;col<mole_frame_num2;col++)
+            for (int row = 0; row < mole_frame_num; row++)
             {
-                if(mole_frame_num2 > 1)
+                if (mole_frame_num > 1)
                 {
-                    x = -right_board + col * hori_dist;
+                    y = -up_board + row * vert_dist;
                 }
-                pos = new Vector3(x, y, transform.position.z);
-                spawn_mole_frame(pos);
+                for (int col = 0; col < mole_frame_num2; col++)
+                {
+                    if (mole_frame_num2 > 1)
+                    {
+                        x = -right_board + col * hori_dist;
+                    }
+                    pos = new Vector3(x, y, transform.position.z);
+                    spawn_mole_frame(pos); 
+                }
             }
         }
+        else
+        {
+            float pick_ratio = (float)ran_num / (float)(mole_frame_num * mole_frame_num2);
+            int count = ran_num;
+            HashSet<(int, int)> HS = new HashSet<(int, int)>();
+            bool run = true;
+            while (count > 0 && run)
+            {
+                for (int row = 0; row < mole_frame_num; row++)
+                {
+                    if (mole_frame_num > 1)
+                    {
+                        y = -up_board + row * vert_dist;
+                    }
+                    for (int col = 0; col < mole_frame_num2; col++)
+                    {
+                        if (mole_frame_num2 > 1)
+                        {
+                            x = -right_board + col * hori_dist;
+                        }
+                        pos = new Vector3(x, y, transform.position.z);
+                        if (!HS.Contains((row,col)) && UnityEngine.Random.Range(0.0f, 1.0f) < pick_ratio) 
+                        {
+                            count--;
+                            HS.Add((row, col));
+                            spawn_mole_frame(pos);
+                            if (count <= 0) { run = false; break; }
+                        }
+                    }
+                    if (!run) { break; }
+                }
+            }
+        }
+
 
     }
 
@@ -115,12 +153,12 @@ public class WAM_MoleCenter : MonoBehaviour
         frame_TRANSs.Add(frame_TRANS);
     }
 
-    public void generate_mole(MoleGenerType gener_type)
+    public void generate_mole(MoleGenerType gener_type,bool use_Smesh = false)
     {
         switch(gener_type)
         {
             case MoleGenerType.random:
-                random_mole_gener();
+                random_mole_gener(use_Smesh: use_Smesh);
                 break;
             case MoleGenerType.list:
                 list_mole_gener();
@@ -136,24 +174,26 @@ public class WAM_MoleCenter : MonoBehaviour
         spawn_mole(pos);
     }
 
-    private void random_mole_gener()
+    private void random_mole_gener(bool use_Smesh = false)
     {
         bool good_gener = false;
         int index = 0;
         Vector3 pos = new Vector3();
         int counter = 0;
+        int max_i = frame_TRANSs.Count;
         while (!good_gener)
         {
-            index = 0;
-            switch (WAMSetting.IS.Mole_gener_shape)
-            {
-                case MoleGenerShape.circle:
-                    index = Random.Range(0, WAMSetting.IS.Mole_frame_num);
-                    break;
-                case MoleGenerShape.gird:
-                    index = Random.Range(0, WAMSetting.IS.Mole_frame_num * WAMSetting.IS.Mole_frame_num2);
-                    break;
-            }
+            //index = 0;
+            //switch (WAMSetting.IS.Mole_gener_shape)
+            //{
+            //    case MoleGenerShape.circle:
+            //        index = UnityEngine.Random.Range(0, max_i);
+            //        break;
+            //    case MoleGenerShape.gird:
+            //        index = UnityEngine.Random.Range(0, max_i);
+            //        break;
+            //}
+            index = UnityEngine.Random.Range(0, max_i);
             pos = frame_TRANSs[index].position;
             if(Vector3.Distance(pos,last_pos) > WAMSetting.IS.Min_distance)
             {
@@ -163,23 +203,57 @@ public class WAM_MoleCenter : MonoBehaviour
             counter += 1;
             if(counter > 5)
             {
+                good_gener = true;
                 break;
             }
         }
 
-        spawn_mole(pos);
+        Transform mole_TRANS = spawn_mole(pos,use_Smesh: use_Smesh);
         last_pos = pos;
+        if(WAMSetting.IS.Use_jump)
+        {
+            StartCoroutine(fish_jump(mole_TRANS,WAMSetting.IS.Fish_jumpH,WAMSetting.IS.Fish_jumpT));
+        }
     }
 
-    private void spawn_mole(Vector3 pos)
+    private IEnumerator fish_jump(Transform MT, float jheight,float jtime)
+    {
+        float speed = jheight / jtime;
+        Vector3 tar_pos = new Vector3(MT.position.x, MT.position.y + jheight, MT.position.z);
+        while (jtime >= 0.0f)
+        {
+            MT.position = Vector3.Lerp(MT.position, tar_pos, speed * Time.deltaTime);
+            jtime -= Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    private Transform spawn_mole(Vector3 pos,bool use_Smesh = false)
     {
         Transform mole_TRANS = Instantiate(WAMRC.IS.Mole_Prefab, pos, Quaternion.identity).transform;
+        Transform mole_mesh = null;
+        if (use_Smesh) 
+        {
+            int index = UnityEngine.Random.Range(0, WAMRC.IS.Fish_Prefabs.Length);
+            mole_mesh = Instantiate(WAMRC.IS.Fish_Prefabs[index], mole_TRANS, false).transform;
+        }
         float mole_size = WAMSetting.IS.Mole_size;
         mole_TRANS.localScale = new Vector3(mole_size, mole_size, mole_size);
         mole_TRANS.parent = transform;
-        mole_TRANS.GetComponent<WAM_Mole>().init_mole(this);
+        if (use_Smesh) { mole_TRANS.GetComponent<WAM_Mole>().init_mole(this, self_mesh: mole_mesh); }
+        else { mole_TRANS.GetComponent<WAM_Mole>().init_mole(this); }
         mole_TRANS.GetComponent<WAM_Mole>().start_mole();
         mole_to_pool(mole_TRANS);
+        if (WAMSetting.IS.Use_Splash) { splash(mole_TRANS); }
+        return mole_TRANS;
+    }
+
+    private void splash(Transform MT)
+    {
+        Transform splash_TRANS = WAMRC.IS.Splash_TRANS;
+        splash_TRANS.position = MT.position;
+        //splash_TRANS.GetComponent<SpriteRenderer>().enabled = true;
+        splash_TRANS.GetComponentInChildren<Animator>().SetTrigger(WAMSD.SplAniStart_trigger);
     }
 
     private void mole_to_pool(Transform mole_TRANS)
@@ -231,6 +305,11 @@ public class WAM_MoleCenter : MonoBehaviour
         {
             mole_TRANS.GetComponent<WAM_Mole>().wrong_whac();
         }
+    }
+
+    public void correct_whac()
+    {
+
     }
 
 }

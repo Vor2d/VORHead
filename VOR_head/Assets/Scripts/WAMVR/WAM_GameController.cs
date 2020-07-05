@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using WAMEC;
 
@@ -7,6 +8,7 @@ public class WAM_GameController : GeneralGameController
 {
     [SerializeField] private bool ShowTooSlow;
     [SerializeField] private float ShowTooSlowTime;
+    public bool Use_self_mesh;
 
     private Animator GCAnimator;
     private bool check_mole_flag;
@@ -20,6 +22,8 @@ public class WAM_GameController : GeneralGameController
     private float left_timer;
     private bool choose_acuity_flag;
     private int score;
+    private int curr_lvl;
+    private int curr_trial;
     public int Check_stop_instance { get; set; }
     private bool accept_check_stop { get { return Check_stop_instance == 0; } }
     //Cache;
@@ -49,6 +53,8 @@ public class WAM_GameController : GeneralGameController
         this.choose_acuity_flag = false;
         this.score = 0;
         this.Check_stop_instance = 0;
+        this.curr_lvl = -1;
+        this.curr_trial = -1;
 
         register_controller();
         if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay
@@ -65,6 +71,8 @@ public class WAM_GameController : GeneralGameController
         {
             choose_acuity_flag = true;
         }
+
+        adjust_BG_grid();
     }
 
     protected override void Update()
@@ -87,6 +95,12 @@ public class WAM_GameController : GeneralGameController
     private void OnDestroy()
     {
         deregister_controller();
+    }
+
+    private void adjust_BG_grid()
+    {
+        WAMRC.IS.BG_Grid_TRANS.localScale = new Vector3(WAMSetting.IS.BGGrid_HScale,
+            WAMSetting.IS.BGGrid_VScale, 0.0f);
     }
 
     private void update_check_stop()
@@ -134,40 +148,6 @@ public class WAM_GameController : GeneralGameController
         }
     }
 
-    private void generate_mole_center()
-    {
-        GameObject mole_center_OBJ = Instantiate(WAMRC.IS.MoleCenter_Prefab, 
-                                        WAMRC.IS.MoleCenterInidcator_TRANS.position, 
-                                        Quaternion.identity);
-        mole_center_OBJ.GetComponent<WAM_MoleCenter>().init_mole_center();
-        mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame();
-        WAMRC.IS.MoleCenter_TRANS = mole_center_OBJ.transform;
-        MC_cache = mole_center_OBJ.GetComponent<WAM_MoleCenter>();
-    }
-
-    public void GC_Init()
-    {
-        generate_mole_center();
-        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
-        update_score_text();
-    }
-
-    public void ToStartGame()
-    {
-        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
-    }
-
-    public void ToSpawnMole()
-    {
-        MC_cache.generate_mole(WAMSetting.IS.Mole_gener_type);
-        if(WAMSetting.IS.Using_acuity)
-        {
-            acuity_ready_flag = true;
-            check_stop_flag = false;
-        }
-        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
-    }
-    
     private void register_controller()
     {
         if(!WAMSetting.IS.Using_acuity)
@@ -200,6 +180,7 @@ public class WAM_GameController : GeneralGameController
 
         }
         WAMRC.IS.CI_script.Button_B += recenter_VR;
+        WAMRC.IS.CI_script.Button_A += go_next_level;
     }
 
     private void deregister_controller()
@@ -234,6 +215,12 @@ public class WAM_GameController : GeneralGameController
 
         }
         WAMRC.IS.CI_script.Button_B -= recenter_VR;
+        WAMRC.IS.CI_script.Button_A -= go_next_level;
+    }
+
+    private void go_next_level()
+    {
+        GCAnimator.SetTrigger(WAMSD.AniNextLevel_trigger);
     }
     
     private void whac()
@@ -341,10 +328,11 @@ public class WAM_GameController : GeneralGameController
 
     }
 
-    public void success_whac()
+    public void success_whac(Transform MT = null, int dir = (int)Controller_Input.FourDirInput.empty)
     {
         score += 10;
         update_score_text();
+        if (WAMSetting.IS.Use_Fishnet) { WAMRC.IS.Fishnet_TRANS.GetComponent<WAM_Fishnet>().start_net(MT, dir); }
     }
 
     public void mole_reached()
@@ -369,5 +357,69 @@ public class WAM_GameController : GeneralGameController
     {
         WAMRC.IS.ScoreText_TRANS.GetComponent<TextMesh>().text = "Score: " + score;
     }
-    
+
+    #region Animator
+
+    public void ToInit()
+    {
+        //generate_mole_center();
+        //GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+        update_score_text();
+    }
+
+    private void generate_mole_center()
+    {
+        GameObject mole_center_OBJ = Instantiate(WAMRC.IS.MoleCenter_Prefab,
+                                        WAMRC.IS.MoleCenterInidcator_TRANS.position,
+                                        Quaternion.identity);
+        mole_center_OBJ.GetComponent<WAM_MoleCenter>().init_mole_center();
+        mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame();
+        WAMRC.IS.MoleCenter_TRANS = mole_center_OBJ.transform;
+        MC_cache = mole_center_OBJ.GetComponent<WAM_MoleCenter>();
+    }
+
+    public void ToStartGame()
+    {
+        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+    }
+
+    public void ToSpawnMole()
+    {
+        MC_cache.generate_mole(WAMSetting.IS.Mole_gener_type,use_Smesh: Use_self_mesh);
+        if (WAMSetting.IS.Using_acuity)
+        {
+            acuity_ready_flag = true;
+            check_stop_flag = false;
+        }
+        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+    }
+
+    public void ToStartLevel()
+    {
+        clear_level();
+        curr_lvl++;
+        generate_mole_center();
+        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+    }
+
+    private void clear_level()
+    {
+        if (WAMRC.IS.MoleCenter_TRANS != null) 
+        { Destroy(WAMRC.IS.MoleCenter_TRANS.gameObject); }
+    }
+
+    public void ToStartTrial()
+    {
+        curr_trial++;
+        update_trial();
+        GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+    }
+
+    private void update_trial()
+    {
+
+    }
+
+    #endregion
+
 }

@@ -12,5 +12,7 @@ public static class WAMSD
     //Animator;
     public const string AniNextStep_trigger = "NextStep";
     public const string AniStart_trigger = "Start";
+    public const string AniNextLevel_trigger = "NextLevel";
+    public const string SplAniStart_trigger = "Start";
 
 }

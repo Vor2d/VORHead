@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class WAM_StartGame : StateMachineBehaviour
 {
-    private WAM_GameController GC_script;
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(GC_script == null)
-        {
-            this.GC_script = animator.GetComponent<WAM_GameController>();
-        }
 
-        GC_script.ToStartGame();
+        WAM_GameController.IS.ToStartGame();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

@@ -33,6 +33,19 @@ public class WAMSetting
     public float Controller_Dtime;
     public bool Check_too_slow;
     public bool Stop_on_bubble;
+    public float BGGrid_HScale;
+    public float BGGrid_VScale;
+    [Obsolete("Use Mole_frame_size")]
+    public float Hole_Scale;
+    public bool Mole_frame_randomPick;
+    public int Mole_frame_randomNum;
+    public bool Use_jump;
+    public float Fish_jumpH;
+    public float Fish_jumpT;
+    public bool Use_Splash;
+    public bool Use_Fishnet;
+
+    public static WAMSetting IS { get; private set; }
 
     public WAMSetting()
     {
@@ -60,6 +73,16 @@ public class WAMSetting
         this.Controller_Dtime = 0.0f;
         this.Check_too_slow = false;
         this.Stop_on_bubble = false;
+        this.BGGrid_HScale = 1.0f;
+        this.BGGrid_VScale = 1.0f;
+        this.Hole_Scale = 1.0f;
+        this.Mole_frame_randomPick = false;
+        this.Mole_frame_randomNum = 0;
+        this.Use_jump = false;
+        this.Fish_jumpH = 1.0f;
+        this.Fish_jumpT = 0.1f;
+        this.Use_Splash = true;
+        this.Use_Fishnet = true;
 
         IS = this;
     }
@@ -79,7 +102,5 @@ public class WAMSetting
     //    this.Gener_list = other_setting.Gener_list;
     //    this.Using_acuity = other_setting.Using_acuity;
     //    this.Acuity_type = other_setting.Acuity_type;
-    //}
-
-    public static WAMSetting IS { get; private set; }
+    //}    
 }

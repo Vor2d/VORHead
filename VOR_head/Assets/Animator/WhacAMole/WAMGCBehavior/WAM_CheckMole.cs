@@ -4,23 +4,16 @@ using UnityEngine;
 
 public class WAM_CheckMole : StateMachineBehaviour
 {
-    private WAM_GameController GC_script;
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if(GC_script == null)
-        {
-            this.GC_script = animator.GetComponent<WAM_GameController>();
-        }
-
-        GC_script.ToCheckMole();
+        WAM_GameController.IS.ToCheckMole();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        GC_script.CheckMole();
+        WAM_GameController.IS.CheckMole();
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
