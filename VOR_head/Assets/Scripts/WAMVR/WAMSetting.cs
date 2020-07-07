@@ -44,6 +44,7 @@ public class WAMSetting
     public float Fish_jumpT;
     public bool Use_Splash;
     public bool Use_Fishnet;
+    public float Net_size;
 
     public static WAMSetting IS { get; private set; }
 
@@ -83,6 +84,7 @@ public class WAMSetting
         this.Fish_jumpT = 0.1f;
         this.Use_Splash = true;
         this.Use_Fishnet = true;
+        this.Net_size = 1.0f;
 
         IS = this;
     }

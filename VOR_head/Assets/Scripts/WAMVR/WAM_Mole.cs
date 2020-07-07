@@ -10,8 +10,9 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private Transform AcuityMesh_TRANS;
     [SerializeField] private Transform ControllerMesh_TRANS;
     [SerializeField] private Transform RedXMesh_TRANS;
-    [SerializeField] private GeneralSoundCoroutine ErrorSFX_script;
-    [SerializeField] private GeneralSoundCoroutine CorrectSFX_script;
+    [SerializeField] private GeneralSoundCoroutine ErrorSFX_GSC;
+    [SerializeField] private GeneralSoundCoroutine CorrectSFX_GSC;
+    [SerializeField] private GeneralSoundCoroutine SpawnSFX_GSC;
 
     [SerializeField] private float AcuityOffSet;
     [SerializeField] private float ControllerMOffSet;
@@ -75,6 +76,7 @@ public class WAM_Mole : MonoBehaviour
     public void start_mole()
     {
         start_flag = true;
+        SpawnSFX_GSC.start_coroutine();
     }
 
     private void check_timer()
@@ -148,7 +150,7 @@ public class WAM_Mole : MonoBehaviour
         if(start_flag)
         {
             WAM_GameController.IS.success_whac(transform, direction);
-            play_correct_sound();
+            //play_correct_sound();
             StartCoroutine(whac_anim(AfterWhacTime));
             start_flag = false;
         }
@@ -379,12 +381,12 @@ public class WAM_Mole : MonoBehaviour
 
     private void play_error_sound()
     {
-        ErrorSFX_script.start_coroutine();
+        ErrorSFX_GSC.start_coroutine();
     }
 
     private void play_correct_sound()
     {
-        CorrectSFX_script.start_coroutine();
+        CorrectSFX_GSC.start_coroutine();
     }
 
     public void finish_mole()

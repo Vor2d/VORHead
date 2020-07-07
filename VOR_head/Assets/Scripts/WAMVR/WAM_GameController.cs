@@ -73,6 +73,7 @@ public class WAM_GameController : GeneralGameController
         }
 
         adjust_BG_grid();
+        init_fishnet();
     }
 
     protected override void Update()
@@ -95,6 +96,11 @@ public class WAM_GameController : GeneralGameController
     private void OnDestroy()
     {
         deregister_controller();
+    }
+
+    private void init_fishnet()
+    {
+        WAMRC.IS.Fishnet_TRANS.GetComponent<WAM_Fishnet>().init(WAMSetting.IS.Net_size);
     }
 
     private void adjust_BG_grid()

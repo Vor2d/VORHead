@@ -6,22 +6,22 @@ using WAMEC;
 public class WAM_Fishnet : MonoBehaviour
 {
     [SerializeField] private Transform NetIndi_TRANS;
-    [SerializeField] private Transform Mesh_TRANS;
+    [SerializeField] private Transform[] Mesh_TRANS;
     [SerializeField] private float Rotation_deg;
     [SerializeField] private float Rotation_time;
 
     public Transform NetIn_TRANS { get { return NetIndi_TRANS; } }
-    private float net_dist;
+    private Vector3 net_dist;
 
     private void Awake()
     {
-        this.net_dist = 0.0f;
+        this.net_dist = new Vector3();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        net_dist = Vector3.Distance(NetIndi_TRANS.position,transform.position);
+        turn_off_mesh();
     }
 
     // Update is called once per frame
@@ -30,9 +30,10 @@ public class WAM_Fishnet : MonoBehaviour
         
     }
 
-    public void init()
+    public void init(float size_scale)
     {
-        
+        transform.localScale = transform.localScale * size_scale;
+        net_dist = NetIndi_TRANS.position - transform.position;
     }
 
     public void start_net(Transform MT,int dir)
@@ -41,16 +42,24 @@ public class WAM_Fishnet : MonoBehaviour
         transform.position = pos_cal_four_dir(MT.position, dir);
         transform.eulerAngles = rotation_cal(dir);
         StartCoroutine(rotate_cor(MT.GetComponent<WAM_Mole>(), Rotation_deg, Rotation_time));
+        GetComponent<GeneralSoundCoroutine>().start_coroutine();
     }
 
     private void turn_on_mesh()
     {
-
+        foreach(Transform submesh_TRANS in Mesh_TRANS)
+        {
+            submesh_TRANS.GetComponent<SpriteRenderer>().enabled = true;
+        }
+        
     }
 
     private void turn_off_mesh()
     {
-
+        foreach (Transform submesh_TRANS in Mesh_TRANS)
+        {
+            submesh_TRANS.GetComponent<SpriteRenderer>().enabled = false;
+        }
     }
 
     private Vector3 pos_cal_four_dir(Vector3 Mpos,int dir)
@@ -58,13 +67,13 @@ public class WAM_Fishnet : MonoBehaviour
         switch(dir)
         {
             case 0:
-                return new Vector3(Mpos.x - net_dist, Mpos.y, Mpos.z);
+                return new Vector3(Mpos.x - net_dist.y, Mpos.y + net_dist.x, Mpos.z);
             case 1:
-                return new Vector3(Mpos.x, Mpos.y + net_dist, Mpos.z);
+                return new Vector3(Mpos.x + net_dist.x, Mpos.y + net_dist.y, Mpos.z);
             case 2:
-                return new Vector3(Mpos.x + net_dist, Mpos.y, Mpos.z);
+                return new Vector3(Mpos.x + net_dist.y, Mpos.y - net_dist.x, Mpos.z);
             case 3:
-                return new Vector3(Mpos.x, Mpos.y - net_dist, Mpos.z);
+                return new Vector3(Mpos.x - net_dist.x, Mpos.y - net_dist.y, Mpos.z);
         }
         return Vector3.zero;
     }
