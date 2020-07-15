@@ -8,6 +8,9 @@ public class WAM_GameController : GeneralGameController
 {
     [SerializeField] private bool ShowTooSlow;
     [SerializeField] private float ShowTooSlowTime;
+    [SerializeField] private bool UseTimer;
+    [SerializeField] private bool TimerOnStart;
+    [SerializeField] private bool UseDynaReddot;
     public bool Use_self_mesh;
 
     private Animator GCAnimator;
@@ -24,6 +27,9 @@ public class WAM_GameController : GeneralGameController
     private int score;
     private int curr_lvl;
     private int curr_trial;
+    private TextMesh timer_TM_CA;
+    private System.Diagnostics.Stopwatch ST_CA;
+
     public int Check_stop_instance { get; set; }
     private bool accept_check_stop { get { return Check_stop_instance == 0; } }
     //Cache;
@@ -55,6 +61,8 @@ public class WAM_GameController : GeneralGameController
         this.Check_stop_instance = 0;
         this.curr_lvl = -1;
         this.curr_trial = -1;
+        this.timer_TM_CA = WAMRC.IS.TimerText_TRANS.GetComponent<TextMesh>();
+        this.ST_CA = WAM_DataController.IS.Sesstion_timer;
 
         register_controller();
         if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay
@@ -74,6 +82,8 @@ public class WAM_GameController : GeneralGameController
 
         adjust_BG_grid();
         init_fishnet();
+
+        if (TimerOnStart) { ST_CA.Start(); }
     }
 
     protected override void Update()
@@ -91,11 +101,18 @@ public class WAM_GameController : GeneralGameController
         {
             check_cont_delay();
         }
+        if (UseTimer) { update_timer(); }
+        
     }
 
     private void OnDestroy()
     {
         deregister_controller();
+    }
+
+    private void update_timer()
+    {
+        timer_TM_CA.text = ST_CA.Elapsed.ToString("hh\\:mm\\:ss");
     }
 
     private void init_fishnet()
@@ -141,8 +158,19 @@ public class WAM_GameController : GeneralGameController
     {
         if (WAMSetting.IS.Acuity_process == AcuityProcess.post)
         {
+            if (UseDynaReddot) { turn_off_HImesh(); }
             MC_cache.generate_acuity();
         }
+    }
+
+    private void turn_off_HImesh()
+    {
+        WAMRC.IS.HeadIndi_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    private void turn_on_HImesh()
+    {
+        WAMRC.IS.HeadIndi_TRANS.GetComponent<MeshRenderer>().enabled = true;
     }
 
     private void check_head()
@@ -334,9 +362,13 @@ public class WAM_GameController : GeneralGameController
 
     }
 
-    public void success_whac(Transform MT = null, int dir = (int)Controller_Input.FourDirInput.empty)
+    public void success_whac(Transform MT = null, int dir = (int)Controller_Input.FourDirInput.empty,
+        float turning_time = 0.0f)
     {
-        score += 10;
+        Debug.Log("turning_time " + turning_time.ToString("F2"));
+        float time_sca = 1.0f - turning_time / WAMSetting.IS.Mole_des_time;
+        float scoreup = (float)WAMSetting.IS.Base_score_up * (1.0f + time_sca);
+        score += (int)scoreup;
         update_score_text();
         if (WAMSetting.IS.Use_Fishnet) { WAMRC.IS.Fishnet_TRANS.GetComponent<WAM_Fishnet>().start_net(MT, dir); }
     }
@@ -419,6 +451,7 @@ public class WAM_GameController : GeneralGameController
         curr_trial++;
         update_trial();
         GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+        turn_on_HImesh();
     }
 
     private void update_trial()

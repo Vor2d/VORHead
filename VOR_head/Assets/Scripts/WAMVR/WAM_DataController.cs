@@ -5,6 +5,7 @@ using UnityEngine;
 public class WAM_DataController : ParentDataController
 {
     public WAMSetting Setting { get; set; }
+    public System.Diagnostics.Stopwatch Sesstion_timer { get; set; }
 
     protected override void Awake()
     {
@@ -13,6 +14,7 @@ public class WAM_DataController : ParentDataController
         base.Awake();
 
         this.Setting = new WAMSetting();
+        this.Sesstion_timer = new System.Diagnostics.Stopwatch();
     }
 
     private void Start()

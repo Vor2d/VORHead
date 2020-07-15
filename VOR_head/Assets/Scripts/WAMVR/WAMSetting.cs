@@ -37,6 +37,7 @@ public class WAMSetting
     public float BGGrid_VScale;
     [Obsolete("Use Mole_frame_size")]
     public float Hole_Scale;
+    [Obsolete("Use Mole_frame_type")]
     public bool Mole_frame_randomPick;
     public int Mole_frame_randomNum;
     public bool Use_jump;
@@ -45,6 +46,14 @@ public class WAMSetting
     public bool Use_Splash;
     public bool Use_Fishnet;
     public float Net_size;
+    public MoleCenterType Mole_frame_type;
+    public List<int> Mole_frame_Lindex;
+    public int Acuity_size;
+    public int Base_score_up;
+    [Obsolete("Calcuated by linear")]
+    public float Bonus_time_cal_per;
+    [Obsolete("Calcuated by linear")]
+    public float Bonus_score_up_per;
 
     public static WAMSetting IS { get; private set; }
 
@@ -85,6 +94,12 @@ public class WAMSetting
         this.Use_Splash = true;
         this.Use_Fishnet = true;
         this.Net_size = 1.0f;
+        this.Mole_frame_type = MoleCenterType.random;
+        this.Mole_frame_Lindex = new List<int>();
+        this.Acuity_size = 0;
+        this.Base_score_up = 10;
+        this.Bonus_time_cal_per = 0.5f;
+        this.Bonus_score_up_per = 0.5f;
 
         IS = this;
     }

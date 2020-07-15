@@ -11,6 +11,8 @@ public class WAMRC : MonoBehaviour
     public Transform BG_Grid_TRANS;
     public Transform Splash_TRANS;
     public Transform Fishnet_TRANS;
+    public Transform TimerText_TRANS;
+    public Transform HeadIndi_TRANS;
     //Object;
     //public WAM_GameController GC_script;
     [HideInInspector]

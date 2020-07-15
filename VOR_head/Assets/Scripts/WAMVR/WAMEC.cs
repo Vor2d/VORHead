@@ -9,4 +9,5 @@ namespace WAMEC
     public enum AcuityType { fourdir,eightdir};
     public enum AcuityProcess { post};
     public enum ControllerModes { instant, time_delay, post_judge,TD_PJ};
+    public enum MoleCenterType { random,list,all};
 }

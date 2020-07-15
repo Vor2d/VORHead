@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using UnityEngine;
 using WAMEC;
 
@@ -13,10 +14,12 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private GeneralSoundCoroutine ErrorSFX_GSC;
     [SerializeField] private GeneralSoundCoroutine CorrectSFX_GSC;
     [SerializeField] private GeneralSoundCoroutine SpawnSFX_GSC;
+    [SerializeField] private Transform ACBG_TRANS;
 
     [SerializeField] private float AcuityOffSet;
     [SerializeField] private float ControllerMOffSet;
     [SerializeField] private float AfterWhacTime;
+    [SerializeField] private bool Use_Sprite_AC;
 
     private WAM_MoleCenter MC_script;
     private Transform NITRANS_Cache;
@@ -31,6 +34,8 @@ public class WAM_Mole : MonoBehaviour
     private bool collider_checked_flag;
     private bool whac_ani_flag;
     private bool fish_move_flag;
+    private float turning_timer;
+    private bool turning_flag;
 
     private void Awake()
     {
@@ -46,6 +51,8 @@ public class WAM_Mole : MonoBehaviour
         this.whac_ani_flag = false;
         this.init_color = Color.white;
         this.fish_move_flag = false;
+        this.turning_timer = 0.0f;
+        this.turning_flag = false;
     }
 
     private void Start()
@@ -61,21 +68,29 @@ public class WAM_Mole : MonoBehaviour
         {
             check_timer();
             check_aim();
+            update_TT();
         }
     }
 
-    public void init_mole(WAM_MoleCenter _MC_script, Transform self_mesh = null)
+    private void update_TT()
+    {
+        if (turning_flag) { turning_timer += Time.deltaTime; }
+    }
+
+    public void init_mole(WAM_MoleCenter _MC_script, Transform self_mesh = null,Sprite AC_sprite = null)
     {
         MC_script = _MC_script;
         timer = WAMSetting.IS.Mole_des_time;
         RCT_cache = WAMRC.IS.RCT_script;
         last_Cdirection = -1;
         if(self_mesh != null) { Mesh_TRANS = self_mesh; }
+        if (Use_Sprite_AC) { AcuityMesh_TRANS.GetComponent<SpriteRenderer>().sprite = AC_sprite; }
     }
 
     public void start_mole()
     {
         start_flag = true;
+        turning_flag = true;
         SpawnSFX_GSC.start_coroutine();
     }
 
@@ -112,9 +127,14 @@ public class WAM_Mole : MonoBehaviour
                 WAM_GameController.IS.Check_stop_instance++;
             }
             change_mesh(true);
-
+            stop_TT();
         }
         collider_reached();
+    }
+
+    private void stop_TT()
+    {
+        turning_flag = false;
     }
 
 
@@ -149,7 +169,7 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            WAM_GameController.IS.success_whac(transform, direction);
+            WAM_GameController.IS.success_whac(transform, direction,turning_time: turning_timer);
             //play_correct_sound();
             StartCoroutine(whac_anim(AfterWhacTime));
             start_flag = false;
@@ -222,10 +242,29 @@ public class WAM_Mole : MonoBehaviour
 
     private IEnumerator flash_acuity(float time)
     {
-        
-        AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        turn_on_ACmesh();
         yield return new WaitForSeconds(time);
-        AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        turn_off_ACmesh();
+    }
+
+    private void turn_on_ACmesh()
+    {
+        if (Use_Sprite_AC) 
+        {
+            AcuityMesh_TRANS.GetComponent<SpriteRenderer>().enabled = true; 
+            ACBG_TRANS.GetComponent<SpriteRenderer>().enabled = true;
+        }
+        else { AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = true; }
+    }
+
+    private void turn_off_ACmesh()
+    {
+        if (Use_Sprite_AC) 
+        {
+            AcuityMesh_TRANS.GetComponent<SpriteRenderer>().enabled = false;
+            ACBG_TRANS.GetComponent<SpriteRenderer>().enabled = false;
+        }
+        else { AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false; }
     }
 
     private void rotate_acuity(AcuityType A_type, int dir)
@@ -268,15 +307,31 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            if (!ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled)
-            {
-                ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = true;
-            }
+            if (!check_Cmesh()) { turn_on_Cmesh(); }
+
             if (last_Cdirection != C_direction)
             {
                 rotate_Cmesh(WAMSetting.IS.Acuity_type, C_direction);
             }
         }
+    }
+
+    private bool check_Cmesh()
+    {
+        if (Use_Sprite_AC) { return ControllerMesh_TRANS.GetComponent<SpriteRenderer>().enabled; }
+        else { return ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled; }
+    }
+
+    private void turn_on_Cmesh()
+    {
+        if (Use_Sprite_AC) { ControllerMesh_TRANS.GetComponent<SpriteRenderer>().enabled = true; }
+        else { ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = true; }
+    }
+
+    private void turn_off_Cmesh()
+    {
+        if (Use_Sprite_AC) { ControllerMesh_TRANS.GetComponent<SpriteRenderer>().enabled = false; }
+        else { ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = false; }
     }
 
     private void rotate_Cmesh(AcuityType A_type,int dir)
@@ -366,8 +421,8 @@ public class WAM_Mole : MonoBehaviour
         if (WAM_GameController.IS.Use_self_mesh) { Mesh_TRANS.GetComponent<SpriteRenderer>().enabled = false; }
         else { Mesh_TRANS.GetComponent<MeshRenderer>().enabled = false; }
         Collider_TRANS.GetComponent<Collider>().enabled = false;
-        AcuityMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        ControllerMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        turn_off_ACmesh();
+        turn_off_Cmesh();
     }
 
     private void collider_reached()

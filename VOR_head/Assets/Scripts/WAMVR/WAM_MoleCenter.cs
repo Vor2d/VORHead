@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using UnityEditor.Animations;
 using UnityEngine;
 using WAMEC;
@@ -11,17 +12,22 @@ public class WAM_MoleCenter : MonoBehaviour
     private int list_index;
     private Vector3 last_pos;
 
+    private Sprite AC_sprite;
+
     private void Awake()
     {
         this.frame_TRANSs = new List<Transform>();
         this.mole_TRANSs = new List<Transform>();
         this.list_index = 0;
         this.last_pos = new Vector3();
+        this.AC_sprite = null;
     }
 
     public void init_mole_center()
     {
         list_index = -1;
+        AC_sprite = Resources.Load<Sprite>("Sprites/Acuity/WhiteLandC/" + 
+            WAMSetting.IS.Acuity_size.ToString());
     }
 
     public void generate_mole_frame()
@@ -32,13 +38,13 @@ public class WAM_MoleCenter : MonoBehaviour
                 generate_circle();
                 break;
             case MoleGenerShape.gird:
-                generate_grid(random_pick: WAMSetting.IS.Mole_frame_randomPick,
+                generate_grid(MFT: WAMSetting.IS.Mole_frame_type,
                     ran_num: WAMSetting.IS.Mole_frame_randomNum);
                 break;
         }
     }
 
-    private void generate_grid(bool random_pick = false,int ran_num = 0)
+    private void generate_grid(MoleCenterType MFT = MoleCenterType.random,int ran_num = 0)
     {
         float distant2 = WAMSetting.IS.Mole_frame_dist2;
         float distant = WAMSetting.IS.Mole_frame_dist;
@@ -68,7 +74,7 @@ public class WAM_MoleCenter : MonoBehaviour
         }
 
         Vector3 pos = new Vector3();
-        if (!random_pick)
+        if (MFT == MoleCenterType.all)
         {
             for (int row = 0; row < mole_frame_num; row++)
             {
@@ -87,7 +93,7 @@ public class WAM_MoleCenter : MonoBehaviour
                 }
             }
         }
-        else
+        else if(MFT == MoleCenterType.random)
         {
             float pick_ratio = (float)ran_num / (float)(mole_frame_num * mole_frame_num2);
             int count = ran_num;
@@ -118,6 +124,19 @@ public class WAM_MoleCenter : MonoBehaviour
                     }
                     if (!run) { break; }
                 }
+            }
+        }
+        else if(MFT == MoleCenterType.list)
+        {
+            int row = 0, col = 0;
+            foreach (int index in WAMSetting.IS.Mole_frame_Lindex)
+            {
+                row = index / mole_frame_num;
+                col = index % mole_frame_num2;
+                if (mole_frame_num > 1) { y = -up_board + row * vert_dist; }
+                if (mole_frame_num2 > 1) { x = -right_board + col * hori_dist; }
+                pos = new Vector3(x, y, transform.position.z);
+                spawn_mole_frame(pos);
             }
         }
 
@@ -240,7 +259,8 @@ public class WAM_MoleCenter : MonoBehaviour
         float mole_size = WAMSetting.IS.Mole_size;
         mole_TRANS.localScale = new Vector3(mole_size, mole_size, mole_size);
         mole_TRANS.parent = transform;
-        if (use_Smesh) { mole_TRANS.GetComponent<WAM_Mole>().init_mole(this, self_mesh: mole_mesh); }
+        if (use_Smesh) { mole_TRANS.GetComponent<WAM_Mole>().
+                init_mole(this, self_mesh: mole_mesh,AC_sprite: AC_sprite); }
         else { mole_TRANS.GetComponent<WAM_Mole>().init_mole(this); }
         mole_TRANS.GetComponent<WAM_Mole>().start_mole();
         mole_to_pool(mole_TRANS);
