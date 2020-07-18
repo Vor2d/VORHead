@@ -47,13 +47,19 @@ public class WAMSetting
     public bool Use_Fishnet;
     public float Net_size;
     public MoleCenterType Mole_frame_type;
-    public List<int> Mole_frame_Lindex;
+    public List<int> Mole_frame_NUM_IND;    //Format as [Hole number, 1st h, 2nd h, ..., hole number, 1st h, 2nd h, ...]
+    public List<List<int>> Mole_frame_Lindex; 
     public int Acuity_size;
     public int Base_score_up;
     [Obsolete("Calcuated by linear")]
     public float Bonus_time_cal_per;
     [Obsolete("Calcuated by linear")]
     public float Bonus_score_up_per;
+    public bool Timer_session;
+    public float Session_time;  //Seconds;
+    public float Fish_rotate_ang;
+    public float Show_bonus_time;
+    public float Level_time;
 
     public static WAMSetting IS { get; private set; }
 
@@ -95,11 +101,17 @@ public class WAMSetting
         this.Use_Fishnet = true;
         this.Net_size = 1.0f;
         this.Mole_frame_type = MoleCenterType.random;
-        this.Mole_frame_Lindex = new List<int>();
+        this.Mole_frame_NUM_IND = new List<int>();
+        this.Mole_frame_Lindex = new List<List<int>>();
         this.Acuity_size = 0;
         this.Base_score_up = 10;
         this.Bonus_time_cal_per = 0.5f;
         this.Bonus_score_up_per = 0.5f;
+        this.Timer_session = true;
+        this.Session_time = 60.0f;
+        this.Fish_rotate_ang = -180.0f;
+        this.Show_bonus_time = 3.0f;
+        this.Level_time = 60.0f;
 
         IS = this;
     }

@@ -1139,3 +1139,4 @@ MonoBehaviour:
   ControllerMOffSet: 90
   AfterWhacTime: 0.1
   Use_Sprite_AC: 1
+  Rotate_fish: 1

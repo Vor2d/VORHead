@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using Boo.Lang;
+using OVR.OpenVR;
+using System;
 using UnityEngine;
 using WAMEC;
 
@@ -11,6 +11,8 @@ public class WAM_GameController : GeneralGameController
     [SerializeField] private bool UseTimer;
     [SerializeField] private bool TimerOnStart;
     [SerializeField] private bool UseDynaReddot;
+    [SerializeField] private bool UseBonusEachTrial;
+    [SerializeField] private bool UseBonusEachLevel;
     public bool Use_self_mesh;
 
     private Animator GCAnimator;
@@ -29,9 +31,14 @@ public class WAM_GameController : GeneralGameController
     private int curr_trial;
     private TextMesh timer_TM_CA;
     private System.Diagnostics.Stopwatch ST_CA;
+    private bool run_update;
+    private int level_bonus_score;
+    private float level_timer;
+    private bool run_LT;
 
     public int Check_stop_instance { get; set; }
     private bool accept_check_stop { get { return Check_stop_instance == 0; } }
+
     //Cache;
     private WAM_MoleCenter MC_cache;
 
@@ -40,6 +47,12 @@ public class WAM_GameController : GeneralGameController
     private void Awake()
     {
         IS = this;
+
+        this.run_update = false;
+        this.level_bonus_score = 0;
+        this.ST_CA = WAM_DataController.IS.Sesstion_timer;
+        this.level_timer = 0.0f;
+        this.run_LT = false;
     }
 
     // Start is called before the first frame update
@@ -61,8 +74,7 @@ public class WAM_GameController : GeneralGameController
         this.Check_stop_instance = 0;
         this.curr_lvl = -1;
         this.curr_trial = -1;
-        this.timer_TM_CA = WAMRC.IS.TimerText_TRANS.GetComponent<TextMesh>();
-        this.ST_CA = WAM_DataController.IS.Sesstion_timer;
+        this.timer_TM_CA = WAMRC.IS.TimerText_TRANS.GetComponent<TextMesh>();        
 
         register_controller();
         if(WAMSetting.IS.Controller_mode == ControllerModes.time_delay
@@ -84,25 +96,36 @@ public class WAM_GameController : GeneralGameController
         init_fishnet();
 
         if (TimerOnStart) { ST_CA.Start(); }
+        reset_level_timer();
     }
+        
 
     protected override void Update()
     {
-        update_check_stop();
-        if(acuity_ready_flag)
+        if(run_update)
         {
-            check_head();
-        }
-        if(check_stop_flag)
-        {
-            check_stop();
-        }
-        if(check_CD_flag)
-        {
-            check_cont_delay();
-        }
-        if (UseTimer) { update_timer(); }
-        
+            update_check_stop();
+            if (acuity_ready_flag)
+            {
+                check_head();
+            }
+            if (check_stop_flag)
+            {
+                check_stop();
+            }
+            if (check_CD_flag)
+            {
+                check_cont_delay();
+            }
+            if (UseTimer)
+            {
+                if (!WAMSetting.IS.Timer_session) { update_timer(); }
+                else 
+                {
+                    if (run_LT) { update_level_timer(); } 
+                }
+            }
+        }    
     }
 
     private void OnDestroy()
@@ -113,6 +136,26 @@ public class WAM_GameController : GeneralGameController
     private void update_timer()
     {
         timer_TM_CA.text = ST_CA.Elapsed.ToString("hh\\:mm\\:ss");
+    }
+
+    private void update_level_timer()
+    {
+        level_timer -= Time.deltaTime;
+        update_LT_text(level_timer);
+        if (GeneralMethods.check_timer_down(level_timer,ref run_LT)) { level_timeup(); }
+    }
+
+    private void update_LT_text(float timer)
+    {
+        string times = GeneralMethods.seconds_to_time(Mathf.FloorToInt(timer), 0);
+        timer_TM_CA.text = times;
+    }
+
+    private void level_timeup()
+    {
+        GeneralMethods.reset_animator_triggers(GCAnimator);
+        GCAnimator.SetTrigger(WAMSD.AniEndSession_trigger);
+        reset_level_var();
     }
 
     private void init_fishnet()
@@ -365,12 +408,29 @@ public class WAM_GameController : GeneralGameController
     public void success_whac(Transform MT = null, int dir = (int)Controller_Input.FourDirInput.empty,
         float turning_time = 0.0f)
     {
-        Debug.Log("turning_time " + turning_time.ToString("F2"));
-        float time_sca = 1.0f - turning_time / WAMSetting.IS.Mole_des_time;
-        float scoreup = (float)WAMSetting.IS.Base_score_up * (1.0f + time_sca);
-        score += (int)scoreup;
+        //Debug.Log("turning_time " + turning_time.ToString("F2"));
+        score_cal(turning_time);
         update_score_text();
         if (WAMSetting.IS.Use_Fishnet) { WAMRC.IS.Fishnet_TRANS.GetComponent<WAM_Fishnet>().start_net(MT, dir); }
+    }
+
+    private void score_cal(float turning_time = 0.0f)
+    {
+        score += WAMSetting.IS.Base_score_up;
+        if (UseBonusEachTrial) { bonus_each_trial(turning_time); }
+        if (UseBonusEachLevel) { level_bonus_score += (int)bonus_score_cal(turning_time); }
+    }
+
+    private float bonus_score_cal(float turning_time)
+    {
+        float time_sca = 1.0f - turning_time / WAMSetting.IS.Mole_des_time;
+        float scoreup = (float)WAMSetting.IS.Base_score_up * (time_sca);
+        return scoreup;
+    }
+
+    private void bonus_each_trial(float turning_time)
+    {
+        score += (int)bonus_score_cal(turning_time);
     }
 
     public void mole_reached()
@@ -403,6 +463,7 @@ public class WAM_GameController : GeneralGameController
         //generate_mole_center();
         //GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
         update_score_text();
+        run_update = true;
     }
 
     private void generate_mole_center()
@@ -411,7 +472,7 @@ public class WAM_GameController : GeneralGameController
                                         WAMRC.IS.MoleCenterInidcator_TRANS.position,
                                         Quaternion.identity);
         mole_center_OBJ.GetComponent<WAM_MoleCenter>().init_mole_center();
-        mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame();
+        mole_center_OBJ.GetComponent<WAM_MoleCenter>().generate_mole_frame(LI: curr_lvl);
         WAMRC.IS.MoleCenter_TRANS = mole_center_OBJ.transform;
         MC_cache = mole_center_OBJ.GetComponent<WAM_MoleCenter>();
     }
@@ -434,16 +495,38 @@ public class WAM_GameController : GeneralGameController
 
     public void ToStartLevel()
     {
-        clear_level();
+        //clear_level();
         curr_lvl++;
+        level_bonus_score = 0;
         generate_mole_center();
+        start_level_timer();
         GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
+    }
+
+    private void reset_level_var()
+    {
+        reset_trial_var();
+    }
+
+    private void reset_trial_var()
+    {
+        check_mole_flag = false;
+    }
+
+    private void reset_level_timer()
+    {
+        level_timer = WAMSetting.IS.Level_time;
+    }
+
+    private void start_level_timer()
+    {
+        GeneralMethods.start_timer_down(ref level_timer, ref run_LT, WAMSetting.IS.Level_time);
     }
 
     private void clear_level()
     {
         if (WAMRC.IS.MoleCenter_TRANS != null) 
-        { Destroy(WAMRC.IS.MoleCenter_TRANS.gameObject); }
+        { WAMRC.IS.MoleCenter_TRANS.GetComponent<WAM_MoleCenter>().clean_destroy(); }
     }
 
     public void ToStartTrial()
@@ -457,6 +540,35 @@ public class WAM_GameController : GeneralGameController
     private void update_trial()
     {
 
+    }
+
+    public void ToSessionEnded()
+    {
+        clear_level();
+        //run_update = false;
+        show_bonus();
+    }
+
+    private void show_bonus()
+    {
+        WAMRC.IS.BonusText_TRANS.GetComponent<TextMesh>().text = WAMSD.BonusText_PRE + 
+            level_bonus_score.ToString() + WAMSD.BonusText_POST;
+        turn_on_bonus_mesh();
+    }
+
+    private void turn_on_bonus_mesh()
+    {
+        WAMRC.IS.BonusText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    private void turn_off_bonus_mesh()
+    {
+        WAMRC.IS.BonusText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+    }
+
+    public void LeaveSessionEnded()
+    {
+        turn_off_bonus_mesh();
     }
 
     #endregion

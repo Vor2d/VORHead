@@ -480,17 +480,34 @@ public static class GeneralMethods {
         }
     }
 
-    public static void start_timer(ref float timer, ref bool timer_flag, float init_time)
+    public static void start_timer_down(ref float timer, ref bool timer_flag, float init_time)
     {
         timer_flag = true;
         timer = init_time;
     }
 
-    public static bool check_timer(float timer,ref bool timer_flag)
+    public static bool check_timer_down(float timer,ref bool timer_flag)
     {
         if (timer < 0.0f)
         {
             timer = float.MaxValue;
+            timer_flag = false;
+            return true;
+        }
+        return false;
+    }
+
+    public static void start_timer_up(ref float timer, ref bool timer_flag)
+    {
+        timer_flag = true;
+        timer = 0.0f;
+    }
+
+    public static bool check_timer_up(float timer, ref bool timer_flag, float target_time)
+    {
+        if (timer >= target_time)
+        {
+            timer = float.MinValue;
             timer_flag = false;
             return true;
         }
@@ -609,5 +626,38 @@ public static class GeneralMethods {
     public static Vector2[] get_perpen_vec(Vector2 origin)
     {
         return new Vector2[] { new Vector2(origin.y, -origin.x), new Vector2(-origin.y, origin.x) };
+    }
+
+    public static (int,int) seconds_to_time(int seconds)
+    {
+        int sec = seconds % 60;
+        int min = seconds / 60;
+        return (min < 0 ? 0 : min, sec < 0 ? 0 : sec);
+    }
+
+    /// <summary>
+    /// Convert seconds to a time string;
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <param name="str_type">0: "MIN:SEC"</param>
+    /// <returns></returns>
+    public static string seconds_to_time(int seconds,int str_type)
+    {
+        (int,int) timei = seconds_to_time(seconds);
+        string res = "";
+        string min_s = "", sec_s = "";
+        switch(str_type)
+        {
+            case 0:
+                if (timei.Item1 < 10) { min_s += "0"; }
+                min_s += timei.Item1.ToString();
+                res += min_s;
+                res += ":";
+                if (timei.Item2 < 10) { sec_s += "0"; }
+                sec_s += timei.Item2.ToString();
+                res += sec_s;
+                break;
+        }
+        return res;
     }
 }

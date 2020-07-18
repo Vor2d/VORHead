@@ -21,6 +21,28 @@ public class WAM_DataController : ParentDataController
     {
         Setting = load_setting<WAMSetting>();
         Debug.Log("Setting load completed: WAMSetting!");
+        generate_frame_list();
+    }
+
+    private void generate_frame_list()
+    {
+        int cnt = 0;
+        List<int> templis = new List<int>();
+        bool first = true;
+        foreach(int elem in Setting.Mole_frame_NUM_IND)
+        {
+            if (cnt == 0)
+            {
+                cnt = elem;
+                if (!first) { Setting.Mole_frame_Lindex.Add(templis); }
+                templis = new List<int>();
+                first = false;
+                continue;
+            }
+            templis.Add(elem);
+            cnt--;
+        }
+        Setting.Mole_frame_Lindex.Add(templis);
     }
 
     public override void generate_setting()

@@ -20,6 +20,7 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private float ControllerMOffSet;
     [SerializeField] private float AfterWhacTime;
     [SerializeField] private bool Use_Sprite_AC;
+    [SerializeField] private bool Rotate_fish;
 
     private WAM_MoleCenter MC_script;
     private Transform NITRANS_Cache;
@@ -92,6 +93,24 @@ public class WAM_Mole : MonoBehaviour
         start_flag = true;
         turning_flag = true;
         SpawnSFX_GSC.start_coroutine();
+        if (Rotate_fish) { rotate_fish(); }
+    }
+
+    private void rotate_fish()
+    {
+        StartCoroutine(RF_CRT(timer, WAMSetting.IS.Fish_rotate_ang, Mesh_TRANS));
+    }
+
+    private IEnumerator RF_CRT(float time, float angle, Transform mesh_TRANS)
+    {
+        float timer = 0.0f;
+        float speed = angle / time;
+        while(timer < time)
+        {
+            mesh_TRANS.Rotate(new Vector3(0.0f, 0.0f, speed * Time.deltaTime));
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 
     private void check_timer()
@@ -209,7 +228,7 @@ public class WAM_Mole : MonoBehaviour
         }
     }
 
-    private void clean_destroy()
+    public void clean_destroy()
     {
         start_flag = false;
         if (WAMSetting.IS.Stop_on_bubble && aimming_flag)

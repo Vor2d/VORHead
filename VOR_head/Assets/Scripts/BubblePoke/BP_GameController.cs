@@ -172,18 +172,18 @@ public class BP_GameController : GeneralGameController {
 
     public void ToWaitTime()
     {
-        GeneralMethods.start_timer(ref bubble_inte_timer, ref bubble_Itimer_flag, 
+        GeneralMethods.start_timer_down(ref bubble_inte_timer, ref bubble_Itimer_flag, 
                                     BubbleIntervalTime);
     }
 
     public void ToWaitTime(float timer)
     {
-        GeneralMethods.start_timer(ref bubble_inte_timer, ref bubble_Itimer_flag, timer);
+        GeneralMethods.start_timer_down(ref bubble_inte_timer, ref bubble_Itimer_flag, timer);
     }
 
     public void WaitTime()
     {
-        if(GeneralMethods.check_timer(bubble_inte_timer, ref bubble_Itimer_flag))
+        if(GeneralMethods.check_timer_down(bubble_inte_timer, ref bubble_Itimer_flag))
         {
             BPGCAnimator.SetTrigger(BP_StrDefiner.AniNextStepTrigger_str);
         }

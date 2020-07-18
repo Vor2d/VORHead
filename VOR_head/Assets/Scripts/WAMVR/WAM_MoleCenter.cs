@@ -30,7 +30,7 @@ public class WAM_MoleCenter : MonoBehaviour
             WAMSetting.IS.Acuity_size.ToString());
     }
 
-    public void generate_mole_frame()
+    public void generate_mole_frame(int LI = 0)
     {
         switch(WAMSetting.IS.Mole_gener_shape)
         {
@@ -39,12 +39,12 @@ public class WAM_MoleCenter : MonoBehaviour
                 break;
             case MoleGenerShape.gird:
                 generate_grid(MFT: WAMSetting.IS.Mole_frame_type,
-                    ran_num: WAMSetting.IS.Mole_frame_randomNum);
+                    ran_num: WAMSetting.IS.Mole_frame_randomNum,list_index = LI);
                 break;
         }
     }
 
-    private void generate_grid(MoleCenterType MFT = MoleCenterType.random,int ran_num = 0)
+    private void generate_grid(MoleCenterType MFT = MoleCenterType.random,int ran_num = 0,int list_index = 0)
     {
         float distant2 = WAMSetting.IS.Mole_frame_dist2;
         float distant = WAMSetting.IS.Mole_frame_dist;
@@ -129,7 +129,7 @@ public class WAM_MoleCenter : MonoBehaviour
         else if(MFT == MoleCenterType.list)
         {
             int row = 0, col = 0;
-            foreach (int index in WAMSetting.IS.Mole_frame_Lindex)
+            foreach (int index in WAMSetting.IS.Mole_frame_Lindex[list_index])
             {
                 row = index / mole_frame_num;
                 col = index % mole_frame_num2;
@@ -330,6 +330,16 @@ public class WAM_MoleCenter : MonoBehaviour
     public void correct_whac()
     {
 
+    }
+
+    public void clean_destroy()
+    {
+        foreach (Transform mole_TRANS in mole_TRANSs.ToArray())
+        {
+            mole_TRANS.GetComponent<WAM_Mole>().clean_destroy();
+        }
+        WAMRC.IS.MoleCenter_TRANS = null;
+        Destroy(gameObject);
     }
 
 }
