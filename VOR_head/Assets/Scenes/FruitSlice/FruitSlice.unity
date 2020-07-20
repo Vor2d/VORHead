@@ -169,6 +169,21 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: AutoResetHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: Camera_TRANS
+      value: 
+      objectReference: {fileID: 534634143}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: Adjust_delay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
 --- !u!4 &230187260 stripped

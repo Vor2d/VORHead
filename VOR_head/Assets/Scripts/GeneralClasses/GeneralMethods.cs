@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine.SceneManagement;
+using UnityEngine.XR;
 
 using HMTS_enum;
 
@@ -405,26 +406,34 @@ public static class GeneralMethods {
     }
 
     //Method to get headset speed;
-    public static Vector3 getVRspeed()
+    public static Vector3 getVRspeed(bool UsingXR = true)
     {
-        Vector3 angularVelocityRead =
+        Vector3 angularVelocityHead = new Vector3();
+        if (UsingXR) { angularVelocityHead = XRDeviceManager.get_head_Angularspeed(); }
+        else
+        {
+            angularVelocityHead =
                 (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
                 FromFlippedZVector3f()) * Mathf.Rad2Deg;
-
-        return angularVelocityRead;
+        }
+        return angularVelocityHead;
     }
 
     //Method to get headset rotation;
-    public static Quaternion getVRrotation()
+    //Quaternion VRrotation = InputTracking.GetLocalRotation(XRNode.CenterEye);
+    public static Quaternion getVRrotation(bool UsingXR = true)
     {
-        //Quaternion VRrotation = InputTracking.GetLocalRotation(XRNode.CenterEye);
-        Quaternion quatf_orientation =
-                        OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
-                        ToOVRPose().orientation;
-        Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y, 
-                                                quatf_orientation.z, quatf_orientation.w);
+        if (UsingXR) { return XRDeviceManager.get_head_Orientation(); }
+        else
+        {
+            Quaternion quatf_orientation =
+                OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
+                ToOVRPose().orientation;
+            Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y,
+                                                    quatf_orientation.z, quatf_orientation.w);
 
-        return VRrotation;
+            return VRrotation;
+        }
     }
 
     public static float get_median(List<float> data_list)
@@ -455,7 +464,9 @@ public static class GeneralMethods {
 
     public static void recenter_VR()
     {
-        UnityEngine.XR.InputTracking.Recenter();
+        //UnityEngine.XR.InputTracking.Recenter();
+        XRDeviceManager.InitXRDevice();
+        XRDeviceManager.recenter();
     }
 
     //Have to stop from outside;

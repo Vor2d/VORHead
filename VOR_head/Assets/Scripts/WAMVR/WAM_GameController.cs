@@ -256,8 +256,8 @@ public class WAM_GameController : GeneralGameController
             }
 
         }
-        WAMRC.IS.CI_script.Button_B += recenter_VR;
-        WAMRC.IS.CI_script.Button_A += go_next_level;
+        WAMRC.IS.CI_script.Button_Y += recenter_VR;
+        WAMRC.IS.CI_script.Button_X += go_next_level;
     }
 
     private void deregister_controller()
@@ -291,8 +291,8 @@ public class WAM_GameController : GeneralGameController
             }
 
         }
-        WAMRC.IS.CI_script.Button_B -= recenter_VR;
-        WAMRC.IS.CI_script.Button_A -= go_next_level;
+        WAMRC.IS.CI_script.Button_Y -= recenter_VR;
+        WAMRC.IS.CI_script.Button_X -= go_next_level;
     }
 
     private void go_next_level()

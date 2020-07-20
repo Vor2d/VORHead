@@ -15,7 +15,7 @@ public class Aim : MonoBehaviour {
     void Start () {
         if (AimKey == 0)
         {
-            CI_script.Button_A += shoot;
+            CI_script.Button_X += shoot;
         }
         else if (AimKey == 1)
         {
@@ -53,7 +53,7 @@ public class Aim : MonoBehaviour {
     {
         if (AimKey == 0)
         {
-            CI_script.Button_A -= shoot;
+            CI_script.Button_X -= shoot;
         }
         else if (AimKey == 1)
         {

@@ -4549,6 +4549,26 @@ PrefabInstance:
       propertyPath: Sensitivity
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: AutoResetPos
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: Camera_TRANS
+      value: 
+      objectReference: {fileID: 1157162351}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: AutoResetHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1091799022279322447, guid: 5215ab598d10c17499ad0d33cf88f7a7,
+        type: 3}
+      propertyPath: Adjust_delay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5215ab598d10c17499ad0d33cf88f7a7, type: 3}
 --- !u!4 &806535859 stripped
@@ -9640,6 +9660,7 @@ GameObject:
   - component: {fileID: 1157162351}
   - component: {fileID: 1157162350}
   - component: {fileID: 1157162349}
+  - component: {fileID: 1157162352}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9712,6 +9733,24 @@ Transform:
   m_Father: {fileID: 806535859}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1157162352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1157162348}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a2a9c34df4095f47b9ca8f975175f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Device: 0
+  m_PoseSource: 2
+  m_PoseProviderComponent: {fileID: 0}
+  m_TrackingType: 0
+  m_UpdateType: 0
+  m_UseRelativeTransform: 0
 --- !u!1 &1204583059
 GameObject:
   m_ObjectHideFlags: 0

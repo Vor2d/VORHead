@@ -29,7 +29,7 @@ public class SC_GameController : GeneralGameController {
         
         if(scene_manager_OBJ.GetComponent<MySceneManager>().using_VR)
         {
-            CI_script.Button_B += recenter_VR;
+            CI_script.Button_Y += recenter_VR;
         }
 	}
 

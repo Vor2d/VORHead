@@ -47,14 +47,14 @@ public class FS_GameController : GeneralGameController {
 
     private void register_controller()
     {
-        FS_RC.IS.CI_script.Button_B += recenter_VR;
-        FS_RC.IS.CI_script.Button_A += next_trial_but;
+        FS_RC.IS.CI_script.Button_Y += recenter_VR;
+        FS_RC.IS.CI_script.Button_X += next_trial_but;
     }
 
     private void deregister_controller()
     {
-        FS_RC.IS.CI_script.Button_B -= recenter_VR;
-        FS_RC.IS.CI_script.Button_A -= next_trial_but;
+        FS_RC.IS.CI_script.Button_Y -= recenter_VR;
+        FS_RC.IS.CI_script.Button_X -= next_trial_but;
     }
 
 

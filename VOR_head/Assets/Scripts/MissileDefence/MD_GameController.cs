@@ -201,7 +201,7 @@ public class MD_GameController : GeneralGameController {
 
     private void register_controller()
     {
-        CI_script.Button_B += recenter;
+        CI_script.Button_Y += recenter;
         if(MDDC_script.UsingReloadSystem)
         {
             CI_script.IndexTrigger += reload_ammo_input;
@@ -210,7 +210,7 @@ public class MD_GameController : GeneralGameController {
 
     private void de_register_controller()
     {
-        CI_script.Button_B -= recenter;
+        CI_script.Button_Y -= recenter;
         if (MDDC_script.UsingReloadSystem)
         {
             CI_script.IndexTrigger -= reload_ammo_input;

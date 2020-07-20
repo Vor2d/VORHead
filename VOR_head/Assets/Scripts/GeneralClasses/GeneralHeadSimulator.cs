@@ -18,6 +18,11 @@ public class GeneralHeadSimulator : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+        HS_rotate();
+    }
+
+    private void HS_rotate()
+    {
         if (PDC_script.using_VR)
         {
             transform.rotation = GeneralMethods.getVRrotation();

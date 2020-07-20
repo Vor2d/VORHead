@@ -21,7 +21,6 @@ public class WAM_EndSession : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (update_timer()) { animator.SetTrigger(WAMSD.AniStartLevel_trigger); }
-        Debug.Log("!!! " + timer.ToString("F2"));
     }
 
     private bool update_timer()
