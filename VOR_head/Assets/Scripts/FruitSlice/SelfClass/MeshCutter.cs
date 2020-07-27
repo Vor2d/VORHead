@@ -17,7 +17,8 @@ namespace MeshSystem
         /// <param name="par_TRANS"></param>
         /// <returns>Each cut generate 2 pices, and two points generate multiple cuts;</returns>
         public static List<List<Transform>> get_lines_Acut(Vector3 CP1, Vector3 CP2, 
-            Dictionary<MeshData,Transform> MeshDataPool, bool infinte, Texture2D texture2D,Transform par_TRANS)
+            Dictionary<MeshData,Transform> MeshDataPool, bool infinte, Texture2D texture2D,Transform par_TRANS,
+            string shader_str = "")
         {
             List<List<Transform>> res_TRANSs = new List<List<Transform>>();
             Vector3 CP1_relative;
@@ -34,11 +35,13 @@ namespace MeshSystem
                 cut_line = new MeshLine();
                 cut_line.line_cal(new MeshPoint(CP1_relative, true), new MeshPoint(CP2_relative, true));
                 cut_line.infinite = infinte;
-                if (cut(mesh_data, cut_line, texture2D, par_TRANS, MeshDataPool[mesh_data], out half_TRANSs))
+                if (cut(mesh_data, cut_line, texture2D, par_TRANS, MeshDataPool[mesh_data], out half_TRANSs,
+                    shader_str: shader_str))
                 {
                     Debug.Log("!!!!! " + half_TRANSs.ToString());
                     res_TRANSs.Add(half_TRANSs);
                     mesh_data.clean_destroy(MeshDataPool);
+                    temp_TRANS.gameObject.SetActive(false);
                     Object.Destroy(temp_TRANS.gameObject);
                 }
             }
@@ -49,7 +52,7 @@ namespace MeshSystem
         }
 
         private static bool cut(MeshData mesh_data, MeshLine cut_line, Texture2D texture2D, Transform par_TRANS,
-            Transform orig_TRANS, out List<Transform> res_TRANSs)
+            Transform orig_TRANS, out List<Transform> res_TRANSs, string shader_str = "")
         {
             res_TRANSs = new List<Transform>();
 
@@ -62,9 +65,9 @@ namespace MeshSystem
 
             MeshData[] cut_meshs = mesh_data.cut(cut_points[0], cut_points[1]);
             Transform NM1_TRANS = MeshCreater.create_Unity_mesh(cut_meshs[0], false, texture2D, par_TRANS,
-                            orig_TRANS.localPosition);
+                            orig_TRANS.localPosition, shader_str: shader_str);
             Transform NM2_TRANS = MeshCreater.create_Unity_mesh(cut_meshs[1], false, texture2D, par_TRANS,
-                            orig_TRANS.localPosition);
+                            orig_TRANS.localPosition, shader_str: shader_str);
             //Debug.Log("mesh1 " + cut_meshs[0].VarToString());
             //Debug.Log("mesh2 " + cut_meshs[1].VarToString());
             res_TRANSs.Add(NM1_TRANS);

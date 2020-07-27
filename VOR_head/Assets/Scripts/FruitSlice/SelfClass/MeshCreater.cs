@@ -11,7 +11,7 @@ namespace MeshSystem
         /// </summary>
         /// <returns></returns>
         public static Transform create_mesh(Vector3[] poss, Vector3[] init_UV, Texture2D texture2D,
-            Transform par_TRANS, Vector3 trans_pos = new Vector3())
+            Transform par_TRANS, Vector3 trans_pos = new Vector3(), string shader_str = "")
         {
             MeshData mesh_data = new MeshData();
             mesh_data.set_init_UVs(init_UV[0], init_UV[1]);
@@ -24,7 +24,8 @@ namespace MeshSystem
             mesh_data.Verticies = verts;
             mesh_data.MD_regener();
 
-            return create_Unity_mesh(mesh_data, true, texture2D, par_TRANS, trans_pos: trans_pos);
+            return create_Unity_mesh(mesh_data, true, texture2D, par_TRANS, trans_pos: trans_pos,
+                shader_str: shader_str);
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace MeshSystem
         /// </summary>
         /// <returns>transform</returns>
         public static Transform create_Unity_mesh(MeshData mesh_data, bool cal_uv, Texture2D texture2D,
-            Transform par_TRANS, Vector3 trans_pos = new Vector3())
+            Transform par_TRANS, Vector3 trans_pos = new Vector3(), string shader_str = "")
         {
             if (cal_uv)
             {
@@ -50,6 +51,7 @@ namespace MeshSystem
             MeshDataComp MDC = NM_TRANS.gameObject.AddComponent<MeshDataComp>();
             MDC.set_MD(mesh_data);
             MR.material.mainTexture = texture2D;
+            if (shader_str != "") { MR.material.shader = Shader.Find(shader_str); }
             NM_TRANS.parent = par_TRANS;
             NM_TRANS.localPosition = trans_pos;
             FS_RC.IS.MeshDataPool.Add(mesh_data, NM_TRANS);

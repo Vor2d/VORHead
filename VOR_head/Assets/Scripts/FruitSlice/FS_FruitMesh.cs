@@ -7,7 +7,9 @@ using System.Linq;
 
 public class FS_FruitMesh : MonoBehaviour
 {
-    [SerializeField] private bool infinite_cut;
+    [SerializeField] private bool Infinite_cut;
+    [SerializeField] string Shader_str;
+    [SerializeField] bool Force_prob_Tomass;
 
     private Texture2D curr_tex;
     private List<List<Transform>> cutted_TRANSs;
@@ -52,7 +54,8 @@ public class FS_FruitMesh : MonoBehaviour
         points.Add(new Vector3(poss[1].x, poss[0].y, 0.0f));
         points.Add(new Vector3(poss[1].x, poss[1].y, 0.0f));
         
-        MeshCreater.create_mesh(points.ToArray(), uvs, curr_tex, transform, trans_pos: Vector3.zero);
+        MeshCreater.create_mesh(points.ToArray(), uvs, curr_tex, transform, trans_pos: Vector3.zero, 
+            shader_str: Shader_str);
     }
 
     private void set_curr_tex(Texture2D texture2D)
@@ -65,8 +68,8 @@ public class FS_FruitMesh : MonoBehaviour
 
     public void cut_mseh(Vector3 start_pos, Vector3 stop_pos, bool Using_rigidbody = false)
     {
-        cutted_TRANSs = MeshCutter.get_lines_Acut(start_pos, stop_pos, FS_RC.IS.MeshDataPool, infinite_cut,
-            curr_tex, transform);
+        cutted_TRANSs = MeshCutter.get_lines_Acut(start_pos, stop_pos, FS_RC.IS.MeshDataPool, Infinite_cut,
+            curr_tex, transform, shader_str: Shader_str);
         if (Using_rigidbody) { move_cut_RB(); }
         else { move_cut_translate(start_pos, stop_pos); }
     }
@@ -95,6 +98,11 @@ public class FS_FruitMesh : MonoBehaviour
             Random.Range(-FS_Setting.IS.ForceRange, FS_Setting.IS.ForceRange);
         float torque = FS_Setting.IS.ThrowTorque +
             Random.Range(-FS_Setting.IS.TorqueRange, FS_Setting.IS.TorqueRange);
+        if(Force_prob_Tomass)
+        {
+            force *= RB.mass;
+            torque *= RB.mass;
+        }
         if (FS_Setting.IS.ApplyForce)
         {
             RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
