@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FS_FruitSpeedCal2 : MonoBehaviour {
-
-    [SerializeField] private FS_Fruit F_script;
-
+public class FS_FruitSpeedCal2 : MonoBehaviour 
+{
     private bool speed_cal_flag;
     private float slice_speed;
 
@@ -32,9 +30,10 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
     //Check the speed after exit until stop.
     private void check_speed()
     {
-        if (Mathf.Abs(GeneralMethods.getVRspeed().y) < slice_speed)
+        if (Mathf.Abs(GeneralMethods.getVRspeed().magnitude) < slice_speed)
         {
-            F_script.fruit_cutted();
+            FS_Fruit.IS.pre_cut_once();
+            FS_Fruit.IS.stop_record_CP();
             speed_cal_flag = false;
          }
     }
@@ -42,5 +41,10 @@ public class FS_FruitSpeedCal2 : MonoBehaviour {
     public void start_speed_cal()
     {
         speed_cal_flag = true;
+    }
+
+    public void stop_speed_cal()
+    {
+        speed_cal_flag = false;
     }
 }

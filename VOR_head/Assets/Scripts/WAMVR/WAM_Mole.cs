@@ -21,6 +21,7 @@ public class WAM_Mole : MonoBehaviour
     [SerializeField] private float AfterWhacTime;
     [SerializeField] private bool Use_Sprite_AC;
     [SerializeField] private bool Rotate_fish;
+    [SerializeField] private bool Using_drop_back;
 
     private WAM_MoleCenter MC_script;
     private Transform NITRANS_Cache;
@@ -418,8 +419,10 @@ public class WAM_Mole : MonoBehaviour
     {
         if(start_flag)
         {
-            play_error_sound();
-            StartCoroutine(wrong_whac_anim(AfterWhacTime));
+            //play_error_sound();
+            if (Using_drop_back) 
+            { StartCoroutine(drop_back(Mesh_TRANS, WAMSetting.IS.Fish_jumpH, WAMSetting.IS.Fish_jumpT)); }
+            else { StartCoroutine(wrong_whac_anim(AfterWhacTime)); }
             start_flag = false;
         }
         
@@ -432,6 +435,25 @@ public class WAM_Mole : MonoBehaviour
         Debug.Log("Wrong whac");
         yield return new WaitForSeconds(time);
         RedXMesh_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        clean_destroy();
+    }
+
+    private IEnumerator drop_back(Transform MT, float jheight, float jtime)
+    {
+        float speed = jheight / jtime;
+        Vector3 tar_pos = new Vector3(MT.position.x, MT.position.y - jheight, MT.position.z);
+        while (jtime >= 0.0f)
+        {
+            MT.position = Vector3.Lerp(MT.position, tar_pos, speed * Time.deltaTime);
+            jtime -= Time.deltaTime;
+            yield return null;
+        }
+        WW_ani_finish_CB();
+    }
+
+    private void WW_ani_finish_CB()
+    {
+        turn_off_mesh();
         clean_destroy();
     }
 

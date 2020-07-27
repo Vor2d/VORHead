@@ -189,19 +189,19 @@ public static class XRDeviceManager
             case XRNode.Head:
                 return get_head_Angularspeed();
             case XRNode.LeftHand:
-                return get_Angularspeed(LeftControllerNode);
+                return get_device_Angularspeed(LeftControllerNode);
             case XRNode.RightHand:
-                return get_Angularspeed(RightControllerNode);
+                return get_device_Angularspeed(RightControllerNode);
         }
         return Vector3.zero;
     }
 
     public static Vector3 get_head_Angularspeed()
     {
-        return get_Angularspeed(HeadNode);
+        return get_device_Angularspeed(HeadNode);
     }
 
-    public static Vector3 get_Angularspeed(InputDevice device)
+    public static Vector3 get_device_Angularspeed(InputDevice device)
     {
         Vector3 AV = new Vector3();
         device.TryGetFeatureValue(CommonUsages.deviceAngularVelocity, out AV);

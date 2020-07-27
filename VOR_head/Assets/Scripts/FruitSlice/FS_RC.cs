@@ -16,6 +16,12 @@ public class FS_RC : MonoBehaviour
     public Material FruitCommon_MTRL;
     //Prefabs;
     public GameObject Fruit_Prefab;
+    public GameObject Fruit_Indi_Prefab;
+    public GameObject RB_sam_Prefab;
+    //Animators;
+    public Animator GC_Ani;
+    public Animator UI_Ani;
+    public Animator Fruit_Ani;
 
     [HideInInspector]
     //public FS_DataController DC_script;

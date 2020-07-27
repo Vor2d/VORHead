@@ -463,6 +463,7 @@ public class WAM_GameController : GeneralGameController
         //generate_mole_center();
         //GCAnimator.SetTrigger(WAMSD.AniNextStep_trigger);
         update_score_text();
+        update_LT_text(level_timer);
         run_update = true;
     }
 

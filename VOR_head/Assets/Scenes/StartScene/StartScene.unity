@@ -802,6 +802,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6437522dad32e74dada1188242301cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraParent_TRANS: {fileID: 1943459373}
+  Camera_TRANS: {fileID: 625742039}
   sceneManager_prefab: {fileID: 1560035312830508, guid: e60b5c868d769fa4691626c0ff844ddf,
     type: 3}
   CI_script: {fileID: 593820162}

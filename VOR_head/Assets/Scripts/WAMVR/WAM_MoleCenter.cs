@@ -174,26 +174,32 @@ public class WAM_MoleCenter : MonoBehaviour
 
     public void generate_mole(MoleGenerType gener_type,bool use_Smesh = false)
     {
+        Transform mole_TRANS = null;
         switch(gener_type)
         {
             case MoleGenerType.random:
-                random_mole_gener(use_Smesh: use_Smesh);
+                mole_TRANS = random_mole_gener(use_Smesh: use_Smesh);
                 break;
             case MoleGenerType.list:
-                list_mole_gener();
+                mole_TRANS = list_mole_gener();
                 break;
+        }
+
+        if (WAMSetting.IS.Use_jump && mole_TRANS != null)
+        {
+            StartCoroutine(fish_jump(mole_TRANS, WAMSetting.IS.Fish_jumpH, WAMSetting.IS.Fish_jumpT));
         }
     }
 
-    private void list_mole_gener()
+    private Transform list_mole_gener()
     {
         list_index++;
         list_index %= WAMSetting.IS.Gener_list.Count;
         Vector3 pos = frame_TRANSs[WAMSetting.IS.Gener_list[list_index]].position;
-        spawn_mole(pos);
+        return spawn_mole(pos);
     }
 
-    private void random_mole_gener(bool use_Smesh = false)
+    private Transform random_mole_gener(bool use_Smesh = false)
     {
         bool good_gener = false;
         int index = 0;
@@ -229,10 +235,7 @@ public class WAM_MoleCenter : MonoBehaviour
 
         Transform mole_TRANS = spawn_mole(pos,use_Smesh: use_Smesh);
         last_pos = pos;
-        if(WAMSetting.IS.Use_jump)
-        {
-            StartCoroutine(fish_jump(mole_TRANS,WAMSetting.IS.Fish_jumpH,WAMSetting.IS.Fish_jumpT));
-        }
+        return mole_TRANS;
     }
 
     private IEnumerator fish_jump(Transform MT, float jheight,float jtime)

@@ -64,7 +64,6 @@ public class FS_Indicator : MonoBehaviour
     private void check_aim()
     {
         Is_aimed_flag = RC_cache.check_object(FS_SD.FruitIndicator_tag,transform);
-        Debug.Log("Is_aimed_flag " + Is_aimed_flag);
         if (Is_aimed_flag != Last_is_aimed_flag)
         {
             aim_changed(Is_aimed_flag);
@@ -93,5 +92,6 @@ public class FS_Indicator : MonoBehaviour
     private void leaving_indi()
     {
         FI_script.F_script.FSC2_script.start_speed_cal();
+        FS_Fruit.IS.start_record_CP();
     }
 }

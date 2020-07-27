@@ -77,6 +77,27 @@ namespace MeshSystem
             //mesh.UploadMeshData(false);
         }
 
+        public (Vector3[], int[], Vector2[]) get_vert_tri_uv()
+        {
+            List<Vector2> UVs;
+            List<Vector3> V_pos;
+            MeshPoint.SepLists(Verticies, out V_pos, out UVs);
+            return (V_pos.ToArray(), Triangles.ToArray(), UVs.ToArray());
+        }
+
+        public (Vector2[], int[], Vector2[]) get_vert_tri_uv_2d()
+        {
+            List<Vector2> UVs;
+            List<Vector3> V_pos;
+            MeshPoint.SepLists(Verticies, out V_pos, out UVs);
+            List<Vector2> V_pos_2d = new List<Vector2>();
+            foreach(Vector3 pos in V_pos)
+            {
+                V_pos_2d.Add(pos);
+            }
+            return (V_pos_2d.ToArray(), Triangles.ToArray(), UVs.ToArray());
+        }
+
         public void MD_regener()
         {
             center_cal();

@@ -45,8 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e9e92a729affda4886fc42236d681a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AutoResetPos: 0
+  AutoResetHeight: 0
   Camera_TRANS: {fileID: 0}
+  Adjust_delay: 0
 --- !u!1 &1062511296667550
 GameObject:
   m_ObjectHideFlags: 0

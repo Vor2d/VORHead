@@ -6,6 +6,16 @@ namespace MeshSystem
 {
     public static class MeshCutter
     {
+        /// <summary>
+        /// Cut all the meshes with 2 points;
+        /// </summary>
+        /// <param name="CP1"></param>
+        /// <param name="CP2"></param>
+        /// <param name="MeshDataPool"></param>
+        /// <param name="infinte"></param>
+        /// <param name="texture2D"></param>
+        /// <param name="par_TRANS"></param>
+        /// <returns>Each cut generate 2 pices, and two points generate multiple cuts;</returns>
         public static List<List<Transform>> get_lines_Acut(Vector3 CP1, Vector3 CP2, 
             Dictionary<MeshData,Transform> MeshDataPool, bool infinte, Texture2D texture2D,Transform par_TRANS)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MeshSystem;
 using UnityEngine.UI;
+using System.Linq;
 
 public class FS_FruitMesh : MonoBehaviour
 {
@@ -62,14 +63,65 @@ public class FS_FruitMesh : MonoBehaviour
 
 
 
-    public void cut_mseh(Vector3 start_pos, Vector3 stop_pos)
+    public void cut_mseh(Vector3 start_pos, Vector3 stop_pos, bool Using_rigidbody = false)
     {
         cutted_TRANSs = MeshCutter.get_lines_Acut(start_pos, stop_pos, FS_RC.IS.MeshDataPool, infinite_cut,
             curr_tex, transform);
-        move_cut(start_pos, stop_pos);
+        if (Using_rigidbody) { move_cut_RB(); }
+        else { move_cut_translate(start_pos, stop_pos); }
     }
 
-    private void move_cut(Vector3 start_pos, Vector3 stop_pos)
+    private void move_cut_RB()
+    {
+        foreach (List<Transform> c_TRANSs in cutted_TRANSs)
+        {
+            apply_CO_RB(c_TRANSs[0]);
+            apply_CO_RB(c_TRANSs[1]);
+        }
+    }
+
+    private void apply_CO_RB(Transform mesh_TRANS)
+    {
+        PolygonCollider2D MC = mesh_TRANS.gameObject.AddComponent<PolygonCollider2D>();
+        edit_PC(MC, mesh_TRANS);
+        Rigidbody2D RB = mesh_TRANS.gameObject.AddComponent<Rigidbody2D>();
+        edit_RB(RB);
+        apply_force(RB);
+    }
+
+    private void apply_force(Rigidbody2D RB)
+    {
+        float force = FS_Setting.IS.ThrowForce + 
+            Random.Range(-FS_Setting.IS.ForceRange, FS_Setting.IS.ForceRange);
+        float torque = FS_Setting.IS.ThrowTorque +
+            Random.Range(-FS_Setting.IS.TorqueRange, FS_Setting.IS.TorqueRange);
+        if (FS_Setting.IS.ApplyForce)
+        {
+            RB.AddForce(Vector2.up * force, ForceMode2D.Impulse);
+            RB.AddTorque(torque, ForceMode2D.Impulse);
+        }
+    }
+
+    private void edit_PC(PolygonCollider2D PC,Transform mesh_TRANS)
+    {
+        MeshData MD = get_MD_from_pool(mesh_TRANS);
+        PC.points = MD.get_vert_tri_uv_2d().Item1;
+    }
+
+    private void edit_RB(Rigidbody2D RB)
+    {
+        Rigidbody2D RB_prefab = FS_RC.IS.RB_sam_Prefab.GetComponent<Rigidbody2D>();
+        RB.useAutoMass = RB_prefab.useAutoMass;
+        RB.mass = RB_prefab.mass;
+        RB.constraints = RB_prefab.constraints;
+    }
+
+    private MeshData get_MD_from_pool(Transform mesh_TRANS)
+    {
+        return FS_RC.IS.MeshDataPool.FirstOrDefault(x => x.Value == mesh_TRANS).Key;
+    }
+
+    private void move_cut_translate(Vector3 start_pos, Vector3 stop_pos)
     {
         Vector2 cut_vec = (stop_pos - start_pos).normalized;
         Vector2 updir_vec = get_perpen(cut_vec, true);

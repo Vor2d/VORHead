@@ -469,6 +469,16 @@ public static class GeneralMethods {
         XRDeviceManager.recenter();
     }
 
+    public static float recenter_VR(Transform Cam_Par_TRANS, Transform Cam_TRANS)
+    {
+        XRDeviceManager.InitXRDevice();
+        XRDeviceManager.recenter();
+        float refer_height = -Cam_TRANS.position.y;
+        Cam_Par_TRANS.position = new Vector3(Cam_Par_TRANS.position.x,
+            Cam_Par_TRANS.position.y + refer_height, Cam_Par_TRANS.position.z);
+        return refer_height;
+    }
+
     //Have to stop from outside;
     public static IEnumerator blink_object(GameObject target_OBJ, float inter_time, 
                                             Color target_color)
@@ -497,6 +507,16 @@ public static class GeneralMethods {
         timer = init_time;
     }
 
+    public static bool up_ch_timer_down(ref float timer, ref bool timer_flag)
+    {
+        if(timer_flag)
+        {
+            timer -= Time.deltaTime;
+            return check_timer_down(timer, ref timer_flag);
+        }
+        return false;
+    }
+
     public static bool check_timer_down(float timer,ref bool timer_flag)
     {
         if (timer < 0.0f)
@@ -512,6 +532,16 @@ public static class GeneralMethods {
     {
         timer_flag = true;
         timer = 0.0f;
+    }
+
+    public static bool up_ch_timer_up(ref float timer, ref bool timer_flag, float target_time)
+    {
+        if (timer_flag)
+        {
+            timer += Time.deltaTime;
+            return check_timer_up(timer, ref timer_flag, target_time);
+        }
+        return false;
     }
 
     public static bool check_timer_up(float timer, ref bool timer_flag, float target_time)

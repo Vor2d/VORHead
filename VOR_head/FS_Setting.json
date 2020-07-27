@@ -1,1 +1,1 @@
-{"SliceSpeed":10.0,"ScoreIncrPerCut":10}
+{"SliceSpeed":10.0,"ScoreIncrPerCut":10,"ThrowForce":20.0,"ThrowTorque":0.0,"ForceRange":10.0,"TorqueRange":40.0,"ScoreMaxLen":20.0,"ScoreMaxDist":20.0,"ScoreLenDiffMax":2.0,"ScoreDistMax":2.0}
