@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Permissions;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FS_Fruit : MonoBehaviour {
 
     public FS_FruitSpeedCal2 FSC2_script;
-    [SerializeField] private bool Using_rigidbody;
+    public bool Using_rigidbody;
+    public bool Using_collider;
+    public bool Using_gravity;
+    public bool using_weight;
     public bool Using_curve_path;
     [SerializeField] bool Using_straight_path;
     [SerializeField] bool Using_text_result;
@@ -15,8 +17,13 @@ public class FS_Fruit : MonoBehaviour {
     [SerializeField] private FS_FruitMesh FM_script;
     [SerializeField] private FS_FruitIndicator FI_script;
     [SerializeField] private FS_CutResult CR_script;
+    [SerializeField] private Transform TooSlowText_TRANS;
+    [SerializeField] private string CutTooSlowText;
+    [SerializeField] private FS_TrialResults TR_script;
+    [SerializeField] private float MeshPPU;
 
     public bool Start_flag { get; set; }
+    public float first_weight { get; set; }
 
     private Animator animator;
     private Texture2D curr_mesh;
@@ -29,6 +36,7 @@ public class FS_Fruit : MonoBehaviour {
     private float curr_distS_bonus;
     private Stack<float> cut_score;
     private bool cutted;
+    private Transform trial_group_TRANS;
 
     public static FS_Fruit IS { get; set; }
 
@@ -37,8 +45,6 @@ public class FS_Fruit : MonoBehaviour {
         IS = this;
 
         this.Start_flag = false;
-        //this.stop_pos = new Vector3();
-        //this.sta_end_TRANSs = new List<((Transform, Transform), Vector3)>();
         this.animator = GetComponent<Animator>();
         this.curr_mesh = null;
         this.mesh_ract = new Vector2[0];
@@ -50,6 +56,8 @@ public class FS_Fruit : MonoBehaviour {
         this.curr_stopI_pos = new Vector3();
         this.cut_score = new Stack<float>();
         this.cutted = false;
+        this.trial_group_TRANS = null;
+        this.first_weight = 0.0f;
 	}
 
     private void Start()
@@ -77,10 +85,25 @@ public class FS_Fruit : MonoBehaviour {
         Start_flag = true;
     }
 
-    public void load_trial(Vector2[] poss, Texture2D texture2D)
+    public void load_trial(GameObject TR_prefab)
     {
-        set_mesh(texture2D);
-        set_mesh_ract(poss);
+        spawn_trial_group(TR_prefab);
+        set_mesh(trial_group_TRANS.GetComponent<FS_TrialGroup>().Texture);
+        (Vector2[],float) poss_rat = GeneralMethods.mesh_size_cal_ratio(curr_mesh, 
+            FS_Setting.IS.FruitFrameSize, MeshPPU);
+        set_mesh_ract(poss_rat.Item1);
+        adjust_TR(poss_rat.Item2);
+    }
+
+    private void spawn_trial_group(GameObject TR_prefab)
+    {
+        trial_group_TRANS = Instantiate(TR_prefab, transform.position, Quaternion.identity, transform).
+            transform;
+    }
+
+    private void adjust_TR(float ratio)
+    {
+        trial_group_TRANS.localScale *= ratio;
     }
 
     private void set_mesh(Texture2D mesh_tex)
@@ -174,17 +197,30 @@ public class FS_Fruit : MonoBehaviour {
 
     private void create_mesh()
     {
-        FM_script.first_create_mesh(mesh_ract, curr_mesh);
+        Transform mesh_TRANS = FM_script.first_create_mesh(mesh_ract, curr_mesh, Using_RB: Using_rigidbody);
+        if (using_weight) { first_weight = mesh_TRANS.GetComponent<MeshDataComp>().mesh_data.Area; }
     }
 
     private void load_indicators()
     {
-        FI_script.init_indicators();
+        FI_script.init_indicators(trial_group_TRANS.GetComponent<FS_TrialGroup>().Indicators);
     }
 
     public void ToTrialFinished()
     {
         cut();
+        turn_off_indicator();
+        show_trial_result();
+    }
+
+    private void turn_off_indicator()
+    {
+        FI_script
+    }
+
+    private void show_trial_result()
+    {
+        TR_script.show_results(FS_RC.IS.MeshDataPool.Values.ToArray());
     }
 
     private void cut()
@@ -192,7 +228,8 @@ public class FS_Fruit : MonoBehaviour {
         if (Using_rigidbody) { }
         foreach((Vector3,Vector3) sta_sto_pos in sta_stop_poss)
         {
-            FM_script.cut_mseh(sta_sto_pos.Item1, sta_sto_pos.Item2, Using_rigidbody: Using_rigidbody);
+            FM_script.cut_mseh(sta_sto_pos.Item1, sta_sto_pos.Item2, Using_rigidbody: Using_rigidbody, 
+                Using_collider: Using_collider, Using_gravity: Using_gravity);
         }
     }
 
@@ -203,7 +240,7 @@ public class FS_Fruit : MonoBehaviour {
 
     public void ToShowCutResult()
     {
-        show_cut_res(); 
+        show_cut_res();
     }
 
     private void show_cut_res()
@@ -276,6 +313,7 @@ public class FS_Fruit : MonoBehaviour {
     private void trace_back_to_curr()
     {
         FI_script.prepare_TB_to_curr();
+        turn_off_res();
         cancel_cut();
     }
 
@@ -300,5 +338,32 @@ public class FS_Fruit : MonoBehaviour {
     private void cancel_cut()
     {
         FSC2_script.stop_speed_cal();
+    }
+
+    public void cut_too_slow()
+    {
+        cutted = true;
+        animator.SetTrigger(FS_SD.AniTooSlow_str);
+    }
+
+    public void ToCutTooSlow()
+    {
+        show_too_slow_text();
+    }
+
+    private void show_too_slow_text()
+    {
+        TooSlowText_TRANS.GetComponent<TextMesh>().text = CutTooSlowText;
+        TooSlowText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+    }
+
+    public void LeaveCutTooSlow()
+    {
+        turn_off_slow_text();
+    }
+
+    private void turn_off_slow_text()
+    {
+        TooSlowText_TRANS.GetComponent<MeshRenderer>().enabled = false;
     }
 }

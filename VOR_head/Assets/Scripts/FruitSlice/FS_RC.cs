@@ -18,6 +18,7 @@ public class FS_RC : MonoBehaviour
     public GameObject Fruit_Prefab;
     public GameObject Fruit_Indi_Prefab;
     public GameObject RB_sam_Prefab;
+    public GameObject TrialResultFrame;
     //Animators;
     public Animator GC_Ani;
     public Animator UI_Ani;

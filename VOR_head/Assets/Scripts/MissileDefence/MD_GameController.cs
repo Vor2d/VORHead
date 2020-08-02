@@ -12,7 +12,6 @@ public class MD_GameController : GeneralGameController {
 
     [SerializeField] private Transform Camera1I_TRANS;
     [SerializeField] private Transform Camera2I_TRANS;
-    [SerializeField] private Transform CameraParent_TRANS;
     [SerializeField] private Transform Body_TRANS;
     [SerializeField] private Aim Aim_script;
     [SerializeField] private RightController RC_script;

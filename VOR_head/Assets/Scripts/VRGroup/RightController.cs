@@ -38,10 +38,10 @@ public class RightController : GeneralRayCast {
 
     private void update_hand()
     {
-        transform.localPosition =
-                        OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
-        transform.localRotation =
-                        OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch);
+        //transform.localPosition =
+        //                OVRInput.GetLocalControllerPosition(OVRInput.Controller.RTouch);
+        //transform.localRotation =
+        //                OVRInput.GetLocalControllerRotation(OVRInput.Controller.RTouch);
     }
 
     private void update_indicator()

@@ -15,7 +15,6 @@ public class BO_GameController : GeneralGameController {
     [SerializeField] public GameObject DebugText1;
     [SerializeField] private Transform PosManuIndicator;
     [SerializeField] private Transform PosPlayIndicator;
-    [SerializeField] private Transform CameraParent_TRANS;
     [SerializeField] private Transform Body_TRANS;
     [SerializeField] private RightController RC_script;
     //[SerializeField] private Transform FakePad;

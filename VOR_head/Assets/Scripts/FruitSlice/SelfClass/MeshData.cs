@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace MeshSystem
 {
@@ -13,6 +14,11 @@ namespace MeshSystem
         public Vector2 center_pos { get; set; }
         public Vector2[] UV_poss { get; set; }  //Upper left pos and Down right pos;
         public List<MeshLine> Mesh_lines { get; set; }  //Virtual lines for each verticies that stored for further calculation; 
+        public float Up_bound { get; set; }
+        public float Right_bound { get; set; }
+        public float Down_bound { get; set; }
+        public float Left_bound { get; set; }
+        public float Area { get; set; }
 
         public MeshData()
         {
@@ -23,6 +29,11 @@ namespace MeshSystem
             this.center_pos = new Vector2();
             this.UV_poss = new Vector2[2];
             this.Mesh_lines = new List<MeshLine>();
+            this.Up_bound = 0.0f;
+            this.Right_bound = 0.0f;
+            this.Left_bound = 0.0f;
+            this.Down_bound = 0.0f;
+            this.Area = 0.0f;
         }
 
         /// <summary>
@@ -103,7 +114,6 @@ namespace MeshSystem
             center_cal();
             sort_vert();
             line_regener();
-
         }
 
         /// <summary>
@@ -145,8 +155,51 @@ namespace MeshSystem
         {
             Triangles = new List<int>();
             Verticies.Sort((x, y) => x.CompareTo(y, center_pos));
+            get_bound();
+            get_area();
             Triangles = tria_regener(Verticies.Count);
         }
+
+        private void get_bound()
+        {
+            foreach(MeshPoint vert in Verticies)
+            {
+                Up_bound = Math.Max(vert.pos.y, Up_bound);
+                Down_bound = Math.Min(vert.pos.y, Down_bound);
+                Right_bound = Math.Max(vert.pos.x, Right_bound);
+                Left_bound = Math.Min(vert.pos.x, Left_bound);
+            }
+        }
+
+        /// <summary>
+        /// Calculte the area, must be sorted first;
+        /// </summary>
+        private void get_area()
+        {
+            Vector2[] verts_pos = new Vector2[Verticies.Count];
+            
+            for(int i = 0;i< Verticies.Count;i++)
+            {
+                verts_pos[i] = Verticies[i].pos;
+            }
+            Area = area_cal(verts_pos.ToArray());
+        }
+
+        private float area_cal(Vector2[] verts)
+        {
+            float left = 0.0f, right = 0.0f;
+            float sum = 0.0f;
+            for (int i = 0; i < verts.Length - 1; i++)
+            {
+                left = verts[i].x * verts[i + 1].y;
+                right = verts[i + 1].x * verts[i].y;
+                sum += left - right;
+            }
+            sum += verts[verts.Length - 1].x * verts[0].y - verts[0].x * verts[verts.Length - 1].y;
+            sum /= 2.0f;
+            return Mathf.Abs(sum);
+        }
+
 
         /// <summary>
         /// Generate the triangles from verticies. Generate by clockwise;

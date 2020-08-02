@@ -45,6 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   setting_file_name: FS_Setting.json
   setting_path: ./
-  FruitTextures:
-  - {fileID: 2800000, guid: 97c2f43353c7ef74d98d7cc78a465447, type: 3}
-  - {fileID: 2800000, guid: 0ecb84a155fe743418f55943cc56a1ed, type: 3}
+  TrialGroup_prefabs:
+  - {fileID: 7300470212187922963, guid: 2bf45627411eec14893703af5a185855, type: 3}

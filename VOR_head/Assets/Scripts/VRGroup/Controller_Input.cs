@@ -23,7 +23,7 @@ public class Controller_Input : MonoBehaviour {
     public const string RightHorizontal_str =
                                         "Oculus_CrossPlatform_SecondaryThumbstickHorizontal";
 
-    public OVRInput.Controller Controller_type;
+    //public OVRInput.Controller Controller_type;
     [SerializeField] private float JoystickSensitivity = 0.5f;
     [SerializeField] private float TriggerSensitivity = 0.5f;
     [SerializeField] private bool UsingXR;
@@ -86,7 +86,10 @@ public class Controller_Input : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         if (UsingXR) { process_XR_controller(); }
-        else { process_OVR_controller(); }
+        else 
+        { 
+            //process_OVR_controller(); 
+        }
 
 
     }
@@ -109,38 +112,38 @@ public class Controller_Input : MonoBehaviour {
         process_buttons((buttonx, buttony));
     }
 
-    private void process_OVR_controller()
-    {
-        float trigger_val = 0.0f;
-        float JS_horri_val = 0.0f;
-        float JS_vert_val = 0.0f;
-        bool buttonx = false;
-        bool buttony = false;
-        switch (Controller_type)
-        {
-            case OVRInput.Controller.LTouch:
-                {
-                    trigger_val = Input.GetAxis(LeftIndexTrigger_str);
-                    JS_horri_val = Input.GetAxis(LeftHorizontal_str);
-                    JS_vert_val = Input.GetAxis(leftVertical_str);
-                    buttonx = Input.GetKeyDown(KeyCode.JoystickButton2);
-                    buttony = Input.GetKeyDown(KeyCode.JoystickButton3);
-                    break;
-                }
-            case OVRInput.Controller.RTouch:
-                {
-                    trigger_val = Input.GetAxis(RightIndexTrigger_str);
-                    JS_horri_val = Input.GetAxis(RightHorizontal_str);
-                    JS_vert_val = Input.GetAxis(RightVertical_str);
-                    buttonx = Input.GetKeyDown(KeyCode.JoystickButton0);
-                    buttony = Input.GetKeyDown(KeyCode.JoystickButton1);
-                    break;
-                }
-        }
-        process_trigger(trigger_val);
-        process_JS(new Vector2(JS_horri_val, JS_vert_val));
-        process_buttons((buttonx, buttony));
-    }
+    //private void process_OVR_controller()
+    //{
+    //    float trigger_val = 0.0f;
+    //    float JS_horri_val = 0.0f;
+    //    float JS_vert_val = 0.0f;
+    //    bool buttonx = false;
+    //    bool buttony = false;
+    //    switch (Controller_type)
+    //    {
+    //        case OVRInput.Controller.LTouch:
+    //            {
+    //                trigger_val = Input.GetAxis(LeftIndexTrigger_str);
+    //                JS_horri_val = Input.GetAxis(LeftHorizontal_str);
+    //                JS_vert_val = Input.GetAxis(leftVertical_str);
+    //                buttonx = Input.GetKeyDown(KeyCode.JoystickButton2);
+    //                buttony = Input.GetKeyDown(KeyCode.JoystickButton3);
+    //                break;
+    //            }
+    //        case OVRInput.Controller.RTouch:
+    //            {
+    //                trigger_val = Input.GetAxis(RightIndexTrigger_str);
+    //                JS_horri_val = Input.GetAxis(RightHorizontal_str);
+    //                JS_vert_val = Input.GetAxis(RightVertical_str);
+    //                buttonx = Input.GetKeyDown(KeyCode.JoystickButton0);
+    //                buttony = Input.GetKeyDown(KeyCode.JoystickButton1);
+    //                break;
+    //            }
+    //    }
+    //    process_trigger(trigger_val);
+    //    process_JS(new Vector2(JS_horri_val, JS_vert_val));
+    //    process_buttons((buttonx, buttony));
+    //}
 
     private void process_trigger(float val)
     {
@@ -256,88 +259,88 @@ public class Controller_Input : MonoBehaviour {
         ybutton_flag = but_bool;
     }
 
-    [Obsolete("Use process_OVR_controller")]
-    private void process_OVR_controller1()
-    {
-        switch (Controller_type)
-        {
-            case OVRInput.Controller.LTouch:
-                {
-                    //if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical") 
-                    //                                                                > 0.5f)
-                    //{
-                    //    Forward_flag = true;
-                    //}
-                    //else
-                    //{
-                    //    Forward_flag = false;
-                    //}
+    //[Obsolete("Use process_OVR_controller")]
+    //private void process_OVR_controller1()
+    //{
+    //    switch (Controller_type)
+    //    {
+    //        case OVRInput.Controller.LTouch:
+    //            {
+    //                //if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickVertical") 
+    //                //                                                                > 0.5f)
+    //                //{
+    //                //    Forward_flag = true;
+    //                //}
+    //                //else
+    //                //{
+    //                //    Forward_flag = false;
+    //                //}
 
-                    if (Input.GetAxis(LeftIndexTrigger_str) > 0.5f)
-                    {
-                        Index_trigger_holding = true;
-                    }
-                    else
-                    {
-                        Index_trigger_holding = false;
-                    }
-                    if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
-                                                                < -0.5f)
-                    {
-                        Left_flag = true;
-                        Right_flag = false;
-                    }
-                    else if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
-                                                                    > -0.5f &&
-                            Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
-                                                                    < 0.5f)
-                    {
-                        Left_flag = false;
-                        Right_flag = false;
-                    }
-                    else if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
-                                            > 0.5f)
-                    {
-                        Left_flag = false;
-                        Right_flag = true;
-                    }
+    //                if (Input.GetAxis(LeftIndexTrigger_str) > 0.5f)
+    //                {
+    //                    Index_trigger_holding = true;
+    //                }
+    //                else
+    //                {
+    //                    Index_trigger_holding = false;
+    //                }
+    //                if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
+    //                                                            < -0.5f)
+    //                {
+    //                    Left_flag = true;
+    //                    Right_flag = false;
+    //                }
+    //                else if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
+    //                                                                > -0.5f &&
+    //                        Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
+    //                                                                < 0.5f)
+    //                {
+    //                    Left_flag = false;
+    //                    Right_flag = false;
+    //                }
+    //                else if (Input.GetAxis("Oculus_CrossPlatform_PrimaryThumbstickHorizontal")
+    //                                        > 0.5f)
+    //                {
+    //                    Left_flag = false;
+    //                    Right_flag = true;
+    //                }
 
-                    break;
-                }
-            case OVRInput.Controller.RTouch:
-                {
-                    rightC_dir();
+    //                break;
+    //            }
+    //        case OVRInput.Controller.RTouch:
+    //            {
+    //                rightC_dir();
 
-                    //R index trigger;
-                    if (Input.GetAxis(RightIndexTrigger_str) > 0.5f)
-                    {
-                        Index_trigger_holding = true;
-                        if (!index_triggered_flag && IndexTrigger != null)
-                        {
-                            IndexTrigger();
-                            index_triggered_flag = true;
-                        }
-                    }
-                    else
-                    {
-                        index_triggered_flag = false;
-                        Index_trigger_holding = false;
-                    }
-                    //R B button;
-                    if (Input.GetKeyDown(KeyCode.JoystickButton1) && Button_Y != null)
-                    {
-                        Button_Y();
-                    }
-                    if (Input.GetKeyDown(KeyCode.JoystickButton0) && Button_X != null)
-                    {
-                        Button_X();
-                    }
+    //                //R index trigger;
+    //                if (Input.GetAxis(RightIndexTrigger_str) > 0.5f)
+    //                {
+    //                    Index_trigger_holding = true;
+    //                    if (!index_triggered_flag && IndexTrigger != null)
+    //                    {
+    //                        IndexTrigger();
+    //                        index_triggered_flag = true;
+    //                    }
+    //                }
+    //                else
+    //                {
+    //                    index_triggered_flag = false;
+    //                    Index_trigger_holding = false;
+    //                }
+    //                //R B button;
+    //                if (Input.GetKeyDown(KeyCode.JoystickButton1) && Button_Y != null)
+    //                {
+    //                    Button_Y();
+    //                }
+    //                if (Input.GetKeyDown(KeyCode.JoystickButton0) && Button_X != null)
+    //                {
+    //                    Button_X();
+    //                }
 
 
-                    break;
-                }
-        }
-    }
+    //                break;
+    //            }
+    //    }
+    //}
 
     [Obsolete("Use process_JS()")]
     private void rightC_dir()

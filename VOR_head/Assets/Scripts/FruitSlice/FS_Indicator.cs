@@ -30,7 +30,7 @@ public class FS_Indicator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Activated && FI_script.F_script.Start_flag)
+        if(Activated && FS_Fruit.IS.Start_flag)
         {
             check_aim();
         }
@@ -91,7 +91,7 @@ public class FS_Indicator : MonoBehaviour
 
     private void leaving_indi()
     {
-        FI_script.F_script.FSC2_script.start_speed_cal();
+        FS_Fruit.IS.FSC2_script.start_speed_cal();
         FS_Fruit.IS.start_record_CP();
     }
 }

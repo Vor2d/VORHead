@@ -3,7 +3,7 @@
 [Serializable]
 public class FS_Setting
 {
-    public float SliceSpeed;    //Cutting speed, need to above this to finish cut;
+    public float SliceSpeed;    //Stop speed, need to above this to finish cut;
     public int ScoreIncrPerCut; //Score increase amount;
     public float ScoreLenDiffMax;  //Max length difference to get bonus;
     public float ScoreDistMax;
@@ -22,6 +22,13 @@ public class FS_Setting
     public float PathLineWidth;
     public float StraPLineWidth;
     public float IndicatorSize;
+    public float SpeedThreshold;    //Reach the speed threshold or fail;
+    public float ResultFrameWidth;
+    public float ResultFrameHeight;
+    public float ResultTransTime;
+    public float ResultTextOffsety;
+    public float ResultFrameGap;
+    public int ResultFrameHoriMax;    //Max number of horizontal frames;
 
     public static FS_Setting IS;
     public FS_Setting()
@@ -47,5 +54,12 @@ public class FS_Setting
         this.PathLineWidth = 0.1f;
         this.StraPLineWidth = 0.1f;
         this.IndicatorSize = 1.0f;
+        this.SpeedThreshold = 100.0f;
+        this.ResultFrameWidth = 2.0f;
+        this.ResultFrameHeight = 2.0f;
+        this.ResultTransTime = 3.0f;
+        this.ResultTextOffsety = 0.5f;
+        this.ResultFrameGap = 2.0f;
+        this.ResultFrameHoriMax = 6;
     }
 }

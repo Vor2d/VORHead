@@ -1,7 +1,4 @@
-﻿using Boo.Lang;
-using OVR.OpenVR;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 using WAMEC;
 
 public class WAM_GameController : GeneralGameController

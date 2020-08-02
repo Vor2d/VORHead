@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MeshSystem;
-using UnityEngine.UI;
 using System.Linq;
 
 public class FS_FruitMesh : MonoBehaviour
@@ -33,18 +32,18 @@ public class FS_FruitMesh : MonoBehaviour
         
     }
 
-    public void first_create_mesh(Vector2[] poss,Texture2D texture2D)
+    public Transform first_create_mesh(Vector2[] poss, Texture2D texture2D, bool Using_RB = false)
     {
         clear_mesh();
         set_curr_tex(texture2D);
-        create_mesh_Fposs(poss);
+        return create_mesh_Fposs(poss, Using_RB: Using_RB);
     }
 
     /// <summary>
     /// Create the mesh with ractangle points;
     /// </summary>
     /// <param name="poss">{upper left point, down right point}</param>
-    private void create_mesh_Fposs(Vector2[] poss)
+    private Transform create_mesh_Fposs(Vector2[] poss, bool Using_RB = false)
     {
         Vector3[] uvs = new Vector3[] {
             new Vector3(poss[0].x, poss[1].y, 0.0f), new Vector3(poss[1].x, poss[0].y, 0.0f) };
@@ -54,8 +53,10 @@ public class FS_FruitMesh : MonoBehaviour
         points.Add(new Vector3(poss[1].x, poss[0].y, 0.0f));
         points.Add(new Vector3(poss[1].x, poss[1].y, 0.0f));
         
-        MeshCreater.create_mesh(points.ToArray(), uvs, curr_tex, transform, trans_pos: Vector3.zero, 
-            shader_str: Shader_str);
+        Transform mesh_TRANS = MeshCreater.create_mesh(points.ToArray(), uvs, curr_tex, transform, 
+            trans_pos: Vector3.zero, shader_str: Shader_str);
+        apply_CO_RB(mesh_TRANS, Using_RB: Using_RB);
+        return mesh_TRANS;
     }
 
     private void set_curr_tex(Texture2D texture2D)
@@ -63,15 +64,12 @@ public class FS_FruitMesh : MonoBehaviour
         curr_tex = texture2D;
     }
 
-
-
-
-    public void cut_mseh(Vector3 start_pos, Vector3 stop_pos, bool Using_rigidbody = false)
+    public void cut_mseh(Vector3 start_pos, Vector3 stop_pos, bool Using_rigidbody = false,
+        bool Using_collider = false, bool Using_gravity = false)
     {
         cutted_TRANSs = MeshCutter.get_lines_Acut(start_pos, stop_pos, FS_RC.IS.MeshDataPool, Infinite_cut,
             curr_tex, transform, shader_str: Shader_str);
-        if (Using_rigidbody) { move_cut_RB(); }
-        else { move_cut_translate(start_pos, stop_pos); }
+        apply_CO_RB(Using_RB: Using_rigidbody, Using_CO: Using_collider, Using_GR: Using_gravity);
     }
 
     private void move_cut_RB()
@@ -83,13 +81,30 @@ public class FS_FruitMesh : MonoBehaviour
         }
     }
 
-    private void apply_CO_RB(Transform mesh_TRANS)
+    private void apply_CO_RB(bool Using_RB = false, bool Using_CO = false, bool Using_GR = false)
     {
-        PolygonCollider2D MC = mesh_TRANS.gameObject.AddComponent<PolygonCollider2D>();
-        edit_PC(MC, mesh_TRANS);
-        Rigidbody2D RB = mesh_TRANS.gameObject.AddComponent<Rigidbody2D>();
-        edit_RB(RB);
-        apply_force(RB);
+        foreach (List<Transform> c_TRANSs in cutted_TRANSs)
+        {
+            apply_CO_RB(c_TRANSs[0], Using_RB: Using_RB, Using_CO: Using_CO, Using_GR: Using_GR);
+            apply_CO_RB(c_TRANSs[1], Using_RB: Using_RB, Using_CO: Using_CO, Using_GR: Using_GR);
+        }
+    }
+
+    private void apply_CO_RB(Transform mesh_TRANS, bool Using_RB = false, bool Using_CO = false, 
+        bool Using_GR = false)
+    {
+        if(Using_CO)
+        {
+            PolygonCollider2D MC = mesh_TRANS.gameObject.AddComponent<PolygonCollider2D>();
+            edit_PC(MC, mesh_TRANS);
+        }
+        if(Using_RB)
+        {
+            Rigidbody2D RB = mesh_TRANS.gameObject.AddComponent<Rigidbody2D>();
+            edit_RB(RB);
+            if (!Using_GR) { RB.gravityScale = 0.0f; }
+        }
+
     }
 
     private void apply_force(Rigidbody2D RB)
@@ -119,8 +134,8 @@ public class FS_FruitMesh : MonoBehaviour
     private void edit_RB(Rigidbody2D RB)
     {
         Rigidbody2D RB_prefab = FS_RC.IS.RB_sam_Prefab.GetComponent<Rigidbody2D>();
-        RB.useAutoMass = RB_prefab.useAutoMass;
         RB.mass = RB_prefab.mass;
+        RB.useAutoMass = RB_prefab.useAutoMass;
         RB.constraints = RB_prefab.constraints;
     }
 

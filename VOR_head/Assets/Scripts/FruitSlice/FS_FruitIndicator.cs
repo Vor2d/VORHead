@@ -2,25 +2,24 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-public class FS_FruitIndicator : MonoBehaviour {
-
-    public FS_Fruit F_script;
+public class FS_FruitIndicator : MonoBehaviour 
+{
     public Color ActivateColor = Color.green;
     public Color FocusColor = Color.red;
     public Color DeActivatedColor = Color.white;
     [SerializeField] private Transform FruitLineR_TRANS;
-    //[SerializeField] private GameObject Indicator_Prefab;
-    [SerializeField] private Transform[] Position_indi; //Hidden objects;
 
     public List<Transform> indicators_TRANSs { get; private set; }  //Spawned indicators;
     public int activated_index { get; private set; }
     public int activated_trial { get { return activated_index / 2; } }
     public int total_trial { get { return Position_indi.Length / 2; } }
+    private Transform[] Position_indi; //Hidden objects;
 
     private void Awake()
     {
         this.indicators_TRANSs = new List<Transform>();
         this.activated_index = 0;
+        this.Position_indi = null;
     }
 
     // Use this for initialization
@@ -41,8 +40,9 @@ public class FS_FruitIndicator : MonoBehaviour {
     /// Init indicators;
     /// </summary>
     /// <returns>How many trials are there;</returns>
-    public int init_indicators()
+    public int init_indicators(Transform[] debug_indicatores)
     {
+        Position_indi = debug_indicatores;
         Transform temp_TRANS = null;
         for (int i = 0; i < Position_indi.Length; i++)
         {
@@ -113,6 +113,15 @@ public class FS_FruitIndicator : MonoBehaviour {
         deactive_curr_pair();
         activated_index -= 4;
         activated_index = activated_index < -2 ? -2 : activated_index;
+    }
+
+    public void turn_off_indicators()
+    {
+        foreach(Transform indi_TRANS in indicators_TRANSs)
+        {
+            indi_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        }
+        FruitLineR_TRANS.GetComponent<LineRenderer>().enabled = false;
     }
 
 }

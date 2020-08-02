@@ -95,7 +95,6 @@ public class FS_GameController : GeneralGameController {
         FS_Fruit.IS.trace_back_act();
     }
 
-    #region Animator
     //Init State;
     public void ToInit()
     {
@@ -122,38 +121,8 @@ public class FS_GameController : GeneralGameController {
     private void load_trial()
     {
         curr_trial_index++;
-        Vector2[] poss = mesh_size_cal(curr_trial_index);
-        FS_Fruit.IS.load_trial(poss, FS_DataController.IS.FruitTextures[curr_trial_index]);
+        FS_Fruit.IS.load_trial(FS_DataController.IS.TrialGroup_prefabs[curr_trial_index]);
         FS_RC.IS.Fruit_Ani.SetTrigger(FS_SD.AniNextTrial_str);
     }
-
-    /// <summary>
-    /// Calculate the rectangles for the mesh;
-    /// </summary>
-    /// <param name="tex_index"></param>
-    /// <returns>{upper left point, down right point}</returns>
-    private Vector2[] mesh_size_cal(int tex_index)
-    {
-        Vector2[] poss = new Vector2[2];
-        Texture2D texture = FS_DataController.IS.FruitTextures[tex_index];
-        float h_w_ratio = (float)texture.height / (float)texture.width;
-        float mesh_h = 0.0f, mesh_w = 0.0f;
-        float frame_size = FS_DataController.IS.GameSetting.FruitFrameSize;
-        if (h_w_ratio >= 1.0f)
-        {
-            mesh_h = frame_size;
-            mesh_w = frame_size / h_w_ratio;
-        }
-        else
-        {
-            mesh_h = frame_size * h_w_ratio;
-            mesh_w = frame_size;
-        }
-        poss[0] = new Vector2(mesh_w / 2.0f * -1.0f, mesh_h / 2.0f);
-        poss[1] = new Vector2(mesh_w / 2.0f, mesh_h / 2.0f * -1.0f);
-        //Debug.Log("!!!!! " + poss[0].ToString() + poss[1].ToString());
-        return poss;
-    }
-    #endregion
 
 }

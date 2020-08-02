@@ -412,9 +412,9 @@ public static class GeneralMethods {
         if (UsingXR) { angularVelocityHead = XRDeviceManager.get_head_Angularspeed(); }
         else
         {
-            angularVelocityHead =
-                (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
-                FromFlippedZVector3f()) * Mathf.Rad2Deg;
+            //angularVelocityHead =
+            //    (OVRPlugin.GetNodeAngularVelocity(OVRPlugin.Node.Head, OVRPlugin.Step.Render).
+            //    FromFlippedZVector3f()) * Mathf.Rad2Deg;
         }
         return angularVelocityHead;
     }
@@ -426,14 +426,15 @@ public static class GeneralMethods {
         if (UsingXR) { return XRDeviceManager.get_head_Orientation(); }
         else
         {
-            Quaternion quatf_orientation =
-                OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
-                ToOVRPose().orientation;
-            Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y,
-                                                    quatf_orientation.z, quatf_orientation.w);
+            //Quaternion quatf_orientation =
+            //    OVRPlugin.GetNodePose(OVRPlugin.Node.EyeCenter, OVRPlugin.Step.Render).
+            //    ToOVRPose().orientation;
+            //Quaternion VRrotation = new Quaternion(quatf_orientation.x, quatf_orientation.y,
+            //                                        quatf_orientation.z, quatf_orientation.w);
 
-            return VRrotation;
+            //return VRrotation;
         }
+        return Quaternion.identity;
     }
 
     public static float get_median(List<float> data_list)
@@ -701,4 +702,134 @@ public static class GeneralMethods {
         }
         return res;
     }
+
+    /// <summary>
+    /// Generate the grid positions by rows and cols;
+    /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
+    public static Vector2[] grid_generation(float height, float width, int rows, int cols, 
+        float hori_gap, float vert_gap)
+    {
+        float total_height = rows * height + (rows - 1) * vert_gap;
+        float total_width = cols * width + (cols - 1) * hori_gap;
+        return grid_generation(total_width, total_height, rows, cols);
+    }
+
+    /// <summary>
+    /// Generate the grid by total width and height;
+    /// </summary>
+    /// <param name="hori_total_width"></param>
+    /// <param name="hori_total_height"></param>
+    /// <param name="rows"></param>
+    /// <param name="cols"></param>
+    /// <returns></returns>
+    public static Vector2[] grid_generation(float hori_total_width, float hori_total_height, int rows, int cols)
+    {
+        float right_board = hori_total_width / 2.0f;
+        float up_board = hori_total_height / 2.0f;
+        float x = 0.0f;
+        float y = 0.0f;
+        float hori_dist = 0.0f;
+        float vert_dist = 0.0f;
+        if (rows <= 1)
+        {
+            y = 0.0f;
+        }
+        else
+        {
+            vert_dist = hori_total_height / (float)(rows - 1);
+        }
+        if (cols <= 1)
+        {
+            x = 0.0f;
+        }
+        else
+        {
+            hori_dist = hori_total_width / (float)(cols - 1);
+        }
+
+        List<Vector2> poss = new List<Vector2>();
+        Vector2 pos = new Vector2();
+        for (int row = 0; row < rows; row++)
+        {
+            if (rows > 1)
+            {
+                y = -up_board + row * vert_dist;
+            }
+            for (int col = 0; col < cols; col++)
+            {
+                if (cols > 1)
+                {
+                    x = -right_board + col * hori_dist;
+                }
+                pos = new Vector3(x, y);
+                poss.Add(pos);
+            }
+        }
+        return poss.ToArray();
+    }
+
+    /// <summary>
+    /// Calculate the size ratio by two Unity size;
+    /// </summary>
+    /// <param name="size"></param>
+    /// <param name="target_size"></param>
+    /// <returns></returns>
+    public static Vector3 scale_cal(Vector2 size, Vector2 target_size)
+    {
+        Vector2 size_diff = target_size - size;
+        Vector2 size_ratio = size_diff / size;
+        return new Vector3(size_ratio.x + 1.0f, size_ratio.y + 1.0f, 1.0f);
+    }
+
+    public static Vector3 scale_cal(Vector3 size, Vector3 target_size)
+    {
+        Vector3 size_diff = target_size - size;
+        float x = size_diff.x / size.x;
+        float y = size_diff.y / size.y;
+        float z = size_diff.z / size.z;
+        Vector3 size_ratio = new Vector3(x, y, z);
+        return size_ratio + new Vector3(1.0f, 1.0f, 1.0f);
+    }
+
+    /// <summary>
+    /// Calculate the rectangles for the mesh; frame size as a square;
+    /// </summary>
+    /// <param name="tex_index"></param>
+    /// <returns>{upper left point, down right point}</returns>
+    public static Vector2[] mesh_size_cal(Texture2D texture, float frame_size)
+    {
+        Vector2[] poss = new Vector2[2];
+        float h_w_ratio = (float)texture.height / (float)texture.width;
+        float mesh_h = 0.0f, mesh_w = 0.0f;
+        if (h_w_ratio >= 1.0f)
+        {
+            mesh_h = frame_size;
+            mesh_w = frame_size / h_w_ratio;
+        }
+        else
+        {
+            mesh_h = frame_size * h_w_ratio;
+            mesh_w = frame_size;
+        }
+        poss[0] = new Vector2(mesh_w / 2.0f * -1.0f, mesh_h / 2.0f);
+        poss[1] = new Vector2(mesh_w / 2.0f, mesh_h / 2.0f * -1.0f);
+        return poss;
+    }
+
+    /// <summary>
+    /// Calculate the size by frame size and pixel per unity;
+    /// </summary>
+    /// <param name="texture"></param>
+    /// <param name="frame_size"></param>
+    /// <returns>({upper left point, down right point}, ratio)</returns>
+    public static (Vector2[],float) mesh_size_cal_ratio(Texture2D texture, float frame_size, float PPU)
+    {
+        Vector2[] size = mesh_size_cal(texture, frame_size);
+        float hori_size = (texture.width * (1 / PPU)) / 2.0f;
+        float ratio = Mathf.Abs(size[0].x) / hori_size;
+        return (size, ratio);
+    }
+
 }
