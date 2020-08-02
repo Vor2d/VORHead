@@ -192,6 +192,7 @@ public class FS_Fruit : MonoBehaviour {
 
     private void clean_trial()
     {
+        FI_script.clear_indicator();
         //curr_Ctrial_index = -1;
     }
 
@@ -215,7 +216,7 @@ public class FS_Fruit : MonoBehaviour {
 
     private void turn_off_indicator()
     {
-        FI_script
+        FI_script.turn_off_indicators();
     }
 
     private void show_trial_result()

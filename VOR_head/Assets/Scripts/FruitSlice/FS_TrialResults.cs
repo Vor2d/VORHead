@@ -16,6 +16,7 @@ public class FS_TrialResults : MonoBehaviour
     private float frame_gap;
     private int move_finish_inst;
     private float global_scale;
+    private float font_size = 0.0f;
 
     private void Awake()
     {
@@ -27,6 +28,7 @@ public class FS_TrialResults : MonoBehaviour
         this.frame_gap = 0.0f;
         this.move_finish_inst = 0;
         this.global_scale = Int32.MaxValue;
+        this.font_size = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -48,6 +50,7 @@ public class FS_TrialResults : MonoBehaviour
         trans_time = FS_Setting.IS.ResultTransTime;
         text_offsety = FS_Setting.IS.ResultTextOffsety;
         frame_gap = FS_Setting.IS.ResultFrameGap;
+        font_size = FS_Setting.IS.ResultFontSize;
     }
 
     public void show_results(Transform[] mesh_TRANSs)
@@ -157,7 +160,7 @@ public class FS_TrialResults : MonoBehaviour
 
     private void init_frame_group(Transform frame_TRANS)
     {
-        frame_TRANS.GetComponent<FS_FrameGroup>().init_frame(frame_width, frame_height, text_offsety);
+        frame_TRANS.GetComponent<FS_FrameGroup>().init_frame(frame_width, frame_height, text_offsety, font_size);
         
     }
 

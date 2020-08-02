@@ -124,4 +124,14 @@ public class FS_FruitIndicator : MonoBehaviour
         FruitLineR_TRANS.GetComponent<LineRenderer>().enabled = false;
     }
 
+    public void clear_indicator()
+    {
+        turn_off_indicators();
+        foreach(Transform indi_TRANS in indicators_TRANSs.ToArray())
+        {
+            Destroy(indi_TRANS.gameObject);
+        }
+        indicators_TRANSs.Clear();
+    }
+
 }

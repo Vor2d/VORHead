@@ -14,6 +14,7 @@ public class FS_FrameGroup : MonoBehaviour
     private float frame_height;
     private float text_offsety;
     private float weight_scale;
+    private float font_size;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class FS_FrameGroup : MonoBehaviour
         this.frame_height = 0.0f;
         this.text_offsety = 0.0f;
         this.weight_scale = 0.0f;
+        this.font_size = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -35,11 +37,12 @@ public class FS_FrameGroup : MonoBehaviour
 
     }
 
-    public void init_frame(float FW, float FH, float TOY, float _weight_scale = 0.0f)
+    public void init_frame(float FW, float FH, float TOY, float FS, float _weight_scale = 0.0f)
     {
         frame_width = FW;
         frame_height = FH;
         text_offsety = TOY;
+        font_size = FS;
         weight_scale = _weight_scale;
     }
 
@@ -57,6 +60,7 @@ public class FS_FrameGroup : MonoBehaviour
     {
         ScoreText_TRANS.position += new Vector3(0.0f, frame_height / 2.0f + text_offsety, 0.0f);
         ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreText_prefix + score.ToString() + ScoreText_postfix;
+        ScoreText_TRANS.GetComponent<TextMesh>().characterSize = font_size;
     }
 
     public void set_weight_sca(float WS)

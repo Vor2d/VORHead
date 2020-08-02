@@ -29,6 +29,7 @@ public class FS_Setting
     public float ResultTextOffsety;
     public float ResultFrameGap;
     public int ResultFrameHoriMax;    //Max number of horizontal frames;
+    public float ResultFontSize;    //Text Charator size;
 
     public static FS_Setting IS;
     public FS_Setting()
@@ -61,5 +62,6 @@ public class FS_Setting
         this.ResultTextOffsety = 0.5f;
         this.ResultFrameGap = 2.0f;
         this.ResultFrameHoriMax = 6;
+        this.ResultFontSize = 0.05f;
     }
 }
