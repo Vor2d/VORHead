@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.XR;
 
 using HMTS_enum;
+using System.Linq;
 
 /// <summary>
 /// A static class that contains a lot of common methods that will be reused;
@@ -830,6 +831,52 @@ public static class GeneralMethods {
         float hori_size = (texture.width * (1 / PPU)) / 2.0f;
         float ratio = Mathf.Abs(size[0].x) / hori_size;
         return (size, ratio);
+    }
+
+    public static Sprite texture_to_sprite(Texture2D texture)
+    {
+        return Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), 
+            new Vector2(0.5f, 0.5f));
+    }
+
+    public static int index_mod(int index, int mod_n)
+    {
+        int temp_index = index + (Math.Abs(index / mod_n) + 1) * mod_n;
+        return temp_index % mod_n;
+    }
+
+    [Obsolete("Not for int")]
+    public static T dict_find<T,T1>(Dictionary<T,T1> dict, T1 target) where T1 : class where T : class
+    {
+        foreach(KeyValuePair<T,T1> KV in dict)
+        {
+            if (KV.Value == target) { return KV.Key; }
+        }
+        return default(T);
+    }
+
+    /// <summary>
+    /// Find key from value, works for int,int; Return INT32MIN if not found;
+    /// </summary>
+    /// <param name="dict"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static int dict_find_int(Dictionary<int, int> dict, int target)
+    {
+        foreach(KeyValuePair<int, int> KV in dict)
+        {
+            if (KV.Value == target) { return KV.Key; }
+        }
+        return Int32.MinValue;
+    }
+
+    public static void change_render_order(Transform transform, string render_layer = "", 
+        int sorting_order = Int32.MinValue)
+    {
+        if (render_layer != "") 
+        { transform.GetComponent<MeshRenderer>().sortingLayerName = render_layer; }
+        if (sorting_order != Int32.MinValue)
+        { transform.GetComponent<MeshRenderer>().sortingOrder = sorting_order; }
     }
 
 }

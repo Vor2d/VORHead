@@ -11,7 +11,7 @@ public class FS_FruitIndicator : MonoBehaviour
 
     public List<Transform> indicators_TRANSs { get; private set; }  //Spawned indicators;
     public int activated_index { get; private set; }
-    public int activated_trial { get { return activated_index / 2; } }
+    public int activated_cut_trial { get { return activated_index / 2; } }
     public int total_trial { get { return Position_indi.Length / 2; } }
     private Transform[] Position_indi; //Hidden objects;
 

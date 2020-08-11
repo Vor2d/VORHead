@@ -8,8 +8,11 @@ public class FS_CutResult : MonoBehaviour
     [SerializeField] private Transform StraLineRender_TRANS;
     [SerializeField] private Transform EndP_TRANS;
     [SerializeField] private Transform RText_TRANS;
+    [SerializeField] private Vector3 RText_offset;
     [SerializeField] private string Dist_score_prefix;
     [SerializeField] private string Len_score_prefix;
+    [SerializeField] private bool Using_comb_score;
+    [SerializeField] private string Comb_score_prefix;
 
     private bool record_started;
     private List<Vector3> cut_poss;
@@ -59,12 +62,17 @@ public class FS_CutResult : MonoBehaviour
         { cut_poss.Add(hit_point); }
     }
 
-    public void generate_path()
+    /// <summary>
+    /// Generate the line-renderer from cut_poss; return line-renderer transform;
+    /// </summary>
+    /// <returns>Line-renderer transform;</returns>
+    public Transform generate_path()
     {
         LineRenderer LR = CurLineRender_TRANS.GetComponent<LineRenderer>();
         LR.positionCount = cut_poss.Count;
         LR.SetPositions(cut_poss.ToArray());
         LR.enabled = true;
+        return CurLineRender_TRANS;
     }
 
     public void generate_stra_path(Vector3 sta_pos, Vector3 end_pos)
@@ -82,7 +90,7 @@ public class FS_CutResult : MonoBehaviour
         CurLineRender_TRANS.GetComponent<LineRenderer>().enabled = false;
         StraLineRender_TRANS.GetComponent<LineRenderer>().enabled = false;
         EndP_TRANS.GetComponent<MeshRenderer>().enabled = false;
-        RText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        RText_TRANS.GetComponent<GeneralTextController>().turn_off();
     }
 
     public void clear_path()
@@ -104,10 +112,18 @@ public class FS_CutResult : MonoBehaviour
 
     public void show_text_result(float dist_score, float len_score,Vector3 pos)
     {
-        RText_TRANS.GetComponent<TextMesh>().text = Dist_score_prefix +
-            Mathf.RoundToInt(dist_score).ToString() + "\n" + Len_score_prefix +
-            Mathf.RoundToInt(len_score).ToString();
-        RText_TRANS.position = pos;
-        RText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        string res_str = "";
+        if (Using_comb_score)
+        {
+            res_str = Comb_score_prefix + Mathf.RoundToInt(dist_score + len_score);
+        }
+        else
+        {
+            res_str = Dist_score_prefix + Mathf.RoundToInt(dist_score).ToString() + "\n" +
+                Len_score_prefix + Mathf.RoundToInt(len_score).ToString();
+        }
+
+        RText_TRANS.GetComponent<GeneralTextController>().turn_on(res_str); 
+        RText_TRANS.position = pos + RText_offset;
     }
 }

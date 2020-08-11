@@ -1,14 +1,15 @@
 ﻿using System;
+using UnityEngine;
 
 [Serializable]
 public class FS_Setting
 {
     public float SliceSpeed;    //Stop speed, need to above this to finish cut;
     public int ScoreIncrPerCut; //Score increase amount;
-    public float ScoreLenDiffMax;  //Max length difference to get bonus;
-    public float ScoreDistMax;
-    public float ScoreMaxLen;   //The max score possibile;
-    public float ScoreMaxDist;
+    public float ScoreCalMaxLenDiff;  //Max length difference to get bonus;
+    public float ScoreCalMaxDist;
+    public float MaxLenScore;   //The max score possibile;
+    public float MaxDistScore;
     //public float FruitFrameHeight;
     //public float FruitFrameWidth;
     public float FruitFrameSize;
@@ -30,6 +31,12 @@ public class FS_Setting
     public float ResultFrameGap;
     public int ResultFrameHoriMax;    //Max number of horizontal frames;
     public float ResultFontSize;    //Text Charator size;
+    public float PreviewMeshSize;
+    public int PreviewSideNumber;   //How many frame on one side, including center;
+    public Vector2 PreviewRotateSize;   //Total size of the preview panel, {center to right, center to up};
+    public float PreviewTransTime;
+    public int MaxStar;
+    public float StarCalOffset; //Percentage to shift the calculation down; 1.0f represents the first star starts at 0;
 
     public static FS_Setting IS;
     public FS_Setting()
@@ -38,10 +45,10 @@ public class FS_Setting
 
         this.SliceSpeed = 50.0f;
         this.ScoreIncrPerCut = 10;
-        this.ScoreLenDiffMax = 1.0f;
-        this.ScoreDistMax = 1.0f;
-        this.ScoreMaxLen = 1.0f;
-        this.ScoreMaxDist = 1.0f;
+        this.ScoreCalMaxLenDiff = 1.0f;
+        this.ScoreCalMaxDist = 1.0f;
+        this.MaxLenScore = 1.0f;
+        this.MaxDistScore = 1.0f;
         //this.FruitFrameHeight = 6.0f;
         //this.FruitFrameWidth = 6.0f;
         this.FruitFrameSize = 6.0f;
@@ -63,5 +70,11 @@ public class FS_Setting
         this.ResultFrameGap = 2.0f;
         this.ResultFrameHoriMax = 6;
         this.ResultFontSize = 0.05f;
+        this.PreviewMeshSize = 2.0f;
+        this.PreviewSideNumber = 4;
+        this.PreviewRotateSize = new Vector2(4.0f, 0.0f);
+        this.PreviewTransTime = 0.2f;
+        this.MaxStar = 3;
+        this.StarCalOffset = 0.5f;
     }
 }

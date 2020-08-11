@@ -1,7 +1,4 @@
-﻿using MeshSystem;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class FS_FrameGroup : MonoBehaviour
@@ -46,9 +43,9 @@ public class FS_FrameGroup : MonoBehaviour
         weight_scale = _weight_scale;
     }
 
-    public void adjust_results()
+    public void adjust_results(bool text_ANI = false, float ANI_time = 0.0f)
     {
-        adjust_text(format_WS().ToString());
+        adjust_text(format_WS().ToString(), text_ANI: text_ANI, ANI_time: ANI_time);
     }
 
     private int format_WS()
@@ -56,10 +53,20 @@ public class FS_FrameGroup : MonoBehaviour
         return Mathf.RoundToInt(weight_scale * 100);
     }
 
-    private void adjust_text(string score)
+    private int format_WS(float WS)
+    {
+        return Mathf.RoundToInt(WS * 100);
+    }
+
+    private void adjust_text(string score, bool text_ANI = false, float ANI_time = 0.0f)
     {
         ScoreText_TRANS.position += new Vector3(0.0f, frame_height / 2.0f + text_offsety, 0.0f);
-        ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreText_prefix + score.ToString() + ScoreText_postfix;
+        if (text_ANI) { start_text_ANI(weight_scale, ANI_time); }
+        else
+        {
+            ScoreText_TRANS.GetComponent<TextMesh>().text = ScoreText_prefix + score.ToString() + 
+                ScoreText_postfix;
+        }
         ScoreText_TRANS.GetComponent<TextMesh>().characterSize = font_size;
     }
 
@@ -68,4 +75,32 @@ public class FS_FrameGroup : MonoBehaviour
         weight_scale = WS;
     }
 
+    private void start_text_ANI(float score, float time)
+    {
+        StartCoroutine(text_ANI(ScoreText_prefix, ScoreText_postfix, score, time,
+            ScoreText_TRANS.GetComponent<TextMesh>()));
+    }
+
+    private IEnumerator text_ANI(string prefix, string postfix, float score, float time, TextMesh TM)
+    {
+        float speed = score / time;
+        bool running = true;
+        float curr_scr = 0.0f;
+        while(running)
+        {
+            if (curr_scr >= score) 
+            {
+                running = false;
+                break;
+            }
+            curr_scr += speed * Time.deltaTime;
+            TM.text = prefix + format_WS(curr_scr).ToString() + postfix;
+            yield return null;
+        }
+    }
+
+    public void clean_destroy()
+    {
+        Destroy(gameObject);
+    }
 }

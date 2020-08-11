@@ -46,4 +46,6 @@ MonoBehaviour:
   setting_file_name: FS_Setting.json
   setting_path: ./
   TrialGroup_prefabs:
+  - {fileID: 7300470212187922963, guid: c7140cbf2cf98a541b2c05a891cc2556, type: 3}
   - {fileID: 7300470212187922963, guid: 2bf45627411eec14893703af5a185855, type: 3}
+  - {fileID: 7300470212187922963, guid: 5deff58a2f795d54a989c3c007db97ef, type: 3}

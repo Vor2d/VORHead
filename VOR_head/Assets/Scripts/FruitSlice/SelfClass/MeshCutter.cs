@@ -38,7 +38,6 @@ namespace MeshSystem
                 if (cut(mesh_data, cut_line, texture2D, par_TRANS, MeshDataPool[mesh_data], out half_TRANSs,
                     shader_str: shader_str))
                 {
-                    Debug.Log("!!!!! " + half_TRANSs.ToString());
                     res_TRANSs.Add(half_TRANSs);
                     mesh_data.clean_destroy(MeshDataPool);
                     temp_TRANS.gameObject.SetActive(false);

@@ -6,17 +6,22 @@ using UnityEngine;
 
 public class FS_TrialResults : MonoBehaviour
 {
-
+    [SerializeField] bool Using_text_ANI;
+    [SerializeField] float Text_ANI_time_offset;
+    [SerializeField] Transform Star_panel_TRANS;
+    [SerializeField] bool Using_show_star;
+    [SerializeField] float Star_ani_timeoffset;
 
     private float frame_width;
     private float frame_height;
     private float text_offsety;
     private float trans_time;
-    private Dictionary<Transform, Transform> mesh_to_frame;
+    private Dictionary<Transform, Transform> mesh_to_frame; //Mesh transform to frame transform;
     private float frame_gap;
     private int move_finish_inst;
     private float global_scale;
     private float font_size = 0.0f;
+    //private List<Transform> FG_TRANSs;  //Frame group pool;
 
     private void Awake()
     {
@@ -29,6 +34,7 @@ public class FS_TrialResults : MonoBehaviour
         this.move_finish_inst = 0;
         this.global_scale = Int32.MaxValue;
         this.font_size = 0.0f;
+        //this.FG_TRANSs = new List<Transform>();
     }
 
     // Start is called before the first frame update
@@ -80,7 +86,8 @@ public class FS_TrialResults : MonoBehaviour
 
     private void adjust_single(Transform frame_TRANS, Transform mesh_TRANS)
     {
-        frame_TRANS.GetComponent<FS_FrameGroup>().adjust_results();
+        frame_TRANS.GetComponent<FS_FrameGroup>().adjust_results(text_ANI: Using_text_ANI, 
+            ANI_time: trans_time + Text_ANI_time_offset);
         MeshData md = mesh_TRANS.GetComponent<MeshDataComp>().mesh_data;
         Vector2 trans_off_set = md.center_pos * global_scale;
         Vector3 target_pos = frame_TRANS.position + (-(Vector3)(trans_off_set));
@@ -174,5 +181,30 @@ public class FS_TrialResults : MonoBehaviour
     {
         return weight / FW;
     }
+
+    public void clear_results()
+    {
+        foreach(Transform FG_TRANS in mesh_to_frame.Values)
+        {
+            FG_TRANS.GetComponent<FS_FrameGroup>().clean_destroy();
+        }
+        mesh_to_frame.Clear();
+        global_scale = Int32.MaxValue;
+        clear_star();
+    }
+
+    private void clear_star()
+    {
+        Star_panel_TRANS.GetComponent<FS_StarPanel>().clear_panel();
+    }
+
+    public void show_star(int curr_star)
+    {
+        if (!Using_show_star) { return; }
+        Star_panel_TRANS.GetComponent<FS_StarPanel>().init_SP(FS_Setting.IS.MaxStar, 
+            trans_time + Star_ani_timeoffset);
+        Star_panel_TRANS.GetComponent<FS_StarPanel>().spawn_star_time(curr_star);
+    }
+
 
 }

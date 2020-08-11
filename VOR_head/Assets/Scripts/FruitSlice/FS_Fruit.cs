@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class FS_Fruit : MonoBehaviour {
     public bool Using_curve_path;
     [SerializeField] bool Using_straight_path;
     [SerializeField] bool Using_text_result;
-    [SerializeField] private FS_FruitRenderer FR_script;
+    //[SerializeField] private FS_FruitRenderer FR_script;
     [SerializeField] private FS_StopIndicator SI_script;
     [SerializeField] private FS_FruitMesh FM_script;
     [SerializeField] private FS_FruitIndicator FI_script;
@@ -21,6 +22,7 @@ public class FS_Fruit : MonoBehaviour {
     [SerializeField] private string CutTooSlowText;
     [SerializeField] private FS_TrialResults TR_script;
     [SerializeField] private float MeshPPU;
+    [SerializeField] private bool Using_save_cut;
 
     public bool Start_flag { get; set; }
     public float first_weight { get; set; }
@@ -28,15 +30,20 @@ public class FS_Fruit : MonoBehaviour {
     private Animator animator;
     private Texture2D curr_mesh;
     private Vector2[] mesh_ract;
-    private List<(Vector3, Vector3)> sta_stop_poss;    
+    private Dictionary<int, (Vector3, Vector3)> sta_stop_poss;  //Cut index, start-end position;
     private Vector3 curr_stop_pos;
     private Vector3 curr_sta_pos;
     private Vector3 curr_stopI_pos; //Stop indicator position;
     private float curr_lenS_bonus;
     private float curr_distS_bonus;
-    private Stack<float> cut_score;
+    private Dictionary<int, float> cut_scores;   //Cut index and score;
     private bool cutted;
     private Transform trial_group_TRANS;
+    private Dictionary<int, Transform> CL_TRANSs;   //Cut index, Curved lines transforms;
+    private int curr_cut_index { get { return FI_script.activated_cut_trial; } }
+    private bool trace_backable;
+    private float trial_score;
+    private int trial_star;
 
     public static FS_Fruit IS { get; set; }
 
@@ -48,16 +55,20 @@ public class FS_Fruit : MonoBehaviour {
         this.animator = GetComponent<Animator>();
         this.curr_mesh = null;
         this.mesh_ract = new Vector2[0];
-        this.sta_stop_poss = new List<(Vector3, Vector3)>();
+        this.sta_stop_poss = new Dictionary<int, (Vector3, Vector3)>();
         this.curr_stop_pos = new Vector3();
         this.curr_sta_pos = new Vector3();
         this.curr_lenS_bonus = 0.0f;
         this.curr_distS_bonus = 0.0f;
         this.curr_stopI_pos = new Vector3();
-        this.cut_score = new Stack<float>();
+        this.cut_scores = new Dictionary<int, float>();
         this.cutted = false;
         this.trial_group_TRANS = null;
         this.first_weight = 0.0f;
+        this.CL_TRANSs = new Dictionary<int, Transform>();
+        this.trace_backable = false;
+        this.trial_score = 0.0f;
+        this.trial_star = 0;
 	}
 
     private void Start()
@@ -122,7 +133,7 @@ public class FS_Fruit : MonoBehaviour {
         curr_stop_pos = stop_pos;
         Vector3 sta_pos = FI_script.get_curr_sta_pos();
         curr_sta_pos = sta_pos;
-        sta_stop_poss.Add((sta_pos, stop_pos));
+        sta_stop_poss[curr_cut_index] = (sta_pos, stop_pos);
         curr_stopI_pos = FI_script.get_curr_stop_pos();
         animator.SetTrigger(FS_SD.AniNextCutTrial_str);
         cutted = true;
@@ -149,13 +160,13 @@ public class FS_Fruit : MonoBehaviour {
 
     public void ToStartFruit()
     {
-
+        animator.SetTrigger(FS_SD.AniNextStep_str);
     }
 
     public void ToStartCutTrial()
     {
         cutted = false;
-        if (FI_script.activated_trial >= FI_script.total_trial - 1) 
+        if (FI_script.activated_cut_trial >= FI_script.total_trial - 1) 
         {
             animator.SetTrigger(FS_SD.AniNextTrial_str);
             return;
@@ -181,11 +192,13 @@ public class FS_Fruit : MonoBehaviour {
     {
         start_trial();
         animator.SetTrigger(FS_SD.AniNextStep_str);
+        trace_backable = true;
     }
 
     public void start_trial()
     {
         clean_trial();
+        load_trial(FS_RC.IS.Selected_GO);
         create_mesh();
         load_indicators();
     }
@@ -193,7 +206,30 @@ public class FS_Fruit : MonoBehaviour {
     private void clean_trial()
     {
         FI_script.clear_indicator();
-        //curr_Ctrial_index = -1;
+        clear_record();
+        clear_mesh();
+        clear_results();
+    }
+
+    private void clear_record()
+    {
+        CL_clean_destroy();
+        sta_stop_poss.Clear();
+        cut_scores.Clear();
+    }
+
+    private void clear_results()
+    {
+        TR_script.clear_results();
+    }
+
+    private void CL_clean_destroy()
+    {
+        foreach(Transform CL_TRANS in CL_TRANSs.Values)
+        {
+            Destroy(CL_TRANS.gameObject);
+        }
+        CL_TRANSs.Clear();
     }
 
     private void create_mesh()
@@ -210,8 +246,34 @@ public class FS_Fruit : MonoBehaviour {
     public void ToTrialFinished()
     {
         cut();
+        score_cal();
+        star_cal();
         turn_off_indicator();
         show_trial_result();
+        show_star_result();
+        turn_off_CL();
+        trace_backable = false;
+        //update_player();
+    }
+
+    [Obsolete("Update in the LeaveTrialFinished")]
+    private void update_player()
+    {
+        FS_GameController.IS.update_player_SC_STA(Mathf.RoundToInt(trial_score), trial_star);
+    }
+
+    public void LeaveTrialFinished()
+    {
+        clean_trial();
+        FS_GameController.IS.trial_finished(Mathf.RoundToInt(trial_score), trial_star);
+    }
+
+    private void turn_off_CL()
+    {
+        foreach(Transform CL_TRANS in CL_TRANSs.Values)
+        {
+            CL_TRANS.GetComponent<LineRenderer>().enabled = false;
+        }
     }
 
     private void turn_off_indicator()
@@ -224,10 +286,15 @@ public class FS_Fruit : MonoBehaviour {
         TR_script.show_results(FS_RC.IS.MeshDataPool.Values.ToArray());
     }
 
+    private void show_star_result()
+    {
+        TR_script.show_star(trial_star);
+    }
+
     private void cut()
     {
         if (Using_rigidbody) { }
-        foreach((Vector3,Vector3) sta_sto_pos in sta_stop_poss)
+        foreach((Vector3,Vector3) sta_sto_pos in sta_stop_poss.Values)
         {
             FM_script.cut_mseh(sta_sto_pos.Item1, sta_sto_pos.Item2, Using_rigidbody: Using_rigidbody, 
                 Using_collider: Using_collider, Using_gravity: Using_gravity);
@@ -246,11 +313,26 @@ public class FS_Fruit : MonoBehaviour {
 
     private void show_cut_res()
     {
-        if (Using_curve_path) { CR_script.generate_path(); }
+        if (Using_curve_path) 
+        {
+            Transform CurLine_TRANS = CR_script.generate_path();
+            if (Using_save_cut) { duplicate_CL(FM_script.transform, CurLine_TRANS); }
+        }
         if (Using_straight_path) { gener_stra_path(); }
         (float, float) scoreb = cut_score_cal();
-        cut_score.Push(scoreb.Item1 + scoreb.Item2);
+        cut_scores[curr_cut_index] = (scoreb.Item1 + scoreb.Item2);
         if (Using_text_result) { CR_script.show_text_result(scoreb.Item1, scoreb.Item2, curr_stop_pos); }
+    }
+
+    /// <summary>
+    /// Duplicate the curved line; return duplicated transform;
+    /// </summary>
+    private Transform duplicate_CL(Transform par_TRANS, Transform LR_TRANS)
+    {
+        Transform new_line_TRANS = Instantiate(LR_TRANS.gameObject, LR_TRANS.position, 
+            LR_TRANS.rotation, par_TRANS).transform;
+        CL_TRANSs[curr_cut_index] = new_line_TRANS;
+        return new_line_TRANS;
     }
 
     private void gener_stra_path()
@@ -274,11 +356,11 @@ public class FS_Fruit : MonoBehaviour {
     /// <returns>Dist score, length score;</returns>
     private (float, float) cut_score_cal()
     {
-        curr_distS_bonus = cut_dist_cal(curr_stopI_pos, curr_stop_pos, FS_Setting.IS.ScoreDistMax,
-            FS_Setting.IS.ScoreMaxDist);
+        curr_distS_bonus = cut_dist_cal(curr_stopI_pos, curr_stop_pos, FS_Setting.IS.ScoreCalMaxDist,
+            FS_Setting.IS.MaxDistScore);
         curr_lenS_bonus = cut_len_cal(
             Vector3.Distance(curr_stopI_pos, curr_sta_pos) - FS_Setting.IS.IndicatorSize / 2.0f, 
-            CR_script.cur_len_cal(), FS_Setting.IS.ScoreLenDiffMax, FS_Setting.IS.ScoreMaxLen);
+            CR_script.cur_len_cal(), FS_Setting.IS.ScoreCalMaxLenDiff, FS_Setting.IS.MaxLenScore);
         return (curr_distS_bonus, curr_lenS_bonus);
     }
 
@@ -306,6 +388,7 @@ public class FS_Fruit : MonoBehaviour {
 
     public void ToTraceBack()
     {
+        if (!trace_backable) { return; }
         if (cutted) { trace_back_to_curr(); }
         else { trace_back_to_last(); }
         animator.SetTrigger(FS_SD.AniNextStep_str);
@@ -313,22 +396,39 @@ public class FS_Fruit : MonoBehaviour {
 
     private void trace_back_to_curr()
     {
-        FI_script.prepare_TB_to_curr();
         turn_off_res();
         cancel_cut();
+        remove_last_CL(curr_cut_index);
+        FI_script.prepare_TB_to_curr(); //Change index at last;
     }
 
     private void trace_back_to_last()
     {
-        FI_script.prepare_TB_to_last();
-        score_TB_last();
+        score_TB_last(curr_cut_index-1);
         turn_off_res();
         cancel_cut();
+        pop_sta_stop(curr_cut_index-1);
+        remove_last_CL(curr_cut_index-1);
+        FI_script.prepare_TB_to_last(); //Change index at last;
     }
 
-    private void score_TB_last()
+    private void remove_last_CL(int index)
     {
-        if (cut_score.Count > 0) { cut_score.Pop(); }
+        if (Using_save_cut) { remove_CL(index); }
+    }
+
+    private void remove_CL(int index)
+    {
+        if(CL_TRANSs.ContainsKey(index))
+        {
+            Destroy(CL_TRANSs[index].gameObject);
+            CL_TRANSs.Remove(index);
+        }
+    }
+
+    private void score_TB_last(int index)
+    {
+        if (cut_scores.ContainsKey(index)) { cut_scores.Remove(index); }
     }
 
     public void trace_back_act()
@@ -339,6 +439,11 @@ public class FS_Fruit : MonoBehaviour {
     private void cancel_cut()
     {
         FSC2_script.stop_speed_cal();
+    }
+
+    private void pop_sta_stop(int index)
+    {
+        if (sta_stop_poss.ContainsKey(index)) { sta_stop_poss.Remove(index); }
     }
 
     public void cut_too_slow()
@@ -354,8 +459,7 @@ public class FS_Fruit : MonoBehaviour {
 
     private void show_too_slow_text()
     {
-        TooSlowText_TRANS.GetComponent<TextMesh>().text = CutTooSlowText;
-        TooSlowText_TRANS.GetComponent<MeshRenderer>().enabled = true;
+        TooSlowText_TRANS.GetComponent<GeneralTextController>().turn_on(CutTooSlowText);
     }
 
     public void LeaveCutTooSlow()
@@ -365,6 +469,41 @@ public class FS_Fruit : MonoBehaviour {
 
     private void turn_off_slow_text()
     {
-        TooSlowText_TRANS.GetComponent<MeshRenderer>().enabled = false;
+        TooSlowText_TRANS.GetComponent<GeneralTextController>().turn_off();
+    }
+
+    public void ToWaitForSelect()
+    {
+        clean_trial();
+    }
+
+    public void selected()
+    {
+        animator.SetTrigger(FS_SD.AniSelect_str);
+    }
+
+    private void clear_mesh()
+    {
+        FM_script.clear_mesh();
+    }
+
+    private float score_cal()
+    {
+        float Tscore = 0.0f;
+        foreach(float score in cut_scores.Values)
+        {
+            Tscore += score;
+        }
+        trial_score = Tscore;
+        return trial_score;
+    }
+
+    private int star_cal()
+    {
+        float max_scr = FI_script.total_trial * (FS_Setting.IS.MaxDistScore + FS_Setting.IS.MaxLenScore);
+        int star = FS_GameController.Start_cal(trial_score, max_scr);
+        Debug.Log("!!!!!! " + max_scr.ToString() + " !!!!!! " + star.ToString() + " !!!!!! " + trial_score);
+        trial_star = star;
+        return star;
     }
 }

@@ -1,1 +1,1 @@
-{"SliceSpeed":10.0,"ScoreIncrPerCut":10,"ThrowForce":5.0,"ThrowTorque":0.0,"ForceRange":5.0,"TorqueRange":20.0,"ScoreMaxLen":20.0,"ScoreMaxDist":20.0,"ScoreLenDiffMax":2.0,"ScoreDistMax":2.0,"SpeedThreshold":10.0}
+{"SliceSpeed":10.0,"ScoreIncrPerCut":10,"ThrowForce":5.0,"ThrowTorque":0.0,"ForceRange":5.0,"TorqueRange":20.0,"MaxLenScore":20.0,"MaxDistScore":20.0,"ScoreCalMaxLenDiff":2.0,"ScoreCalMaxDist":2.0,"SpeedThreshold":50.0}
