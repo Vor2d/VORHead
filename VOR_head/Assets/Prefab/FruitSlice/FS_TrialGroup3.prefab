@@ -167,7 +167,7 @@ MonoBehaviour:
   - {fileID: 6012223115444221361}
   texture: {fileID: 2800000, guid: 97c2f43353c7ef74d98d7cc78a465447, type: 3}
   DummyMesh_TRANS: {fileID: 6897543504295901485}
-  StarsToUnlock: 4
+  StarsToUnlock: 0
 --- !u!1001 &1119926683162563462
 PrefabInstance:
   m_ObjectHideFlags: 0

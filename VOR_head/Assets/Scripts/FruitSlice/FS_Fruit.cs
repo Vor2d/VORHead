@@ -502,6 +502,7 @@ public class FS_Fruit : MonoBehaviour {
     {
         float max_scr = FI_script.total_trial * (FS_Setting.IS.MaxDistScore + FS_Setting.IS.MaxLenScore);
         int star = FS_GameController.Start_cal(trial_score, max_scr);
+        Debug.Log("!!!!!! " + max_scr.ToString() + " !!!!!! " + star.ToString() + " !!!!!! " + trial_score);
         trial_star = star;
         return star;
     }

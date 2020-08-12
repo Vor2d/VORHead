@@ -74,7 +74,7 @@ public class FS_LevelSelectPanel : MonoBehaviour
         foreach(Transform LP_TRANS in level_preview_TRANSs.Values)
         {
             level_index = LP_TRANS.GetComponent<FS_LevelPreview>().Level_index;
-            LP_TRANS.GetComponent<FS_LevelPreview>().update_info(FS_Player.IS.get_level_info(level_index));
+            LP_TRANS.GetComponent<FS_LevelPreview>().update_info(FS_RC.IS.player.get_level_info(level_index));
         }
     }
 
