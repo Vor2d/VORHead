@@ -18,7 +18,6 @@ public class FS_RC : MonoBehaviour
     public FS_RayCast RC_script;
     public Transform Fruit_TRANS;
     public Material FruitCommon_MTRL;
-    public FS_Player player;
     //Prefabs;
     [Obsolete("Fruit static")]
     public GameObject Fruit_Prefab;
@@ -50,12 +49,12 @@ public class FS_RC : MonoBehaviour
         this.MeshDataPool = new Dictionary<MeshData, Transform>();
         this.Level_infos = new List<FS_TrialGroup>();
         init_level_infos();
-        this.player = FS_DataController.IS.player;
     }
 
     private void Update()
     {
-
+        Debug.Log("!!!!!! " + FS_Player.IS.ID.ToString());
+        Debug.Log("###### " + FS_Player.IS.Total_star);
     }
 
     private void init_level_infos()

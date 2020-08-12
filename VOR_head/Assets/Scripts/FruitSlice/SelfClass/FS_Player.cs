@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 public class FS_Player
 {
@@ -9,22 +10,25 @@ public class FS_Player
     private int total_star;
     private Dictionary<int, FS_PlayerLevelInfo> level_infos;    //Level index, level info;
 
+    public Guid ID { get; private set; }
     public static FS_Player IS;
 
     public FS_Player()
     {
         IS = this;
+        this.ID = Guid.NewGuid();
 
         this.total_score = 0;
         this.total_star = 0;
         this.level_infos = new Dictionary<int, FS_PlayerLevelInfo>();
     }
 
-    public void init_levels(int level_num)
+    public void init_levels(int level_num, bool force_new = false)
     {
         for(int i = 0;i<level_num;i++)
         {
-            force_new_empty_level(i);
+            if (force_new) { force_new_empty_level(i); }
+            else { check_level_overwrite(i); }
         }
     }
 
@@ -61,7 +65,7 @@ public class FS_Player
 
     private void check_level_overwrite(int level)
     {
-        if (level_infos[level] == null) { force_new_empty_level(level); }
+        if (!level_infos.ContainsKey(level) || level_infos[level] == null) { force_new_empty_level(level); }
     }
 
     private void force_new_empty_level(int level)
