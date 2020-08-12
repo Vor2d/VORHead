@@ -120,8 +120,7 @@ public class FS_GameController : GeneralGameController {
 
     private void init_player()
     {
-        FS_RC.IS.player = FS_DataController.IS.player;
-        FS_RC.IS.player.init_levels(FS_RC.IS.Level_infos.Count);
+        FS_Player.IS.init_levels(FS_RC.IS.Level_infos.Count, force_new: false);
     }
 
     public void ToStartGame()
@@ -177,7 +176,7 @@ public class FS_GameController : GeneralGameController {
 
     private void update_player_unlock()
     {
-        check_n_unlock_level(FS_RC.IS.player);
+        check_n_unlock_level(FS_Player.IS);
     }
 
     private void check_n_unlock_level(FS_Player player)
@@ -203,7 +202,7 @@ public class FS_GameController : GeneralGameController {
 
     private bool check_valid_select(int trial_index)
     {
-        return FS_RC.IS.player.get_level_lock_stat(trial_index);
+        return FS_Player.IS.get_level_lock_stat(trial_index);
     }
 
     public void trial_finished(int score, int star)
@@ -215,7 +214,7 @@ public class FS_GameController : GeneralGameController {
 
     public void update_player_SC_STA(int score, int star)
     {
-        FS_RC.IS.player.update_level_info(curr_trial_index, score, star);
+        FS_Player.IS.update_level_info(curr_trial_index, score, star);
     }
 
     private void turn_on_score_text()
