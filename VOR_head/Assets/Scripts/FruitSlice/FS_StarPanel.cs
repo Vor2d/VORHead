@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,6 +59,7 @@ public class FS_StarPanel : MonoBehaviour
     /// </summary>
     public void spawn_star_inst(int curr_star)
     {
+        curr_star = Math.Min(curr_star, max_num);
         curr_num = curr_star;
         Transform temp_TRANS = null;
         for (int i = 0;i<curr_star;i++)

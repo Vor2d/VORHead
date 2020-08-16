@@ -37,6 +37,7 @@ public class FS_Setting
     public float PreviewTransTime;
     public int MaxStar;
     public float StarCalOffset; //Percentage to shift the calculation down; 1.0f represents the first star starts at 0;
+    public int WeightMaxScore;
 
     public static FS_Setting IS;
     public FS_Setting()
@@ -76,5 +77,6 @@ public class FS_Setting
         this.PreviewTransTime = 0.2f;
         this.MaxStar = 3;
         this.StarCalOffset = 0.5f;
+        this.WeightMaxScore = 20;
     }
 }

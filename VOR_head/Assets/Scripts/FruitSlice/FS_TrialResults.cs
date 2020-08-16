@@ -20,8 +20,9 @@ public class FS_TrialResults : MonoBehaviour
     private float frame_gap;
     private int move_finish_inst;
     private float global_scale;
-    private float font_size = 0.0f;
+    private float font_size;
     //private List<Transform> FG_TRANSs;  //Frame group pool;
+    private float caled_wei_sca_loss;
 
     private void Awake()
     {
@@ -35,6 +36,7 @@ public class FS_TrialResults : MonoBehaviour
         this.global_scale = Int32.MaxValue;
         this.font_size = 0.0f;
         //this.FG_TRANSs = new List<Transform>();
+        this.caled_wei_sca_loss = 0.0f;
     }
 
     // Start is called before the first frame update
@@ -133,6 +135,9 @@ public class FS_TrialResults : MonoBehaviour
         Transform temp_TRANS = null;
         Vector3 pos = new Vector3();
         float z_pos = transform.position.z;
+        float ideal_wei_sca = ideal_weight_cal(mesh_TRANSs.Length);
+        float temp_wei_sca = 0.0f;
+        float total_wei_sca_loss = 0.0f;
         for(int i = 0;i<mesh_TRANSs.Length;i++)
         {
             pos = new Vector3(poss[i].x, poss[i].y, z_pos);
@@ -140,10 +145,22 @@ public class FS_TrialResults : MonoBehaviour
             mesh_to_frame.Add(mesh_TRANSs[i], temp_TRANS);
             if (FS_Fruit.IS.using_weight) 
             {
-                set_weight_sca(temp_TRANS.GetComponent<FS_FrameGroup>(),
+                temp_wei_sca = set_weight_sca(temp_TRANS.GetComponent<FS_FrameGroup>(),
                     mesh_TRANSs[i].GetComponent<MeshDataComp>().mesh_data.Area);
+                total_wei_sca_loss += Mathf.Abs(temp_wei_sca - ideal_wei_sca);
             }
         }
+        caled_wei_sca_loss = total_wei_sca_loss;
+    }
+
+    public float get_weight_sca_loss()
+    {
+        return caled_wei_sca_loss;
+    }
+
+    private float ideal_weight_cal(int num)
+    {
+        return 1.0f / (float)num;
     }
 
     private Vector2[] pos_cal(int num)
@@ -167,14 +184,15 @@ public class FS_TrialResults : MonoBehaviour
 
     private void init_frame_group(Transform frame_TRANS)
     {
-        frame_TRANS.GetComponent<FS_FrameGroup>().init_frame(frame_width, frame_height, text_offsety, font_size);
-        
+        frame_TRANS.GetComponent<FS_FrameGroup>().init_frame(frame_width, frame_height, text_offsety,
+            font_size);
     }
 
-    private void set_weight_sca(FS_FrameGroup FG_script, float weight)
+    private float set_weight_sca(FS_FrameGroup FG_script, float weight)
     {
         float WS = calculate_weight_sca(weight, FS_Fruit.IS.first_weight);
         FG_script.set_weight_sca(WS);
+        return WS;
     }
 
     private float calculate_weight_sca(float weight, float FW)

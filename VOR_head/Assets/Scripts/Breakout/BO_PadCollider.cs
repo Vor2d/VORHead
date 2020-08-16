@@ -21,10 +21,8 @@ public class BO_PadCollider : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("OnCollisionEnter " + collision.transform.name);
         if (collision.transform.CompareTag("BO_Ball"))
         {
-            //Instantiate(HitIndicator,collision.contacts)
             contact_point = collision.contacts[0].point;
             contacted_flag = true;
         }

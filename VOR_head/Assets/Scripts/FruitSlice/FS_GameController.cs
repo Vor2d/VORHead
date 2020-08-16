@@ -38,12 +38,6 @@ public class FS_GameController : GeneralGameController {
         score_increase = FS_DataController.IS.GameSetting.ScoreIncrPerCut;
         register_controller();
     }
-	
-	// Update is called once per frame
-	protected override void Update ()
-    {
-
-    }
 
     private void OnDestroy()
     {

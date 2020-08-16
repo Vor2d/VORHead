@@ -5,6 +5,7 @@ using UnityEngine;
 public class BO_Brick : MonoBehaviour {
 
     [SerializeField] private GameObject BrickParticle_Prefab;
+    [SerializeField] private bool Using_brick_shadows;
 
     private float alpha;
 
@@ -37,16 +38,23 @@ public class BO_Brick : MonoBehaviour {
 
     public void hited()
     {
-        GetComponent<Collider>().enabled = false;
         Instantiate(BrickParticle_Prefab, transform.position,new Quaternion());
+        clean_destroy();
+    }
+
+    private void clean_destroy()
+    {
+        GetComponent<Collider>().enabled = false;
+        BO_RC.IS.Bricks_pool.Remove(transform);
         Destroy(gameObject);
     }
 
     public void update_shadow()
     {
+        if (!Using_brick_shadows) { return; }
         foreach(Transform child in transform)
         {
-            if(child.CompareTag("BO_BrickRayCasts"))
+            if(child.CompareTag("BO_BrickRayCasts") && child.gameObject.activeSelf)
             {
                 foreach(Transform cchild in child)
                 {

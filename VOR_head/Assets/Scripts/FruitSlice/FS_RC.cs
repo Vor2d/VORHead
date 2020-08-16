@@ -53,8 +53,7 @@ public class FS_RC : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("!!!!!! " + FS_Player.IS.ID.ToString());
-        Debug.Log("###### " + FS_Player.IS.Total_star);
+
     }
 
     private void init_level_infos()

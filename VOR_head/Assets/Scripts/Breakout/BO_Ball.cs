@@ -21,7 +21,6 @@ public class BO_Ball : MonoBehaviour {
     [SerializeField] ParticleSystem Up_PS;
     [SerializeField] ParticleSystem Down_PS;
 
-    private BO_GameController BOGC_script;
     private Rigidbody ball_RB;
     private bool start_flag;
     private float boundary_timer;
@@ -42,8 +41,6 @@ public class BO_Ball : MonoBehaviour {
     // Use this for initialization
     void Start () {
         this.ball_RB = GetComponent<Rigidbody>();
-        this.BOGC_script = 
-                GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
         this.start_flag = false;
         this.boundary_timer = BoundaryTime;
         this.boundary_timer_flag = false;
@@ -183,7 +180,7 @@ public class BO_Ball : MonoBehaviour {
     {
         if(other.CompareTag("BO_DeSpawnWall"))
         {
-            BOGC_script.restart_ball();
+            BO_GameController.IS.restart_ball();
             Destroy(gameObject);
         }
     }
@@ -310,7 +307,7 @@ public class BO_Ball : MonoBehaviour {
         if(collision.transform.CompareTag("BO_Brick"))
         {
             collision.transform.GetComponent<BO_Brick>().hited();
-            BOGC_script.brick_destroied();
+            BO_GameController.IS.brick_destroied();
         }
 
         //Debug.Log("collision.contacts " + collision.contacts.Length);

@@ -4,15 +4,22 @@ using UnityEngine;
 
 public class BO_RC : MonoBehaviour
 {
-    //Scripts;
-    public BO_GameController GC_script;
+    [Header("Objects")]
+    public Transform Brick_par_TRANS;
+    [Header("Scripts")]
+    public Controller_Input CI;
+    [Header("Perfabs")]
+    public GameObject Brick_prefab;
 
-    [HideInInspector]
-    public BO_DataController DC_script;
+    public List<Transform> Bricks_pool { get; set; }
+
+    public static BO_RC IS;
 
     private void Awake()
     {
-        GeneralMethods.check_ref<BO_DataController>(ref DC_script, BO_SD.DC_name);
+        IS = this;
+
+        this.Bricks_pool = new List<Transform>();
     }
 
     // Start is called before the first frame update

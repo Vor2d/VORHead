@@ -7,6 +7,11 @@ public class BodyParent : MonoBehaviour
     [SerializeField] protected bool AutoResetHeight; //Auto matically reset position to 0;
     protected static float refer_height = 0.0f;
 
+    private void Update()
+    {
+
+    }
+
     public void set_ref_hei(float ref_hei)
     {
         refer_height = ref_hei;

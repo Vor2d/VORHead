@@ -23,6 +23,7 @@ public class FS_Fruit : MonoBehaviour {
     [SerializeField] private FS_TrialResults TR_script;
     [SerializeField] private float MeshPPU;
     [SerializeField] private bool Using_save_cut;
+    [SerializeField] private bool Using_weight_score;
 
     public bool Start_flag { get; set; }
     public float first_weight { get; set; }
@@ -246,10 +247,10 @@ public class FS_Fruit : MonoBehaviour {
     public void ToTrialFinished()
     {
         cut();
-        score_cal();
+        show_trial_result();
+        score_cal(Using_weight: Using_weight_score,weight_sca_loss: TR_script.get_weight_sca_loss());
         star_cal();
         turn_off_indicator();
-        show_trial_result();
         show_star_result();
         turn_off_CL();
         trace_backable = false;
@@ -487,7 +488,7 @@ public class FS_Fruit : MonoBehaviour {
         FM_script.clear_mesh();
     }
 
-    private float score_cal()
+    private float score_cal(bool Using_weight = false, float weight_sca_loss = 0.0f)
     {
         float Tscore = 0.0f;
         foreach(float score in cut_scores.Values)
@@ -495,12 +496,15 @@ public class FS_Fruit : MonoBehaviour {
             Tscore += score;
         }
         trial_score = Tscore;
+        if (Using_weight) { trial_score += (1.0f - weight_sca_loss) * FS_Setting.IS.WeightMaxScore *
+                FI_script.total_trial; }
         return trial_score;
     }
 
-    private int star_cal()
+    private int star_cal(bool Using_weight = false)
     {
         float max_scr = FI_script.total_trial * (FS_Setting.IS.MaxDistScore + FS_Setting.IS.MaxLenScore);
+        if (Using_weight) { max_scr += FS_Setting.IS.WeightMaxScore * FI_script.total_trial; }
         int star = FS_GameController.Start_cal(trial_score, max_scr);
         trial_star = star;
         return star;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
 /// Parent game controller object;
@@ -14,6 +15,13 @@ public class GeneralGameController : MonoBehaviour
     public static float UITimeScale = 1.0f;
     public static float GameDeltaTime = 0.0f;
     public static float UIDeltaTime = 0.0f;
+
+    public Guid GGC_ID { get; private set; }
+
+    private void Awake()
+    {
+        GGC_ID = Guid.NewGuid();
+    }
 
     protected virtual void Update()
     {

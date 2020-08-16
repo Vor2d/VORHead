@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BO_UIController : MonoBehaviour
 {
-    [SerializeField] private BO_RC BORC;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -20,16 +18,16 @@ public class BO_UIController : MonoBehaviour
 
     public void quit_button()
     {
-        BORC.GC_script.quit_game();
+        BO_GameController.IS.quit_game();
     }
 
     public void restart_button()
     {
-        BORC.GC_script.restart_game();
+        BO_GameController.IS.restart_game();
     }
 
     public void start_button()
     {
-        BORC.GC_script.pre_start_game();
+        BO_GameController.IS.pre_start_game();
     }
 }

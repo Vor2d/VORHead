@@ -7336,6 +7336,7 @@ MonoBehaviour:
   TR_script: {fileID: 1193969211}
   MeshPPU: 100
   Using_save_cut: 1
+  Using_weight_score: 1
 --- !u!95 &1828043355
 Animator:
   serializedVersion: 3

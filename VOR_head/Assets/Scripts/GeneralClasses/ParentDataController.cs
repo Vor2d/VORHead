@@ -17,6 +17,8 @@ public class ParentDataController : MonoBehaviour {
 
     public MySceneManager MSM_script { get; private set; }
 
+    public Guid PDC_ID { get; private set; }
+
     protected virtual void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -26,6 +28,8 @@ public class ParentDataController : MonoBehaviour {
 
     public virtual void init_DC()
     {
+        PDC_ID = Guid.NewGuid();
+
         GameObject temp_SM_OBJ = GameObject.Find(GeneralStrDefiner.SceneManagerGO_name);
         if(temp_SM_OBJ != null)
         {

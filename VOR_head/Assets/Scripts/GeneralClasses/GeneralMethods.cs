@@ -475,9 +475,8 @@ public static class GeneralMethods {
     {
         XRDeviceManager.InitXRDevice();
         XRDeviceManager.recenter();
-        float refer_height = -Cam_TRANS.position.y;
-        Cam_Par_TRANS.position = new Vector3(Cam_Par_TRANS.position.x,
-            Cam_Par_TRANS.position.y + refer_height, Cam_Par_TRANS.position.z);
+        float refer_height = Cam_Par_TRANS.position.y - Cam_TRANS.position.y;
+        Cam_Par_TRANS.position = new Vector3(Cam_Par_TRANS.position.x, refer_height, Cam_Par_TRANS.position.z);
         return refer_height;
     }
 
@@ -879,4 +878,24 @@ public static class GeneralMethods {
         { transform.GetComponent<MeshRenderer>().sortingOrder = sorting_order; }
     }
 
+    public static Vector3 random_pos_gener(Vector3 center, Vector3 range)
+    {
+        float x = UnityEngine.Random.Range(center.x - range.x, center.x + range.x);
+        float y = UnityEngine.Random.Range(center.y - range.y, center.y + range.y);
+        float z = UnityEngine.Random.Range(center.z - range.z, center.z + range.z);
+        return new Vector3(x, y, z);
+    }
+
+    [Obsolete("Not implemented yet")]
+    /// <summary>
+    /// Check over lap, only for cubes;
+    /// </summary>
+    /// <param name="pos1"></param>
+    /// <param name="pos2"></param>
+    /// <param name="size"></param>
+    /// <returns></returns>
+    public static bool overlap_check_3D(Vector3 pos1, Vector3 pos2, Vector3 size)
+    {
+        return true;
+    }
 }

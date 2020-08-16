@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4645815100606142}
   - component: {fileID: 120662196035574426}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: BallLineRenderer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -45,6 +45,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -56,6 +57,7 @@ LineRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -136,7 +138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4306367268502710}
   - component: {fileID: 114764131704634886}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: BallRayCast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +183,7 @@ GameObject:
   - component: {fileID: 4145161143707214}
   - component: {fileID: 198783129979270214}
   - component: {fileID: 199920472759526398}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: UpParticalSys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4875,6 +4877,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -4887,6 +4890,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -4933,7 +4937,7 @@ GameObject:
   - component: {fileID: 4506035993187992}
   - component: {fileID: 198704091464719192}
   - component: {fileID: 199041377970287756}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: LeftParticalSys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9627,6 +9631,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -9639,6 +9644,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -9688,7 +9694,7 @@ GameObject:
   - component: {fileID: 135740915326561836}
   - component: {fileID: 54386753523236000}
   - component: {fileID: 114000811092270578}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: BO_Ball
   m_TagString: BO_Ball
   m_Icon: {fileID: 0}
@@ -9739,6 +9745,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -9750,6 +9757,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -9831,7 +9839,7 @@ GameObject:
   - component: {fileID: 199002128246879792}
   - component: {fileID: 65525560862148874}
   - component: {fileID: 114773791598262768}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: FrontPartical
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14525,6 +14533,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14537,6 +14546,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14608,7 +14618,7 @@ GameObject:
   - component: {fileID: 4923880112032032}
   - component: {fileID: 33226147210928128}
   - component: {fileID: 23184575061901648}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14651,6 +14661,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -14662,6 +14673,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -14685,7 +14697,7 @@ GameObject:
   - component: {fileID: 4450259125586846}
   - component: {fileID: 198864367432176636}
   - component: {fileID: 199136918982760360}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: DownParticalSys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19379,6 +19391,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -19391,6 +19404,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -19437,7 +19451,7 @@ GameObject:
   - component: {fileID: 4072286698254214}
   - component: {fileID: 198319068592603222}
   - component: {fileID: 199378931858440288}
-  m_Layer: 2
+  m_Layer: 14
   m_Name: RightParticalSys
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24131,6 +24145,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -24143,6 +24158,7 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
