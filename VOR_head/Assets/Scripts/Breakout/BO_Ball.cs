@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BO_Ball : MonoBehaviour {
 
+    [SerializeField] private Transform Line_TRANS;
     [SerializeField] private float MaxPlaneSpeed = 100.0f;
     [SerializeField] private float MaxDepthSpeed = 100.0f;
     [SerializeField] private float MinPlaneSpeed = 0.0f;
@@ -24,8 +25,9 @@ public class BO_Ball : MonoBehaviour {
     private Rigidbody ball_RB;
     private bool start_flag;
     private float boundary_timer;
-    private bool boundary_timer_flag;
+    private Vector3 velocity_state;
 
+    private bool boundary_timer_flag;
     private bool last_left_boundary_flag;
     private bool left_boundary_flag;
     private bool last_right_boundary_flag;
@@ -52,6 +54,7 @@ public class BO_Ball : MonoBehaviour {
         this.up_boundary_flag = false;
         this.last_down_boundary_flag = false;
         this.down_boundary_flag = false;
+        this.velocity_state = new Vector3();
     }
 
     private void Update()
@@ -124,6 +127,12 @@ public class BO_Ball : MonoBehaviour {
 
     }
 
+    public void init_ball()
+    {
+        if (BO_RC.IS.Ball_pool.Exists(trans => trans = transform)) { }
+        else { BO_RC.IS.Ball_pool.Add(transform); }
+    }
+
     private void check_velocity()
     {
         Vector3 speed = ball_RB.velocity;
@@ -181,7 +190,7 @@ public class BO_Ball : MonoBehaviour {
         if(other.CompareTag("BO_DeSpawnWall"))
         {
             BO_GameController.IS.restart_ball();
-            Destroy(gameObject);
+            clean_destroy();
         }
     }
 
@@ -319,4 +328,35 @@ public class BO_Ball : MonoBehaviour {
         //    Debug.DrawRay(contact.point, contact.normal, Color.white);
         //}
     }
+
+    public void clean_destroy()
+    {
+        BO_RC.IS.Ball_pool.Remove(transform);
+        Destroy(gameObject);
+    }
+
+    public void pause_physics()
+    {
+        turn_off_line();
+        velocity_state = ball_RB.velocity;
+        ball_RB.isKinematic = true;
+    }
+
+    public void unpause_physics()
+    {
+        ball_RB.isKinematic = false;
+        ball_RB.velocity = velocity_state;
+        turn_on_line();
+    }
+
+    private void turn_on_line()
+    {
+        Line_TRANS.GetComponent<LineRenderer>().enabled = true;
+    }
+
+    private void turn_off_line()
+    {
+        Line_TRANS.GetComponent<LineRenderer>().enabled = false;
+    }
+
 }

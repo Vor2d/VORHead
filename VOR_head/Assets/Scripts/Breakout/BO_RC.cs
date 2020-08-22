@@ -6,12 +6,18 @@ public class BO_RC : MonoBehaviour
 {
     [Header("Objects")]
     public Transform Brick_par_TRANS;
+    public Transform Pause_text_TRANS;
+    public Transform Minimap_TRANS;
+    public Transform Pad_TRANS;
+    public Transform Despawn_panel_TRANS;
     [Header("Scripts")]
     public Controller_Input CI;
     [Header("Perfabs")]
     public GameObject Brick_prefab;
+    public List<GameObject> Level_pool;
 
     public List<Transform> Bricks_pool { get; set; }
+    public List<Transform> Ball_pool { get; set; }
 
     public static BO_RC IS;
 
@@ -20,6 +26,7 @@ public class BO_RC : MonoBehaviour
         IS = this;
 
         this.Bricks_pool = new List<Transform>();
+        this.Ball_pool = new List<Transform>();
     }
 
     // Start is called before the first frame update

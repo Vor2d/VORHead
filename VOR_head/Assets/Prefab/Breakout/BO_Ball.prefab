@@ -9811,6 +9811,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b00d75287edbdc449c4b1f560151563, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Line_TRANS: {fileID: 4645815100606142}
   MaxPlaneSpeed: 20
   MaxDepthSpeed: 100
   MinPlaneSpeed: 0

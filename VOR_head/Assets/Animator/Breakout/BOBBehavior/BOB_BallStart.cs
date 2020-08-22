@@ -2,27 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BO_Start : StateMachineBehaviour {
-
-    private BO_GameController BOGC_script;
+public class BOB_BallStart : StateMachineBehaviour {
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (BOGC_script == null)
-        {
-            BOGC_script =
-                GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
-        }
-
-        BOGC_script.ToBO_Start();
+        BO_GameController.IS.ToBallStart();
 
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        BOGC_script.BO_Start();
+        //BO_GameController.IS.BallStart();
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

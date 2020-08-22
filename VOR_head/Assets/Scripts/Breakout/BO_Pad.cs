@@ -15,7 +15,7 @@ public class BO_Pad : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (BOCRH_script.Hit_position.z != 0.0f)
+        if (BOCRH_script.Hit_position.z != 0.0f && !BO_GameController.IS.Game_paused)
         {
             transform.position = BOCRH_script.Hit_position;
         }

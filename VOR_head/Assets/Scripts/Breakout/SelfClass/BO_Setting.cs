@@ -8,8 +8,9 @@ public class BO_Setting
     public Vector3 Brick_gener_range;   //Hori range, vert range, depth range;
     public int Auto_gener_number;
     public Vector3 Brick_size;
+    public float Ball_count_time;
 
-    public static BO_Setting IS;
+    public static BO_Setting IS { get; set; }
 
     public BO_Setting()
     {
@@ -19,6 +20,7 @@ public class BO_Setting
         this.Brick_gener_range = new Vector3(0.0f, 0.0f, 0.0f);
         this.Auto_gener_number = 5;
         this.Brick_size = new Vector3(2.0f, 1.0f, 1.0f);
+        this.Ball_count_time = 3.0f;
     }
 
 }

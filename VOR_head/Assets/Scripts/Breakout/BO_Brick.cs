@@ -64,4 +64,13 @@ public class BO_Brick : MonoBehaviour {
             }
         }
     }
+
+    public void despawn_by_pos(float z)
+    {
+        if(transform.position.z <= z)
+        {
+            BO_GameController.IS.brick_despawned();
+            clean_destroy();
+        }
+    }
 }

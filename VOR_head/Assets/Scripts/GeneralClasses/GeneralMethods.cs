@@ -508,11 +508,12 @@ public static class GeneralMethods {
         timer = init_time;
     }
 
-    public static bool up_ch_timer_down(ref float timer, ref bool timer_flag)
+    public static bool up_ch_timer_down(ref float timer, ref bool timer_flag, float delta_time = -1.0f)
     {
         if(timer_flag)
         {
-            timer -= Time.deltaTime;
+            if (delta_time < 0) { timer -= Time.deltaTime; }
+            else { timer -= delta_time; }
             return check_timer_down(timer, ref timer_flag);
         }
         return false;
@@ -535,11 +536,13 @@ public static class GeneralMethods {
         timer = 0.0f;
     }
 
-    public static bool up_ch_timer_up(ref float timer, ref bool timer_flag, float target_time)
+    public static bool up_ch_timer_up(ref float timer, ref bool timer_flag, float target_time, 
+        float delta_time = -0.1f)
     {
         if (timer_flag)
         {
-            timer += Time.deltaTime;
+            if (delta_time < 0) { timer += Time.deltaTime; }
+            else { timer += delta_time; }
             return check_timer_up(timer, ref timer_flag, target_time);
         }
         return false;
@@ -716,18 +719,26 @@ public static class GeneralMethods {
         return grid_generation(total_width, total_height, rows, cols);
     }
 
+    public static Vector2[] grid_generation(float hori_total_width, float vert_total_height, float width, 
+        float height)
+    {
+        int rows = Mathf.FloorToInt(vert_total_height / height);
+        int cols = Mathf.FloorToInt(hori_total_width / width);
+        return grid_generation(hori_total_width, vert_total_height, rows, cols);
+    }
+
     /// <summary>
     /// Generate the grid by total width and height;
     /// </summary>
     /// <param name="hori_total_width"></param>
-    /// <param name="hori_total_height"></param>
+    /// <param name="vert_total_height"></param>
     /// <param name="rows"></param>
     /// <param name="cols"></param>
     /// <returns></returns>
-    public static Vector2[] grid_generation(float hori_total_width, float hori_total_height, int rows, int cols)
+    public static Vector2[] grid_generation(float hori_total_width, float vert_total_height, int rows, int cols)
     {
         float right_board = hori_total_width / 2.0f;
-        float up_board = hori_total_height / 2.0f;
+        float up_board = vert_total_height / 2.0f;
         float x = 0.0f;
         float y = 0.0f;
         float hori_dist = 0.0f;
@@ -738,7 +749,7 @@ public static class GeneralMethods {
         }
         else
         {
-            vert_dist = hori_total_height / (float)(rows - 1);
+            vert_dist = vert_total_height / (float)(rows - 1);
         }
         if (cols <= 1)
         {

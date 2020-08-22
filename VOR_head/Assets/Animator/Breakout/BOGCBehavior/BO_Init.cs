@@ -4,18 +4,10 @@ using UnityEngine;
 
 public class BO_Init : StateMachineBehaviour {
 
-    private BO_GameController BOGC_script;
-
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (BOGC_script == null)
-        {
-            BOGC_script =
-                GameObject.Find("BO_GameController").GetComponent<BO_GameController>();
-        }
-
-        BOGC_script.BO_ToInit();
+        BO_GameController.IS.BO_ToInit();
 
     }
 
