@@ -54,7 +54,7 @@ speed_TH = 40
 Drop_speed = 500.0
 Drop_pos = 40.0
 #Subplot info
-subplot_col_num = 5
+subplot_col_num = 3
 #Subplots for all trials
 subplot_row_width = 3
 #Subplots for mean plot
@@ -100,7 +100,10 @@ def common_legend(fig,axs,pos = "upper right"):
 		handle, label = ax.get_legend_handles_labels()
 		handles.extend(handle)
 		labels.extend(label)
-	fig.legend(handles, labels, loc=pos)
+	if(pos == "self"):
+		fig.legend(handles, labels, bbox_to_anchor=(1.2, 1.0), loc = "upper right")
+	else:
+		fig.legend(handles, labels, loc=pos)
 
 def common_axes(fig,xlab,ylab,p1 = 0.5,p2 = 0.04,p3 = 0.06,p4 = 0.5):
 	fig.text(p1, p2, xlab, ha='center', va='center')
@@ -1599,10 +1602,10 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		#axes[i + 1,0].legend([tpl1,tpl2,tpl3])
 
 	fig.align_ylabels(axes[:, 0])
-	common_legend(fig,[axes[0,0],axes[2,0]],pos = "lower right")
+	common_legend(fig,[axes[0,0],axes[2,0]],pos = "self")
 	common_axes(fig,xlab6,"")
 	pyplot.suptitle(title)
-	pyplot.savefig(SavePath + title + ".png",dpi = 300)
+	pyplot.savefig(SavePath + title + ".png",dpi = 300, bbox_inches="tight")
 	#pyplot.show()
 	pyplot.clf()
 
@@ -2826,25 +2829,25 @@ class TotalMean:
 		#self.sa_total_dict
 		rstr = "Subject\tThreshold Size\n"
 		for sub in self.sa_total_dict:
-			rstr += str(sub) + "\t" + self.sa_total_dict[sub]
+			rstr += str(sub) + "\t" + str(self.sa_total_dict[sub])
 			rstr += "\n"
 		self.write_to_file(resdata + "subjects_static_acuity_threshold", rstr)
 		#self.da_total_dict
 		rstr = "Subject\tThreshold Size\n"
 		for sub in self.da_total_dict:
-			rstr += str(sub) + "\t" + self.da_total_dict[sub]
+			rstr += str(sub) + "\t" + str(self.da_total_dict[sub])
 			rstr += "\n"
 		self.write_to_file(resdata + "subjects_dynamic_acuity_threshold", rstr)
 		#self.dda_total_dict
 		rstr = "Subject\tThreshold Size\n"
 		for sub in self.dda_total_dict:
-			rstr += str(sub) + "\t" + self.dda_total_dict[sub]
+			rstr += str(sub) + "\t" + str(self.dda_total_dict[sub])
 			rstr += "\n"
 		self.write_to_file(resdata + "subjects_delayed_dynamic_acuity_threshold", rstr)
 		#self.dga_total_dict
 		rstr = "Subject\tThreshold Size\n"
 		for sub in self.dga_total_dict:
-			rstr += str(sub) + "\t" + self.dga_total_dict[sub]
+			rstr += str(sub) + "\t" + str(self.dga_total_dict[sub])
 			rstr += "\n"
 		self.write_to_file(resdata + "subjects_delayed_gaze_shift_acuity_threshold", rstr)
 		#self.sa_fit_total
@@ -3111,7 +3114,10 @@ class TotalMean:
 		step = (maxx - minx) * fit_precise
 		x_data = numpy.arange(minx,maxx,step)
 		sub_n = len(list(sapopt.keys()))
-		row_n = sub_n // subplot_col_num + 1
+		if (sub_n // subplot_col_num == sub_n / subplot_col_num):
+			row_n = sub_n // subplot_col_num
+		else:
+			row_n = sub_n // subplot_col_num + 1
 		fig, axes = pyplot.subplots(row_n,subplot_col_num,squeeze = False,sharex=True,sharey = True)
 		index = 0
 		finished = False
@@ -3126,10 +3132,10 @@ class TotalMean:
 				y_data_da = sigmoid3(x_data, *(dapopt[index])) * Percent_rat
 				self._subplot_SD_single(axes[i,j],x_data,y_data_sa,y_data_da)
 				index += 1
-		common_legend(fig,[axes[0,0]])
+		common_legend(fig,[axes[0,0]], pos = "self")
 		common_axes(fig,xlab1,ylab1)
 		pyplot.suptitle("Comparison of Static Acuity and Dynamic Acuity of Healthy Group")
-		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300)
+		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300, bbox_inches="tight")
 		#pyplot.show()
 		pyplot.clf()
 
