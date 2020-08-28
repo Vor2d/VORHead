@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class BO_PadCollider : MonoBehaviour {
 
-    public Vector3 contact_point { get; set; }
-    public bool contacted_flag { get; set; }
+    public Vector3 Contact_point { get; private set; }
+    public System.Action OnCEnter_CB { get; set; }
+    public Transform Contact_TRANS { get; private set; }
 
-	// Use this for initialization
-	void Start () {
-        contact_point = new Vector3();
-        contacted_flag = false;
+    private void Awake()
+    {
+        Contact_point = new Vector3();
+        OnCEnter_CB = null;
+    }
+
+    // Use this for initialization
+    void Start () 
+    {
 
     }
 	
@@ -23,8 +29,11 @@ public class BO_PadCollider : MonoBehaviour {
     {
         if (collision.transform.CompareTag("BO_Ball"))
         {
-            contact_point = collision.contacts[0].point;
-            contacted_flag = true;
+            Contact_TRANS = collision.transform;
+            Contact_point = collision.contacts[0].point;
+            OnCEnter_CB?.Invoke();
         }
     }
+
+
 }

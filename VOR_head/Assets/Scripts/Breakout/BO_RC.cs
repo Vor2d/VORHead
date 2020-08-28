@@ -12,6 +12,7 @@ public class BO_RC : MonoBehaviour
     public Transform Despawn_panel_TRANS;
     [Header("Scripts")]
     public Controller_Input CI;
+    public BO_CheckRayHit CRH_script;
     [Header("Perfabs")]
     public GameObject Brick_prefab;
     public List<GameObject> Level_pool;
