@@ -6,10 +6,12 @@ public class HeadIndiOnCanvas : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
     [SerializeField] private Camera camara;
+    [SerializeField] private bool Using_range;
 
     private SpriteRenderer sprite_renderer;
     private Transform HI_TRANS;
     private bool activate;
+    private float range;
 
 
     private void Awake()
@@ -17,6 +19,7 @@ public class HeadIndiOnCanvas : MonoBehaviour
         this.sprite_renderer = gameObject.GetComponent<SpriteRenderer>();
         this.HI_TRANS = null;
         this.activate = false;
+        this.range = DataController.IS.SystemSetting.HIOCRange;
     }
 
     // Start is called before the first frame update
@@ -43,6 +46,9 @@ public class HeadIndiOnCanvas : MonoBehaviour
         Vector3 pos =
             GeneralMethods.world_to_canvas(HI_TRANS.position, camara, canvas, boundary: true);
         pos = Vector3Int.RoundToInt(pos);
+        if(Using_range && Vector3.Distance(pos, Vector3.zero) > range)
+        { turn_off_sprite(); }
+        else { turn_on_sprite(); }
         GetComponent<RectTransform>().localPosition = pos;
     }
 

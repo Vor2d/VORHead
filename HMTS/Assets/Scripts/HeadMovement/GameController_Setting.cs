@@ -414,4 +414,9 @@ public class GameController_Setting : MonoBehaviour {
     {
         Application.Quit();
     }
+
+    public void RecenterMinitor2Button()
+    {
+        GC_script.recenter_monitor2();
+    }
 }

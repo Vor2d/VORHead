@@ -49,6 +49,7 @@ public class GameSetting
     public float Cam3Angle;
     public float RotationScale;
     public float DistScale;
+    public float HIOCRange;
 
     public GameSetting()
     {
@@ -95,6 +96,7 @@ public class GameSetting
         this.Cam3Angle = 0.0f;
         this.RotationScale = 1.0f;
         this.DistScale = 1.0f;
+        this.HIOCRange = 0.0f;
     }
 
     [Obsolete("Not using txt file anymore")]
@@ -187,6 +189,7 @@ public class GameSetting
         result_str += "Cam3Angle" + " " + Cam3Angle.ToString("F2");
         result_str += "RotationScale" + " " + RotationScale.ToString("F2");
         result_str += "DistScale" + " " + DistScale.ToString("F2");
+        result_str += "HIOCRange" + " " + HIOCRange.ToString("F2");
 
 
         return result_str;

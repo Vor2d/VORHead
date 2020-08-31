@@ -442,6 +442,21 @@ public class GameController : GeneralGameController {
         CapCamera2.fieldOfView = DC_script.SystemSetting.Camera3FOV;
     }
 
+    private void adjust_camera(float Cam1Angle, float Cam3Angle)
+    {
+        Vector3 virtual_rot = Vector3.zero;
+        if (Using1to1) { virtual_rot = new Vector3(0.0f, Cam1Angle, 0.0f); }
+        CapCamera1.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
+
+        if (Using1to1) { virtual_rot = new Vector3(0.0f, Cam3Angle, 0.0f); }
+        CapCamera2.transform.eulerAngles = Vector3Int.RoundToInt(virtual_rot);
+
+        MainCamera.fieldOfView = DC_script.SystemSetting.MainCameraFOV;
+        SettingCamera.fieldOfView = DC_script.SystemSetting.Camera2FOV;
+        CapCamera1.fieldOfView = DC_script.SystemSetting.Camera1FOV;
+        CapCamera2.fieldOfView = DC_script.SystemSetting.Camera3FOV;
+    }
+
     private void OnDestroy()
     {
         if(DC_script.MSM_script.using_VR)
@@ -2139,6 +2154,18 @@ public class GameController : GeneralGameController {
         {
             GCAnimator.SetTrigger("NextStep");
         }
+    }
+
+    public void recenter_monitor2()
+    {
+        adjust_camera(0.0f, HS_script.TrueHeadRR.y);
+        set_GS_angel(HS_script.TrueHeadRR.y);
+    }
+
+    private void set_GS_angel(float angle)
+    {
+        DC_script.Sections[0].SectionTrialInfo.Turn_data[0] = new Vector2(angle, 0.0f);
+        DC_script.Sections[0].SectionTrialInfo.Jump_data[0] = new Vector2(angle, 0.0f);
     }
 }
 
