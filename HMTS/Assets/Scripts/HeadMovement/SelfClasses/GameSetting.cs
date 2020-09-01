@@ -96,7 +96,7 @@ public class GameSetting
         this.Cam3Angle = 0.0f;
         this.RotationScale = 1.0f;
         this.DistScale = 1.0f;
-        this.HIOCRange = 0.0f;
+        this.HIOCRange = 5760.0f;
     }
 
     [Obsolete("Not using txt file anymore")]

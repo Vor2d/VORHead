@@ -71,6 +71,11 @@ public class DataController : ParentDataController {
         }
     }
 
+    private void Update()
+    {
+
+    }
+
     public override void generate_setting()
     {
         generate_setting<GameSetting>(SystemSetting);
