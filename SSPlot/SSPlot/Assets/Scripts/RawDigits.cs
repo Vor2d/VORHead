@@ -15,12 +15,12 @@ public class RawDigits : MonoBehaviour
     void Update()
     {
         float[] RD = CoilData.IS.Raw_data;
-        TM.text = RD[0].ToString("F3") + " | " +
-                    RD[1].ToString("F3") + " | " +
-                    RD[2].ToString("F3") + " | " +
+        TM.text = "hdx "+ RD[0].ToString("F3") + " | " +
+                    "hdy " + RD[1].ToString("F3") + " | " +
+                    "hdz " + RD[2].ToString("F3") + " | " +
                     "\n" +
-                    RD[3].ToString("F3") + " | " +
-                    RD[4].ToString("F3") + " | " +
-                    RD[5].ToString("F3") + " | ";
+                    "htx " + RD[3].ToString("F3") + " | " +
+                    "hty " + RD[4].ToString("F3") + " | " +
+                    "htz " + RD[5].ToString("F3") + " | ";
     }
 }
