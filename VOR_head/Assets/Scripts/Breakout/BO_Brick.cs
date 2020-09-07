@@ -6,6 +6,7 @@ public class BO_Brick : MonoBehaviour {
 
     [SerializeField] private GameObject BrickParticle_Prefab;
     [SerializeField] private bool Using_brick_shadows;
+    [SerializeField] private bool Using_random_color;
 
     private float alpha;
 
@@ -24,6 +25,17 @@ public class BO_Brick : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //random_color();
+    }
+
+    public void init(Color color = default(Color))
+    {
+        if (!Using_random_color)
+        { change_color(color); }
+    }
+
+    private void change_color(Color color)
+    {
+        GetComponent<Renderer>().material.color = color;
     }
 
     private void random_color()

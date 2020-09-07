@@ -50,6 +50,9 @@ public class GameSetting
     public float RotationScale;
     public float DistScale;
     public float HIOCRange;
+    public int MLHMaxSize;
+    public int MLHSinRepeatNum;
+    public int MLHDouRepeatNum;
 
     public GameSetting()
     {
@@ -185,11 +188,15 @@ public class GameSetting
         result_str += "DynaDelayRepeatNum" + " " + DynaDelayRepeatNum.ToString() + " ";
         result_str += "DynaStopThresh" + " " + DynaStopThresh.ToString() + " ";
         result_str += "SecondHeadSpeed" + " " + SecondHeadSpeed.ToString() + " ";
-        result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2");
+        result_str += "Cam1Angle" + " " + Cam1Angle.ToString("F2") + " ";
         result_str += "Cam3Angle" + " " + Cam3Angle.ToString("F2");
-        result_str += "RotationScale" + " " + RotationScale.ToString("F2");
-        result_str += "DistScale" + " " + DistScale.ToString("F2");
-        result_str += "HIOCRange" + " " + HIOCRange.ToString("F2");
+        result_str += "RotationScale" + " " + RotationScale.ToString("F2") + " ";
+        result_str += "DistScale" + " " + DistScale.ToString("F2") + " ";
+        result_str += "HIOCRange" + " " + HIOCRange.ToString("F2") + " ";
+        result_str += "MLHMaxSize" + " " + MLHMaxSize.ToString() + " ";
+        result_str += "MLHSinRepeatNum" + " " + MLHSinRepeatNum.ToString() + " ";
+        result_str += "MLHDouRepeatNum" + " " + MLHDouRepeatNum.ToString() + " ";
+
 
 
         return result_str;

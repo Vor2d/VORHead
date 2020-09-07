@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000002, guid: ae2c18e5093268045a5ea18eb800cc1e,
+  m_LightingDataAsset: {fileID: 112000000, guid: ae2c18e5093268045a5ea18eb800cc1e,
     type: 2}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -1138,6 +1138,8 @@ MonoBehaviour:
   Max_gener_try_num: 5
   Bottom_z: 43
   Step_off_set: 0.1
+  Pattern_try_num: 5
+  Brick_alpha: 1
   start_count_flag: 0
 --- !u!4 &567881327
 Transform:

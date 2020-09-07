@@ -707,7 +707,7 @@ public static class GeneralMethods {
     }
 
     /// <summary>
-    /// Generate the grid positions by rows and cols;
+    /// Generate the grid positions by rows and cols; Iterate horizontally;
     /// </summary>
     /// <param name=""></param>
     /// <returns></returns>
@@ -728,7 +728,23 @@ public static class GeneralMethods {
     }
 
     /// <summary>
-    /// Generate the grid by total width and height;
+    /// Same as grid_generation, but also returns rows and cols; Iterate horizontally;
+    /// </summary>
+    /// <param name="hori_total_width"></param>
+    /// <param name="vert_total_height"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <returns>(grid, (cols, rows))</returns>
+    public static (Vector2[], Vector2Int) grid_generation_rc(float hori_total_width, float vert_total_height,
+        float width, float height)
+    {
+        int rows = Mathf.FloorToInt(vert_total_height / height);
+        int cols = Mathf.FloorToInt(hori_total_width / width);
+        return (grid_generation(hori_total_width, vert_total_height, rows, cols), new Vector2Int(cols, rows));
+    }
+
+    /// <summary>
+    /// Generate the grid by total width and height; Iterate horizontally;
     /// </summary>
     /// <param name="hori_total_width"></param>
     /// <param name="vert_total_height"></param>
@@ -908,5 +924,22 @@ public static class GeneralMethods {
     public static bool overlap_check_3D(Vector3 pos1, Vector3 pos2, Vector3 size)
     {
         return true;
+    }
+
+    /// <summary>
+    /// Calculate the index from 2d to 1d; Iterate horizontally;
+    /// </summary>
+    /// <returns></returns>
+    public static int index_2d_to_1d(int cols, int ri, int ci)
+    {
+        return ri * cols + ci;
+    }
+
+    public static Color random_color(float alpha = 1.0f)
+    {
+        float r = UnityEngine.Random.Range(0.0f, 1.0f);
+        float g = UnityEngine.Random.Range(0.0f, 1.0f);
+        float b = UnityEngine.Random.Range(0.0f, 1.0f);
+        return (new Color(r, g, b, alpha));
     }
 }

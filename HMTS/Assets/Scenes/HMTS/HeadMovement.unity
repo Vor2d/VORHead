@@ -7085,6 +7085,7 @@ MonoBehaviour:
   UsingErrorFrame: 1
   EF_TRANS1: {fileID: 286090528}
   EF_TRANS2: {fileID: 1648354003}
+  Pre_size_num: 2
 --- !u!4 &913016691
 Transform:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ public class GameController : GeneralGameController {
 
     //Direction: 0 is left, 1 is right;
 
-    //Obsolete;
+    [Obsolete("")]
     public Dictionary<string, string> GameModeToIndiText = new Dictionary<string, string>()
     {
         { "Training", "Back Training" },
@@ -21,8 +21,8 @@ public class GameController : GeneralGameController {
         { "Jump_Learning","Learning 2"},
     };
 
-    //Obsoleted;
     [HideInInspector]
+    [Obsolete("Not showing results")]
     public bool ShowResultFlag = false;
     [HideInInspector]
     public bool TurnSpeedWindow = false;
@@ -63,6 +63,7 @@ public class GameController : GeneralGameController {
     [SerializeField] private bool UsingErrorFrame;
     [SerializeField] private Transform EF_TRANS1;
     [SerializeField] private Transform EF_TRANS2;
+    [SerializeField] private int Pre_size_num;
 
 
     //Hiden;
@@ -130,6 +131,7 @@ public class GameController : GeneralGameController {
     private float AD_max;
     private float AD_min;
     private Dictionary<int, int> AC_results;
+    private Dictionary<int, int> AC_results_wrong;
     private Vector2Int AC_repeat_number;
     private CurveFit AC_curve_fit;
     private int AC_size_result;
@@ -154,6 +156,12 @@ public class GameController : GeneralGameController {
     private bool check_double_speed_flag;
     private bool double_speed_passed_flag;
 
+    private static class MLHData
+    {
+        public static int single_repeat_num;
+        public static int double_repeat_num;
+        public static Queue<int> pre_size;
+    }
 
     public bool UsingAcuity
     {
@@ -193,7 +201,7 @@ public class GameController : GeneralGameController {
         this.restar_script = ResultTarget.GetComponent<ResultTarget>();
         //this.SNJstatus = SNJSteps.ToReset;
         //this.center_rotatey = 0.0f;
-        this.last_rot_ang_dir = new Vector2(0.0f,0.0f);
+        this.last_rot_ang_dir = new Vector2(0.0f, 0.0f);
         this.current_rot_ang_dir_x = new Vector2(0.0f, 0.0f);
         this.GCAnimator = GetComponent<Animator>();
         this.head_speed_flag = false;
@@ -248,7 +256,7 @@ public class GameController : GeneralGameController {
         this.AD_max = 0.0f;
         this.AD_min = 0.0f;
         this.AC_results = new Dictionary<int, int>();
-        this.AC_repeat_number = new Vector2Int(-1,-1);
+        this.AC_repeat_number = new Vector2Int(-1, -1);
         this.AC_curve_fit = new CurveFit();
         this.AC_size_result = 0;
         this.AC_LH = 0.0f;
@@ -263,6 +271,7 @@ public class GameController : GeneralGameController {
         this.check_double_speed_flag = false;
         this.double_speed_passed_flag = false;
         this.CamScale = 1.0f;
+        this.AC_results_wrong = new Dictionary<int, int>();
 
         CamScale = DC_script.SystemSetting.DistScale;
 
@@ -388,6 +397,13 @@ public class GameController : GeneralGameController {
                 check_double_speed_flag = false;
             }
         }
+    }
+
+    private void clean_MLH_data()
+    {
+        MLHData.single_repeat_num = 0;
+        MLHData.double_repeat_num = 0;
+        MLHData.pre_size = new Queue<int>();
     }
 
     private void adjust_camera()
@@ -1071,7 +1087,10 @@ public class GameController : GeneralGameController {
         {
             if (change_acuity())
             {
-                AC_converge_cal();
+                if (DC_script.Current_GM.CurrAcuityChangeMode == AcuityChangeMode.acuity_list)
+                { AC_converge_cal(); }
+                else if(DC_script.Current_GM.CurrAcuityChangeMode == AcuityChangeMode.MLH)
+                { }
                 to_next_section();
                 return;
             }
@@ -1497,9 +1516,92 @@ public class GameController : GeneralGameController {
                 }
                 acuity_change_index++;
                 break;
+            case AcuityChangeMode.MLH:
+                return MLH_change_acuity();
         }
         return false;
 
+    }
+
+    private void show_MLH(int size)
+    {
+        AC_size_result = size;
+    }
+
+    private bool MLH_change_acuity()
+    {
+        curr_acuity_size = MLH_actuiy_cal();
+        set_acuity_size(curr_acuity_size);
+        (bool, int) res = MLH_check_stop();
+        if (res.Item1)
+        {
+            show_MLH(res.Item2);
+        }
+        return res.Item1;
+    }
+
+    private (bool, int) MLH_check_stop()
+    {
+        int[] queue_temp = MLHData.pre_size.ToArray();
+        if(curr_acuity_size == queue_temp[queue_temp.Length-1])
+        { MLHData.single_repeat_num++; }
+        if (MLHData.pre_size.Contains(curr_acuity_size))
+        { MLHData.double_repeat_num++; }
+        else
+        {
+            MLHData.pre_size.Enqueue(curr_acuity_size);
+            if (!(MLHData.pre_size.Count > Pre_size_num)) { MLHData.pre_size.Dequeue(); }
+        }
+        if (MLHData.single_repeat_num > DataController.IS.SystemSetting.MLHSinRepeatNum)
+        { return (true, curr_acuity_size); }
+        if (MLHData.double_repeat_num > DataController.IS.SystemSetting.MLHDouRepeatNum)
+        { return (true, get_queue_maxsize()); }
+        return (false, 0);
+    }
+
+    private int get_queue_maxsize()
+    {
+        int res = 0;
+        foreach(int s in MLHData.pre_size)
+        {
+            res = Math.Max(res, s);
+        }
+        return res;
+    }
+
+    private int MLH_actuiy_cal()
+    {
+        float Lmax = 0.0f;
+        int max_size_p1 = DataController.IS.SystemSetting.MLHMaxSize + 1;
+        float[] lgit = new float[max_size_p1];
+        float L = 0.0f;
+        int res = 0;
+        //pl.optotypeSize[0] = pl.eps;
+        for (int i = 0; i < max_size_p1; i++)
+        {
+            for (int j = 0; j < max_size_p1; j++)
+            {
+                lgit[j] = 0.125f + (0.75f / (1.0f + Mathf.Pow((float)i / (float)j, 2)));
+            }
+            L = 1.0f;
+            for (int k = 0; k < max_size_p1; k++)
+            {
+                L *= Mathf.Pow(lgit[k], get_ac_result(k)) *
+                    Mathf.Pow(1 - lgit[k], get_ac_result(k, wrong: true));
+            }
+            if (L > Lmax)
+            {
+                Lmax = L;
+                res = i;
+            }
+        }
+        return res;
+    }
+
+    private int get_ac_result(int size, bool wrong = false)
+    {
+        if (!wrong) { return AC_results.ContainsKey(size) ? AC_results[size] : 0; }
+        else { return AC_results_wrong.ContainsKey(size) ? AC_results_wrong[size] : 0; }
     }
 
     private void increase_acuity_size()
@@ -1562,6 +1664,9 @@ public class GameController : GeneralGameController {
         AD_right_right = 0;
         acuity_right_num = 0;
         acuity_wrong_num = 0;
+        clean_MLH_data();
+        AC_results = new Dictionary<int, int>();
+        AC_results_wrong = new Dictionary<int, int>();
 
         if (UsingAcuity)
         {
@@ -1576,7 +1681,6 @@ public class GameController : GeneralGameController {
         if (DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
         {
             AC_curve_fit = new CurveFit();
-            AC_results = new Dictionary<int, int>();
         }
         
         if (DC_script.Current_GM.UsingPostDelay && 
@@ -2064,14 +2168,15 @@ public class GameController : GeneralGameController {
 
     private void record_AC(bool result)
     {
-        if (!AC_results.ContainsKey(curr_acuity_size))
-        {
-            AC_results.Add(curr_acuity_size, 0);
-        }
+        if(!AC_results.ContainsKey(curr_acuity_size))
+        { AC_results.Add(curr_acuity_size, 0); }
+        if(!AC_results_wrong.ContainsKey(curr_acuity_size))
+        { AC_results_wrong.Add(curr_acuity_size, 0); }
         if(result)
-        {
-            AC_results[curr_acuity_size]++;
-        }
+        { AC_results[curr_acuity_size]++; }
+        else
+        { AC_results_wrong[curr_acuity_size]++; }
+
         if(AC_repeat_number.x < curr_acuity_size)
         {
             AC_repeat_number.x = curr_acuity_size;
@@ -2106,6 +2211,7 @@ public class GameController : GeneralGameController {
         Debug_str.Add(str);
     }
 
+    [Obsolete("Debug test")]
     public void test1()
     {
         AC_results.Add(0, 0);

@@ -45,3 +45,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   setting_file_name: BO_Setting.json
   setting_path: ./
+  Pattern_textures:
+  - {fileID: 2800000, guid: eb9f8f24d88003b48a26bb0cbc950a89, type: 3}
+  - {fileID: 2800000, guid: 4cd953f7404ec8140a06087bbd694e95, type: 3}
+  - {fileID: 2800000, guid: 71427feb96792d045b719659f1292327, type: 3}
+  - {fileID: 2800000, guid: 60ed1e2cecf4c2f45bf0b569febca8f2, type: 3}
+  - {fileID: 2800000, guid: f657de228ed40454a81c471e7a637a6c, type: 3}
+  - {fileID: 2800000, guid: ca39c326b3e18784789d55e957475ec4, type: 3}
+  - {fileID: 2800000, guid: 8a2acacb349ec1e43b1dadd3f5fdb32f, type: 3}
+  - {fileID: 2800000, guid: 11a832c4a530759478dae328d2f2ced4, type: 3}
+  - {fileID: 2800000, guid: 8b6a74d5d57837742ba8ea3674871c10, type: 3}
+  - {fileID: 2800000, guid: d77fc998418f67348b204781d7d6f391, type: 3}
+  - {fileID: 2800000, guid: 776e100522b003140834d2b44eef05c0, type: 3}
+  - {fileID: 2800000, guid: 68511276dc51fae41814c41b44b911fe, type: 3}
+  - {fileID: 2800000, guid: 4cd520b26d089044992b45f90af90da1, type: 3}

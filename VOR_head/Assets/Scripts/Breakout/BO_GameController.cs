@@ -25,6 +25,8 @@ public class BO_GameController : GeneralGameController
     [SerializeField] private int Max_gener_try_num;
     [SerializeField] private float Bottom_z;
     [SerializeField] private float Step_off_set;
+    [SerializeField] private int Pattern_try_num;
+    [SerializeField] private float Brick_alpha;
 
     [HideInInspector]
     public bool start_count_flag;
@@ -41,6 +43,7 @@ public class BO_GameController : GeneralGameController
     private int Brick_inst_num { get { return BO_RC.IS.Bricks_pool.Count; } }
     private int Brick_max_num { get { return BO_Setting.IS.Auto_gener_number; } }
     private Vector2[] bottom_grid;
+    private Vector2Int bottom_grid_cr;  //x is cols, y is rows;
     private BO_LevelInfo level_cache;
 
     public static BO_GameController IS { get; private set; }
@@ -59,6 +62,7 @@ public class BO_GameController : GeneralGameController
         this.Game_paused = false;
         this.bottom_grid = null;
         this.level_cache = null;
+        this.bottom_grid_cr = new Vector2Int();
     }
 
     // Use this for initialization
@@ -169,9 +173,11 @@ public class BO_GameController : GeneralGameController
         Body_TRANS.position = PosManuIndicator.position;
         enable_stated1_objs();
         disable_stated2_objs();
-        bottom_grid = GeneralMethods.grid_generation(BO_Setting.IS.Brick_gener_range.x * 2,
+        (Vector2[], Vector2Int) pack = GeneralMethods.grid_generation_rc(BO_Setting.IS.Brick_gener_range.x * 2,
             BO_Setting.IS.Brick_gener_range.y * 2, BO_Setting.IS.Brick_size.x,
             BO_Setting.IS.Brick_size.y);
+        bottom_grid = pack.Item1;
+        bottom_grid_cr = pack.Item2;
     }
 
     public void pre_start_game()
@@ -272,10 +278,11 @@ public class BO_GameController : GeneralGameController
     }
 
     private Transform instantiate_brick(Vector3 pos, Vector3 size, Transform parent_TRANS, GameObject prefab,
-        List<Transform> pool)
+        List<Transform> pool, Color color = default(Color))
     {
         Transform brick_TRANS = Instantiate(prefab, pos, Quaternion.identity, parent_TRANS).transform;
         brick_TRANS.localScale = size;
+        brick_TRANS.GetComponent<BO_Brick>().init(color);
         pool.Add(brick_TRANS);
         return brick_TRANS;
     }
@@ -414,7 +421,8 @@ public class BO_GameController : GeneralGameController
 
     public void ToRanLayOneGenBri()
     {
-        gener_brick_bottom(level_cache.Sin_lay_num);
+        if (!level_cache.Using_random_pattern) { gener_brick_bottom(level_cache.Sin_lay_num); }
+        else { gener_brick_bottom_pattern(); }
         animator.SetTrigger(BO_SD.AniNextStepTrigger_str);
     }
 
@@ -438,6 +446,49 @@ public class BO_GameController : GeneralGameController
             instantiate_brick(pos, BO_Setting.IS.Brick_size, BO_RC.IS.Brick_par_TRANS, BO_RC.IS.Brick_prefab,
                 BO_RC.IS.Bricks_pool);
             count++;
+        }
+    }
+
+    private void gener_brick_bottom_pattern(bool ran_pattern = true)
+    {
+        int pattern_index = 0;
+        if (ran_pattern)
+        { 
+            for(int i = 0;i<Pattern_try_num;i++)
+            {
+                pattern_index = UnityEngine.Random.Range(0, BO_DataController.IS.Patterns.Count);
+                if (pattern_check(pattern_index)) { break; }
+            }
+        }
+
+    }
+
+    private bool pattern_check(int index)
+    {
+        BO_BrickPattern pattern = BO_DataController.IS.Patterns[index];
+        if (pattern.Height > bottom_grid_cr.y || pattern.Width > bottom_grid_cr.x) { return false; }
+        int x_ind = UnityEngine.Random.Range(0, bottom_grid_cr.x - pattern.Width + 1);
+        int y_ind = UnityEngine.Random.Range(0, bottom_grid_cr.y - pattern.Height + 1);
+        spawn_pattern(y_ind, x_ind, ref pattern);
+        return true;
+    }
+
+    private void spawn_pattern(int start_r, int start_c, ref BO_BrickPattern pattern)
+    {
+        int g_ind = 0;
+        Vector3 temp_pos = new Vector3();
+        Color color = GeneralMethods.random_color(Brick_alpha);
+        for(int r = 0;r<pattern.Height;r++)
+        {
+            for(int c = 0;c<pattern.Width;c++)
+            {
+                if (!pattern.Binary_pattern[r, c]) { continue; }
+                g_ind = GeneralMethods.index_2d_to_1d(bottom_grid_cr.x, r + start_r, c + start_c);
+                temp_pos = (Vector3)bottom_grid[g_ind];
+                temp_pos.z = Bottom_z;
+                instantiate_brick(temp_pos, BO_Setting.IS.Brick_size, BO_RC.IS.Brick_par_TRANS,
+                    BO_RC.IS.Brick_prefab, BO_RC.IS.Bricks_pool, color: color);
+            }
         }
     }
 
