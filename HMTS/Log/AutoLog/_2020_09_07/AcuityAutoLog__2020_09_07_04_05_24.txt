@@ -1,0 +1,23 @@
+0	start	0	18.70	StaticAcuity
+1	0	1989	-1	Show Acuity	-1	-1
+
+2	0	4823	1	True	left	left
+3	0	6314	-1	Show Acuity	-1	-1
+
+4	0	7920	1	False	right	uple
+5	0	9566	-1	Show Acuity	-1	-1
+6	0	11157	1	True	right	right
+
+7	0	13414	-1	Show Acuity	-1	-1
+8	0	14856	1	True	up	up
+9	0	16463	-1	Show Acuity	-1	-1
+10	0	17854	1	False	dori	left
+
+11	0	19935	-1	Show Acuity	-1	-1
+
+
+
+
+
+
+

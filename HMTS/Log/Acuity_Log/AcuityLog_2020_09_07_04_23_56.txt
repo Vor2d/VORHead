@@ -1,0 +1,43 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	18.00	StaticAcuity
+1	0	2039	-1	Show Acuity	-1	-1
+2	0	3227	1	False	upri	up
+3	0	5008	-1	Show Acuity	-1	-1
+4	0	6284	9	True	upri	upri
+5	0	8495	-1	Show Acuity	-1	-1
+6	0	9771	3	True	up	up
+7	0	11842	-1	Show Acuity	-1	-1
+8	0	13017	2	False	right	up
+9	0	14719	-1	Show Acuity	-1	-1
+10	0	16028	3	True	upri	upri
+11	0	18358	-1	Show Acuity	-1	-1
+12	0	19586	2	False	uple	up
+13	0	21143	-1	Show Acuity	-1	-1
+14	0	22402	3	True	uple	uple
+15	0	24151	-1	Show Acuity	-1	-1
+16	0	25525	2	False	up	right
+17	0	27406	-1	Show Acuity	-1	-1
+18	0	28634	3	True	right	right
+19	0	30174	-1	Show Acuity	-1	-1
+20	0	31499	2	False	dole	up
+21	0	33250	-1	Show Acuity	-1	-1
+22	0	47830	3	False	uple	left
+23	0	49484	-1	Show Acuity	-1	-1
+24	0	50842	3	False	dole	left
+25	0	52366	-1	Show Acuity	-1	-1
+26	0	53531	3	True	up	up
+27	0	55669	-1	Show Acuity	-1	-1
+28	0	56745	3	True	right	right
+29	0	58822	-1	Show Acuity	-1	-1
+30	0	60053	3	True	uple	uple
+31	0	61511	-1	Show Acuity	-1	-1
+32	0	62687	2	False	upri	up
+33	0	64192	-1	Show Acuity	-1	-1
+34	0	66693	3	True	down	down
+35	0	68388	-1	Show Acuity	-1	-1
+36	0	69598	2	False	left	up
+37	0	71614	-1	Show Acuity	-1	-1
+38	0	74382	3	False	down	right
+39	start	0	75956.93	DynamicAcuity
+

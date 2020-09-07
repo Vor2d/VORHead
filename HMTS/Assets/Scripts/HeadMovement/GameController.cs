@@ -180,7 +180,7 @@ public class GameController : GeneralGameController {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
                     curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
                     AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
-                    head_time_counter};
+                    head_time_counter, MLHData.single_repeat_num, MLHData.double_repeat_num};
         }
     }
 
@@ -1543,14 +1543,17 @@ public class GameController : GeneralGameController {
     private (bool, int) MLH_check_stop()
     {
         int[] queue_temp = MLHData.pre_size.ToArray();
-        if(curr_acuity_size == queue_temp[queue_temp.Length-1])
+        if (queue_temp.Length > 0 && curr_acuity_size == queue_temp[queue_temp.Length - 1])
         { MLHData.single_repeat_num++; }
+        else 
+        { MLHData.single_repeat_num = 0; }
         if (MLHData.pre_size.Contains(curr_acuity_size))
         { MLHData.double_repeat_num++; }
         else
         {
+            MLHData.double_repeat_num = 0;
             MLHData.pre_size.Enqueue(curr_acuity_size);
-            if (!(MLHData.pre_size.Count > Pre_size_num)) { MLHData.pre_size.Dequeue(); }
+            while (MLHData.pre_size.Count > Pre_size_num) { MLHData.pre_size.Dequeue(); }
         }
         if (MLHData.single_repeat_num > DataController.IS.SystemSetting.MLHSinRepeatNum)
         { return (true, curr_acuity_size); }

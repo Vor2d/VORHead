@@ -666,4 +666,14 @@ public static class GeneralMethods {
         socket.SendTo(package, endPoint);
         socket.Close();
     }
+
+    public static void print_queue<T>(ref Queue<T> queue)
+    {
+        string res = "";
+        foreach (T item in queue.ToArray())
+        {
+            res += item.ToString() + ", ";
+        }
+        Debug.Log("Queue " + res);
+    }
 }

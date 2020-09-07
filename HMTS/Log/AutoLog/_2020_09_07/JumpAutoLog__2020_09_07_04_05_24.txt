@@ -1,0 +1,35 @@
+Settings: Using_curved_screen True Player_screen_cm 200 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 Camera3_display 2 Camera1FOV 2.2 Camera2FOV 100 Camera3FOV 2.2 MainCameraFOV 179 MCPPI 80.6 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.2 SpeedThreshold 180 StopWinodow 0.03 TargetChangeTime 1 TargetChangeTimeRRange 0 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.08 AcuityChangeNumber 7 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 81 StopSpeed 10.00 PostDelayList 0 PostDelayNumber 5 PostDelayUpC 0.50 PostDelayLoC 0.60 PostDelayConvNum 1 PostDelayRepeatNum 2 PostDelayASOffset 0 DynaDelayRepeatNum 9 DynaStopThresh 1000 SecondHeadSpeed 180 Cam1Angle 0.00 Cam3Angle 30.00RotationScale 0.25 DistScale 5.00 HIOCRange 5760.00 MLHMaxSize 9 MLHSinRepeatNum 3 MLHDouRepeatNum 15 
+19	0	-1	GameMode StaticAcuity HideFlag True JumpFlag False ShowTargetFlag True HeadIndicatorChange False SkipCenterFlag True HideHeadIndicator True Gain 1 UsingAcuityAfter False UsingAcuityBefore False UsingAcuityWaitTime True AcuitySize 8 UsingAcuityChange True CurrAcuityChangeMode MLH UsingPostDelay False PostDelayMode random PostDelayInit 0.00 PostDelayIMax 0.00 ADUsingStaticData False UsingPresetSD False StaticDataSize 0 StaticDataMLH 0.000 UsingDynamicDelay False DynamicDelayMode fix_amount DynaDelayInit 0.000 DynaDelayMax 0.000 DynaDelayInter 0.000 GS False DynaDir 0 DoubleHeadSpeed False 	
+3	148	0	0	ReSet	0.00	0
+4	165	0	0	ShowTarget	0.00	0
+5	1707	0	0	MoveTarget	0.00	1
+6	1738	0	0	ShowTarget	0.00	1
+7	1988	0	0	TargetHided	0.00	1
+8	1990	0	0	ChangeTargetWaitTime	0.00	1
+9	4825	0	0	ShowTarget	0.00	1
+10	6048	0	0	MoveTarget	0.00	1
+11	6081	0	0	ShowTarget	0.00	1
+12	6313	0	0	TargetHided	0.00	1
+13	6313	0	0	ChangeTargetWaitTime	0.00	1
+14	7920	0	0	ShowTarget	0.00	1
+15	9301	0	0	MoveTarget	0.00	1
+16	9334	0	0	ShowTarget	0.00	1
+17	9566	0	0	TargetHided	0.00	1
+18	9566	0	0	ChangeTargetWaitTime	0.00	1
+19	11157	0	0	ShowTarget	0.00	1
+20	13149	0	0	MoveTarget	0.00	1
+21	13182	0	0	ShowTarget	0.00	1
+22	13414	0	0	TargetHided	0.00	1
+23	13414	0	0	ChangeTargetWaitTime	0.00	1
+24	14855	0	0	ShowTarget	0.00	1
+25	16197	0	0	MoveTarget	0.00	1
+26	16230	0	0	ShowTarget	0.00	1
+27	16463	0	0	TargetHided	0.00	1
+28	16464	0	0	ChangeTargetWaitTime	0.00	1
+29	17854	0	0	ShowTarget	0.00	1
+30	19687	0	0	MoveTarget	0.00	1
+31	19719	0	0	ShowTarget	0.00	1
+32	19935	0	0	TargetHided	0.00	1
+33	19936	0	0	ChangeTargetWaitTime	0.00	1
+
+

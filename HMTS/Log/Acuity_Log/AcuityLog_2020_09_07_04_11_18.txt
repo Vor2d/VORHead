@@ -1,0 +1,15 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	18.63	StaticAcuity
+1	0	2014	-1	Show Acuity	-1	-1
+2	0	5937	1	False	up	left
+3	0	7831	-1	Show Acuity	-1	-1
+4	0	12952	9	False	uple	up
+5	0	14933	-1	Show Acuity	-1	-1
+6	0	37698	9	False	dole	up
+7	0	39123	-1	Show Acuity	-1	-1
+8	0	42694	9	True	up	up
+9	0	44633	-1	Show Acuity	-1	-1
+10	0	47732	9	True	dori	dori
+11	start	0	49720.42	DynamicAcuity
+

@@ -100,7 +100,10 @@ public class GameSetting
         this.RotationScale = 1.0f;
         this.DistScale = 1.0f;
         this.HIOCRange = 5760.0f;
-    }
+        this.MLHMaxSize = 9;
+        this.MLHSinRepeatNum = 3;
+        this.MLHDouRepeatNum = 15;
+}
 
     [Obsolete("Not using txt file anymore")]
     public GameSetting(Dictionary<string,string> setting_dict)
