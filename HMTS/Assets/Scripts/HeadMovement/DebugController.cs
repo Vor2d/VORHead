@@ -15,10 +15,10 @@ public class DebugController : MonoBehaviour
     const string VRLST_init_text = "VR Logging: ";    //VRLoggingState init text;
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
-    const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH/AD_LR/AD_RR/HTC" +
+    const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH" +
         "/SRN/DRN): ";
     const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex" +
-        "/TargetAD): ";
+        "/TargetAD/AD_LR/AD_RR/HTC): ";
 
     public bool UsingDebug;
     public GameController GC_script;
@@ -147,9 +147,6 @@ public class DebugController : MonoBehaviour
                                         " / " + (GC_script.AcuityState[3]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[10]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[11]).ToString("F3") +
-                                        " / " + (GC_script.AcuityState[12]).ToString("F0") +
-                                        " / " + (GC_script.AcuityState[13]).ToString("F0") +
-                                        " / " + (GC_script.AcuityState[14]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[15]).ToString() +
                                         " / " + (GC_script.AcuityState[16]).ToString();
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
@@ -157,7 +154,10 @@ public class DebugController : MonoBehaviour
                                 " / " + (GC_script.AcuityState[6]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[7]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[8]).ToString("F0") +
-                                " / " + (GC_script.AcuityState[9]).ToString("F3");
+                                " / " + (GC_script.AcuityState[9]).ToString("F3") +
+                                " / " + (GC_script.AcuityState[12]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[13]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[14]).ToString("F0");
     }
 
     private void eye_test()

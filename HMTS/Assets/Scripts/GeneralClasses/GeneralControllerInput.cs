@@ -25,6 +25,7 @@ public class GeneralControllerInput : MonoBehaviour
     public System.Action Right_act { get; set; }
     public System.Action Left_act { get; set; }
     public System.Action Button5_act { get; set; }
+    public System.Action Button1_act { get; set; }
 
     private void Awake()
     {
@@ -114,6 +115,10 @@ public class GeneralControllerInput : MonoBehaviour
         {
             Button5_act();
         }
+        if (Input.GetKeyDown(KeyCode.JoystickButton1) && Button1_act != null)
+        {
+            Button1_act();
+        }
     }
 
     private void XboxController()
@@ -170,6 +175,11 @@ public class GeneralControllerInput : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.JoystickButton5) && Button5_act != null)
         {
             Button5_act();
+        }
+
+        if (Input.GetKeyDown(KeyCode.JoystickButton1) && Button1_act != null)
+        {
+            Button1_act();
         }
     }
 

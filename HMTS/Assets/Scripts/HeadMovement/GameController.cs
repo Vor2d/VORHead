@@ -300,6 +300,7 @@ public class GameController : GeneralGameController {
         if(DC_script.MSM_script.using_coil)
         {
             GCI_script.Button5_act += check_controller;
+            GCI_script.Button1_act += check_controller;
         }
 
         if (UsingHIOC) 
