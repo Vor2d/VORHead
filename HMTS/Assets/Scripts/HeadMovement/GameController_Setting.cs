@@ -374,14 +374,12 @@ public class GameController_Setting : MonoBehaviour {
 
     public void ToggleReddotButton()
     {
-        if(GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled)
-        {
-            GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
-        }
-        else
-        {
-            GC_script.HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
-        }
+        toggle_red_dot();
+    }
+
+    private void toggle_red_dot()
+    {
+        GameController.IS.toggle_HI();
     }
 
     public void BackToMainMenuButton()

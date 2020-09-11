@@ -155,6 +155,7 @@ public class GameController : GeneralGameController {
     private bool ready_for_controller_flag;
     private bool check_double_speed_flag;
     private bool double_speed_passed_flag;
+    private bool HI_flag;
 
     private static class MLHData
     {
@@ -184,8 +185,11 @@ public class GameController : GeneralGameController {
         }
     }
 
+    public static GameController IS;
+
     private void Awake()
     {
+        IS = this;
     }
 
     // Use this for initialization
@@ -272,6 +276,7 @@ public class GameController : GeneralGameController {
         this.double_speed_passed_flag = false;
         this.CamScale = 1.0f;
         this.AC_results_wrong = new Dictionary<int, int>();
+        this.HI_flag = true;
 
         CamScale = DC_script.SystemSetting.DistScale;
 
@@ -1671,6 +1676,7 @@ public class GameController : GeneralGameController {
         clean_MLH_data();
         AC_results = new Dictionary<int, int>();
         AC_results_wrong = new Dictionary<int, int>();
+        AC_repeat_number = new Vector2Int(-1, -1);
 
         if (UsingAcuity)
         {
@@ -1801,16 +1807,24 @@ public class GameController : GeneralGameController {
         HIOC_TRANS2.GetComponent<HeadIndiOnCanvas>().turn_off_sprite();
     }
 
+    public void toggle_HI()
+    {
+        if (HI_flag) { turn_off_HI(); }
+        else { turn_on_HI(); }
+    }
+
     private void turn_on_HI()
     {
         HeadIndicator.GetComponent<MeshRenderer>().enabled = true;
         if (UsingHIOC) { turn_on_HIOC(); }
+        HI_flag = true;
     }
 
     private void turn_off_HI()
     {
         HeadIndicator.GetComponent<MeshRenderer>().enabled = false;
         if (UsingHIOC) { turn_off_HIOC(); }
+        HI_flag = false;
     }
 
     public void ToHideHeadIndicator()
@@ -2155,7 +2169,8 @@ public class GameController : GeneralGameController {
             update_SS();
             ALS_script.log_acuity(simulink_sample, curr_acuity_size, result.ToString(),
                 acuity_dir.ToString(),GCI_script.Eight_dir_input.ToString());
-            if(DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity)
+            if(DC_script.Current_GM.GameModeName == GameModeEnum.StaticAcuity ||
+                DC_script.Current_GM.GameModeName == GameModeEnum.DynamicAcuity)
             {
                 record_AC(result);
             }
