@@ -1854,7 +1854,7 @@ public class GameController : GeneralGameController {
     {
         float temp_degree_x = list[iter].x;
         turn_deg_x = Mathf.Abs(temp_degree_x);
-        if (temp_degree_x < 0)
+        if (temp_degree_x <= 0)
         {
             turn_dir_x = 0;
         }
