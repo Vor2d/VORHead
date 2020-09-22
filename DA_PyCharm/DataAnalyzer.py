@@ -44,15 +44,15 @@ C_limit1 = -10.0
 C_limit2 = 110.0
 #Wide data trial range
 eye_left = -800
-eye_right = 500
+eye_right = 800
 #Narrow data trial range
 S_eye_left = -200
 S_eye_right = 800
 #Wide data trial speed threshold
 speed_TH = 40
 #Drop out threshold
-Drop_speed = 500.0
-Drop_pos = 40.0
+Drop_speed = 600.0
+Drop_pos = 100.0
 #Subplot info
 subplot_col_num = 3
 #Subplots for all trials
@@ -218,6 +218,7 @@ class Section:
 	def cal_delay_dir(self,mat_data):
 		LDE_RI_TO = {}
 		RDE_RI_TO = {}
+
 		for DR in self.delay_RW:
 			sample = DR[2]
 			stop_sample = self._cal_SD(mat_data,DR)
@@ -523,6 +524,8 @@ class MatData:
 		r_trials = 0
 		for i in range(0,trial_num):
 			trial = source[i,0]
+			if(len(trial) == 0):
+				trial = numpy.zeros((1000,3))
 			if(sum_head is None):
 				sum_head = numpy.transpose([trial[:,0]])
 				sum_eye = numpy.transpose([trial[:,1]])
@@ -794,6 +797,11 @@ def read_file(AF_name, DF_name,sectionN=0):
 				RW = 1 if (strings[4] == "True") else 0
 				section.AZ_RW_dir.append((AZ,RW,strings[5],sample))
 				section.delay_RW.append((last_delay,RW,sample))
+				if(strings[4] == "True" or strings[4] == "False"):
+					try:
+						sample = int(strings[1])
+					except:
+						sample = -1
 			if(AZ == -2):
 				try:
 					last_delay = float(strings[4])
@@ -837,8 +845,8 @@ def read_mat(filename,shift):
 	samples = file['sampleNo']
 	if(shift != 0):
 		samples = samples[:shift]
-	MD.SA_HS_LES_RES = numpy.column_stack((samples,file['head'][0][0][1][:,2],file['leftEye'][0][0][1][:,2],file['rightEye'][0][0][1][:,2]))
-	MD.SA_HP_LEP_REP = numpy.column_stack((samples,file['head'][0][0][0][:,2],file['leftEye'][0][0][0][:,2],file['rightEye'][0][0][0][:,2]))
+	MD.SA_HS_LES_RES = numpy.column_stack((samples,file['head'][0][0]['vel'][:,2],file['leftEye'][0][0]['vel'][:,2],file['rightEye'][0][0]['vel'][:,2]))
+	MD.SA_HP_LEP_REP = numpy.column_stack((samples,file['head'][0][0]['pos'][:,2],file['leftEye'][0][0]['pos'][:,2],file['rightEye'][0][0]['pos'][:,2]))
 	return MD
 
 
@@ -848,8 +856,8 @@ def read_head_mat(matdata,filename,shift):
 	samples = file['sampleNo']
 	if(shift != 0):
 		samples = samples[:shift]
-	matdata.head_SA_HS = numpy.column_stack((samples,file['head'][0][0][1][:,2]))
-	matdata.head_SA_HP = numpy.column_stack((samples,file['head'][0][0][0][:,2]))
+	matdata.head_SA_HS = numpy.column_stack((samples,file['head'][0][0]['vel'][:,2]))
+	matdata.head_SA_HP = numpy.column_stack((samples,file['head'][0][0]['pos'][:,2]))
 	return matdata
 
 
@@ -1804,53 +1812,90 @@ def run_subject(para,sub_index,DY_DL=[], GA_DL=[],plot_detail=False,shift1=0,shi
 	GA_EYSections.append(section6)
 	MatDatas.append(mat_data)
 
+#################################################################################################
+
 #Sub 0
 S_index += 1
-sub_para = ["AcuityLog_2019_08_19_10_20_29.txt",        "AcuityLog_2019_08_19_10_35_08.txt",        "JumpLog__2019_08_19_10_20_29.txt",        "JumpLog__2019_08_19_10_35_08.txt",        "JumpLog__2019_08_19_10_35_08_2.txt",        "AcuityLog_2019_08_19_10_50_10.txt",        "",        "Mdata.mat",        "0",        "MdataH.mat"]
-DY_DL = []
-GA_DL = [17]
+sub_para = ["MFSADA_AD_2020_09_04_02_47_23.txt",
+			"MFTDATGA_AD_2020_09_04_03_20_15.txt",
+			"MFSADA_JD_2020_09_04_02_47_23.txt",
+			"MFTDA_JD_2020_09_04_03_20_15.txt",
+			"MFTGA_JD_2020_09_04_03_51_51.txt",
+			"MFEDTDATGA_AD_2020_09_04_04_15_15.txt",
+			"",
+			"MF_eyedata.mat",
+			"0",
+			"MF_acuitydata.mat"]
+DY_DL = [13]
+GA_DL = [13]
 run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 
 #Sub 1
 S_index += 1
-sub_para = ["AcuityLog_2019_08_30_01_05_31.txt",        "AcuityLog_2019_08_30_01_19_07.txt",        "JumpLog__2019_08_30_01_05_31.txt",        "JumpLog__2019_08_30_01_19_07.txt",        "JumpLog__2019_08_30_01_19_07_2.txt",        "AcuityLog_2019_08_30_01_33_17.txt",        "",        "Qdata.mat",        "0",        "QdataH.mat"]
-DY_DL = [0,5,8,9,10,11,12,13,14,15,16,17,18,19]
-GA_DL = [0,1,2,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19]
-run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
-
+sub_para = ["MWSADA_AD_2020_09_10_03_25_12.txt",
+			"MWTDATGA_AD_2020_09_10_03_30_01.txt",
+			"MWSADA_JD_2020_09_10_03_25_12.txt",
+			"MWTDA_JD_2020_09_10_03_30_01.txt",
+			"MWTGA_JD_2020_09_10_03_44_31.txt",
+			"MWEDTDATGA_AD_2020_09_10_04_32_22.txt",
+			"",
+			"MW_eyedata.mat",
+			"1",
+			"MW_acuitydata.mat"]
+DY_DL = []
+GA_DL = [2,6,8,10,12,14,16,18,20,24,26,28]
+run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 #Sub 2
 S_index += 1
-sub_para = ["AcuityLog_2019_08_30_02_09_54.txt",        "AcuityLog_2019_08_30_02_25_56.txt",        "JumpLog__2019_08_30_02_09_54.txt",        "JumpLog__2019_08_30_02_25_56.txt",        "JumpLog__2019_08_30_02_25_56_2.txt",        "AcuityLog_2019_08_30_02_48_29.txt",        "",        "MIdata.mat",        "0",        "MIdataH.mat"]
-DY_DL = [0]
-GA_DL = [0,7,17]
-run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
-
+sub_para = ["QLSADA_AD_2020_09_12_01_05_06.txt",
+			"QLTDATGA_AD_2020_09_12_12_51_09.txt",
+			"QLSADA_JD_2020_09_12_01_05_06.txt",
+			"QLTDA_JD_2020_09_12_12_51_09.txt",
+			"QLTGA_JD_2020_09_12_01_08_21.txt",
+			"QLEDTDATGA_AD_2020_09_12_01_36_34.txt",
+			"",
+			"QL_eyedata.mat",
+			"0",
+			"QL_acuitydata.mat"]
+DY_DL = [7,11,16,18]
+GA_DL = [0,1,2,4,5,7,9,10,11,12,13,15,16,17,18,20,21,22,23,24,25,26,27,28,29]
+run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 #Sub 3
 S_index += 1
-sub_para = ["AcuityLog_2019_08_30_03_30_50.txt",            "AcuityLog_2019_08_30_03_55_04.txt",            "JumpLog__2019_08_30_03_30_50.txt",            "JumpLog__2019_08_30_03_55_04.txt",            "JumpLog__2019_08_30_03_55_04_2.txt",            "AcuityLog_2019_08_30_04_11_56.txt",            "",            "S1data.mat",            "1",            "S1dataH.mat"]
-DY_DL = [7,10]
-GA_DL = [0,7,8,9,10,11]
-run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
-
+sub_para = ["CZSADA_AD_2020_09_12_02_46_52.txt",
+			"CZTDATGA_AD_2020_09_12_02_52_16.txt",
+			"CZSADA_JD_2020_09_12_02_46_52.txt",
+			"CZTDA_JD_2020_09_12_03_36_11.txt",
+			"CZTGA_JD_2020_09_12_03_43_58.txt",
+			"CZEDTDATGA_AD_2020_09_12_03_36_11.txt",
+			"",
+			"CZ_eyedata.mat",
+			"0",
+			"CZ_acuitydata.mat"]
+DY_DL = [19,31,41]
+GA_DL = [0,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,29]
+run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 #Sub 4
 S_index += 1
-sub_para = ["AcuityLog_2019_09_18_05_23_42.txt",            "AcuityLog_2019_09_18_05_36_44.txt",            "JumpLog__2019_09_18_05_23_42.txt",            "JumpLog__2019_09_18_05_36_44.txt",            "JumpLog__2019_09_18_05_36_44_2.txt",            "AcuityLog_2019_09_18_05_53_13.txt",            "",            "Hdata.mat",            "0",            "HdataH.mat"]
-DY_DL = []
-GA_DL = [0,2,5,8,10,11,12,13,14,16,17,18]
-run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
+sub_para = ["HXSADA_AD_2020_09_17_03_26_56.txt",
+			"HXTDATGA_AD_2020_09_17_03_30_38.txt",
+			"HXSADA_JD_2020_09_17_03_26_56.txt",
+			"HXTDA_JD_2020_09_17_04_05_53.txt",
+			"HXTGA_JD_2020_09_17_04_08_55.txt",
+			"HXEDTDATGA_AD_2020_09_17_04_05_53.txt",
+			"",
+			"HX_eyedata.mat",
+			"1",
+			"HX_acuitydata.mat"]
+DY_DL = [22]
+GA_DL = [0,1,2,3,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,26]
+run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
-
-#Sub 5
-S_index += 1
-sub_para = ["AcuityLog_2019_10_18_01_43_44.txt",            "AcuityLog_2019_10_18_01_59_54.txt",            "JumpLog__2019_10_18_01_43_44.txt",            "JumpLog__2019_10_18_01_59_54.txt",            "JumpLog__2019_10_18_01_59_54_2.txt",            "AcuityLog_2019_10_18_02_22_03.txt",            "",            "Cdata.mat",            "0",            "CdataH.mat"]
-DY_DL = [2]
-GA_DL = [0,15,16,18]
-run_subject(sub_para,S_index,DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True,shift2 = -1)
-
+#################################################################################################
 
 def plot_fit(x_data,popt,index,lab_mode=0):
 	x_data = np.arange(x_data[0],x_data[-1],fit_precise)
@@ -2231,6 +2276,10 @@ class TotalMean:
 				popt = []
 				for k in x_data:
 					y_data.append(DSs.AZ_percent[k])
+				if(len(x_data) == 1):
+					self.da_fit_total[count] = [0,0,0]
+					count += 1
+					continue
 				try:
 					popt,pcov = curve_fit(sigmoid3, x_data, y_data)
 					self.da_total_dict[count] = self._total_TH_cal(popt,x_data)
@@ -2360,6 +2409,9 @@ class TotalMean:
 				sample.append(x)
 				temp = []
 				for sec in sections:
+					if(not (x in sec.delay_percent)):
+						temp.append(1.0)
+						continue
 					temp.append(sec.delay_percent[x])
 				temp.sort()
 				sample.append(temp[int(len(temp) * quant_low)])
@@ -2425,6 +2477,9 @@ class TotalMean:
 				sample.append(x)
 				temp = []
 				for sec in StaticSections:
+					if(not (x in sec.AZ_percent)):
+						temp.append(1.0)
+						continue
 					temp.append(sec.AZ_percent[x])
 				temp.sort()
 				sample.append(temp[int(len(temp) * quant_low)])
@@ -2533,6 +2588,8 @@ class TotalMean:
 			min_d = 100.0
 			max_d = -100.0
 			for sub in self.sa_total_dict.keys():
+				if(not(sub in self.da_total_dict)):
+					continue
 				x_data.append(self.sa_total_dict[sub])
 				da = self.da_total_dict[sub]
 				y_data.append(da)
@@ -3333,7 +3390,7 @@ def do_total_mean():
 	total_mean.total_plot()
 	total_mean.quant_plot()
 	total_mean.plot_subjects(mode = 0)
-	total_mean.plot_static_dynamic_fit(2)
+	#total_mean.plot_static_dynamic_fit(2)
 	total_mean.subplot_static_dynamic_fit()
 	return total_mean
 
