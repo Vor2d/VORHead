@@ -7,6 +7,8 @@ using System;
 /// </summary>
 public class ParentDataController : MonoBehaviour {
 
+    private const string Andoid_setting_path = "/sdcard/VOR/";
+
     //Customize it for each data controller;
     public string setting_file_name = "Setting.json";
     public string setting_path = "";
@@ -26,9 +28,19 @@ public class ParentDataController : MonoBehaviour {
         init_DC();
     }
 
+    protected virtual void detect_Android()
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            setting_path = Andoid_setting_path;
+        }
+    }
+
     public virtual void init_DC()
     {
         PDC_ID = Guid.NewGuid();
+
+        detect_Android();
 
         GameObject temp_SM_OBJ = GameObject.Find(GeneralStrDefiner.SceneManagerGO_name);
         if(temp_SM_OBJ != null)

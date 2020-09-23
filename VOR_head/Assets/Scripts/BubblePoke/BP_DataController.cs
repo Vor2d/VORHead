@@ -11,19 +11,12 @@ public class BP_DataController : ParentDataController
     public BP_GameMode GameMode = BP_GameMode.Random;
     public BP_TrailInfo trial_info { get; set; }
 
-    private void Awake()
-    {
-        DontDestroyOnLoad(this);
-    }
-
     // Use this for initialization
     void Start () {
-        init_DC();
-
         this.trial_info = new BP_TrailInfo();
         if (GameMode == BP_GameMode.UsingFile)
         {
-            read_data_fromfile(file_path);
+            read_data_fromfile(setting_path + file_path);
         }
     }
 	

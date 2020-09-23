@@ -54,7 +54,7 @@ public class MD_DataController : ParentDataController
 
         if (ReadDataFromFile)
         {
-            load_game_data_file(game_data_path);
+            load_game_data_file(setting_path + game_data_path);
             parse_variables();
         }
 
