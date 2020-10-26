@@ -40,6 +40,7 @@ public class DebugController : MonoBehaviour
     public bool UsingEyeSimulator;
     public Text AcuityState_Text;
     public Text AcuityDelay_Text;
+    public Text AcuityDelay_Text2;
     public Camera camera1;
     public Camera camera2;
     public Camera camera3;
@@ -158,6 +159,7 @@ public class DebugController : MonoBehaviour
                                 " / " + (GC_script.AcuityState[12]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[13]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[14]).ToString("F0");
+        AcuityDelay_Text2.text = GC_script.MLHState;
     }
 
     private void eye_test()

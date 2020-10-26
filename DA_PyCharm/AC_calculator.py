@@ -15,8 +15,8 @@ import math
 size_data = numpy.array(range(1,100))
 
 H_reso = 1920.0 #Horizontal resolution
-p_dist = 900.0 #player distance (mm)
-s_width = 20.0 #screen width (mm)
+p_dist = 1500.0 #player distance (mm)
+s_width = 110.0 #screen width (mm)
 DegPArcm = 1.0/60.0
 #FeetsPArcm = 20.0
 

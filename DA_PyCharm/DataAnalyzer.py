@@ -15,22 +15,22 @@ from scipy.io import loadmat
 
 # In[2]:
 
-pyplot.rcParams["figure.figsize"] = (6,6)
+pyplot.rcParams["figure.figsize"] = (9,9)
 pyplot.rcParams["figure.dpi"] = 300
-pyplot.rcParams["font.size"] = 8
+pyplot.rcParams["font.size"] = 14
 
 LogToFile = True
 
 
 # In[3]:
 
-xlab1 = "Optotype logMAR"
+xlab1 = "Optotype Size (LogMAR)"
 xlab2 = "Time (seconds) from start of head-turn"
 xlab3 = "Time (seconds) from head completely stops"
 xlab4 = "Simulink samples"
 xlab5 = "StaticAcuity"
 xlab6 = "Time (milliseconds)"
-ylab1 = "Acuity correctness percentage"
+ylab1 = "Success Rate (%)"
 ylab2 = "Orientation (degrees)"
 ylab3 = "Speed (degrees/second)"
 ylab5 = "DynamicAcuity"
@@ -70,12 +70,13 @@ logistic_base = 0.125
 fit_precise = 0.001
 quant_low = 0.25
 quant_high = 0.75
-logMAR = [-0.16939196,0.3077292,0.52957791,0.52957791,0.67570581,0.67570581,0.7848501,0.7848501,\
-		0.87200005,0.87200005,0.94455045,0.94455045]
+logMAR = [-0.182, -0.036, 0.072, 0.232, 0.294, 0.397, 0.516,\
+		  0.610, 0.709, 0.808, 0.903, 1.016]
 Z_90_confi = 1.960
 Percent_rat = 100.0
 AC_threshold = (1.0 + 0.125) / 2.0 * Percent_rat
-DL_threshold = 7.0 / 9.0 * Percent_rat
+#DL_threshold = 7.0 / 9.0 * Percent_rat
+DL_threshold = (1.0 + 0.125) / 2.0 * Percent_rat
 
 
 # In[5]:
@@ -101,7 +102,7 @@ def common_legend(fig,axs,pos = "upper right"):
 		handles.extend(handle)
 		labels.extend(label)
 	if(pos == "self"):
-		fig.legend(handles, labels, bbox_to_anchor=(1.2, 1.0), loc = "upper right")
+		fig.legend(handles, labels, bbox_to_anchor=(1.2, 0.9), loc = "upper right")
 	else:
 		fig.legend(handles, labels, loc=pos)
 
@@ -422,6 +423,10 @@ class MatData:
 			matrix2 = matrix2.transpose()
 			if(invert):
 				matrix2 *= -1
+				# Method to shift the Gaze-shift position data
+				matrix2 -= matrix2[-1,-1]
+				matrix2[:,1] = numpy.array([self.SA_HP_LEP_REP[int(T_start):int(T_end), self.eye_index + 2]]) * -1
+				# End
 			if(sectionN == 0):
 				self.DYTR_HP_EP_GPs.append([matrix2,left,trial_index])
 			elif(sectionN == 1):
@@ -943,7 +948,7 @@ def plot_delay_dir(section,title):
 	y_data = []
 	for x in x_data:
 		y_data.append(section.delay_percent[x] * Percent_rat)
-	tpl0 = plotplot(x_data,y_data,"Total",C_limit1,C_limit2)
+	tpl0 = plotplot(x_data,y_data,"Both Sides",C_limit1,C_limit2)
 
 	x_data = sorted(section.Ldelay_percent.keys())
 	y_data = []
@@ -1017,23 +1022,23 @@ def plot_eye_trial(trial,realtime = True):
 
 	y_data = trial[:,0]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'red',label = labels[0])
+		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[0])
 	else:
-		tpl, = plot(x_data,y_data,color= 'red',label = labels[0])
+		tpl, = plot(x_data,y_data,color= 'green',label = labels[0])
 	tpls.append(tpl)
 
 	y_data = trial[:,1]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[1])
+		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[1])
 	else:
-		tpl, = plot(x_data,y_data,color = 'green',label = labels[1])
+		tpl, = plot(x_data,y_data,color = 'blue',label = labels[1])
 	tpls.append(tpl)
 
 	y_data = trial[:,2]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[2])
+		tpl, = plot(x_data_real,y_data,color= 'orange',label = labels[2])
 	else:
-		tpl, = plot(x_data,y_data,color = 'blue',label = labels[2])
+		tpl, = plot(x_data,y_data,color = 'orange',label = labels[2])
 	tpls.append(tpl)
 
 	return tpls
@@ -1050,23 +1055,23 @@ def plot_eye_trial_pos(trial,realtime = True):
 
 	y_data = trial[:,0]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'red',label = labels[0])
+		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[0])
 	else:
-		tpl, = plot(x_data,y_data,color= 'red',label = labels[0])
+		tpl, = plot(x_data,y_data,color= 'green',label = labels[0])
 	tpls.append(tpl)
 
 	y_data = trial[:,1]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'green',label = labels[1])
+		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[1])
 	else:
-		tpl, = plot(x_data,y_data,color = 'green',label = labels[1])
+		tpl, = plot(x_data,y_data,color = 'blue',label = labels[1])
 	tpls.append(tpl)
 
 	y_data = trial[:,2]
 	if(realtime):
-		tpl, = plot(x_data_real,y_data,color= 'blue',label = labels[2])
+		tpl, = plot(x_data_real,y_data,color= 'orange',label = labels[2])
 	else:
-		tpl, = plot(x_data,y_data,color = 'blue',label = labels[2])
+		tpl, = plot(x_data,y_data,color = 'orange',label = labels[2])
 	tpls.append(tpl)
 
 	return tpls
@@ -1106,6 +1111,7 @@ def plot_eye(mat_data,dir_mode,title = "",sectionN=0,oneplot = False):
 		pyplot.title("Rotation Speed Data")
 		if(not oneplot):
 			pyplot.savefig(SavePath + title + str(index) + "Speed_HeadEye" + ".png",dpi = 300)
+			#pyplot.show()
 			pyplot.clf()
 		index += 1
 	if(oneplot):
@@ -1322,7 +1328,7 @@ def plot_eye_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,spe
 		pyplot.ylabel(ylab2)
 	else:
 		pyplot.ylabel(ylab3)
-	pyplot.legend(handles = tpls)
+	pyplot.legend(handles = tpls, fontsize = "small")
 	pyplot.savefig(SavePath + title + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
@@ -1542,9 +1548,9 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		for x in x_data:
 			ratio_x_data.append(x * 1000.0 + start)
 		axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
-		axes[0,0].plot(ratio_x_data,y_data,label = "percentage",color = "red")
+		axes[0,0].plot(ratio_x_data,y_data,label = "ACP",color = "red")
 		axes[0,0].set_ylim(C_limit1,C_limit2)
-		axes[0,0].set_ylabel("percentage")
+		axes[0,0].set_ylabel("ACP")
 	else:
 		#dot
 		sub_num = section.sub_index
@@ -1564,7 +1570,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		ratio_x_data2 = x_data2 * 1000.0 + start
 		axes[0,0].plot(ratio_x_data2,y_data2,label = "logistic curve",color = "red")
 		axes[0,0].set_ylim(C_limit1,C_limit2)
-		axes[0,0].set_ylabel("percentage")
+		axes[0,0].set_ylabel("ACP")
 
 	for rx in ratio_x_data:
 		axes[0,0].axvline(x=rx,color = "black")
@@ -1634,7 +1640,7 @@ def plot_SD_percent3(section,title,S_index=0):
 	x_data_S = x_data * SD_range / 1000.0
 	for x in x_data:
 		y_data.append(section.SD_percent[x][2] * Percent_rat)
-	tpls.append(plot_SD_percent(x_data_S,y_data,"Total"))
+	tpls.append(plot_SD_percent(x_data_S,y_data,"Both Sides"))
 
 	y_data = []
 	x_data = numpy.asarray(list(section.LSD_percent.keys()))
@@ -1880,6 +1886,22 @@ GA_DL = [0,2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,28,2
 run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
 
 #Sub 4
+S_index += 1
+sub_para = ["ABSADA_AD_2020_09_17_01_40_58.txt",
+			"ABTDATGA_AD_2020_09_17_01_50_36.txt",
+			"ABSADA_JD_2020_09_17_01_40_58.txt",
+			"HXTDA_JD_2020_09_17_04_05_53.txt",
+			"ABTGA_JD_2020_09_17_02_12_23.txt",
+			"ABEDTDATGA_AD_2020_09_17_02_40_04.txt",
+			"",
+			"AB_eyedata.mat",
+			"0",
+			"AB_acuitydata.mat"]
+DY_DL = []
+GA_DL = [0,1,3,4,5,7,8,10,11,13,14,16,19,24,28]
+run_subject(sub_para,S_index, DY_DL = DY_DL, GA_DL = GA_DL, plot_detail = True)
+
+#Sub 5
 S_index += 1
 sub_para = ["HXSADA_AD_2020_09_17_03_26_56.txt",
 			"HXTDATGA_AD_2020_09_17_03_30_38.txt",
@@ -2298,7 +2320,7 @@ class TotalMean:
 			for DDSs in sections:
 				x_data = sorted(numpy.asarray(list(DDSs.delay_percent.keys())))
 				for x in x_data:
-					if(DDSs.delay_percent[x] >= DL_threshold):
+					if(DDSs.delay_percent[x] * Percent_rat >= DL_threshold):
 						self.dda_total_dict[count] = x
 						break
 				if not count in self.dda_total_dict:
@@ -2309,6 +2331,7 @@ class TotalMean:
 				x_data = sorted(numpy.asarray(list(DGSs.delay_percent.keys())))
 				y_data = []
 				popt = []
+				"""
 				#Threshold
 				for x in x_data:
 					if(DGSs.delay_percent[x] >= DL_threshold):
@@ -2316,6 +2339,7 @@ class TotalMean:
 						break
 				if not count in self.dga_total_dict:
 					self.dga_total_dict[count] = x_data[-1]
+				"""
 				#Fit
 				for x in x_data:
 					y_data.append(DGSs.delay_percent[x])
@@ -2328,6 +2352,15 @@ class TotalMean:
 					except Exception as e:
 						print("fit error !!! ",mode, " | ",count, " | ",e)
 				self.dga_fit_total[count] = popt
+				for tempx in numpy.arange(0.0,1.0,fit_precise):
+					tempy = sigmoid3(tempx,*(popt))
+					print("!!!!!!!!!!!! "+str(tempx)+" "+str(tempy))
+					if(tempy * Percent_rat >= DL_threshold):
+						print("@@@@@@@@@@@@@@@@ " + str(tempx) + " " + str(tempy))
+						self.dga_total_dict[count] = tempx
+						break
+				if not count in self.dga_total_dict:
+					self.dga_total_dict[count] = x_data[-1]
 				count += 1
 		elif(mode == 4): #From stop
 			for DDSs in sections:
@@ -3117,7 +3150,7 @@ class TotalMean:
 			pyplot.legend(handles=tpls)
 			pyplot.xlabel(xlab2)
 			pyplot.ylabel(ylab1)
-			pyplot.title("Temporal Gaze-shist Acuity Logisic Curve")
+			pyplot.title("Temporal Gaze-shift Acuity Logistic Curve")
 			pyplot.savefig(SavePath + str(counter) + "_GazeshiftACuityFit" + ".png",dpi = 300)
 			#pyplot.show()
 			pyplot.clf()
@@ -3191,7 +3224,7 @@ class TotalMean:
 				index += 1
 		common_legend(fig,[axes[0,0]], pos = "self")
 		common_axes(fig,xlab1,ylab1)
-		pyplot.suptitle("Comparison of Static Acuity and Dynamic Acuity of Healthy Group")
+		pyplot.suptitle("Comparison of Static Acuity and Dynamic Acuity")
 		pyplot.savefig(SavePath + "SD_subplotall" + ".png",dpi = 300, bbox_inches="tight")
 		#pyplot.show()
 		pyplot.clf()
@@ -3321,7 +3354,7 @@ class TotalMean:
 
 		labels = ["Head","Eye","Gaze"]
 		labels2 = ["Head 95% confidence","Eye 95% confidence","Gaze 95% confidence"]
-		colors = ["Red","Green","Blue"]
+		colors = ["green","blue","orange"]
 
 		x_data = numpy.array(range(0,sam_num))
 		x_data = x_data / SS_Ratio * 1000.0
@@ -3352,29 +3385,29 @@ class TotalMean:
 
 	def HE_mean_plot(self):
 		self._head_eye_mean_plot(self.HE_mean_DAP,\
-			title = "Healthy Group TDVA Mean Orientation Data",speed = False)
+			title = "TDVA Mean Orientation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_LDAP,\
-			title = "Healthy Group TDVA Left Side Mean Orientation Data",speed = False)
+			title = "TDVA Left Side Mean Orientation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_RDAP,\
-			title = "Healthy Group TDVA Right Side Mean Orientation Data",speed = False)
+			title = "TDVA Right Side Mean Orientation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_DAS,\
-			title = "Healthy Group TDVA Mean Speed Data",speed = True)
+			title = "TDVA Mean Speed Data",speed = True)
 		self._head_eye_mean_plot(self.HE_mean_LDAS,\
-			title = "Healthy Group TDVA Left Side Mean Speed Data",speed = True)
+			title = "TDVA Left Side Mean Speed Data",speed = True)
 		self._head_eye_mean_plot(self.HE_mean_RDAS,\
-			title = "Healthy Group TDVA Right Side Mean Speed Data",speed = True)
+			title = "TDVA Right Side Mean Speed Data",speed = True)
 		self._head_eye_mean_plot(self.HE_mean_GAP,\
-			title = "Healthy Group TGVA Mean Orienation Data",speed = False)
+			title = "TGVA Mean Orienation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_LGAP,\
-			title = "Healthy Group TGVA Left Side Mean Orientation Data",speed = False)
+			title = "TGVA Left Side Mean Orientation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_RGAP,\
-			title = "Healthy Group TGVA Right Side Mean Orientation Data",speed = False)
+			title = "TGVA Right Side Mean Orientation Data",speed = False)
 		self._head_eye_mean_plot(self.HE_mean_GAS,\
-			title = "Healthy Group TGVA Mean Speed Data",speed = True)
+			title = "TGVA Mean Speed Data",speed = True)
 		self._head_eye_mean_plot(self.HE_mean_LGAS,\
-			title = "Healthy Group TGVA Left Side Mean Speed Data",speed = True)
+			title = "TGVA Left Side Mean Speed Data",speed = True)
 		self._head_eye_mean_plot(self.HE_mean_RGAS,\
-			title = "Healthy Group TGVA Right Side Mean Speed Data",speed = True)
+			title = "TGVA Right Side Mean Speed Data",speed = True)
 
 
 # In[43]:
@@ -3484,7 +3517,7 @@ def mix_plot():
 	pyplot.legend(handles=[line])
 	pyplot.xlabel(xlab2)
 	pyplot.ylabel(ylab1)
-	pyplot.title("Healthy Group Temporal Dynamic Acuity")
+	pyplot.title("Temporal Dynamic Acuity")
 	pyplot.savefig(SavePath + "DynamicDelayMix" + ".png",dpi = 300)
 	#pyplot.title("Dynamic Delay")
 	#pyplot.show()
@@ -3582,7 +3615,7 @@ def mix_plot():
 	pyplot.legend(handles=[line])
 	pyplot.xlabel(xlab2)
 	pyplot.ylabel(ylab1)
-	pyplot.title("Healthy Group Gaze-shift Acuity Logistic Curves")
+	pyplot.title("Gaze-shift Acuity Logistic Curves")
 	pyplot.savefig(SavePath + "Gazeshift Acuity Fit" + ".png",dpi = 300)
 	#pyplot.show()
 	pyplot.clf()
