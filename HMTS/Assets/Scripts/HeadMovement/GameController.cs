@@ -6,6 +6,7 @@ using UnityEngine.XR;
 using UnityEngine.SceneManagement;
 using HMTS_enum;
 using System.Linq;
+using Accord.Collections;
 
 public class GameController : GeneralGameController {
 
@@ -147,9 +148,7 @@ public class GameController : GeneralGameController {
     private int head_time_counter;
     private System.Diagnostics.Stopwatch head_timer;
     private int last_AC_size;
-    private bool head_left;
-    private bool MLH_left_stop_flag;
-    private bool MLH_right_stop_flag;
+    private int MLH_first;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -163,6 +162,9 @@ public class GameController : GeneralGameController {
     private bool check_double_speed_flag;
     private bool double_speed_passed_flag;
     private bool HI_flag;
+    private bool head_left;
+    private bool MLH_left_stop_flag;
+    private bool MLH_right_stop_flag;
 
     private static class MLHData
     {
@@ -180,11 +182,12 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear()
+        public static void clear(int first)
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
             pre_size = new Queue<int>();
+            first = 0;
         }
     }
 
@@ -204,11 +207,12 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear()
+        public static void clear(int first)
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
             pre_size = new Queue<int>();
+            first = 0;
         }
     }
 
@@ -228,11 +232,12 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear()
+        public static void clear(int first)
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
             pre_size = new Queue<int>();
+            first = 0;
         }
     }
 
@@ -372,6 +377,7 @@ public class GameController : GeneralGameController {
         this.head_left = false;
         this.MLH_left_stop_flag = false;
         this.MLH_right_stop_flag = false;
+        this.MLH_first = 0;
 
 
         CamScale = DC_script.SystemSetting.DistScale;
@@ -1298,9 +1304,11 @@ public class GameController : GeneralGameController {
 
     private int DD_dynamic_change_AC()
     {
+        MLH_first++;
         if (DC_script.Current_GM.DynamicDelayMode == DynamicDelayModes.MLH && !DC_script.Current_GM.GS)
         {
             curr_acuity_size = MLH_actuiy_cal();
+            if (MLH_first <= 2 && curr_acuity_size < 9) { curr_acuity_size++; }
             set_acuity_size(curr_acuity_size);
         }
         return curr_acuity_size;
@@ -1308,7 +1316,7 @@ public class GameController : GeneralGameController {
 
     private void DD_gs_change_AC(bool left)
     {
-        if(DC_script.Current_GM.DynamicDelayMode == DynamicDelayModes.MLH && DC_script.Current_GM.GS)
+        if (DC_script.Current_GM.DynamicDelayMode == DynamicDelayModes.MLH && DC_script.Current_GM.GS)
         {
             if (left) { DD_MLH_change(true); }
             else { DD_MLH_change(false); }
@@ -1317,16 +1325,18 @@ public class GameController : GeneralGameController {
 
     private int DD_MLH_change(bool left)
     {
+        MLH_first++;
         curr_acuity_size = MLH_actuiy_cal_dir(left);
+        if (MLH_first <= 2 && curr_acuity_size < 9) { curr_acuity_size++; }
         set_acuity_size(curr_acuity_size);
         return curr_acuity_size;
     }
 
     private void DD_clear_MLH()
     {
-        MLHData.clear();
-        MLHLeftData.clear();
-        MLHRightData.clear();
+        MLHData.clear(MLH_first);
+        MLHLeftData.clear(MLH_first);
+        MLHRightData.clear(MLH_first);
         AC_results.Clear();
         AC_results_wrong.Clear();
         AC_left_results.Clear();
@@ -1706,7 +1716,9 @@ public class GameController : GeneralGameController {
 
     private bool MLH_change_acuity()
     {
+        MLH_first++;
         curr_acuity_size = MLH_actuiy_cal();
+        if (MLH_first <= 2 && curr_acuity_size < 9) { curr_acuity_size++; }
         set_acuity_size(curr_acuity_size);
         (bool, int) res = MLH_check_stop();
         if (res.Item1)
@@ -1934,7 +1946,7 @@ public class GameController : GeneralGameController {
         AD_right_right = 0;
         acuity_right_num = 0;
         acuity_wrong_num = 0;
-        MLHData.clear();
+        MLHData.clear(MLH_first);
         DD_clear_MLH();
         AC_results = new Dictionary<int, int>();
         AC_results_wrong = new Dictionary<int, int>();
