@@ -30,7 +30,7 @@ xlab3 = "Time (seconds) from head completely stops"
 xlab4 = "Simulink samples"
 xlab5 = "StaticAcuity"
 xlab6 = "Time (milliseconds)"
-ylab1 = "Success Rate (%)"
+ylab1 = "Accuracy of the Responses (%)"
 ylab2 = "Orientation (degrees)"
 ylab3 = "Speed (degrees/second)"
 ylab5 = "DynamicAcuity"
@@ -1548,9 +1548,9 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		for x in x_data:
 			ratio_x_data.append(x * 1000.0 + start)
 		axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
-		axes[0,0].plot(ratio_x_data,y_data,label = "ACP",color = "red")
+		axes[0,0].plot(ratio_x_data,y_data,label = "AOR",color = "red")
 		axes[0,0].set_ylim(C_limit1,C_limit2)
-		axes[0,0].set_ylabel("ACP")
+		axes[0,0].set_ylabel("AOR")
 	else:
 		#dot
 		sub_num = section.sub_index
@@ -1562,7 +1562,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		for x in x_data:
 			ratio_x_data.append(x * 1000.0 + start)
 		axes[0,0].axhline(y = AC_threshold,color = "black",linestyle = "dashed")
-		axes[0,0].scatter(ratio_x_data,y_data,label = "ACP")
+		axes[0,0].scatter(ratio_x_data,y_data,label = "AOR")
 		#curve
 		popt = TM.dga_fit_total[sub_num]
 		x_data2 = numpy.arange(x_data[0],x_data[-1],(x_data[-1] - x_data[0])*fit_precise)
@@ -1570,7 +1570,7 @@ def subplot_mean(mat_data,section,sectionN,dir_mode,title = "",confi = True,fit 
 		ratio_x_data2 = x_data2 * 1000.0 + start
 		axes[0,0].plot(ratio_x_data2,y_data2,label = "logistic curve",color = "red")
 		axes[0,0].set_ylim(C_limit1,C_limit2)
-		axes[0,0].set_ylabel("ACP")
+		axes[0,0].set_ylabel("AOR")
 
 	for rx in ratio_x_data:
 		axes[0,0].axvline(x=rx,color = "black")
