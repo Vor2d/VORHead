@@ -38,7 +38,6 @@ public class GameMode
     public float DynaDelayMax { get; set; }
     public float DynaDelayInter { get; set; }
     public int DynaDir { get; set; }    //0: no dir; 1: left; 2: right;
-     
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -254,7 +253,7 @@ public class GameMode
                 }
             }
         }
-        catch { DynamicDelayMode = DynamicDelayModes.fix_amount; }
+        catch { DynamicDelayMode = DynamicDelayModes.MLH; }
         try { DynaDelayInit = float.Parse(para_dict["DynaDelayInit"]); }
         catch { DynaDelayInit = 0.0f; }
         try { DynaDelayMax = float.Parse(para_dict["DynaDelayMax"]); }

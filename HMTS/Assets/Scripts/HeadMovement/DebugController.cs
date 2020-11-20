@@ -16,7 +16,7 @@ public class DebugController : MonoBehaviour
     const string JLS_init_text = "Jump Logging: ";    //JumpLoggingState init text;
     const string LTN_init_text = "Loop and Trial and Section Iterator: ";
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH" +
-        "/SRN/DRN): ";
+        "/SRN/DRN/q0/q1): ";
     const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex" +
         "/TargetAD/AD_LR/AD_RR/HTC): ";
 
@@ -149,7 +149,9 @@ public class DebugController : MonoBehaviour
                                         " / " + (GC_script.AcuityState[10]).ToString("F0") +
                                         " / " + (GC_script.AcuityState[11]).ToString("F3") +
                                         " / " + (GC_script.AcuityState[15]).ToString() +
-                                        " / " + (GC_script.AcuityState[16]).ToString();
+                                        " / " + (GC_script.AcuityState[16]).ToString() +
+                                        " / " + (GC_script.AcuityState[17]).ToString() +
+                                        " / " + (GC_script.AcuityState[18]).ToString();
         AcuityDelay_Text.text = AcuityDelay_init_text + (GC_script.AcuityState[4]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[5]).ToString("F3") +
                                 " / " + (GC_script.AcuityState[6]).ToString("F0") +

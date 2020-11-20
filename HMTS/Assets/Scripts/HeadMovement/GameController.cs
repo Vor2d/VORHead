@@ -258,7 +258,9 @@ public class GameController : GeneralGameController {
             return new List<float>() { acuity_change_index, acuity_right_num, acuity_wrong_num,
                     curr_acuity_size,A_delay_index,curr_A_delay,A_delay_right,AD_converge_index,
                     AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
-                    head_time_counter, MLHData.single_repeat_num, MLHData.double_repeat_num};
+                    head_time_counter, MLHData.single_repeat_num, MLHData.double_repeat_num,
+                    (MLHData.pre_size != null && MLHData.pre_size.Count >= 1) ? MLHData.pre_size.ToArray()[0] : -1,
+                    (MLHData.pre_size != null && MLHData.pre_size.Count >= 2) ? MLHData.pre_size.ToArray()[1] : -1};
         }
     }
 
@@ -273,7 +275,11 @@ public class GameController : GeneralGameController {
                 "|MLS " + MLHLeftData.single_repeat_num.ToString() +
                 "|MLD " + MLHLeftData.double_repeat_num.ToString() +
                 "|MRS " + MLHRightData.single_repeat_num.ToString() +
-                "|MRD " + MLHRightData.double_repeat_num.ToString();
+                "|MRD " + MLHRightData.double_repeat_num.ToString() +
+                "|Lq1 " + ((MLHLeftData.pre_size != null && MLHLeftData.pre_size.Count >= 1) ? MLHLeftData.pre_size.ToArray()[0] : -1).ToString() +
+                "|Lq2 " + ((MLHLeftData.pre_size != null && MLHLeftData.pre_size.Count >= 2) ? MLHLeftData.pre_size.ToArray()[1] : -1).ToString() +
+                "|Rq1 " + ((MLHRightData.pre_size != null && MLHRightData.pre_size.Count >= 1) ? MLHRightData.pre_size.ToArray()[0] : -1).ToString() +
+                "|Rq2 " + ((MLHRightData.pre_size != null && MLHRightData.pre_size.Count >= 2) ? MLHRightData.pre_size.ToArray()[1] : -1).ToString();
 
         }
     }
@@ -1283,7 +1289,7 @@ public class GameController : GeneralGameController {
     private bool DD_MLH_judge()
     {
         (bool, int) temp_res = (false, 0);
-        if (!DC_script.Current_GM.GS)
+        if (DC_script.Current_GM.GS)
         {
             if (head_left)
             {
@@ -1740,7 +1746,7 @@ public class GameController : GeneralGameController {
         else
         {
             MLHData.double_repeat_num = 0;
-            MLHData.pre_size.Enqueue(curr_acuity_size);
+            //MLHData.pre_size.Enqueue(curr_acuity_size);
         }
         if (queue_temp.Length == 0 || curr_acuity_size != queue_temp[queue_temp.Length - 1])
         {
@@ -1766,7 +1772,7 @@ public class GameController : GeneralGameController {
         else
         {
             MLHLeftData.double_repeat_num = 0;
-            MLHLeftData.pre_size.Enqueue(curr_acuity_size);
+            //MLHLeftData.pre_size.Enqueue(curr_acuity_size);
         }
         if (queue_temp.Length == 0 || curr_acuity_size != queue_temp[queue_temp.Length - 1])
         {
@@ -1792,7 +1798,7 @@ public class GameController : GeneralGameController {
         else
         {
             MLHRightData.double_repeat_num = 0;
-            MLHRightData.pre_size.Enqueue(curr_acuity_size);
+            //MLHRightData.pre_size.Enqueue(curr_acuity_size);
         }
         if (queue_temp.Length == 0 || curr_acuity_size != queue_temp[queue_temp.Length - 1])
         {
