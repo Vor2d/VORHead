@@ -246,14 +246,14 @@ public class GameMode
             string[] temp_enums = Enum.GetNames(typeof(DynamicDelayModes));
             for (int i = 0; i < temp_enums.Length; i++)
             {
-                if (para_dict["DynamicDelayModes"] == temp_enums[i])
+                if (para_dict["DynamicDelayMode"] == temp_enums[i])
                 {
                     DynamicDelayMode = (DynamicDelayModes)i;
                     break;
                 }
             }
         }
-        catch { DynamicDelayMode = DynamicDelayModes.MLH; }
+        catch { DynamicDelayMode = DynamicDelayModes.fix_amount; }
         try { DynaDelayInit = float.Parse(para_dict["DynaDelayInit"]); }
         catch { DynaDelayInit = 0.0f; }
         try { DynaDelayMax = float.Parse(para_dict["DynaDelayMax"]); }

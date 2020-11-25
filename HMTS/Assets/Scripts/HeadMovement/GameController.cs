@@ -182,7 +182,7 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear(int first)
+        public static void clear(ref int first)
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
@@ -207,12 +207,11 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear(int first)
+        public static void clear()
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
             pre_size = new Queue<int>();
-            first = 0;
         }
     }
 
@@ -232,12 +231,11 @@ public class GameController : GeneralGameController {
             return res;
         }
 
-        public static void clear(int first)
+        public static void clear()
         {
             single_repeat_num = 0;
             double_repeat_num = 0;
             pre_size = new Queue<int>();
-            first = 0;
         }
     }
 
@@ -1310,9 +1308,9 @@ public class GameController : GeneralGameController {
 
     private int DD_dynamic_change_AC()
     {
-        MLH_first++;
         if (DC_script.Current_GM.DynamicDelayMode == DynamicDelayModes.MLH && !DC_script.Current_GM.GS)
         {
+            MLH_first++;
             curr_acuity_size = MLH_actuiy_cal();
             if (MLH_first <= 2 && curr_acuity_size < 9) { curr_acuity_size++; }
             set_acuity_size(curr_acuity_size);
@@ -1340,9 +1338,9 @@ public class GameController : GeneralGameController {
 
     private void DD_clear_MLH()
     {
-        MLHData.clear(MLH_first);
-        MLHLeftData.clear(MLH_first);
-        MLHRightData.clear(MLH_first);
+        MLHData.clear(ref MLH_first);
+        MLHLeftData.clear();
+        MLHRightData.clear();
         AC_results.Clear();
         AC_results_wrong.Clear();
         AC_left_results.Clear();
@@ -1830,7 +1828,7 @@ public class GameController : GeneralGameController {
             L = 1.0f;
             for (int k = 0; k < max_size_p1; k++)
             {
-                L *= Mathf.Pow(lgit[k], get_ac_result(k)) *
+                L *= Mathf.Pow(lgit[k], get_ac_result(k, wrong: false)) *
                     Mathf.Pow(1 - lgit[k], get_ac_result(k, wrong: true));
             }
             if (L > Lmax)
@@ -1859,7 +1857,7 @@ public class GameController : GeneralGameController {
             L = 1.0f;
             for (int k = 0; k < max_size_p1; k++)
             {
-                L *= Mathf.Pow(lgit[k], get_ac_result(k, left)) *
+                L *= Mathf.Pow(lgit[k], get_ac_result(k, left, wrong: false)) *
                     Mathf.Pow(1 - lgit[k], get_ac_result(k, left, wrong: true));
             }
             if (L > Lmax)
@@ -1952,7 +1950,7 @@ public class GameController : GeneralGameController {
         AD_right_right = 0;
         acuity_right_num = 0;
         acuity_wrong_num = 0;
-        MLHData.clear(MLH_first);
+        MLHData.clear(ref MLH_first);
         DD_clear_MLH();
         AC_results = new Dictionary<int, int>();
         AC_results_wrong = new Dictionary<int, int>();

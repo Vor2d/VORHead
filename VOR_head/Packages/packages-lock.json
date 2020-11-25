@@ -54,25 +54,25 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.visualstudio": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.ide.vscode": {
-      "version": "1.2.1",
+      "version": "1.2.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.multiplayer-hlapi": {
-      "version": "1.0.4",
+      "version": "1.0.6",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "nuget.mono-cecil": "0.1.5-preview"
+        "nuget.mono-cecil": "0.1.6-preview"
       },
       "url": "https://packages.unity.com"
     },
@@ -84,7 +84,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.purchasing": {
-      "version": "2.1.0",
+      "version": "2.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -100,7 +100,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
-      "version": "1.1.16",
+      "version": "1.1.18",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -163,7 +163,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.xr.oculus": {
-      "version": "1.4.3",
+      "version": "1.5.0",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -173,7 +173,7 @@
       "url": "https://packages.unity.com"
     },
     "nuget.mono-cecil": {
-      "version": "0.1.5-preview",
+      "version": "0.1.6-preview",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
