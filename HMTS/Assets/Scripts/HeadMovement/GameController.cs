@@ -1043,7 +1043,12 @@ public class GameController : GeneralGameController {
 
     private IEnumerator show_acuity(float delay_time,float time_dure, bool jump_next)
     {
-        yield return new WaitForSeconds(delay_time);
+        float timer = 0.0f;
+        while(timer < delay_time)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
         if (!show_acuity_flag)
         {
             show_acuity_flag = true;
