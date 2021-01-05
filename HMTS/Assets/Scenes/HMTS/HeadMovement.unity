@@ -8030,8 +8030,8 @@ MonoBehaviour:
   DebugTarget_TRANS: {fileID: 701531087}
   DebugTargetDegree: {x: 0, y: 0, z: 0}
   RealToVirtualTest: {x: 0, y: 0, z: 0}
-  RealToVirtualTest_Text: {fileID: 1786479961}
-  Debug_taget_Text: {fileID: 1960040912}
+  UnralatedTest1_Text: {fileID: 1786479961}
+  UnralatedTest2_Text: {fileID: 1960040912}
   Headrr_Text: {fileID: 1756674525}
   State_Text: {fileID: 1709506306}
   VRLoggingState_Text: {fileID: 1424569859}
@@ -13150,12 +13150,12 @@ GameObject:
   - component: {fileID: 1786479962}
   - component: {fileID: 1786479961}
   m_Layer: 5
-  m_Name: RealToVirtualTest_Text
+  m_Name: Test1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1786479961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13176,7 +13176,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -13187,7 +13187,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: RealToVirtualTest_Text
+  m_Text: Test1
 --- !u!222 &1786479962
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13212,7 +13212,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: -450, y: -200}
+  m_AnchoredPosition: {x: -453, y: -231}
   m_SizeDelta: {x: 550, y: 100}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &1806064470
@@ -14346,12 +14346,12 @@ GameObject:
   - component: {fileID: 1960040913}
   - component: {fileID: 1960040912}
   m_Layer: 5
-  m_Name: Debug_taget_Text
+  m_Name: Test2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1960040912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14372,7 +14372,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 20
+    m_FontSize: 16
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -14383,7 +14383,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Debug_taget_Text
+  m_Text: Test2
 --- !u!222 &1960040913
 CanvasRenderer:
   m_ObjectHideFlags: 0

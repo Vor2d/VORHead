@@ -30,8 +30,8 @@ public class DebugController : MonoBehaviour
     public Transform DebugTarget_TRANS;
     public Vector3 DebugTargetDegree;
     public Vector3 RealToVirtualTest;
-    public Text RealToVirtualTest_Text;
-    public Text Debug_taget_Text;
+    public Text UnralatedTest1_Text;
+    public Text UnralatedTest2_Text;
     public Text Headrr_Text;
     public Text State_Text;
     public Text VRLoggingState_Text;
@@ -77,6 +77,13 @@ public class DebugController : MonoBehaviour
         show_info();
 
         debug_group();
+
+        Unralated_test1();
+    }
+
+    private void FixedUpdate()
+    {
+        Unralated_test2();
     }
 
     private void LateUpdate()
@@ -87,46 +94,34 @@ public class DebugController : MonoBehaviour
         }
     }
 
+    private void Unralated_test1()
+    {
+        UnralatedTest1_Text.text = "Update_rate: " + (1.0f / Time.deltaTime).ToString("F4");
+    }
+
+    private void Unralated_test2()
+    {
+        UnralatedTest2_Text.text = "FixedUpdate_rate: " + (1.0f / Time.fixedDeltaTime).ToString("F4");
+    }
+
     private void init_debug()
     {
         if (UsingDebug)
         {
-            //GC_script.test1();
+
         }
     }
 
     private void gener_text1()
     {
-        string DT1 = "";
-        //DT1 += camera1.transform.eulerAngles.ToString("F4");
-        //DT1 += camera2.transform.eulerAngles.ToString("F4");
-        //DT1 += camera3.transform.eulerAngles.ToString("F4");
-        //DebugText1.text = DT1;
 
-        DT1 = "";
-        DT1 += target_TRANS.position.ToString("F4");
-        DT1 += HeadIndicator_TRANS.position.ToString("F4");
-        DebugText1.text = DT1;
-
-        //foreach (string text in text1Hash.Values)
-        //{
-        //    DebugText1.text += text;
-        //}
     }
 
     private void debug_group()
     {
         if (UsingDebug)
         {
-            string text2 = "";
-            foreach (string ds in GameController.Debug_str)
-            {
-                text2 += ds + "////";
-            }
-            //DebugTMP2.text = text2;
-            //DebugTMP1.text = GC_script.back_cal().ToString("F3");
 
-            gener_text1();
         }
     }
 
