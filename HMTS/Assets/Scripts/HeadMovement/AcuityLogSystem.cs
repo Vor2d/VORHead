@@ -105,4 +105,9 @@ public class AcuityLogSystem : GeneralLogSystem
         log_acuity(simulink_sample, -2, delay.ToString("F2"),"-1","-1");
     }
 
+    public void log_acuity_off(uint simulink_sample)
+    {
+        log_acuity(simulink_sample, -3, "-1", "-1", "-1");
+    }
+
 }

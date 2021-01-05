@@ -149,6 +149,10 @@ public class GameController : GeneralGameController {
     private System.Diagnostics.Stopwatch head_timer;
     private int last_AC_size;
     private int MLH_first;
+    private float show_acuity_delay_timer;
+    private float show_acuity_delay_time;
+    private float show_acuity_timer;
+    private float show_acuity_time;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -165,6 +169,9 @@ public class GameController : GeneralGameController {
     private bool head_left;
     private bool MLH_left_stop_flag;
     private bool MLH_right_stop_flag;
+    private bool show_acuity_FU_flag;
+    private bool show_actuiy_delay_flag;
+    private bool jump_next;
 
     private static class MLHData
     {
@@ -382,6 +389,13 @@ public class GameController : GeneralGameController {
         this.MLH_left_stop_flag = false;
         this.MLH_right_stop_flag = false;
         this.MLH_first = 0;
+        this.show_acuity_FU_flag = false;
+        this.show_actuiy_delay_flag = false;
+        this.show_acuity_delay_timer = 0.0f;
+        this.show_acuity_delay_time = 0.0f;
+        this.show_acuity_timer = 0.0f;
+        this.show_acuity_time = 0.0f;
+        this.jump_next = false;
 
 
         CamScale = DC_script.SystemSetting.DistScale;
@@ -500,15 +514,37 @@ public class GameController : GeneralGameController {
             target_change_timer -= Time.deltaTime;
         }
 
-        if(check_double_speed_flag)
+    }
+
+    private void FixedUpdate()
+    {
+        Fixed_check_speed();
+        Fixed_check_double_speed();
+        show_acuity_normal_delay();
+        show_acuity_normal();
+    }
+
+    private void Fixed_check_speed()
+    {
+        check_speed_no_window();
+    }
+
+    private void Fixed_check_double_speed()
+    {
+        if (check_double_speed_flag)
         {
             head_speed_y = CD_script.currentHeadVelocity.z;
-            if(Math.Abs(head_speed_y) >= DC_script.SystemSetting.SecondHeadSpeed)
+            if (Math.Abs(head_speed_y) >= DC_script.SystemSetting.SecondHeadSpeed)
             {
                 double_speed_passed_flag = true;
                 check_double_speed_flag = false;
             }
         }
+    }
+
+    private void Fixed_show_acuity()
+    {
+
     }
 
     private void adjust_camera()
@@ -819,7 +855,7 @@ public class GameController : GeneralGameController {
     {
         //Debug.Log("center " + center_rotatey);
 
-        check_speed_no_window();
+        //check_speed_no_window();
 
         //check_border();
     }
@@ -906,7 +942,6 @@ public class GameController : GeneralGameController {
         head_timer.Start();
         speed_passed_flag = true;
         Check_speed_flag = false;
-        //Debug.Log("speed_passed !!!!!!");
         update_SS();
         JLS_script.log_action(simulink_sample, trial_iter, "head_turned", 0.0f, 0);
 
@@ -920,11 +955,15 @@ public class GameController : GeneralGameController {
             //tar_script.turn_off_all_tmesh();
             if(DC_script.Current_GM.UsingDynamicDelay)
             {
-                StartCoroutine(show_acuity(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
+                //StartCoroutine(show_acuity_coro(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
+                start_show_acuity_normal_FU(curr_A_delay, DC_script.SystemSetting.AcuityFlashTime,
+                    false);
             }
             else
             {
-                StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime, false));
+                //StartCoroutine(show_acuity(DC_script.SystemSetting.AcuityFlashTime, false));
+                start_show_acuity_normal_FU(0.0f, DC_script.SystemSetting.AcuityFlashTime,
+                    false);
             }
             GCAnimator.SetTrigger("NextStep");
         }
@@ -978,7 +1017,7 @@ public class GameController : GeneralGameController {
             {
                 if(DC_script.Current_GM.UsingPostDelay)
                 {
-                    StartCoroutine(show_acuity(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, true));
+                    StartCoroutine(show_acuity_coro(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, true));
                 }
                 else
                 {
@@ -1041,7 +1080,7 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private IEnumerator show_acuity(float delay_time,float time_dure, bool jump_next)
+    private IEnumerator show_acuity_coro(float delay_time,float time_dure, bool jump_next)
     {
         float timer = 0.0f;
         while(timer < delay_time)
@@ -1064,6 +1103,74 @@ public class GameController : GeneralGameController {
             }
             show_acuity_flag = false;
             ready_for_controller_flag = true;
+        }
+    }
+
+    private void start_show_acuity_normal_FU(float delay_time, float time_dure, bool _jump_next)
+    {
+        show_acuity_delay_time = delay_time;
+        show_acuity_time = time_dure;
+        jump_next = _jump_next;
+        start_show_acuity_normal_delay();
+    }
+
+    private void start_show_acuity_normal_delay()
+    {
+        show_acuity_flag = false;
+        show_actuiy_delay_flag = true;
+        show_acuity_delay_timer = 0.0f;
+    }
+
+    private void start_show_acuity_normal()
+    {
+        tar_script.turn_off_all_tmesh();
+        update_SS();
+        ALS_script.log_acuity_delay(simulink_sample, show_acuity_delay_time);
+        acuity_dir = turn_on_acuity();
+        show_acuity_flag = true;
+        show_acuity_timer = 0.0f;
+    }
+
+    private void show_acuity_normal_delay()
+    {
+        if (show_actuiy_delay_flag) 
+        {
+            if(show_acuity_delay_timer < show_acuity_delay_time)
+            {
+                show_acuity_delay_timer += Time.fixedDeltaTime;
+                return;
+            }
+            else
+            {
+                show_acuity_delay_timer = 10000.0f;
+                show_actuiy_delay_flag = false;
+                start_show_acuity_normal();
+            }
+        }
+    }
+
+    private void show_acuity_normal()
+    {
+        if (show_acuity_flag)
+        {
+            if(show_acuity_timer < show_acuity_time)
+            {
+                show_acuity_timer += Time.fixedDeltaTime;
+                return;
+            }
+            else
+            {
+                show_acuity_timer = 10000.0f;
+                update_SS();
+                ALS_script.log_acuity_off(simulink_sample);
+                turn_off_AG();
+                if (jump_next)
+                {
+                    GCAnimator.SetTrigger("NextStep");
+                }
+                ready_for_controller_flag = true;
+                show_acuity_flag = false;
+            }
         }
     }
 
