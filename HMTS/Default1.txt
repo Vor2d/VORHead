@@ -1,0 +1,8 @@
+GameMode	StaticAcuity
+AcuitySize	8
+UsingAcuityChange	True
+AcuityChangeMode	MLH
+________________________________
+-1
+0	0
+______________________________

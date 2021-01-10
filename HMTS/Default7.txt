@@ -1,0 +1,18 @@
+GameMode	DynamicAcuity
+AcuitySize	8
+UsingAcuityChange	True
+AcuityChangeMode	MLH
+DynaDir	1
+________________________________
+-1
+0	0
+________________________________
+GameMode	DynamicAcuity
+AcuitySize	8
+UsingAcuityChange	True
+AcuityChangeMode	MLH
+DynaDir	2
+________________________________
+-1
+0	0
+________________________________

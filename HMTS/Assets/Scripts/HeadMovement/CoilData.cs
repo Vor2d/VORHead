@@ -15,6 +15,8 @@ public class CoilData : MonoBehaviour {
     public Vector2 Right_eye_voltage { get; set; }
     public float[] Raw_data { get; set; }
 
+    [SerializeField] private float test_head_speed;
+
     //static information;
     private const int port = 5123;
     private static IPAddress addr;
@@ -54,13 +56,28 @@ public class CoilData : MonoBehaviour {
 
         if(DC_script.using_coil)
         {
+            stopListening = false;
             RCThread = new Thread(read_coil);
             RCThread.Start();
         }
+
+        //Test;
+        ////////////////////////////////
+        stopListening = true;
+        ////////////////////////////////
+    }
+
+    private void Update()
+    {
+        //Test;
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        if (Input.GetKey(KeyCode.L)) { currentHeadVelocity = new Vector3(0.0f, 0.0f, 200.0f); }
+        else { currentHeadVelocity = Vector3.zero; }
+        ///////////////////////////////////////////////////////////////////////////////////////////
     }
 
 
-	private void read_coil()
+    private void read_coil()
 	{
 		try
 		{

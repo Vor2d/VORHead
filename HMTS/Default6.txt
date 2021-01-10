@@ -1,0 +1,15 @@
+GameMode	DynamicAcuity
+AcuitySize	5
+UsingAcuityChange	False
+AcuityChangeMode	acuity_list
+UsingDynamicDelay	True
+DynamicDelayMode	fix_amount
+DynaDelayInit	0.0
+DynaDelayMax	0.72
+DynaDelayInter	0.08
+GS	True
+________________________________
+-1
+0	0
+0	0
+________________________________
