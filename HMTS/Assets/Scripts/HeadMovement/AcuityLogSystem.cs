@@ -16,7 +16,7 @@ public class AcuityLogSystem : GeneralLogSystem
         this.first_line = _first_line;
     }
 
-    protected override void logging()
+    protected override void Logging()
     {
         while (thread_state_flag) { Thread.Sleep(100); }
 

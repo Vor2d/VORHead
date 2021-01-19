@@ -34,7 +34,7 @@ public class VRLogSystem : GeneralLogSystem
         this.DC_script = GameObject.Find("DataController").GetComponent<DataController>();
     }
 
-    protected override void logging()
+    protected override void Logging()
     {
         log_headset();
     }

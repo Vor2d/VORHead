@@ -24,7 +24,7 @@ public class GeneralLogSystem : MonoBehaviour
     protected double total_time;
     protected int line_counter;
     protected string head_line;
-    private Thread LOG_Thread;
+    protected Thread LOG_Thread;
 
     protected virtual void Start()
     {
@@ -92,13 +92,13 @@ public class GeneralLogSystem : MonoBehaviour
         }
         thread_state_flag = true;
         Debug.Log("Start Logging LOG!! "+LogTypeName);
-        LOG_Thread = new Thread(logging);
+        LOG_Thread = new Thread(Logging);
         LOG_Thread.Start();
     }
 
-    protected virtual void logging()
+    protected virtual void Logging()
     {
-        Debug.Log("Logging!!!!");
+        Debug.Log("Logging!!!!, need to be overrided");
     }
 
     public void turn_off_Thread()
@@ -123,8 +123,8 @@ public class GeneralLogSystem : MonoBehaviour
         try
         {
             thread_state_flag = false;
-            // attempt to join for 500ms
-            if (!LOG_Thread.Join(2000))
+            // attempt to join for 2000ms
+            if (!LOG_Thread.Join(3000))
             {
                 // force shutdown
                 LOG_Thread.Abort();

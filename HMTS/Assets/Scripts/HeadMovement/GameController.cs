@@ -153,7 +153,9 @@ public class GameController : GeneralGameController {
     private float show_acuity_delay_time;
     private float show_acuity_timer;
     private float show_acuity_time;
-    private System.Diagnostics.Stopwatch test_watch;
+    private long test_last_time;
+    private long test_new_time;
+    private List<long> test_time_list;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -397,9 +399,11 @@ public class GameController : GeneralGameController {
         this.show_acuity_timer = 0.0f;
         this.show_acuity_time = 0.0f;
         this.jump_next = false;
-        this.test_watch = new System.Diagnostics.Stopwatch();
+        this.test_last_time = 0;
+        this.test_new_time = 0;
+        this.test_time_list = new List<long>();
 
-        test_watch.Start();
+        TestTimer.Test_watch.Start();
 
 
         CamScale = DC_script.SystemSetting.DistScale;
@@ -517,11 +521,16 @@ public class GameController : GeneralGameController {
         {
             target_change_timer -= Time.deltaTime;
         }
+    }
 
+    private void LateUpdate()
+    {
+        
     }
 
     private void FixedUpdate()
     {
+        test_time_list.Add(TestTimer.Test_watch.ElapsedMilliseconds);
         Fixed_check_speed();
         Fixed_check_double_speed();
         show_acuity_normal_delay();
@@ -897,7 +906,6 @@ public class GameController : GeneralGameController {
     {
         if(Check_speed_flag)
         {
-            Debug.Log("000000000 " + test_watch.ElapsedMilliseconds);
             if (DC_script.using_coil)
             {
                 head_speed_y = CD_script.currentHeadVelocity.z;
@@ -910,10 +918,10 @@ public class GameController : GeneralGameController {
             if (head_speed_y > 0) { head_left = true; }
             if (Mathf.Abs(head_speed_y) > DC_script.SystemSetting.SpeedThreshold)
             {
+                HeadLogSystem.IS.Add_game_state("Speed passed");
                 if(DC_script.Current_GM.GameModeName == GameModeEnum.DynamicAcuity)
                 {
-                    Debug.Log("1111111 " + test_watch.ElapsedMilliseconds);
-                    if(!DC_script.Current_GM.GS)
+                    if (!DC_script.Current_GM.GS)
                     {
                         if((DC_script.Current_GM.DynaDir == 1) && head_speed_y < 0)
                         {
@@ -932,6 +940,7 @@ public class GameController : GeneralGameController {
                 speed_passed(speed: head_speed_y);
                 return;
             }
+            
         }
 
         if (ray_cast_scrip.hit_border_flag && !speed_passed_flag)
@@ -940,7 +949,6 @@ public class GameController : GeneralGameController {
             Debug.Log("hit_border_flag");
             GCAnimator.SetTrigger("Reset");
         }
-
     }
 
     private void speed_passed(float speed = 0.0f)
@@ -950,21 +958,17 @@ public class GameController : GeneralGameController {
         Check_speed_flag = false;
         update_SS();
         JLS_script.log_action(simulink_sample, trial_iter, "head_turned", 0.0f, 0);
-        Debug.Log("22222222 " + test_watch.ElapsedMilliseconds);
 
         if(DC_script.Current_GM.DoubleHeadSpeed)
         {
             check_double_speed_flag = true;
         }
-        Debug.Log("333333333 " + test_watch.ElapsedMilliseconds);
         DD_gs_change_AC(head_left);
-        Debug.Log("444444444 " + test_watch.ElapsedMilliseconds);
         if (DC_script.Current_GM.UsingAcuityBefore)
         {
             //tar_script.turn_off_all_tmesh();
             if(DC_script.Current_GM.UsingDynamicDelay)
             {
-                Debug.Log("555555555 " + test_watch.ElapsedMilliseconds);
                 //StartCoroutine(show_acuity_coro(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
                 start_show_acuity_normal_FU(curr_A_delay, DC_script.SystemSetting.AcuityFlashTime,
                     false);
@@ -1043,16 +1047,15 @@ public class GameController : GeneralGameController {
 
     private AcuityGroup.AcuityDirections turn_on_acuity()
     {
+        HeadLogSystem.IS.Add_game_state("Show acuity");
         AcuityGroup.AcuityDirections dir = AcuityGroup.AcuityDirections.up;
         int count = 0;
-        Debug.Log("888888888 " + test_watch.ElapsedMilliseconds);
         foreach (AcuityGroup AGS in AGS_list)
         {
             if (count == 0) { dir = AGS.turn_on_acuity(true); }
             else { AGS.turn_on_acuity(false, def_dir: dir); }
             count++;
         }
-        Debug.Log("9999999999 " + test_watch.ElapsedMilliseconds);
         return dir;
     }
 
@@ -1156,7 +1159,6 @@ public class GameController : GeneralGameController {
             {
                 show_acuity_delay_timer = 10000.0f;
                 show_actuiy_delay_flag = false;
-                Debug.Log("77777777 " + test_watch.ElapsedMilliseconds);
                 start_show_acuity_normal();
             }
         }

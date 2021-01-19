@@ -1,5 +1,0 @@
-0	start	0	18.36	StaticAcuity
-1	0	1987	-1	Show Acuity	-1	-1
-
-
-

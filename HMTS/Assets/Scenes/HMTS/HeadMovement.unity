@@ -3087,6 +3087,7 @@ GameObject:
   - component: {fileID: 370484278}
   - component: {fileID: 370484279}
   - component: {fileID: 370484280}
+  - component: {fileID: 370484281}
   m_Layer: 0
   m_Name: LogSystem
   m_TagString: Untagged
@@ -3187,6 +3188,23 @@ MonoBehaviour:
   LogTypeName: AcuityLog
   UsingSharedTime: 1
   LS_script: {fileID: 370484279}
+--- !u!114 &370484281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370484274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9450e3553a2769c428c3664d4de3a874, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  path: Log/Head_Log/
+  LogTypeName: HeadLog
+  UsingSharedTime: 0
+  LS_script: {fileID: 370484279}
+  log_head: 1
 --- !u!1 &376125429
 GameObject:
   m_ObjectHideFlags: 0
@@ -4585,6 +4603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1bf90f5fdb2ffd49873ac9856d8c152, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test_head_speed: 0
 --- !u!1 &501720793
 GameObject:
   m_ObjectHideFlags: 0
