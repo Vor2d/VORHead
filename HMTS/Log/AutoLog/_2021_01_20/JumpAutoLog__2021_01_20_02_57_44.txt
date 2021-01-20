@@ -1,0 +1,10 @@
+Settings: Using_curved_screen True Player_screen_cm 180 Screen_width_cm 121 Camera1_display 0 Camera2_display 1 Camera3_display 2 Camera1FOV 2.2 Camera2FOV 100 Camera3FOV 2.2 MainCameraFOV 150 MCPPI 80.6 GazeTime 1.5 RandomGazeTime 0.5 HideTime 0.2 SpeedThreshold 20 StopWinodow 0.03 TargetChangeTime 1 TargetChangeTimeRRange 0 UseAcuityIndicator True AcuityMode 1 AcuityFlashTime 0.08 AcuityChangeNumber 10 AcuityChangeUpPerc 0.8 AcuityChangeDownPerc 0.5 ACuityList 90 StopSpeed 10.00 PostDelayList 0 PostDelayNumber 5 PostDelayUpC 0.50 PostDelayLoC 0.60 PostDelayConvNum 1 PostDelayRepeatNum 2 PostDelayASOffset 0 DynaDelayRepeatNum 9 DynaStopThresh 7 SecondHeadSpeed 150 Cam1Angle 0.00 Cam3Angle 180.00RotationScale 1.00 DistScale 5.00 HIOCRange 5160.00 MLHMaxSize 9 MLHSinRepeatNum 3 MLHDouRepeatNum 15 
+7	0	-1	GameMode DynamicAcuity HideFlag False JumpFlag False ShowTargetFlag True HeadIndicatorChange True SkipCenterFlag True HideHeadIndicator False Gain 1 UsingAcuityAfter False UsingAcuityBefore True UsingAcuityWaitTime False AcuitySize 2 UsingAcuityChange False CurrAcuityChangeMode acuity_list UsingPostDelay False PostDelayMode random PostDelayInit 0.00 PostDelayIMax 0.00 ADUsingStaticData False UsingPresetSD False StaticDataSize 0 StaticDataMLH 0.000 UsingDynamicDelay True DynamicDelayMode MLH DynaDelayInit 0.000 DynaDelayMax 0.720 DynaDelayInter 0.080 GS False DynaDir 1 DoubleHeadSpeed True 	
+3	136	0	0	ReSet	0.00	0
+4	142	0	0	ShowTarget	0.00	0
+5	1512	0	0	MoveTarget	0.00	0
+6	1526	0	0	ShowTarget	0.00	0
+7	3438	0	0	head_turned	0.00	0
+8	3597	0	0	head_stop	0.00	0
+
+

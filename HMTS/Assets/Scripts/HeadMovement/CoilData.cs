@@ -63,7 +63,7 @@ public class CoilData : MonoBehaviour {
 
         //Test;
         ////////////////////////////////
-        stopListening = true;
+        //stopListening = true;
         ////////////////////////////////
     }
 
@@ -71,9 +71,9 @@ public class CoilData : MonoBehaviour {
     {
         //Test;
         ////////////////////////////////////////////////////////////////////////////////////////////
-        if (Input.GetKey(KeyCode.L)) { currentHeadVelocity = new Vector3(0.0f, 0.0f, 200.0f); }
-        else { currentHeadVelocity = Vector3.zero; }
-        if (Input.GetKeyDown(KeyCode.L)) { Debug.Log("----------- " + TestTimer.Test_watch.ElapsedMilliseconds); }
+        //if (Input.GetKey(KeyCode.L)) { currentHeadVelocity = new Vector3(0.0f, 0.0f, 200.0f); }
+        //else { currentHeadVelocity = Vector3.zero; }
+        //if (Input.GetKeyDown(KeyCode.L)) { Debug.Log("----------- " + TestTimer.Test_watch.ElapsedMilliseconds); }
         ///////////////////////////////////////////////////////////////////////////////////////////
     }
 

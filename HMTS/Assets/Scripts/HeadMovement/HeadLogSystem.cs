@@ -10,8 +10,9 @@ public class HeadLogSystem : GeneralLogSystem
 {
     [SerializeField] private bool log_head;
 
-    private const string _first_line = "Line_#\tSimulink_Sample\tHead_speedx\tHead_speedy\tHead_speedz";
+    private const string _first_line = "Line_#\tSimulink_Sample\tHead_speedx\tHead_speedy\tHead_speedz\tTimer";
     private bool logging_flag;
+    private System.Diagnostics.Stopwatch sW;
 
     public static HeadLogSystem IS;
 
@@ -21,6 +22,7 @@ public class HeadLogSystem : GeneralLogSystem
 
         this.first_line = _first_line;
         this.logging_flag = false;
+        this.sW = new System.Diagnostics.Stopwatch();
     }
 
     // Start is called before the first frame update
@@ -45,6 +47,7 @@ public class HeadLogSystem : GeneralLogSystem
 
     public void Start_log()
     {
+        sW.Start();
         logging_flag = true;
     }
 
@@ -70,6 +73,8 @@ public class HeadLogSystem : GeneralLogSystem
         Log_SB.Append(head_speed.y.ToString("F2"));
         Log_SB.Append("\t");
         Log_SB.Append(head_speed.z.ToString("F2"));
+        Log_SB.Append("\t");
+        Log_SB.Append(sW.ElapsedMilliseconds.ToString());
         Log_SB.AppendLine();
     }
 

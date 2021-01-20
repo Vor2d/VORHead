@@ -102,7 +102,7 @@ public class AcuityGroup : MonoBehaviour
     }
 
     public virtual AcuityDirections turn_on_acuity(bool random_rotate,
-                                        AcuityDirections def_dir = AcuityDirections.up)
+                        AcuityDirections def_dir = AcuityDirections.up)
     {
         AcuityDirections dir = AcuityDirections.up;
         if (random_rotate)
@@ -114,6 +114,11 @@ public class AcuityGroup : MonoBehaviour
             dir = rotate(false, def_dir: def_dir);
         }
         turn_on_BG();
+        try
+        {
+            NetReciever.IS.WriteToArduino("Hi");
+        }
+        catch (System.Exception e) { Debug.Log(e); }
         AcuitySprite_TRANS.gameObject.SetActive(true);
         return dir;
     }
