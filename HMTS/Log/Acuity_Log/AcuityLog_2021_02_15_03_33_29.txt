@@ -1,0 +1,13 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	11.57	DynamicAcuity
+1	0	2237	-2	0.00	-1	-1
+2	0	2315	-3	-1	-1	-1
+3	0	6556	2	False	dori	upri
+4	0	14573	-2	0.00	-1	-1
+5	0	14652	-3	-1	-1	-1
+6	0	18220	9	True	right	right
+7	0	36318	-2	0.00	-1	-1
+8	0	36540	-3	-1	-1	-1
+9	0	39019	4	False	up	upri
+

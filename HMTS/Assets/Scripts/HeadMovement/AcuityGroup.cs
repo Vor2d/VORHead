@@ -16,7 +16,8 @@ public class AcuityGroup : MonoBehaviour
     [SerializeField] protected Transform AcuityIndi_TRANS;
     [SerializeField] protected Controller_Input CI_script;
     [SerializeField] protected GeneralControllerInput GCI_script;
-
+    [SerializeField] protected Transform WhiteSquare_TRANS;
+    
     protected bool AI_start_flag;
     protected GameController.AcuityMode acuity_mode;
     protected DataController DC_script;
@@ -84,6 +85,17 @@ public class AcuityGroup : MonoBehaviour
         turn_off_AI();
         turn_off_AS();
         turn_off_BG();
+        turn_off_WS();
+    }
+
+    protected void turn_off_WS()
+    {
+        WhiteSquare_TRANS.gameObject.SetActive(false);
+    }
+
+    protected void turn_on_WS()
+    {
+        WhiteSquare_TRANS.gameObject.SetActive(true);
     }
 
     public void turn_on_AG()
@@ -118,14 +130,20 @@ public class AcuityGroup : MonoBehaviour
         {
             NetReciever.IS.WriteToArduino("Hi");
         }
-        catch (System.Exception e) { Debug.Log(e); }
-        AcuitySprite_TRANS.gameObject.SetActive(true);
+        catch (System.Exception e) { Debug.LogError(e); }
+        turn_on_AS();
+        turn_on_WS();
         return dir;
     }
 
     public void turn_off_AS()
     {
         AcuitySprite_TRANS.gameObject.SetActive(false);
+    }
+
+    public void turn_on_AS()
+    {
+        AcuitySprite_TRANS.gameObject.SetActive(true);
     }
 
     public void turn_off_AI()

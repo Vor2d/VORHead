@@ -11,7 +11,6 @@ using Accord.Collections;
 public class GameController : GeneralGameController {
 
     //Direction: 0 is left, 1 is right;
-
     [Obsolete("")]
     public Dictionary<string, string> GameModeToIndiText = new Dictionary<string, string>()
     {
@@ -21,6 +20,9 @@ public class GameController : GeneralGameController {
         { "HC_FB_Learning","Learning 1"},
         { "Jump_Learning","Learning 2"},
     };
+
+    public static readonly string[] animator_trigger_strs = new string[]
+    { "NextStep", "Reset", "FirstLoopNext", "Collaborate", "Finished", "UpdateDC", "CheckController" };
 
     [HideInInspector]
     [Obsolete("Not showing results")]
@@ -428,12 +430,12 @@ public class GameController : GeneralGameController {
 
         if(DC_script.MSM_script.using_VR)
         {
-            CI_script.IndexTrigger += check_controller;
+            CI_script.IndexTrigger += controller_input;
         }
         if(DC_script.MSM_script.using_coil)
         {
-            GCI_script.Button5_act += check_controller;
-            GCI_script.Button1_act += check_controller;
+            GCI_script.Button5_act += controller_input;
+            GCI_script.Button1_act += controller_input;
         }
 
         if (UsingHIOC) 
@@ -631,7 +633,7 @@ public class GameController : GeneralGameController {
     {
         if(DC_script.MSM_script.using_VR)
         {
-            CI_script.IndexTrigger -= check_controller;
+            CI_script.IndexTrigger -= controller_input;
         }
     }
 
@@ -1304,9 +1306,26 @@ public class GameController : GeneralGameController {
 
     //}
 
+    private void Clean_flags_start()
+    {
+        Check_speed_flag = false;
+        speed_passed_flag = false;
+        check_double_speed_flag = false;
+        double_speed_passed_flag = false;
+        Check_stop_flag = false;
+        controller_flag = false;
+        stop_window_timer = DC_script.SystemSetting.StopWinodow;
+        show_acuity_flag = false;
+        show_actuiy_delay_flag = false;
+        ready_for_controller_flag = false;
+        controller_flag = false;
+        GeneralMethods.reset_animator_triggers(GCAnimator,animator_trigger_strs);
+    }
+
     public void ToStartTrial()
     {
-        if(ShowResultFlag)
+        Clean_flags_start();
+        if (ShowResultFlag)
         {
             restar_script.turn_off_mesh();
         }
@@ -2402,7 +2421,7 @@ public class GameController : GeneralGameController {
         }
     }
 
-    private void check_controller()
+    private void controller_input()
     {
         if(controller_flag)
         {

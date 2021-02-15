@@ -566,6 +566,22 @@ public static class GeneralMethods {
         }
     }
 
+    public static void reset_animator_triggers(Animator animator, string[] str_list)
+    {
+        foreach (string name in str_list)
+        {
+            try
+            {
+                animator.ResetTrigger(name);
+                Debug.Log(name + "!!!!!");
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+        }
+    }
+
     /// <summary>
     /// Load setting file from Json.
     /// </summary>

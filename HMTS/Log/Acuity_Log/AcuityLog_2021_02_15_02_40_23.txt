@@ -1,0 +1,6 @@
+
+Line_#	Simulink_#	Time	AcuitySize	Right_Wrong
+0	start	0	8.01	DynamicAcuity
+1	0	2644	-2	0.00	-1	-1
+2	0	2810	-3	-1	-1	-1
+
