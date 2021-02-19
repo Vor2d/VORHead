@@ -67,6 +67,8 @@ public class GameController : GeneralGameController {
     [SerializeField] private Transform EF_TRANS1;
     [SerializeField] private Transform EF_TRANS2;
     [SerializeField] private int Pre_size_num;
+    [SerializeField] private GameObject Left_SQ_OBJ;
+    [SerializeField] private GameObject Right_SQ_OBJ;
 
 
     //Hiden;
@@ -682,6 +684,7 @@ public class GameController : GeneralGameController {
 
     public void ToCenterGaze()
     {
+        Clean_flags_start();
         turn_on_raycasts();
         gaze_timer_rand = DC_script.SystemSetting.GazeTime +
                 UnityEngine.Random.Range(-DC_script.SystemSetting.RandomGazeTime,
@@ -861,6 +864,7 @@ public class GameController : GeneralGameController {
 
     public void ToWaitForTurn()
     {
+        Clean_flags_start();
         Check_speed_flag = true;
         Target_raycast_flag = false;
         tar_script.changeTOBJcolor(TOBJ_rea_col);
@@ -1050,6 +1054,12 @@ public class GameController : GeneralGameController {
     private AcuityGroup.AcuityDirections turn_on_acuity()
     {
         HeadLogSystem.IS.Add_game_state("Show acuity");
+        try
+        {
+            NetReciever.IS.WriteToArduino("1,");
+            Debug.LogError("Start");
+        }
+        catch (System.Exception e) { Debug.LogError("Ard error: " + e); }
         AcuityGroup.AcuityDirections dir = AcuityGroup.AcuityDirections.up;
         int count = 0;
         foreach (AcuityGroup AGS in AGS_list)
@@ -1058,7 +1068,20 @@ public class GameController : GeneralGameController {
             else { AGS.turn_on_acuity(false, def_dir: dir); }
             count++;
         }
+        if (tar_script.transform.position.x > 1)
+        { turn_on_right_sq(); }
+        else { turn_on_left_sq(); }
         return dir;
+    }
+
+    private void turn_on_left_sq()
+    {
+        Left_SQ_OBJ.SetActive(true);
+    }
+
+    private void turn_on_right_sq()
+    {
+        Right_SQ_OBJ.SetActive(true);
     }
 
     private void turn_on_AG()
@@ -1071,6 +1094,12 @@ public class GameController : GeneralGameController {
 
     private void turn_off_AG()
     {
+        try
+        {
+            NetReciever.IS.WriteToArduino("0,");
+            Debug.LogError("Stop");
+        }
+        catch (Exception e) { Debug.LogError("Arduino error! " + e); }
         foreach (AcuityGroup AGS in AGS_list)
         {
             AGS.turn_off_AG();

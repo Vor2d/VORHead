@@ -126,13 +126,8 @@ public class AcuityGroup : MonoBehaviour
             dir = rotate(false, def_dir: def_dir);
         }
         turn_on_BG();
-        try
-        {
-            NetReciever.IS.WriteToArduino("Hi");
-        }
-        catch (System.Exception e) { Debug.LogError(e); }
         turn_on_AS();
-        turn_on_WS();
+        //turn_on_WS();
         return dir;
     }
 
