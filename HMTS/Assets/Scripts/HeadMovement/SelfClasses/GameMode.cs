@@ -38,6 +38,7 @@ public class GameMode
     public float DynaDelayMax { get; set; }
     public float DynaDelayInter { get; set; }
     public int DynaDir { get; set; }    //0: no dir; 1: left; 2: right;
+    public bool ReadyFrame { get; set; }
 
     public GameModeEnum GameModeName { get; set; }
     //public string game_mode_str{ get; set; }
@@ -81,6 +82,7 @@ public class GameMode
         this.DynaDelayMax = other_GM.DynaDelayMax;
         this.DynaDelayInter = other_GM.DynaDelayInter;
         this.DoubleHeadSpeed = other_GM.DoubleHeadSpeed;
+        this.ReadyFrame = other_GM.ReadyFrame;
 
         this.GameModeName = other_GM.GameModeName;
     }
@@ -266,6 +268,8 @@ public class GameMode
         catch { DynaDir = 0; }
         try { DoubleHeadSpeed = (para_dict["DoubleHeadSpeed"] == "True"); }
         catch { DoubleHeadSpeed = false; }
+        try { ReadyFrame = para_dict["ReadyFrame"] == "True"; }
+        catch { ReadyFrame = false; }
     }
 
     public string VarToString()
@@ -306,6 +310,7 @@ public class GameMode
         result_str += "GS" + " " + GS.ToString() + " ";
         result_str += "DynaDir" + " " + DynaDir.ToString() + " ";
         result_str += "DoubleHeadSpeed" + " " + DoubleHeadSpeed.ToString() + " ";
+        result_str += "ReadyFrame" + " " + ReadyFrame.ToString() + " ";
 
         return result_str;
     }

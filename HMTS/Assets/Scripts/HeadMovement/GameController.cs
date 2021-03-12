@@ -69,7 +69,13 @@ public class GameController : GeneralGameController {
     [SerializeField] private int Pre_size_num;
     [SerializeField] private GameObject Left_SQ_OBJ;
     [SerializeField] private GameObject Right_SQ_OBJ;
-
+    [SerializeField] private Color readyFrame_initColor;
+    [SerializeField] private Color readyFrame_readyColor;
+    [SerializeField] private Transform readyFrame1_TRANS;
+    [SerializeField] private Transform readyFrame2_TRANS;
+    [SerializeField] private float readytimer_rangelow;
+    [SerializeField] private float readytimer_rangehigh;
+    //[SerializeField] private bool use_readframe;
 
     //Hiden;
     public uint simulink_sample { get; set; }
@@ -160,6 +166,8 @@ public class GameController : GeneralGameController {
     private long test_last_time;
     private long test_new_time;
     private List<long> test_time_list;
+    private float readytimer;
+    private int random_counter;
     //Flags;
     private bool head_speed_flag;
     private bool stopped_flag;
@@ -272,7 +280,8 @@ public class GameController : GeneralGameController {
                     AD_repeat_index,target_AD,AC_size_result,AC_LH,AD_left_right,AD_right_right,
                     head_time_counter, MLHData.single_repeat_num, MLHData.double_repeat_num,
                     (MLHData.pre_size != null && MLHData.pre_size.Count >= 1) ? MLHData.pre_size.ToArray()[0] : -1,
-                    (MLHData.pre_size != null && MLHData.pre_size.Count >= 2) ? MLHData.pre_size.ToArray()[1] : -1};
+                    (MLHData.pre_size != null && MLHData.pre_size.Count >= 2) ? MLHData.pre_size.ToArray()[1] : -1,
+                    random_counter};
         }
     }
 
@@ -406,6 +415,7 @@ public class GameController : GeneralGameController {
         this.test_last_time = 0;
         this.test_new_time = 0;
         this.test_time_list = new List<long>();
+        this.random_counter = 0;
 
         TestTimer.Test_watch.Start();
 
@@ -534,7 +544,7 @@ public class GameController : GeneralGameController {
 
     private void FixedUpdate()
     {
-        test_time_list.Add(TestTimer.Test_watch.ElapsedMilliseconds);
+        //test_time_list.Add(TestTimer.Test_watch.ElapsedMilliseconds);
         Fixed_check_speed();
         Fixed_check_double_speed();
         show_acuity_normal_delay();
@@ -864,7 +874,7 @@ public class GameController : GeneralGameController {
 
     public void ToWaitForTurn()
     {
-        Clean_flags_start();
+        Clean_flags_start2();
         Check_speed_flag = true;
         Target_raycast_flag = false;
         tar_script.changeTOBJcolor(TOBJ_rea_col);
@@ -976,8 +986,8 @@ public class GameController : GeneralGameController {
             if(DC_script.Current_GM.UsingDynamicDelay)
             {
                 //StartCoroutine(show_acuity_coro(curr_A_delay,DC_script.SystemSetting.AcuityFlashTime, false));
-                start_show_acuity_normal_FU(curr_A_delay, DC_script.SystemSetting.AcuityFlashTime,
-                    false);
+                //start_show_acuity_normal_FU(curr_A_delay, DC_script.SystemSetting.AcuityFlashTime,
+                //    false);
             }
             else
             {
@@ -1164,6 +1174,7 @@ public class GameController : GeneralGameController {
     {
         show_acuity_flag = false;
         show_actuiy_delay_flag = true;
+        Debug.Log("!!!!!!!!!!" + show_actuiy_delay_flag);
         show_acuity_delay_timer = 0.0f;
     }
 
@@ -1351,6 +1362,22 @@ public class GameController : GeneralGameController {
         GeneralMethods.reset_animator_triggers(GCAnimator,animator_trigger_strs);
     }
 
+    private void Clean_flags_start2()
+    {
+        Check_speed_flag = false;
+        speed_passed_flag = false;
+        check_double_speed_flag = false;
+        double_speed_passed_flag = false;
+        Check_stop_flag = false;
+        controller_flag = false;
+        stop_window_timer = DC_script.SystemSetting.StopWinodow;
+        //show_acuity_flag = false;
+        //show_actuiy_delay_flag = false;
+        ready_for_controller_flag = false;
+        controller_flag = false;
+        GeneralMethods.reset_animator_triggers(GCAnimator, animator_trigger_strs);
+    }
+
     public void ToStartTrial()
     {
         Clean_flags_start();
@@ -1443,9 +1470,18 @@ public class GameController : GeneralGameController {
                 return DD_next_repeat();
             case DynamicDelayModes.MLH:
                 return DD_next_MLH();
-
+            case DynamicDelayModes.random:
+                return DD_next_random();
         }
         return false;
+    }
+
+    private bool DD_next_random()
+    {
+        ++random_counter;
+        curr_A_delay = UnityEngine.Random.Range(DC_script.SystemSetting.RRLow,
+            DC_script.SystemSetting.RRHigh);
+        return random_counter >= DC_script.SystemSetting.RTNumber;
     }
 
     private bool DD_next_MLH()
@@ -2130,6 +2166,7 @@ public class GameController : GeneralGameController {
         AC_results = new Dictionary<int, int>();
         AC_results_wrong = new Dictionary<int, int>();
         AC_repeat_number = new Vector2Int(-1, -1);
+        random_counter = 0;
 
         if (UsingAcuity)
         {
@@ -2339,6 +2376,7 @@ public class GameController : GeneralGameController {
         GCAnimator.SetBool("ShowTargetFlag", DC_script.Current_GM.ShowTargetFlag);
         GCAnimator.SetBool("SkipCenter", DC_script.Current_GM.SkipCenterFlag);
         GCAnimator.SetBool("ChangeTargetByTimeFlag", DC_script.Current_GM.ChangeTargetByTime);
+        GCAnimator.SetBool("UseReadyFrame", DC_script.Current_GM.ReadyFrame);
     }
 
     public void ToChangeTargetWaitTime()
@@ -2761,5 +2799,48 @@ public class GameController : GeneralGameController {
         DC_script.Sections[0].SectionTrialInfo.Turn_data[0] = new Vector2(angle, 0.0f);
         DC_script.Sections[0].SectionTrialInfo.Jump_data[0] = new Vector2(angle, 0.0f);
     }
-}
 
+    private void RF_red_state()
+    {
+        readyFrame1_TRANS.GetComponent<SpriteRenderer>().enabled = true;
+        readyFrame1_TRANS.GetComponent<SpriteRenderer>().color = readyFrame_initColor;
+        readyFrame2_TRANS.GetComponent<SpriteRenderer>().enabled = true;
+        readyFrame2_TRANS.GetComponent<SpriteRenderer>().color = readyFrame_initColor;
+    }
+
+    private void RF_green_state()
+    {
+        readyFrame1_TRANS.GetComponent<SpriteRenderer>().color = readyFrame_readyColor;
+        readyFrame2_TRANS.GetComponent<SpriteRenderer>().color = readyFrame_readyColor;
+    }
+
+    private void RF_turn_off()
+    {
+        readyFrame1_TRANS.GetComponent<SpriteRenderer>().enabled = false;
+        readyFrame2_TRANS.GetComponent<SpriteRenderer>().enabled = false;
+    }
+
+    public void ToReadyFrame()
+    {
+        RF_red_state();
+        readytimer = UnityEngine.Random.Range(readytimer_rangelow, readytimer_rangehigh);
+    }
+
+    public void UpdateReadyFrame()
+    {
+        readytimer -= Time.deltaTime;
+        if(readytimer <= 0.0f)
+        {
+            readytimer = float.MaxValue;
+            RF_green_state();
+            start_show_acuity_normal_FU(curr_A_delay, DC_script.SystemSetting.AcuityFlashTime,
+                false);
+            GCAnimator.SetTrigger("NextStep");
+        }
+    }
+
+    public void LeaveReadyFrame()
+    {
+        RF_turn_off();
+    }
+}

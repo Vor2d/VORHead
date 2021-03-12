@@ -18,7 +18,7 @@ public class DebugController : MonoBehaviour
     const string Acuity_init_text = "Acuity (Index/Right/Wrong/Size/TargetSize/Max_LH" +
         "/SRN/DRN/q0/q1): ";
     const string AcuityDelay_init_text = "Acuity (DelayIndex/CurrDelay/DelayRight/Converge/RepeatIndex" +
-        "/TargetAD/AD_LR/AD_RR/HTC): ";
+        "/TargetAD/AD_LR/AD_RR/HTC/RandomDCount): ";
 
     public bool UsingDebug;
     public GameController GC_script;
@@ -155,7 +155,8 @@ public class DebugController : MonoBehaviour
                                 " / " + (GC_script.AcuityState[9]).ToString("F3") +
                                 " / " + (GC_script.AcuityState[12]).ToString("F0") +
                                 " / " + (GC_script.AcuityState[13]).ToString("F0") +
-                                " / " + (GC_script.AcuityState[14]).ToString("F0");
+                                " / " + (GC_script.AcuityState[14]).ToString("F0") +
+                                " / " + (GC_script.AcuityState[19]).ToString("F0");
         AcuityDelay_Text2.text = GC_script.MLHState;
     }
 

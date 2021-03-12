@@ -53,6 +53,9 @@ public class GameSetting
     public int MLHMaxSize;
     public int MLHSinRepeatNum;
     public int MLHDouRepeatNum;
+    public int RRLow;
+    public float RRHigh;
+    public float RTNumber;
 
     public GameSetting()
     {
@@ -103,6 +106,9 @@ public class GameSetting
         this.MLHMaxSize = 9;
         this.MLHSinRepeatNum = 3;
         this.MLHDouRepeatNum = 15;
+        this.RRLow = 0;
+        this.RRHigh = 0;
+        this.RTNumber = 0;
 }
 
     [Obsolete("Not using txt file anymore")]
@@ -199,6 +205,9 @@ public class GameSetting
         result_str += "MLHMaxSize" + " " + MLHMaxSize.ToString() + " ";
         result_str += "MLHSinRepeatNum" + " " + MLHSinRepeatNum.ToString() + " ";
         result_str += "MLHDouRepeatNum" + " " + MLHDouRepeatNum.ToString() + " ";
+        result_str += "RRLow" + " " + RRLow.ToString() + " ";
+        result_str += "RRHigh" + " " + RRHigh.ToString() + " ";
+        result_str += "RTNumber" + " " + RTNumber.ToString() + " ";
 
 
 

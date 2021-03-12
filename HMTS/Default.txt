@@ -3,13 +3,14 @@ AcuitySize	2
 UsingAcuityChange	False
 AcuityChangeMode	acuity_list
 UsingDynamicDelay	True
-DynamicDelayMode	MLH
+DynamicDelayMode	random
 DynaDelayInit	0.0
 DynaDelayMax	0.72
 DynaDelayInter	0.08
 DynaDir	1
 DoubleHeadSpeed	True
 GS	False
+ReadyFrame	True
 ________________________________
 -1
 0	0
@@ -19,13 +20,14 @@ AcuitySize	2
 UsingAcuityChange	False
 AcuityChangeMode	acuity_list
 UsingDynamicDelay	True
-DynamicDelayMode	MLH
+DynamicDelayMode	random
 DynaDelayInit	0.0
 DynaDelayMax	0.72
 DynaDelayInter	0.08
 DynaDir	2
 DoubleHeadSpeed	True
 GS	False
+ReadyFrame	True
 ________________________________
 -1
 0	0
